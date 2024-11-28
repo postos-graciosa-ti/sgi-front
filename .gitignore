@@ -1,0 +1,9 @@
+/__pycache__
+/controllers/__pycache__
+/database/__pycache__
+/middlewares/__pycache__
+/models/__pycache__
+/venv
+/.env
+/seeds/__pycache__
+/database.db

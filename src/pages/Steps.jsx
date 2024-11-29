@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import Select from "react-select"
 import useUserSessionStore from "../data/userSession"
 import api from "../services/api"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const Steps = () => {
   const navigate = useNavigate()
@@ -41,6 +41,12 @@ const Steps = () => {
   return (
     <>
       <div className="container">
+        <div className="mt-3">
+          <Link to="/" className="btn btn-primary">
+            Voltar
+          </Link>
+        </div>
+
         <h1 className="mt-3">
           Selecione sua filial
         </h1>

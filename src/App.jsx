@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import Login from './requests/auth/login'
-import axios from 'axios'
+import { Link, useNavigate } from 'react-router-dom'
 import useUserSessionStore from './data/userSession'
-import { useNavigate } from 'react-router-dom'
+import login from './requests/login'
 
 function App() {
   const navigate = useNavigate()
@@ -10,7 +9,7 @@ function App() {
   const [email, setEmail] = useState()
 
   const [password, setPassword] = useState()
-  
+
   const userSession = useUserSessionStore(state => state.userSession)
 
   const setUserSession = useUserSessionStore(state => state.setUserSession)
@@ -18,11 +17,12 @@ function App() {
   const handleLogin = (e) => {
     e.preventDefault()
 
-    axios
-      .post("http://localhost:8000/login", {
-        "email": email,
-        "password": password
-      })
+    let formData = {
+      "email": email,
+      "password": password
+    }
+
+    login(formData)
       .then((response) => {
         setUserSession(response.data)
 
@@ -33,7 +33,43 @@ function App() {
 
   return (
     <>
-      <div className="container mt-4">
+
+      <div className="d-grid w-100" style={{ height: '100vh', placeItems: 'center' }}>
+        <form onSubmit={(e) => handleLogin(e)}>
+          <h1 className="mb-4">Entrar</h1>
+
+          <div className="mb-3">
+            <input
+              type="email"
+              className="form-control w-100"
+              placeholder="E-mail"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="password"
+              className="form-control"
+              placeholder="E-mail"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <Link to="/first-access" className="mt-2">
+              Seu primeiro acesso?
+            </Link>
+          </div>
+
+          <div className="mb-3">
+            <button type="submit" className="btn btn-success">
+              Entrar
+            </button>
+          </div>
+        </form>
+      </div>
+
+
+      {/* <div className="container mt-4">
         <form onSubmit={(e) => handleLogin(e)}>
           <h1 className="mb-4">Entrar</h1>
 
@@ -53,6 +89,10 @@ function App() {
               placeholder="E-mail"
               onChange={(e) => setPassword(e.target.value)}
             />
+
+            <Link to="/first-access" className="mt-2">
+              Seu primeiro acesso?
+            </Link>
           </div>
 
           <div className="mb-3">
@@ -61,7 +101,7 @@ function App() {
             </button>
           </div>
         </form>
-      </div>
+      </div> */}
     </>
   )
 }

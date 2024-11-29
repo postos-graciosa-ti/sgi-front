@@ -2,7 +2,9 @@ import { Link } from "react-router-dom"
 import useUserSessionStore from "../data/userSession"
 
 const Nav = () => {
-  // const resetState = useUserSessionStore(state => state.resetState)
+  const userSession = useUserSessionStore(state => state.userSession)
+
+  const setUserSession = useUserSessionStore(state => state.setUserSession)
 
   const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
@@ -29,16 +31,20 @@ const Nav = () => {
 
                 <ul className="dropdown-menu">
                   <li>
-                    <Link className="dropdown-item" to="/">
+                    <Link className="dropdown-item" to="/" onClick={() => setUserSession({})}>
                       Sair
                     </Link>
                   </li>
 
-                  <li>
-                    <Link className="dropdown-item" to="/users">
-                      Usuários
-                    </Link>
-                  </li>
+                  {
+                    userSession.role_id == 1 && (
+                      <li>
+                        <Link className="dropdown-item" to="/users">
+                          Usuários
+                        </Link>
+                      </li>
+                    )
+                  }
 
                   <li>
                     <Link className="dropdown-item disabled" to="/users">
@@ -59,9 +65,9 @@ const Nav = () => {
       </nav>
 
       <div className="m-3 text-end">
-        <a href="#">
+        <Link to="/steps">
           Você está em: {selectedSubsidiarie.label}
-        </a>
+        </Link>
       </div>
     </>
   )

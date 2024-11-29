@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlmodel import Session, select
@@ -15,6 +15,7 @@ from models.user import User
 from models.user_subsidiaries import user_subsidiaries
 from seeds.seed_all import seed_roles, seed_subsidiaries
 from models.jobs import Jobs
+from passlib.hash import pbkdf2_sha256
 
 load_dotenv()
 
@@ -101,25 +102,23 @@ def delete_job(job_id: int):
 @app.post("/login")
 def login(user: User):
     with Session(engine) as session:
-        statement = (
-            select(User)
-            .where(User.email == user.email, User.password == user.password)
-            .limit(1)
-        )
+        statement = select(User).where(User.email == user.email).limit(1)
+        db_user = session.exec(statement).first()
 
-        user_admin = session.exec(statement).first()
+        if not db_user:
+            raise HTTPException(status_code=404, detail="Usuário não encontrado")
 
-        if user_admin.password == user.password:
-            return user_admin
-        else:
-            return {"error": "error"}
+        if not pbkdf2_sha256.verify(user.password, db_user.password):
+            raise HTTPException(status_code=400, detail="Senha incorreta")
+
+        return db_user
 
 
 @app.post("/users")
 def create_user(user: User):
-    default_user_pwd = os.environ.get("DEFAULT_USER_PWD")
+    # default_user_pwd = os.environ.get("DEFAULT_USER_PWD")
 
-    user.password = default_user_pwd if user.password == "1" else user.password
+    # user.password = default_user_pwd if user.password == "1" else user.password
 
     with Session(engine) as session:
         session.add(user)
@@ -254,3 +253,59 @@ def test(arr: Test):
             subsidiary = session.exec(statement).first()
         subsidiaries_array.append(subsidiary)
     return subsidiaries_array
+
+
+class VerifyEmail(BaseModel):
+    email: str
+
+
+@app.post("/verify-email")
+def verify_email(userData: VerifyEmail):
+    with Session(engine) as session:
+        user = session.exec(select(User).where(User.email == userData.email)).first()
+
+    if user:
+        return {"status": "true", "message": "Email existe no banco de dados."}
+    else:
+        return {"status": "false", "message": "Email não encontrado no banco de dados."}
+
+
+class ConfirmPassword(BaseModel):
+    email: str
+    password: str
+
+
+@app.post("/confirm-password")
+def confirm_password(userData: ConfirmPassword):
+    with Session(engine) as session:
+        statement = select(User).where(User.email == userData.email)
+
+        results = session.exec(statement)
+
+        user = results.one()
+
+        user.password = pbkdf2_sha256.hash(userData.password)
+
+        # user.password = userData.password
+
+        session.add(user)
+
+        session.commit()
+
+        session.refresh(user)
+
+        return user
+
+# class GetUsersBySubsidiarieId(BaseModel):
+#     subsidiarie_id: int
+
+# @app.post("/get-users-by-subsidiarie-id")
+# def get_users_by_subsidiarie_id(data: GetUsersBySubsidiarieId):
+#     with Session(engine) as session:
+#         statement = select(User).where(User.subsidiaries_id.contains(str(data.subsidiarie_id)))
+
+#         results = session.exec(statement)
+
+#         users = results.all()
+
+#     return users

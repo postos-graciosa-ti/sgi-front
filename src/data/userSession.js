@@ -15,6 +15,8 @@ const useUserSessionStore = create((set) => ({
 
   selectedJob: {},
 
+  workersList: [],
+
   setUserSession: (newUserSession) => set(() => ({ userSession: newUserSession })),
 
   resetState: () => set(() => ({ userSession: {} })),
@@ -30,6 +32,8 @@ const useUserSessionStore = create((set) => ({
   setJobsList: (newJobsList) => set(() => ({ jobsList: newJobsList })),
 
   setSelectedJob: (newSelectedJob) => set(() => ({ selectedJob: newSelectedJob })),
+
+  setWorkersList: (newWorkersList) => set(() => ({ workersList: newWorkersList })),
 }))
 
 export default useUserSessionStore

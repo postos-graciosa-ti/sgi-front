@@ -1,8 +1,13 @@
+from passlib.hash import pbkdf2_sha256
 from sqlmodel import Session, select
 
 from database.sqlite import engine
+from models.candidate_status import CandidateStatus
+from models.function import Function
 from models.role import Role
 from models.subsidiarie import Subsidiarie
+from models.turn import Turn
+from models.user import User
 
 
 def seed_roles():
@@ -58,3 +63,81 @@ def seed_subsidiaries():
             ]
             session.add_all(subsidiaries)
             session.commit()
+
+
+def seed_candidate_status():
+    with Session(engine) as session:
+        existing_candidate_status = session.exec(select(CandidateStatus)).all()
+        if not existing_candidate_status:
+            candidate_status = [
+                CandidateStatus(name="Cadastrado"),
+                CandidateStatus(name="Primeira Entrevista"),
+                CandidateStatus(name="Segunda Entrevista"),
+                CandidateStatus(name="Aguardando Exame Médico"),
+                CandidateStatus(name="Contratado"),
+            ]
+            session.add_all(candidate_status)
+            session.commit()
+
+
+def seed_users():
+    with Session(engine) as session:
+        existing_users = session.exec(select(User)).all()
+        if not existing_users:
+            users = [
+                User(
+                    email="administrador@gmail.com",
+                    password=pbkdf2_sha256.hash("teste"),
+                    name="Administrador",
+                    role_id=1,
+                    subsidiaries_id="[1,2,3]",
+                ),
+                User(
+                    email="analistaderh@gmail.com",
+                    password=pbkdf2_sha256.hash("teste"),
+                    name="Analista de RH",
+                    role_id=2,
+                    subsidiaries_id="[1,2,3]",
+                ),
+            ]
+            session.add_all(users)
+            session.commit()
+
+
+def seed_functions():
+    with Session(engine) as session:
+        existing_functions = session.exec(select(Function)).all()
+        if not existing_functions:
+            functions = [
+                Function(
+                    name="Frentista",
+                    description="Atendimento ao cliente no posto de combustível",
+                ),
+                Function(
+                    name="Caixa",
+                    description="Responsável por realizar transações financeiras no caixa",
+                ),
+            ]
+            session.add_all(functions)
+            session.commit()
+
+
+def seed_turns():
+    with Session(engine) as session:
+        existing_turns = session.exec(select(Turn)).all()
+        if not existing_turns:
+            turns = [
+                Turn(name="Manhã", time="08:00-12:00"),
+                Turn(name="Noite", time="14:00-18:00"),
+            ]
+            session.add_all(turns)
+            session.commit()
+
+
+def seed_database():
+    seed_roles()
+    seed_subsidiaries()
+    seed_candidate_status()
+    seed_users()
+    seed_functions()
+    seed_turns()

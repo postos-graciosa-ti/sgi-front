@@ -50,7 +50,7 @@ const Candidates = () => {
             </div>
 
             <div className="col-2">
-              <button className="btn btn-primary">
+              <button className="btn btn-dark">
                 <ArrowUpRight />
               </button>
             </div>
@@ -61,11 +61,31 @@ const Candidates = () => {
           </span>
         </div>
 
-        <div className="card p-3 mb-3" onClick={navigateRegisterCandidate}>
+        <div className="card p-3 mb-3" onClick={() => navigate('/register-candidate', { replace: true })}>
           <h4>Cadastro</h4>
 
           <span>
-            Armazenamento do currículo e prova de matemática
+            Armazenamento do currículo e dados pessoais
+          </span>
+        </div>
+
+        <div className="card p-3 mb-3" onClick={() => navigate('/first-interview', { replace: true })}>
+          <div className="row">
+            <div className="col-10">
+              <h4>
+                Primeira Entrevista
+              </h4>
+            </div>
+
+            <div className="col-2">
+              <button className="btn btn-dark">
+                <ArrowUpRight />
+              </button>
+            </div>
+          </div>
+
+          <span>
+            Candidatos para primeira entrevista
           </span>
         </div>
       </div>

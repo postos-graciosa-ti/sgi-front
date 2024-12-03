@@ -29,6 +29,8 @@ const UserModal = (props) => {
 
   const [selectedSubsidiaries, setSelectedSubsidiaries] = useState([])
 
+  const [selectAllSubsidiaries, setSelectAllSubsidiaries] = useState()
+
   useEffect(() => {
     getRoles()
       .then((response) => {
@@ -58,6 +60,8 @@ const UserModal = (props) => {
 
   }, [])
 
+  console.log(role)
+
   const handleCreateUser = (e) => {
     e.preventDefault()
 
@@ -78,11 +82,20 @@ const UserModal = (props) => {
             .then((response) => {
               setUserList(response.data)
 
+              setSelectAllSubsidiaries(false)
+
               setModalOpen(false)
             })
             .catch((error) => console.error(error))
         }
       })
+  }
+
+  const handleSelectRole = (role) => {
+    if (role == 1)
+      setSelectAllSubsidiaries(true)
+
+    setRole(role)
   }
 
   return (
@@ -125,7 +138,7 @@ const UserModal = (props) => {
               <Select
                 placeholder="Cargo"
                 options={rolesOptions}
-                onChange={(e) => setRole(e.value)}
+                onChange={(e) => handleSelectRole(e.value)}
               />
             </div>
 
@@ -134,13 +147,20 @@ const UserModal = (props) => {
                 placeholder="Filial"
                 options={subsidiariesList}
                 isMulti
+                value={selectAllSubsidiaries && subsidiariesList || false}
                 onChange={(e) => setSelectedSubsidiaries(e)}
               />
             </div>
           </Modal.Body>
 
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setModalOpen(false)}>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setModalOpen(false)
+                setSelectAllSubsidiaries(false)
+              }}
+            >
               Fechar
             </Button>
 

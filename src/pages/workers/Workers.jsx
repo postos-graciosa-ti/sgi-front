@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
+import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
-import CreateWorkerModal from "./CreateWorkerModal"
-import getWorkersBySubsidiarie from "../../requests/getWorkersBySubsidiarie"
 import useUserSessionStore from "../../data/userSession"
-import DefaultScaleModal from "./DefaultScaleModal"
-import ScaleModal from "./ScaleModal"
+import getWorkersBySubsidiarie from "../../requests/getWorkersBySubsidiarie"
+import api from "../../services/api"
+import CreateWorkerModal from "./CreateWorkerModal"
 
 const Workers = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -15,27 +15,32 @@ const Workers = () => {
 
   const workersList = useUserSessionStore((state) => state.workersList)
 
-  const [defaultScaleModalOpen, setDefaultScaleModalOpen] = useState()
-
-  // console.log(workers)
-
-  const [scaleModalOpen, setScaleModalOpen] = useState()
-
   useEffect(() => {
     getWorkersBySubsidiarie(selectedSubsdiarie.value)
       .then((response) => setWorkersList(response.data))
   }, [])
 
-  const handleRemoveWorker = () => {
+  const handleUpdateWorker = () => {
 
   }
 
-  const handleGenerateScale = (name) => {
-    // api
-    //   .get("/teste")
-    //   .then((response) => {
-    //     const items = response.data.filter(item => item.name === 'nome')
-    //   })
+  const handleDeleteWorker = (worker) => {
+    api
+      .put(`/workers/deactivate/${worker.id}`)
+      .then((response) => {
+        console.log(response)
+
+        if (response.status == 200) {
+          Swal.fire({
+            title: `${worker.name} foi desativado`,
+            // text: "You clicked the button!",
+            icon: "success"
+          })
+
+          getWorkersBySubsidiarie(selectedSubsdiarie.value)
+            .then((response) => setWorkersList(response.data))
+        }
+      })
   }
 
   return (
@@ -53,17 +58,6 @@ const Workers = () => {
           Adicionar colaborador
         </button>
 
-        {/* <button
-          className="btn btn-sm btn-primary mt-3"
-          onClick={() => setDefaultScaleModalOpen(true)}
-        >
-          Cadastrar escala padrão
-        </button> */}
-
-        <button className="btn btn-sm btn-primary mt-3" onClick={() => setScaleModalOpen(true)}>
-          Gerar escala de trabalho
-        </button>
-
         <div className="table-responsive mt-3">
           <table className="table">
             <tr>
@@ -79,17 +73,17 @@ const Workers = () => {
                   <td>{worker.function_id == 1 && "Frentista"}</td>
                   <td>{worker.is_active == true && "Sim" || "Não"}</td>
                   <td>
-                    <button className="btn btn-sm btn-primary me-2">
-                      Ver escala de funcionário
-                    </button>
-
-                    <button className="btn btn-sm btn-primary me-2">
+                    <button
+                      className="btn btn-sm btn-primary me-2"
+                      onClick={() => handleUpdateWorker(worker)}
+                    >
                       Editar
                     </button>
 
                     <button
+                      type="button"
                       className="btn btn-sm btn-danger"
-                      onClick={() => handleRemoveWorker(worker)}
+                      onClick={() => handleDeleteWorker(worker)}
                     >
                       Remover
                     </button>
@@ -105,16 +99,6 @@ const Workers = () => {
         createWorkerModalOpen={createWorkerModalOpen}
         setCreateWorkerModalOpen={setCreateWorkerModalOpen}
       />
-
-      {/* <DefaultScaleModal
-        defaultScaleModalOpen={defaultScaleModalOpen}
-        setDefaultScaleModalOpen={setDefaultScaleModalOpen}
-      />
-
-      <ScaleModal
-        scaleModalOpen={scaleModalOpen}
-        setScaleModalOpen={setScaleModalOpen}
-      /> */}
     </>
   )
 }

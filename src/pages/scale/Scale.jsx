@@ -3,14 +3,20 @@ import React, { useEffect, useState } from 'react'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 import ReactSelect from 'react-select'
+import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
 import useUserSessionStore from '../../data/userSession'
+import getSundays from "../../functions/getSundays"
+import getWeek from "../../functions/getWeek"
 import getWorkersBySubsidiarie from '../../requests/getWorkersBySubsidiarie'
+import postScaleCreate from "../../requests/postScaleCreate"
+import postValidateSundays from '../../requests/postValidateSundays'
+import postValidateWeekdays from '../../requests/postValidateWeekdays'
 import api from '../../services/api'
 
 const Scale = () => {
   const firstDayOfMonth = moment().startOf('month').toDate()
-  
+
   const lastDayOfMonth = moment().endOf('month').toDate()
 
   let timedata = {
@@ -64,23 +70,51 @@ const Scale = () => {
     setSelectedDate(newDate)
   }
 
+  const [test, setTest] = useState(true)
+
   const handleSubmitScale = (e) => {
     e.preventDefault()
+
+    let weekdays = `${getWeek(selectedDate)}`.replace(/(\d{4}-\d{2}-\d{2})/g, '"$1"')
+
+    let sundays = `${getSundays(selectedDate)}`.replace(/(\d{4}-\d{2}-\d{2})/g, '"$1"')
 
     let workersIds = selectedWorkers.map(worker => worker.value).join(',')
 
     let formData = {
       "date": `${moment(selectedDate).format("YYYY-MM-DD")}`,
-      "workers_ids": workersIds,
-      "subsidiarie_id": selectedSubsdiarie.value
+      "workers_ids": `[${workersIds}]`,
+      "subsidiarie_id": selectedSubsdiarie.value,
+      "days_of_week": weekdays,
+      "sundays": sundays
     }
 
-    console.log(formData)
-
-    api
-      .post("/scale", formData)
-      .then((response) => console.log(response))
-      .catch((error) => console.error(error))
+    postValidateWeekdays(selectedDate, workersIds, selectedSubsdiarie, weekdays)
+      .then((response) => {
+        if (response.data.success == true) {
+          postValidateSundays(selectedDate, workersIds, selectedSubsdiarie, weekdays)
+            .then((response) => {
+              if (response.data.success == true) {
+                postScaleCreate(formData)
+                  .then((response) => console.log(response))
+              } else {
+                Swal.fire({
+                  title: "Erro ao planejar folgas de domingo",
+                  text: `${response.data.message}`,
+                  icon: "error"
+                })
+                throw new Error("Erro ao planejar folgas de domingo")
+              }
+            })
+        } else {
+          Swal.fire({
+            title: "Erro ao planejar folgas da semana",
+            text: `${response.data.message}`,
+            icon: "error"
+          })
+          throw new Error("Erro ao planejar folgas da semana")
+        }
+      })
   }
 
   return (
@@ -129,34 +163,6 @@ const Scale = () => {
             }
           </div>
         </div>
-
-        {/* <h4>
-          Programação de folga
-        </h4>
-
-        <div className="mb-2">
-          <b>
-            Pré-visualização de dias de folga
-          </b>
-        </div>
-
-        <Calendar
-          onChange={onChange}
-          value={selectedDate}
-          tileClassName={tileClassName}
-        />
-
-        {
-          selectedDate && (
-            <div className="mt-3">
-              <b>
-                Programação de folga para: {moment(selectedDate.toDateString()).format("DD/MM/YYYY")}
-              </b>
-
-              <ReactSelect />
-            </div>
-          )
-        } */}
 
         <style>
           {`

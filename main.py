@@ -10,6 +10,7 @@ from pydantic import BaseModel
 from sqlmodel import Session, select, text
 
 from database.sqlite import create_db_and_tables, engine
+from functions.scale import is_valid_scale
 from middlewares.cors_middleware import add_cors_middleware
 from models.candidate import Candidate
 from models.candidate_status import CandidateStatus
@@ -46,24 +47,11 @@ add_cors_middleware(app)
 def on_startup():
     create_db_and_tables()
     seed_database()
-    # seed_roles()
-    # seed_subsidiaries()
-    # seed_candidate_status()
-    # seed_users()
-    # seed_functions()
 
 
 @app.get("/")
 def docs():
     return {"docs": "acess /docs", "redocs": "access /redocs"}
-
-
-# from datetime import date
-
-# @app.get("/current_date")
-# def get_current_date():
-#     current_date = date.today()
-#     return {"current_date": current_date}
 
 
 @app.post("/default_scale")
@@ -80,27 +68,6 @@ def get_default_scale():
     with Session(engine) as session:
         default_scale = session.exec(select(DefaultScale)).all()
     return default_scale
-
-
-# from datetime import timedelta
-# from typing import List
-
-
-# @app.post("/generate_scale_6x1")
-# def generate_scale_6x1():
-#     with Session(engine) as session:
-#         workers = session.exec(select(Workers)).all()
-#         scales = []
-#         for worker in workers:
-#             scale = []
-#             for i in range(6):
-#                 day = (worker.id * 7 + i) % 7
-#                 if day == 6:  # domingo
-#                     scale.append(False)
-#                 else:
-#                     scale.append(True)
-#             scales.append({"worker_id": worker.id, "scale": scale})
-#         return scales
 
 
 @app.get("/turns")
@@ -150,19 +117,6 @@ def get_workers_by_subsidiarie(subsidiarie_id: int):
     return workers
 
 
-# @app.get("/workers")
-# def get_users_raw():
-#     raw_query = "SELECT * FROM workers"
-
-#     with Session(engine) as session:
-#         result = session.execute(text(raw_query))
-#         users = result.fetchall()
-#     return users
-
-
-# jobs routes
-
-
 @app.get("/jobs")
 def get_jobs():
     with Session(engine) as session:
@@ -188,27 +142,6 @@ def create_job(job: Jobs):
     return job
 
 
-# @app.get("/jobs/{job_id}")
-# def get_job_by_id(job_id: int):
-#     with Session(engine) as session:
-#         job = session.get(Jobs, job_id)
-#     return job
-
-
-# @app.put("/jobs/{job_id}")
-# def update_job(job_id: int, job: Jobs):
-#     with Session(engine) as session:
-#         db_job = session.get(Jobs, job_id)
-
-#         if db_job:
-#             db_job.name = job.name
-#             db_job.description = job.description
-#             db_job.subsidiarie_id = job.subsidiarie_id
-#             session.commit()
-#             session.refresh(db_job)
-#     return db_job
-
-
 @app.delete("/jobs/{job_id}")
 def delete_job(job_id: int):
     with Session(engine) as session:
@@ -218,9 +151,6 @@ def delete_job(job_id: int):
             session.delete(job)
             session.commit()
     return {"message": "Job deleted successfully"}
-
-
-# auth routes
 
 
 @app.post("/login")
@@ -240,10 +170,6 @@ def login(user: User):
 
 @app.post("/users")
 def create_user(user: User):
-    # default_user_pwd = os.environ.get("DEFAULT_USER_PWD")
-
-    # user.password = default_user_pwd if user.password == "1" else user.password
-
     with Session(engine) as session:
         session.add(user)
         session.commit()
@@ -331,9 +257,6 @@ def get_users_roles():
         return users
 
 
-# /subsidiaries
-
-
 @app.get("/subsidiaries")
 def get_subsidiaries():
     with Session(engine) as session:
@@ -406,21 +329,6 @@ def confirm_password(userData: ConfirmPassword):
         return user
 
 
-# class GetUsersBySubsidiarieId(BaseModel):
-#     subsidiarie_id: int
-
-# @app.post("/get-users-by-subsidiarie-id")
-# def get_users_by_subsidiarie_id(data: GetUsersBySubsidiarieId):
-#     with Session(engine) as session:
-#         statement = select(User).where(User.subsidiaries_id.contains(str(data.subsidiarie_id)))
-
-#         results = session.exec(statement)
-
-#         users = results.all()
-
-#     return users
-
-
 class PostCandidate(BaseModel):
     name: str
     date_of_birth: str
@@ -488,16 +396,6 @@ def calculate_day_off(mes: int, ano: int):
     }
 
 
-# # Exemplo de uso
-# mes = 12  # Dezembro
-# ano = 2024
-# resultado = calcular_folgas(mes, ano)
-
-# print("Cálculo de folgas para", mes, "/", ano)
-# for chave, valor in resultado.items():
-#     print(f"{chave}: {valor}")
-
-
 class Timedata(BaseModel):
     month: int
     year: int
@@ -516,13 +414,106 @@ def get_scale(date: str):
     return scale
 
 
-@app.post("/scale")
-def create_scale(scale: Scale):
+# class CreateScale(BaseModel):
+#     date: str
+#     workers_ids: str
+#     subsidiarie_id: int
+#     days_of_week: str
+#     sundays: str
+
+
+# @app.post("/scale/validate")
+# def create_scale(scale: CreateScale):
+#     proihbited_days = ["2024-12-01", "2024-12-02"]
+
+#     workers_ids = eval(scale.workers_ids)
+
+#     for worker_id in workers_ids:
+#         for day in proihbited_days:
+#             with Session(engine) as session:
+#                 existing_scale = session.exec(
+#                     select(Scale).where(
+#                         Scale.date == day, Scale.workers_ids.contains(str(worker_id))
+#                     )
+#                 ).first()
+#                 if existing_scale:
+#                     return {
+#                         "error": f"O trabalhador {worker_id} já está escalado para o dia {day}."
+#                     }
+#     return {"success": "Nenhum trabalhador está escalado para os dias proibidos."}
+
+
+class ValidateWeekdaysScale(BaseModel):
+    date: str
+    workers_ids: str
+    subsidiarie_id: int
+    days_of_week: str
+    # sundays: str
+
+
+class ValidateSundaysScale(BaseModel):
+    date: str
+    workers_ids: str
+    subsidiarie_id: int
+    # days_of_week: str
+    sundays: str
+
+
+@app.post("/scale/validate/weekdays")
+def validate_weekdays(scale: ValidateWeekdaysScale):
+    workers_ids = eval(scale.workers_ids)
+
+    proihbited_weekdays = eval(scale.days_of_week)
+
+    is_valid_weekdays = is_valid_scale(workers_ids, proihbited_weekdays)
+
+    return is_valid_weekdays
+
+
+@app.post("/scale/validate/sundays")
+def validate_sundays(scale: ValidateSundaysScale):
+    workers_ids = eval(scale.workers_ids)
+
+    proihbited_sundays = eval(scale.sundays)
+
+    is_valid_sundays = is_valid_scale(workers_ids, proihbited_sundays)
+
+    return is_valid_sundays
+
+
+def get_week_scale(date: str):
+    data = datetime.strptime(date, "%Y-%m-%d")
+
+    dia_da_semana = data.weekday()
+
+    segunda_feira = data - timedelta(days=dia_da_semana)
+
+    domingo = data + timedelta(days=6 - dia_da_semana)
+
+    datas_da_semana = [segunda_feira + timedelta(days=i) for i in range(7)]
+
+    return [data.strftime("%Y-%m-%d") for data in datas_da_semana]
+
+
+@app.get("/scales")
+def get_all_scales():
+    with Session(engine) as session:
+        scales = session.exec(select(Scale)).all()
+    return scales
+
+
+@app.post("/scale/create")
+def scale_create(scale: Scale):
     with Session(engine) as session:
         session.add(scale)
         session.commit()
         session.refresh(scale)
     return scale
+
+
+# @app.post("/scale/create")
+# def scale_create(scale: Scale):
+#     workers_ids = [int(n) for n in scale.workers_ids.split(",")]
 
 
 class WorkersInArray(BaseModel):
@@ -541,3 +532,58 @@ def workers_in_array(arr: WorkersInArray):
             subsidiary = session.exec(statement).first()
         subsidiaries_array.append(subsidiary)
     return subsidiaries_array
+
+
+class PutWorker(BaseModel):
+    name: str
+    function_id: int
+    subsidiarie_id: int
+    is_active: bool
+    turn_id: int
+
+
+@app.put("/workers/{worker_id}")
+def update_worker(worker_id: int, worker_data: PutWorker):
+    with Session(engine) as session:
+        worker = session.exec(select(Workers).where(Workers.id == worker_id))
+        worker.name = worker_data.name
+        worker.function_id = worker_data.function_id
+        worker.subsidiarie_id = worker_data.subsidiarie_id
+        worker.turn_id = worker_data.turn_id
+
+
+@app.put("/workers/deactivate/{worker_id}")
+def deactivate_worker(worker_id: int):
+    with Session(engine) as session:
+        worker = session.get(Workers, worker_id)
+        if worker:
+            worker.is_active = False
+            session.commit()
+            session.refresh(worker)
+            new_job = session.get(Function, worker.function_id)
+            job = Jobs(
+                name=new_job.name,
+                description=new_job.description,
+                subsidiarie_id=worker.subsidiarie_id,
+            )
+            session.add(job)
+            session.commit()
+            session.refresh(job)
+            return job
+
+
+@app.delete("/scales/{date}/{worker_id}")
+def delete_scale(date: str, worker_id: int):
+    with Session(engine) as session:
+        scale = session.exec(
+            select(Scale).where(
+                Scale.workers_ids.contains(str(worker_id)),
+                Scale.date == date,
+            )
+        ).first()
+        if scale:
+            session.delete(scale)
+            session.commit()
+            return {"message": "Escala deletada com sucesso"}
+        else:
+            return {"message": "Escala não encontrada"}

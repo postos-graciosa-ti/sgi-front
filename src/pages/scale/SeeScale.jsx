@@ -4,6 +4,7 @@ import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 import Nav from "../../components/Nav"
 import api from '../../services/api'
+import { X } from 'react-bootstrap-icons'
 
 const SeeScale = () => {
   const firstDayOfMonth = moment().startOf('month').toDate()
@@ -36,11 +37,11 @@ const SeeScale = () => {
       .then((response) => {
         let scaleData = response.data
 
-        let test = `[${scaleData.workers_ids}]`
+        // let test = `[${scaleData.workers_ids}]`
 
         api
           .post("/workers-in-array", {
-            "arr": test
+            "arr": scaleData.workers_ids
           })
           .then((response) => setWorkers(response.data))
       })
@@ -61,6 +62,13 @@ const SeeScale = () => {
   const onChange = (newDate) => {
     setWorkers([])
     setSelectedDate(newDate)
+  }
+
+  const handleDeleteScale = (worker) => {
+    api
+      .delete(`/scales/${moment(selectedDate).format("YYYY-MM-DD")}/${worker.id}`)
+      .then((response) => console.log(response))
+      .catch((error) => console.error(error))
   }
 
   return (
@@ -97,6 +105,14 @@ const SeeScale = () => {
 
                   {workers && workers.map((worker) => (
                     <div>
+                      <button
+                        type="button"
+                        className="btn btn-danger me-2"
+                        onClick={() => handleDeleteScale(worker)}
+                      >
+                        <X />
+                      </button>
+
                       {worker.name}
                     </div>
                   ))}

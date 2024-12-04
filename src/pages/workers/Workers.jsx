@@ -20,13 +20,13 @@ const Workers = () => {
       .then((response) => setWorkersList(response.data))
   }, [])
 
-  // const handleUpdateWorker = () => {
+  const handleUpdateWorker = () => {
 
-  // }
+  }
 
   const handleDeleteWorker = (worker) => {
     api
-      .put(`/workers/${worker.id}`)
+      .put(`/workers/deactivate/${worker.id}`)
       .then((response) => {
         console.log(response)
 
@@ -73,12 +73,12 @@ const Workers = () => {
                   <td>{worker.function_id == 1 && "Frentista"}</td>
                   <td>{worker.is_active == true && "Sim" || "Não"}</td>
                   <td>
-                    {/* <button
+                    <button
                       className="btn btn-sm btn-primary me-2"
                       onClick={() => handleUpdateWorker(worker)}
                     >
                       Editar
-                    </button> */}
+                    </button>
 
                     <button
                       type="button"

@@ -8,3 +8,4 @@ class Scale(SQLModel, table=True):
     date: str = Field(index=True)
     workers_ids: str = Field(default="[]")
     subsidiarie_id: int = Field(default=None, foreign_key="subsidiarie.id")
+    agreed: bool = Field(default=False)

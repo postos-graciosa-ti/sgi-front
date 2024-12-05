@@ -12,6 +12,7 @@ import SeeScale from "./pages/scale/SeeScale.jsx"
 import Steps from "./pages/steps.jsx"
 import Users from "./pages/Users.jsx"
 import Workers from "./pages/workers/workers.jsx"
+import CandidateFirstInterview from "./pages/candidates/CandidateFirstInterview.jsx"
 
 const Routes = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -27,6 +28,7 @@ const Routes = createBrowserRouter([
   { path: "/workers", element: <Workers /> },
   { path: "/scale", element: <Scale /> },
   { path: "/see-scale", element: <SeeScale /> },
+  { path: "/candidate-first-interview", element: <CandidateFirstInterview /> },
 ])
 
 export default Routes

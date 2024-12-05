@@ -1,12 +1,18 @@
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
+import { Pen, QuestionCircle, X } from 'react-bootstrap-icons'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
+import { useNavigate } from 'react-router-dom'
 import Nav from "../../components/Nav"
+import refactorTomorrow from '../../functions/refactorTomorrow'
+import postGenerateDayOff from '../../requests/postGenerateDayOff.js'
 import api from '../../services/api'
-import { X } from 'react-bootstrap-icons'
+import AgreedModal from './AgreedModal.jsx'
 
 const SeeScale = () => {
+  const navigate = useNavigate()
+
   const firstDayOfMonth = moment().startOf('month').toDate()
 
   const lastDayOfMonth = moment().endOf('month').toDate()
@@ -22,13 +28,15 @@ const SeeScale = () => {
 
   const [workers, setWorkers] = useState()
 
+  const [agreedModalOpen, setAgreedModalOpen] = useState(false)
+
+  const [selectedWorker, setSelectedWorker] = useState()
+
+  const [selectedScale, setSelectedScale] = useState()
+
   useEffect(() => {
-    api
-      .post("/generate-day-off", timedata)
-      .then((response) => {
-        setSelectedDays(response.data.folgas_regulares)
-      })
-      .catch((error) => console.error(error))
+    postGenerateDayOff(timedata)
+      .then((response) => setSelectedDays(response.data.folgas_regulares))
   }, [])
 
   useEffect(() => {
@@ -37,13 +45,18 @@ const SeeScale = () => {
       .then((response) => {
         let scaleData = response.data
 
+        setSelectedScale(response.data)
+
         // let test = `[${scaleData.workers_ids}]`
 
         api
           .post("/workers-in-array", {
             "arr": scaleData.workers_ids
           })
-          .then((response) => setWorkers(response.data))
+          .then((response) => {
+            console.log(response.data)
+            setWorkers(response.data)
+          })
       })
       .catch((error) => console.error(error))
 
@@ -76,27 +89,46 @@ const SeeScale = () => {
       <Nav />
 
       <div className="container">
+        <div className='mb-3'>
+          <button
+            id="seeScale"
+            className="btn btn-primary"
+            onClick={() => navigate('/scale', { replace: true })}
+          >
+            Planejamento de folgas
+          </button>
+
+          <button
+            id="help"
+            className="btn btn-warning ms-2"
+            onClick={() => refactorTomorrow.drive()}
+          >
+            <QuestionCircle />
+          </button>
+        </div>
+
+        <div className="mb-3">
+          <h4>Escala de folgas</h4>
+          <span>Selecione uma data no calendário e verá ao lado os colaboradores que vão folgar nesse dia</span>
+        </div>
+
         <div className="row">
           <div className="col">
-            <div className="mb-2">
-              <b>
-                Selecione uma das datas destacadas
-              </b>
+            <div id="calendar">
+              <Calendar
+                onChange={onChange}
+                value={selectedDate}
+                tileClassName={tileClassName}
+                minDate={firstDayOfMonth}
+                maxDate={lastDayOfMonth}
+              />
             </div>
-
-            <Calendar
-              onChange={onChange}
-              value={selectedDate}
-              tileClassName={tileClassName}
-              minDate={firstDayOfMonth}
-              maxDate={lastDayOfMonth}
-            />
           </div>
 
           <div className="col">
             {
               selectedDate && (
-                <>
+                <div id="workers">
                   <div>
                     <b>
                       {moment(selectedDate).format("DD-MM-YYYY")}
@@ -104,7 +136,22 @@ const SeeScale = () => {
                   </div>
 
                   {workers && workers.map((worker) => (
-                    <div>
+                    <div key={worker.id}>
+                      {
+                        !worker.agreed ? (
+                          <button
+                            type="button"
+                            className="btn btn-warning me-2"
+                            onClick={() => {
+                              setSelectedWorker(worker)
+                              setAgreedModalOpen(true)
+                            }}
+                          >
+                            <Pen />
+                          </button>
+                        ) : ""
+                      }
+
                       <button
                         type="button"
                         className="btn btn-danger me-2"
@@ -116,11 +163,21 @@ const SeeScale = () => {
                       {worker.name}
                     </div>
                   ))}
-                </>
+                </div>
               )
             }
           </div>
         </div>
+
+        <AgreedModal
+          selectedScale={selectedScale}
+          selectedWorker={selectedWorker}
+          selectedDate={moment(selectedDate).format("YYYY-MM-DD")}
+          agreedModalOpen={agreedModalOpen}
+          setAgreedModalOpen={setAgreedModalOpen}
+          workers={workers}
+          setWorkers={setWorkers}
+        />
 
         <style>
           {`

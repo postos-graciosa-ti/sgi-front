@@ -5,8 +5,11 @@ import useUserSessionStore from "../../data/userSession"
 import getWorkersBySubsidiarie from "../../requests/getWorkersBySubsidiarie"
 import api from "../../services/api"
 import CreateWorkerModal from "./CreateWorkerModal"
+import SecurityPasswordModal from "./SecurityPasswordModal"
 
 const Workers = () => {
+  const userSession = useUserSessionStore(state => state.userSession)
+
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const [createWorkerModalOpen, setCreateWorkerModalOpen] = useState(false)
@@ -14,6 +17,10 @@ const Workers = () => {
   const setWorkersList = useUserSessionStore((state) => state.setWorkersList)
 
   const workersList = useUserSessionStore((state) => state.workersList)
+
+  const [securityPasswordModalOpen, setSecurityPasswordModalOpen] = useState(false)
+
+  const [selectedWorker, setSelectedWorker] = useState()
 
   useEffect(() => {
     getWorkersBySubsidiarie(selectedSubsdiarie.value)
@@ -42,6 +49,8 @@ const Workers = () => {
         }
       })
   }
+
+  console.log(userSession)
 
   return (
     <>
@@ -80,6 +89,21 @@ const Workers = () => {
                       Editar
                     </button>
 
+                    {
+                      userSession.role_id == 1 && (
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-secondary me-2"
+                          onClick={() => {
+                            setSelectedWorker(worker)
+                            setSecurityPasswordModalOpen(true)
+                          }}
+                        >
+                          Cadastrar senha de segurança
+                        </button>
+                      )
+                    }
+
                     <button
                       type="button"
                       className="btn btn-sm btn-danger"
@@ -98,6 +122,12 @@ const Workers = () => {
       <CreateWorkerModal
         createWorkerModalOpen={createWorkerModalOpen}
         setCreateWorkerModalOpen={setCreateWorkerModalOpen}
+      />
+
+      <SecurityPasswordModal
+        selectedWorker={selectedWorker}
+        securityPasswordModalOpen={securityPasswordModalOpen}
+        setSecurityPasswordModalOpen={setSecurityPasswordModalOpen}
       />
     </>
   )

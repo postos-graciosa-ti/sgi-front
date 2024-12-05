@@ -13,8 +13,13 @@ import postScaleCreate from "../../requests/postScaleCreate"
 import postValidateSundays from '../../requests/postValidateSundays'
 import postValidateWeekdays from '../../requests/postValidateWeekdays'
 import api from '../../services/api'
+import { useNavigate } from 'react-router-dom'
+import { QuestionCircle } from 'react-bootstrap-icons'
+import driverObj from "../../functions/driverObj"
 
 const Scale = () => {
+  const navigate = useNavigate()
+
   const firstDayOfMonth = moment().startOf('month').toDate()
 
   const lastDayOfMonth = moment().endOf('month').toDate()
@@ -70,8 +75,6 @@ const Scale = () => {
     setSelectedDate(newDate)
   }
 
-  const [test, setTest] = useState(true)
-
   const handleSubmitScale = (e) => {
     e.preventDefault()
 
@@ -86,17 +89,25 @@ const Scale = () => {
       "workers_ids": `[${workersIds}]`,
       "subsidiarie_id": selectedSubsdiarie.value,
       "days_of_week": weekdays,
-      "sundays": sundays
+      "sundays": sundays,
+      "agreed": false,
     }
 
     postValidateWeekdays(selectedDate, workersIds, selectedSubsdiarie, weekdays)
       .then((response) => {
         if (response.data.success == true) {
-          postValidateSundays(selectedDate, workersIds, selectedSubsdiarie, weekdays)
+          postValidateSundays(selectedDate, workersIds, selectedSubsdiarie, sundays)
             .then((response) => {
               if (response.data.success == true) {
                 postScaleCreate(formData)
-                  .then((response) => console.log(response))
+                  .then((response) => {
+                    console.log(response)
+                    Swal.fire({
+                      title: "Sucesso",
+                      text: "Planejamento de folgas cadastrado com sucesso",
+                      icon: "success"
+                    })
+                  })
               } else {
                 Swal.fire({
                   title: "Erro ao planejar folgas de domingo",
@@ -122,14 +133,29 @@ const Scale = () => {
       <Nav />
 
       <div className="container">
-        <div className="row">
-          <div className="col">
-            <div className="mb-2">
-              <b>
-                Selecione uma das datas destacadas
-              </b>
-            </div>
+        <button
+          id="seeScale"
+          className="btn btn-primary"
+          onClick={() => navigate('/see-scale', { replace: true })}
+        >
+          Ver escala de folgas
+        </button>
 
+        <button
+          id="help"
+          className="btn btn-warning ms-2"
+          onClick={() => driverObj.drive()}
+        >
+          <QuestionCircle />
+        </button>
+
+        <div className="mt-3 mb-3">
+          <h3>Planejamento de folgas</h3>
+          <span>Selecione uma data no calendário e os colaboradores que vão folgar nesse dia</span>
+        </div>
+
+        <div className="row">
+          <div className="col" id="calendar">
             <Calendar
               onChange={onChange}
               value={selectedDate}
@@ -142,7 +168,7 @@ const Scale = () => {
           <div className="col">
             {
               <form onSubmit={(e) => handleSubmitScale(e)}>
-                <div>
+                <div id="workers">
                   <b>
                     {selectedDate && moment(selectedDate.toDateString()).format("DD/MM/YYYY")}
                   </b>

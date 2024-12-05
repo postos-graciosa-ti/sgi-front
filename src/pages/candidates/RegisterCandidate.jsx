@@ -5,6 +5,7 @@ import useUserSessionStore from "../../data/userSession"
 import getJobs from "../../requests/getJobs"
 import api from "../../services/api"
 import MathCorrection from "./mathCorrection"
+import TeoryModal from "./TeoryModal"
 
 const RegisterCandidate = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -22,6 +23,8 @@ const RegisterCandidate = () => {
   const [selectedJob, setSelectedJob] = useState()
 
   const [mathModalOpen, setMathModalOpen] = useState(false)
+
+  const [teoryModalOpen, setTeoryModalOpen] = useState(false)
 
   useEffect(() => {
     getJobs(selectedSubsdiarie.value)
@@ -50,12 +53,15 @@ const RegisterCandidate = () => {
     }
 
     console.log(formData)
+    debugger
 
     api
       .post("/candidates", formData)
       .then((response) => console.log(response))
       .catch((error) => console.error(error))
   }
+
+  console.log(name)
 
   return (
     <>
@@ -114,7 +120,10 @@ const RegisterCandidate = () => {
               type="text"
               className="form-control mt-3"
               placeholder="Jessé Gomes da Silva Filho"
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                console.log(e.target.value)
+                setName(e.target.value)
+              }}
             />
           </div>
 
@@ -148,28 +157,35 @@ const RegisterCandidate = () => {
           </div>
 
           <div className="mb-3">
-            <button 
+            <button
               className="btn btn-sm btn-primary me-3"
               onClick={() => setMathModalOpen(true)}
             >
               Corrigir prova de matemática
             </button>
 
+            <button
+              className="btn btn-sm btn-primary me-3"
+              onClick={() => setMathModalOpen(true)}
+            >
+              Corrigir prova teórica
+            </button>
 
             <button type="submit" className="btn btn-sm btn-success">
               Cadastrar
             </button>
-
-            {/* <button type="reset" className="btn btn-light ms-2">
-              Limpar
-            </button> */}
           </div>
         </form>
       </div>
 
-      <MathCorrection 
+      <MathCorrection
         mathModalOpen={mathModalOpen}
         setMathModalOpen={setMathModalOpen}
+      />
+
+      <TeoryModal 
+        teoryModalOpen={teoryModalOpen}
+        setTeoryModalOpen={setTeoryModalOpen}
       />
     </>
   )

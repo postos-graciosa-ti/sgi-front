@@ -470,6 +470,13 @@ def validate_weekdays(scale: ValidateWeekdaysScale):
     return is_valid_weekdays
 
 
+@app.get("/candidates")
+def get_candidates():
+    with Session(engine) as session:
+        candidates = session.exec(select(Candidate)).all()
+    return candidates
+
+
 @app.post("/scale/validate/sundays")
 def validate_sundays(scale: ValidateSundaysScale):
     workers_ids = eval(scale.workers_ids)
@@ -520,6 +527,59 @@ class WorkersInArray(BaseModel):
     arr: str
 
 
+class PutWorkerSecurity(BaseModel):
+    security_password: str
+
+
+class ScaleAgreed(BaseModel):
+    user_id: int
+    security_password: str
+    # scale_date: str
+
+
+# @app.post("/scales/agreed")
+# def agreed_scales(data: ScaleAgreed):
+#     with Session(engine) as session:
+#         user = session.exec(select(User).where)
+
+
+@app.put("/workers/{id}/security-password")
+def put_worker_security_password(id: int, workerData: PutWorkerSecurity):
+    with Session(engine) as session:
+        worker = session.exec(select(Workers).where(Workers.id == id))
+
+        worker.security_password = pbkdf2_sha256.hash(workerData.security_password)
+
+        # session.commit()
+
+        # session.refresh(worker)
+    return worker
+
+
+class Validate(BaseModel):
+    security_password: str
+
+
+@app.post("/workers/{id}/security-password/validate")
+def post_security_password(id: int, data: Validate):
+    with Session(engine) as session:
+        worker = session.exec(select(Workers).where(Workers.id == id))
+
+        # return worker
+
+        if pbkdf2_sha256.verify(worker.security_password, data.security_password):
+            return True
+        else:
+            return False
+
+
+@app.get("/workers")
+def get_workers():
+    with Session(engine) as session:
+        workers = session.exec(select(Workers))
+    return workers
+
+
 @app.post("/workers-in-array")
 def workers_in_array(arr: WorkersInArray):
     user_subsidiaries = eval(arr.arr)
@@ -550,6 +610,29 @@ def update_worker(worker_id: int, worker_data: PutWorker):
         worker.function_id = worker_data.function_id
         worker.subsidiarie_id = worker_data.subsidiarie_id
         worker.turn_id = worker_data.turn_id
+
+
+@app.post("/scales/{id}")
+def scales_sla(id: int):
+    with Session(engine) as session:
+        scale = session.exec(select(Scale).where(Scale.id == id)).first()
+
+        if not scale:
+            raise HTTPException(status_code=404, detail="Scale not found")
+
+        scale.agreed = True
+
+        session.add(scale)
+
+        session.commit()
+
+        session.refresh(scale)
+
+        selected_scale = session.exec(select(Scale).where(Scale.id == id)).first()
+
+        all_scales = session.exec(select(Scale))
+
+        return {"scale": selected_scale, "all_scales": all_scales}
 
 
 @app.put("/workers/deactivate/{worker_id}")

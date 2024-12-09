@@ -1,5 +1,6 @@
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
+import { Printer } from 'react-bootstrap-icons'
 import 'react-calendar/dist/Calendar.css'
 import ReactSelect from "react-select"
 import Swal from 'sweetalert2'
@@ -24,6 +25,14 @@ const SeeScale = () => {
 
   const [rowsToUpdate, setRowsToUpdate] = useState([])
 
+  const todayMoment = moment();
+
+  const startOfWeek = todayMoment.clone().startOf('week').format('YYYY-MM-DD');
+
+  const endOfWeek = todayMoment.clone().endOf('week').format('YYYY-MM-DD');
+
+  console.log(startOfWeek, endOfWeek)
+
   useEffect(() => {
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
@@ -36,7 +45,17 @@ const SeeScale = () => {
             let hasCurrentMonthScale = scales.some((scale) => moment(scale.date).isSame(today, 'month'))
 
             if (hasCurrentMonthScale) {
-              setScales(response.data)
+              let weekScales = scales.filter((scale) => {
+                const scaleDate = new Date(scale.date)
+                
+                const start = new Date(startOfWeek)
+                
+                const end = new Date(endOfWeek)
+                
+                return scaleDate >= start && scaleDate <= end
+              })
+              
+              setScales(weekScales);
             } else {
               handleGenerateScale()
                 .then(() => {
@@ -107,12 +126,40 @@ const SeeScale = () => {
 
   // console.log(rowsToUpdate)
 
+  // const [initDate, setInitDate] = useState()
+
+  // const [finalDate, setFinalDate] = useState()
+
+  // useEffect(() => {
+  //   const filterScales = scales.filter((scale) => {
+  //     const scaleDate = moment(scale)
+
+  //     return scaleDate.isSameOrAfter(moment(initDate), 'day') && scaleDate.isSameOrBefore(moment(finalDate), 'day')
+  //   })
+
+  //   setScales(filterScales)
+  // }, [initDate, finalDate, scales])
+
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current,
+  // })
+
+  const handlePrint = () => {
+    window.print()
+  }
+
   return (
     <>
       <Nav />
 
       <div className="container">
-        <div className="row mb-3">
+        <div>
+          <button onClick={handlePrint} className="btn btn-light justify-content-end">
+            <Printer />
+          </button>
+        </div>
+
+        <div className="row mt-3 mb-3">
           <div className="col">
             <h4>
               <b>
@@ -134,6 +181,26 @@ const SeeScale = () => {
             }
           </div>
         </div>
+
+        {/* <div className="row mt-3 mb-3">
+          <div className="col">
+            <input
+              type="date"
+              className="form-control"
+              placeholder="Data inicial"
+              onChange={(e) => setInitDate(e.target.value)}
+            />
+          </div>
+
+          <div className="col">
+            <input
+              type="date"
+              className="form-control"
+              placeholder="Data final"
+              onChange={(e) => setFinalDate(e.target.value)}
+            />
+          </div>
+        </div> */}
 
         {
           scales && scales.map((scale) => (

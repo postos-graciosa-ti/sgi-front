@@ -1,7 +1,8 @@
 import { createBrowserRouter } from "react-router-dom"
 import App from './App.jsx'
 import AllJobs from "./pages/candidates/AllJobs.jsx"
-import Candidates from "./pages/candidates/candidates.jsx"
+import CandidateFirstInterview from "./pages/candidates/CandidateFirstInterview.jsx"
+import Candidates from "./pages/candidates/Candidates.jsx"
 import FirstInterview from "./pages/candidates/FirstInterview.jsx"
 import Jobs from "./pages/candidates/Jobs.jsx"
 import RegisterCandidate from "./pages/candidates/RegisterCandidate.jsx"
@@ -9,10 +10,9 @@ import FirstAcess from "./pages/FirstAcess.jsx"
 import Home from "./pages/Home.jsx"
 import Scale from "./pages/scale/Scale.jsx"
 import SeeScale from "./pages/scale/SeeScale.jsx"
-import Steps from "./pages/steps.jsx"
+import Steps from "./pages/Steps.jsx"
 import Users from "./pages/Users.jsx"
 import Workers from "./pages/workers/workers.jsx"
-import CandidateFirstInterview from "./pages/candidates/CandidateFirstInterview.jsx"
 
 const Routes = createBrowserRouter([
   { path: "/", element: <App /> },

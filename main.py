@@ -1,6 +1,7 @@
+import calendar
 import os
 import uuid
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, HTTPException, UploadFile
@@ -33,6 +34,8 @@ from seeds.seed_all import (
     seed_users,
 )
 from services.firebase import initialize_firebase
+from typing import Any, List
+import json
 
 load_dotenv()
 
@@ -509,12 +512,13 @@ def get_all_scales():
     return scales
 
 
-@app.post("/scale/create")
-def scale_create(scale: Scale):
+@app.post("/scale")
+def scale_create(scale: List[Scale]):
     with Session(engine) as session:
-        session.add(scale)
+        session.add_all(scale)
         session.commit()
-        session.refresh(scale)
+        for item in scale:
+            session.refresh(item)
     return scale
 
 
@@ -560,23 +564,65 @@ class Validate(BaseModel):
     security_password: str
 
 
-@app.post("/workers/{id}/security-password/validate")
-def post_security_password(id: int, data: Validate):
+# @app.post("/workers/{id}/security-password/validate")
+# def post_security_password(id: int, data: Validate):
+#     with Session(engine) as session:
+#         worker = session.exec(select(Workers).where(Workers.id == id))
+
+#         # return worker
+
+#         if pbkdf2_sha256.verify(worker.security_password, data.security_password):
+#             return True
+#         else:
+#             return False
+
+
+class Test(BaseModel):
+    id: int
+    date: str
+    subsidiarie_id: int
+    workers: List
+
+
+@app.get("/scales/subsidiarie/{id}")
+def get_scales_by_subsidiarie(id: int) -> Any:
+    # with Session(engine) as session:
+    #     scales = session.exec(select(Scale).where(Scale.subsidiarie_id == id)).all()
+
+    #     for scale in scales:
+    #         print(scale)
+
+    #         print(json.loads(scale.workers))
+
+    #         scale.workers = json.loads(scale.workers)
+
+    #     return scales
+
     with Session(engine) as session:
-        worker = session.exec(select(Workers).where(Workers.id == id))
+        scales = session.exec(
+            select(Scale).where(Scale.subsidiarie_id == id)
+        ).fetchall()
 
-        # return worker
+        if not scales:
+            raise HTTPException(
+                status_code=404, detail="No scales found for the given subsidiary ID."
+            )
 
-        if pbkdf2_sha256.verify(worker.security_password, data.security_password):
-            return True
-        else:
-            return False
+        for scale in scales:
+            try:
+                scale.workers = json.loads(scale.workers)
+            except json.JSONDecodeError:
+                raise HTTPException(
+                    status_code=500, detail="Invalid JSON in 'workers' field."
+                )
+
+        return scales
 
 
 @app.get("/workers")
 def get_workers():
     with Session(engine) as session:
-        workers = session.exec(select(Workers))
+        workers = session.exec(select(Workers)).all()
     return workers
 
 
@@ -630,9 +676,7 @@ def scales_sla(id: int):
 
         selected_scale = session.exec(select(Scale).where(Scale.id == id)).first()
 
-        all_scales = session.exec(select(Scale))
-
-        return {"scale": selected_scale, "all_scales": all_scales}
+        return selected_scale
 
 
 @app.put("/workers/deactivate/{worker_id}")
@@ -670,3 +714,61 @@ def delete_scale(date: str, worker_id: int):
             return {"message": "Escala deletada com sucesso"}
         else:
             return {"message": "Escala não encontrada"}
+
+
+@app.put("/scales/{id}")
+def put_scales(
+    id: int, rows: list
+):  
+    for row in rows:
+        with Session(engine) as session:
+            db_row = session.exec(select(Scale).where(Scale.id == row.scale_id)).first()
+
+            if db_row:  
+                db_row_workers = json.loads(db_row.workers)
+
+                for worker in db_row_workers:
+                    worker.status = row.status
+
+                print(db_row)
+            else:
+                print(f"Scale with id {row.scale_id} not found.")
+
+
+class Shift(BaseModel):
+    scale_id: int
+    worker_id: int
+    status: str
+
+
+@app.post("/shifts/")
+def create_shifts(shifts: List[Shift]):
+    for shift in shifts:
+        print(f"Processing shift: {shift}")
+
+        with Session(engine) as session:
+            db_row = session.exec(
+                select(Scale).where(Scale.id == shift.scale_id)
+            ).first()
+
+            if db_row:
+                print(f"Found scale: {db_row}")
+
+                workers = json.loads(db_row.workers)
+
+                print(f"Workers before update: {workers}")
+
+                for worker in workers:
+                    if worker["id"] == shift.worker_id:
+                        worker["status"] = shift.status
+                        print(f"Updated worker: {worker}")
+
+                db_row.workers = json.dumps(workers)
+
+                session.add(db_row)
+                
+                session.commit()
+
+                print(f"Updated workers saved in database: {workers}")
+
+    return {"message": "Shifts updated successfully"}

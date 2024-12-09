@@ -8,4 +8,4 @@ class Workers(SQLModel, table=True):
     subsidiarie_id: int = Field(default=None, foreign_key="subsidiarie.id")
     is_active: bool = Field(default=True)
     turn_id: int = Field(default=None, foreign_key="turn.id")
-    security_password: str | None = Field(default=None, nullable=True)
+    # security_password: str | None = Field(default=None, nullable=True)

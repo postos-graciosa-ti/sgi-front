@@ -1,193 +1,189 @@
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
-import { Pen, QuestionCircle, X } from 'react-bootstrap-icons'
-import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
-import { useNavigate } from 'react-router-dom'
+import ReactSelect from "react-select"
+import Swal from 'sweetalert2'
 import Nav from "../../components/Nav"
-import refactorTomorrow from '../../functions/refactorTomorrow'
-import postGenerateDayOff from '../../requests/postGenerateDayOff.js'
+import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
-import AgreedModal from './AgreedModal.jsx'
 
 const SeeScale = () => {
-  const navigate = useNavigate()
+  const today = new Date();
 
-  const firstDayOfMonth = moment().startOf('month').toDate()
+  const currentMonth = today.getMonth()
 
-  const lastDayOfMonth = moment().endOf('month').toDate()
+  const currentYear = today.getFullYear()
 
-  let timedata = {
-    "month": moment().month() + 1,
-    "year": moment().year()
-  }
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
 
-  const [selectedDays, setSelectedDays] = useState([])
+  const [scales, setScales] = useState()
 
-  const [selectedDate, setSelectedDate] = useState(null)
+  const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
-  const [workers, setWorkers] = useState()
+  const [seeButton, setSeeButton] = useState(false)
 
-  const [agreedModalOpen, setAgreedModalOpen] = useState(false)
-
-  const [selectedWorker, setSelectedWorker] = useState()
-
-  const [selectedScale, setSelectedScale] = useState()
-
-  useEffect(() => {
-    postGenerateDayOff(timedata)
-      .then((response) => setSelectedDays(response.data.folgas_regulares))
-  }, [])
+  const [rowsToUpdate, setRowsToUpdate] = useState([])
 
   useEffect(() => {
     api
-      .get(`/scale/${moment(selectedDate).format("YYYY-MM-DD")}`)
-      .then((response) => {
-        let scaleData = response.data
-
-        setSelectedScale(response.data)
-
-        // let test = `[${scaleData.workers_ids}]`
-
+      .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
+      .then(() => {
         api
-          .post("/workers-in-array", {
-            "arr": scaleData.workers_ids
-          })
+          .get(`/scales/subsidiarie/${selectedSubsdiarie.value}`)
           .then((response) => {
-            console.log(response.data)
-            setWorkers(response.data)
+            let scales = response.data
+
+            let hasCurrentMonthScale = scales.some((scale) => moment(scale.date).isSame(today, 'month'))
+
+            if (hasCurrentMonthScale) {
+              setScales(response.data)
+            } else {
+              handleGenerateScale()
+                .then(() => {
+                  api
+                    .get(`/scales/subsidiarie/${selectedSubsdiarie.value}`)
+                    .then((response) => setScales(response.data))
+                })
+            }
+          })
+          .catch(() => {
+            handleGenerateScale()
+              .then(() => {
+                api
+                  .get(`/scales/subsidiarie/${selectedSubsdiarie.value}`)
+                  .then((response) => setScales(response.data))
+              })
           })
       })
-      .catch((error) => console.error(error))
+      .catch(() => {
+        return Swal.fire({
+          "title": "Erro",
+          "text": "Não foi possível gerar escala pois não há trabalhadores cadastrados",
+          "icon": "error"
+        })
+      })
 
-  }, [selectedDate])
+  }, [])
 
-  const tileClassName = ({ date, view }) => {
-    if (view === 'month') {
-      const day = date.getDate()
-
-      return selectedDays.includes(day) ? 'highlight' : null
-    }
-
-    return null
-  }
-
-  const onChange = (newDate) => {
-    setWorkers([])
-    setSelectedDate(newDate)
-  }
-
-  const handleDeleteScale = (worker) => {
+  const handleGenerateScale = () => {
     api
-      .delete(`/scales/${moment(selectedDate).format("YYYY-MM-DD")}/${worker.id}`)
+      .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
+      .then((response) => {
+        const workersData = response.data
+
+        const workers = []
+
+        workersData && workersData.map((worker) => {
+          workers.push({
+            "id": worker.id,
+            "name": worker.name,
+            "status": "trabalhando",
+          })
+        })
+
+        const scales = []
+
+        for (let day = 1; day <= daysInMonth; day++) {
+          scales.push({
+            "date": moment(new Date(currentYear, currentMonth, day)).format("YYYY-MM-DD"),
+            "subsidiarie_id": selectedSubsdiarie.value,
+            "workers": JSON.stringify(workers)
+          })
+        }
+
+        api
+          .post(`/scale`, scales)
+          .then((response) => console.log(response.data))
+          .catch((error) => console.error(error))
+      })
+  }
+
+  const handleUpdateRows = () => {
+    api
+      .post("/shifts/", rowsToUpdate)
       .then((response) => console.log(response))
       .catch((error) => console.error(error))
   }
+
+  // console.log(rowsToUpdate)
 
   return (
     <>
       <Nav />
 
       <div className="container">
-        <div className='mb-3'>
-          <button
-            id="seeScale"
-            className="btn btn-primary"
-            onClick={() => navigate('/scale', { replace: true })}
-          >
-            Planejamento de folgas
-          </button>
-
-          <button
-            id="help"
-            className="btn btn-warning ms-2"
-            onClick={() => refactorTomorrow.drive()}
-          >
-            <QuestionCircle />
-          </button>
-        </div>
-
-        <div className="mb-3">
-          <h4>Escala de folgas</h4>
-          <span>Selecione uma data no calendário e verá ao lado os colaboradores que vão folgar nesse dia</span>
-        </div>
-
-        <div className="row">
+        <div className="row mb-3">
           <div className="col">
-            <div id="calendar">
-              <Calendar
-                onChange={onChange}
-                value={selectedDate}
-                tileClassName={tileClassName}
-                minDate={firstDayOfMonth}
-                maxDate={lastDayOfMonth}
-              />
-            </div>
+            <h4>
+              <b>
+                Planejamento de folgas
+              </b>
+            </h4>
           </div>
 
-          <div className="col">
+          <div className="col text-end">
             {
-              selectedDate && (
-                <div id="workers">
-                  <div>
-                    <b>
-                      {moment(selectedDate).format("DD-MM-YYYY")}
-                    </b>
-                  </div>
-
-                  {workers && workers.map((worker) => (
-                    <div key={worker.id}>
-                      {
-                        !worker.agreed ? (
-                          <button
-                            type="button"
-                            className="btn btn-warning me-2"
-                            onClick={() => {
-                              setSelectedWorker(worker)
-                              setAgreedModalOpen(true)
-                            }}
-                          >
-                            <Pen />
-                          </button>
-                        ) : ""
-                      }
-
-                      <button
-                        type="button"
-                        className="btn btn-danger me-2"
-                        onClick={() => handleDeleteScale(worker)}
-                      >
-                        <X />
-                      </button>
-
-                      {worker.name}
-                    </div>
-                  ))}
-                </div>
+              seeButton && (
+                <button
+                  className="btn btn-success"
+                  onClick={(e) => handleUpdateRows(e)}
+                >
+                  Salvar
+                </button>
               )
             }
           </div>
         </div>
 
-        <AgreedModal
-          selectedScale={selectedScale}
-          selectedWorker={selectedWorker}
-          selectedDate={moment(selectedDate).format("YYYY-MM-DD")}
-          agreedModalOpen={agreedModalOpen}
-          setAgreedModalOpen={setAgreedModalOpen}
-          workers={workers}
-          setWorkers={setWorkers}
-        />
+        {
+          scales && scales.map((scale) => (
+            <div className='card mb-3 p-2' key={scale.date}>
+              <p>
+                <b>
+                  {scale.date}
+                </b>
+              </p>
 
-        <style>
-          {`
-          .highlight {
-            background-color: #ffff76;
-            color: grey;
-            // border-radius: 50%;
-          }
-        `}
-        </style>
+              {scale.workers && scale.workers.map((worker) => (
+                <>
+                  <div className="row">
+                    <div className="col">
+                      {worker.name}
+                    </div>
+
+                    <div className="col">
+                      <ReactSelect
+                        className="mb-1"
+                        defaultValue={{ label: worker.status, value: worker.status }}
+                        options={[
+                          { label: "folgando", value: "folgando" },
+                          { label: "trabalhando", value: "trabalhando" }
+                        ]}
+                        onChange={(e) => {
+                          setSeeButton(true)
+                          setRowsToUpdate((prevState) => {
+                            return (
+                              prevState ? [...prevState, {
+                                "scale_id": scale.id,
+                                "worker_id": worker.id,
+                                "status": e.value
+                              }]
+                                :
+                                [{
+                                  "scale_id": scale.id,
+                                  "worker_id": worker.id,
+                                  "status": e.value
+                                }]
+                            )
+                          })
+                        }}
+                      />
+                    </div>
+                  </div>
+                </>
+              ))}
+            </div>
+          ))}
       </div>
     </>
   )

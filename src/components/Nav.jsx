@@ -60,13 +60,7 @@ const Nav = () => {
 
                   <li>
                     <Link className="dropdown-item" to="/scale">
-                      Planejar escala de folgas
-                    </Link>
-                  </li>
-
-                  <li>
-                    <Link className="dropdown-item" to="/see-scale">
-                      Escala de folgas
+                      Planejamento de folgas
                     </Link>
                   </li>
                 </ul>

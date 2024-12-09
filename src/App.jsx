@@ -28,13 +28,12 @@ function App() {
 
         navigate('/steps', { replace: true })
       })
-      .catch((error) => console.error(error))
   }
 
   return (
     <>
 
-      <div className="d-grid w-100" style={{ height: '100vh', placeItems: 'center' }}>
+      <div className="container mt-3">
         <form onSubmit={(e) => handleLogin(e)}>
           <h1 className="mb-4">Entrar</h1>
 
@@ -51,17 +50,17 @@ function App() {
             <input
               type="password"
               className="form-control"
-              placeholder="E-mail"
+              placeholder="Senha"
               onChange={(e) => setPassword(e.target.value)}
             />
-
-            <Link to="/first-access" className="mt-2">
-              Seu primeiro acesso?
-            </Link>
           </div>
 
-          <div className="mb-3">
-            <button type="submit" className="btn btn-success">
+          <div className="mb-3 text-end">
+            <Link to="/first-access" className="btn btn-primary">
+              Primeiro acesso
+            </Link>
+
+            <button type="submit" className="btn btn-success ms-2">
               Entrar
             </button>
           </div>

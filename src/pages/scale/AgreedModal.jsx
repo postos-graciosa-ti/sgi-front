@@ -9,6 +9,7 @@ const AgreedModal = (props) => {
     selectedScale,
     selectedWorker,
     selectedDate,
+    setSelectedDate,
     agreedModalOpen,
     setAgreedModalOpen,
     workers,
@@ -36,8 +37,7 @@ const AgreedModal = (props) => {
           api
             .post(`/scales/${selectedScale.id}`)
             .then((response) => {
-              setWorkers(response.data.all_scales)
-              setAgreedModalOpen(false)
+              setSelectedDate(selectedDate)
             })
         }
       })

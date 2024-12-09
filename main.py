@@ -717,14 +717,12 @@ def delete_scale(date: str, worker_id: int):
 
 
 @app.put("/scales/{id}")
-def put_scales(
-    id: int, rows: list
-):  
+def put_scales(id: int, rows: list):
     for row in rows:
         with Session(engine) as session:
             db_row = session.exec(select(Scale).where(Scale.id == row.scale_id)).first()
 
-            if db_row:  
+            if db_row:
                 db_row_workers = json.loads(db_row.workers)
 
                 for worker in db_row_workers:
@@ -766,7 +764,7 @@ def create_shifts(shifts: List[Shift]):
                 db_row.workers = json.dumps(workers)
 
                 session.add(db_row)
-                
+
                 session.commit()
 
                 print(f"Updated workers saved in database: {workers}")

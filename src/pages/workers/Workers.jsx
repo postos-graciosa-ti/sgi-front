@@ -89,7 +89,7 @@ const Workers = () => {
                       Editar
                     </button>
 
-                    {
+                    {/* {
                       userSession.role_id == 1 && (
                         <button
                           type="button"
@@ -102,7 +102,7 @@ const Workers = () => {
                           Cadastrar senha de segurança
                         </button>
                       )
-                    }
+                    } */}
 
                     <button
                       type="button"

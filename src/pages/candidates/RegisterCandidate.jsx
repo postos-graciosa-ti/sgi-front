@@ -4,8 +4,8 @@ import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import getJobs from "../../requests/getJobs"
 import api from "../../services/api"
-import MathCorrection from "./mathCorrection"
 import TeoryModal from "./TeoryModal"
+import MathCorrection from "./MathCorrection"
 
 const RegisterCandidate = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)

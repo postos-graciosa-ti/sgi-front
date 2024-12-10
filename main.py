@@ -1,7 +1,9 @@
 import calendar
+import json
 import os
 import uuid
 from datetime import date, datetime, timedelta
+from typing import Any, List
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, HTTPException, UploadFile
@@ -10,6 +12,11 @@ from passlib.hash import pbkdf2_sha256
 from pydantic import BaseModel
 from sqlmodel import Session, select, text
 
+from controllers.scales_controller import (
+    handle_get_scales_history,
+    handle_get_week_scale,
+)
+from controllers.subsidiaries import handle_get_subsidiaries, handle_post_subsidiaries, handle_put_subsidiarie, handle_delete_subsidiarie
 from database.sqlite import create_db_and_tables, engine
 from functions.scale import is_valid_scale
 from middlewares.cors_middleware import add_cors_middleware
@@ -25,6 +32,7 @@ from models.turn import Turn
 from models.user import User
 from models.user_subsidiaries import user_subsidiaries
 from models.workers import Workers
+from pyhints.scales import WeekScale
 from seeds.seed_all import (
     seed_candidate_status,
     seed_database,
@@ -34,8 +42,6 @@ from seeds.seed_all import (
     seed_users,
 )
 from services.firebase import initialize_firebase
-from typing import Any, List
-import json
 
 load_dotenv()
 
@@ -56,6 +62,42 @@ def on_startup():
 def docs():
     return {"docs": "acess /docs", "redocs": "access /redocs"}
 
+
+# default standart get, get by id, post, put, delete
+
+# scale routes
+
+@app.get("/scales/history/subsidiarie/{subsidiarie_id}")
+def get_scales_history(subsidiarie_id: int):
+    return handle_get_scales_history(subsidiarie_id)
+
+# xx
+
+# subsidiaries routes
+
+@app.get("/subsidiaries")
+def get_subsidiaries():
+    return handle_get_subsidiaries()
+
+@app.post("/subsidiaries")
+def post_subsidiaries(formData: Subsidiarie):
+    return handle_post_subsidiaries(formData)
+
+class PutSubsidiarie(BaseModel):
+    name: str
+    adress: str
+    phone: str
+    email: str
+
+@app.put("/subsidiaries/{id}")
+def put_subsidiaries(id: int, formData: PutSubsidiarie):
+    return handle_put_subsidiarie(id, formData)
+
+@app.delete("/subsidiaries/{id}")
+def delete_subsidiaries(id: int):
+    return handle_delete_subsidiarie(id)
+
+# xx
 
 @app.post("/default_scale")
 def create_default_scale(default_scale: DefaultScale):
@@ -258,13 +300,6 @@ def get_users_roles():
         ]
 
         return users
-
-
-@app.get("/subsidiaries")
-def get_subsidiaries():
-    with Session(engine) as session:
-        subsidiaries = session.exec(select(Subsidiarie)).all()
-    return subsidiaries
 
 
 @app.get("/users/{user_id}")

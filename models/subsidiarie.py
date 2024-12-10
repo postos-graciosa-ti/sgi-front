@@ -6,3 +6,4 @@ class Subsidiarie(SQLModel, table=True):
     adress: str = Field(index=True)
     phone: str = Field(index=True)
     email: str = Field(index=True)
+    

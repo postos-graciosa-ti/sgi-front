@@ -7,3 +7,4 @@
 /.env
 /seeds/__pycache__
 /database.db
+/pyhints/__pycache__

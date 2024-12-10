@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
-import useUserSessionStore from '../data/userSession'
-import getRoles from '../requests/getRoles'
-import getUsers from '../requests/getUsers'
-import putUser from '../requests/putUser'
+import useUserSessionStore from '../../data/userSession'
+import getRoles from '../../requests/getRoles'
+import getUsers from '../../requests/getUsers'
+import putUser from '../../requests/putUser'
 
 const UpdateUserModal = (props) => {
   const {
@@ -42,7 +42,7 @@ const UpdateUserModal = (props) => {
 
   const handleUpdateUser = (e) => {
     e.preventDefault()
-    
+
     let formData = {
       "name": name,
       "email": email,
@@ -132,12 +132,12 @@ const UpdateUserModal = (props) => {
           </Modal.Body>
 
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setOpenUpdateUserModal(false)}>
+            <Button variant="light" onClick={() => setOpenUpdateUserModal(false)}>
               Fechar
             </Button>
 
-            <Button type="submit" variant="primary" onClick={() => handleUpdateUser()}>
-              Confirmar
+            <Button type="submit" variant="success" onClick={() => handleUpdateUser()}>
+              Editar
             </Button>
           </Modal.Footer>
         </form>

@@ -1,11 +1,13 @@
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
-import { Printer } from 'react-bootstrap-icons'
+import { Printer, Question } from 'react-bootstrap-icons'
 import 'react-calendar/dist/Calendar.css'
+import { Link } from 'react-router-dom'
 import ReactSelect from "react-select"
 import Swal from 'sweetalert2'
 import Nav from "../../components/Nav"
 import useUserSessionStore from '../../data/userSession'
+import driverObj from "../../functions/driverObj"
 import api from '../../services/api'
 
 const SeeScale = () => {
@@ -31,7 +33,7 @@ const SeeScale = () => {
 
   const endOfWeek = todayMoment.clone().endOf('week').format('YYYY-MM-DD');
 
-  console.log(startOfWeek, endOfWeek)
+  // console.log(startOfWeek, endOfWeek)
 
   useEffect(() => {
     api
@@ -47,14 +49,14 @@ const SeeScale = () => {
             if (hasCurrentMonthScale) {
               let weekScales = scales.filter((scale) => {
                 const scaleDate = new Date(scale.date)
-                
+
                 const start = new Date(startOfWeek)
-                
+
                 const end = new Date(endOfWeek)
-                
+
                 return scaleDate >= start && scaleDate <= end
               })
-              
+
               setScales(weekScales);
             } else {
               handleGenerateScale()
@@ -120,32 +122,20 @@ const SeeScale = () => {
   const handleUpdateRows = () => {
     api
       .post("/shifts/", rowsToUpdate)
-      .then((response) => console.log(response))
+      .then((response) => {
+        console.log(response)
+
+        setSeeButton(false)
+      })
       .catch((error) => console.error(error))
   }
 
-  // console.log(rowsToUpdate)
-
-  // const [initDate, setInitDate] = useState()
-
-  // const [finalDate, setFinalDate] = useState()
-
-  // useEffect(() => {
-  //   const filterScales = scales.filter((scale) => {
-  //     const scaleDate = moment(scale)
-
-  //     return scaleDate.isSameOrAfter(moment(initDate), 'day') && scaleDate.isSameOrBefore(moment(finalDate), 'day')
-  //   })
-
-  //   setScales(filterScales)
-  // }, [initDate, finalDate, scales])
-
-  // const handlePrint = useReactToPrint({
-  //   content: () => componentRef.current,
-  // })
-
   const handlePrint = () => {
     window.print()
+  }
+
+  const handleDriveObj = () => {
+    driverObj.drive()
   }
 
   return (
@@ -154,16 +144,28 @@ const SeeScale = () => {
 
       <div className="container">
         <div>
-          <button onClick={handlePrint} className="btn btn-light justify-content-end">
+          <button 
+          id="help"
+          className="btn btn-warning me-2"
+          onClick={handleDriveObj}
+          >
+            <Question />
+          </button>
+          
+          <button id="printer" onClick={handlePrint} className="btn btn-light">
             <Printer />
           </button>
+
+          <Link to="/scale-history" id="scaleHistory" className="btn btn-primary ms-2">
+            Histórico de escalas
+          </Link>
         </div>
 
         <div className="row mt-3 mb-3">
           <div className="col">
             <h4>
               <b>
-                Planejamento de folgas
+                Planejamento de escala semanal
               </b>
             </h4>
           </div>
@@ -172,6 +174,7 @@ const SeeScale = () => {
             {
               seeButton && (
                 <button
+                  id="save"
                   className="btn btn-success"
                   onClick={(e) => handleUpdateRows(e)}
                 >
@@ -182,29 +185,9 @@ const SeeScale = () => {
           </div>
         </div>
 
-        {/* <div className="row mt-3 mb-3">
-          <div className="col">
-            <input
-              type="date"
-              className="form-control"
-              placeholder="Data inicial"
-              onChange={(e) => setInitDate(e.target.value)}
-            />
-          </div>
-
-          <div className="col">
-            <input
-              type="date"
-              className="form-control"
-              placeholder="Data final"
-              onChange={(e) => setFinalDate(e.target.value)}
-            />
-          </div>
-        </div> */}
-
         {
           scales && scales.map((scale) => (
-            <div className='card mb-3 p-2' key={scale.date}>
+            <div id="weekScale" className='card mb-3 p-2' key={scale.date}>
               <p>
                 <b>
                   {scale.date}
@@ -213,7 +196,7 @@ const SeeScale = () => {
 
               {scale.workers && scale.workers.map((worker) => (
                 <>
-                  <div className="row">
+                  <div key={worker.id} className="row">
                     <div className="col">
                       {worker.name}
                     </div>
@@ -252,6 +235,7 @@ const SeeScale = () => {
             </div>
           ))}
       </div>
+      
     </>
   )
 }

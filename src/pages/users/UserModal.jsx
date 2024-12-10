@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
-import useUserSessionStore from '../data/userSession'
-import getRoles from '../requests/getRoles'
-import getSubsidiaries from '../requests/getSubsidiaries'
-import getUsers from '../requests/getUsers'
-import postUser from '../requests/postUser'
+import useUserSessionStore from '../../data/userSession'
+import getRoles from '../../requests/getRoles'
+import getSubsidiaries from '../../requests/getSubsidiaries'
+import getUsers from '../../requests/getUsers'
+import postUser from '../../requests/postUser'
 
 const UserModal = (props) => {
   const {
@@ -155,7 +155,7 @@ const UserModal = (props) => {
 
           <Modal.Footer>
             <Button
-              variant="secondary"
+              variant="light"
               onClick={() => {
                 setModalOpen(false)
                 setSelectAllSubsidiaries(false)
@@ -164,8 +164,8 @@ const UserModal = (props) => {
               Fechar
             </Button>
 
-            <Button type="submit" variant="primary">
-              Confirmar
+            <Button type="submit" variant="success">
+              Criar
             </Button>
           </Modal.Footer>
         </form>

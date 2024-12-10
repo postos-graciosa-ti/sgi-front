@@ -57,7 +57,7 @@ const Workers = () => {
       <Nav />
 
       <div className="container">
-        <h4>Colaboradores da filial {selectedSubsdiarie.label}</h4>
+        <h4>Cadastro de colaboradores</h4>
 
         <button
           type="button"

@@ -1,8 +1,8 @@
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import useUserSessionStore from "../data/userSession"
-import deleteUser from '../requests/deleteUser'
-import getUsers from '../requests/getUsers'
+import useUserSessionStore from "../../data/userSession"
+import deleteUser from '../../requests/deleteUser'
+import getUsers from '../../requests/getUsers'
 
 // pedir senha para confirmação uma exclusão de usuário?
 // lembrar que somente admins acessam essa página
@@ -48,7 +48,7 @@ const DeleteUserModal = (props) => {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="primary" onClick={() => setOpenDeleteUserModal(false)}>
+        <Button variant="light" onClick={() => setOpenDeleteUserModal(false)}>
           Fechar
         </Button>
 

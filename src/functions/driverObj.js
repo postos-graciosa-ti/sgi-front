@@ -5,31 +5,38 @@ const driverObj = driver({
   showProgress: true,
   steps: [
     {
-      element: '#seeScale',
-      popover: {
-        title: 'Ver Escala',
-        description: 'Ao clicar, redireciona para uma tela para ver escalas de funcionários dessa unidade'
-      }
-    },
-    {
       element: '#help',
       popover: {
         title: 'Ajuda',
-        description: 'Se você tem dúvidas do que fazer nessa página, esse botão irá te passar informações'
+        description: 'Caso fique em dúvida sobre algo nessa página, esse botão irá fornecer mais informações'
       }
     },
     {
-      element: '#calendar',
+      element: '#printer',
       popover: {
-        title: 'Calendário',
-        description: 'Ao selecionar uma data, você estara planejando uma folga para esse dia'
+        title: 'Impressão',
+        description: 'Clicando nesse ícone, você abre um atalho para impressão'
       }
     },
     {
-      element: '#workers',
+      element: '#scaleHistory',
       popover: {
-        title: 'Colaboradores',
-        description: 'Selecione os colabores que você quer planejar para a folga e clique em cadastrar'
+        title: 'Histórico de escala',
+        description: 'Ao clicar nesse ícone, você é redirecionado para uma tela em que você pode observar todo o histórico de escalas anteriores'
+      }
+    },
+    {
+      element: '#weekScale',
+      popover: {
+        title: 'Escala',
+        description: 'Mostra data, os colaboradores da filial, se estão de folga ou trabalhando no dia. Você pode mudar o status do colaborador se quiser que ele folgue nesse dia, ou vice versa'
+      }
+    },
+    {
+      element: '#save',
+      popover: {
+        title: 'Salvar',
+        description: 'Depois de fazer suas alterações na escala semanal, você pode salvar suas alterações'
       }
     },
   ]

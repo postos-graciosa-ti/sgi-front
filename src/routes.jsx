@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom"
 import App from "./App"
 import Steps from "./pages/Steps"
 import Home from "./pages/Home"
-import Users from "./pages/Users"
+import Users from "./pages/users/Users"
 import Candidates from "./pages/candidates/Candidates"
 import Jobs from "./pages/candidates/Jobs"
 import FirstAcess from "./pages/FirstAcess"
@@ -13,6 +13,8 @@ import Workers from "./pages/workers/Workers"
 import Scale from "./pages/scale/Scale"
 import SeeScale from "./pages/scale/SeeScale"
 import CandidateFirstInterview from "./pages/candidates/CandidateFirstInterview"
+import ScaleHistory from "./pages/scale/ScaleHistory"
+import Subsidiaries from "./pages/subsidiaries/Subsidiaries"
 
 const Routes = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -29,6 +31,8 @@ const Routes = createBrowserRouter([
   { path: "/scale", element: <Scale /> },
   { path: "/see-scale", element: <SeeScale /> },
   { path: "/candidate-first-interview", element: <CandidateFirstInterview /> },
+  { path: "/scale-history", element: <ScaleHistory /> },
+  { path: "/subsidiaries", element: <Subsidiaries /> },
 ])
 
 export default Routes

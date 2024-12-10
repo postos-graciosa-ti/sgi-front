@@ -21,7 +21,59 @@ const Nav = () => {
           <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <Link className="nav-link active" aria-current="page" to="/home">Início</Link>
+                <Link
+                  className="nav-link"
+                  aria-current="page"
+                  to="/home"
+                >
+                  Início
+                </Link>
+              </li>
+
+              {
+                userSession.role_id == 1 && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/users">
+                      Cadastro de usuários
+                    </Link>
+                  </li>
+                )
+              }
+
+              {
+                userSession.role_id == 1 && (
+                  <li className="nav-item">
+                    <Link
+                      className="nav-link"
+                      aria-current="page"
+                      to="/subsidiaries"
+                    >
+                      Cadastro de filiais
+                    </Link>
+                  </li>
+                )
+              }
+
+              <li className="nav-item">
+                <Link
+                  className="nav-link"
+                  aria-current="page"
+                  to="/"
+                  onClick={() => setUserSession({})}
+                >
+                  Cadastro de colaboradores
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link
+                  className="nav-link"
+                  aria-current="page"
+                  to="/"
+                  onClick={() => setUserSession({})}
+                >
+                  Sair
+                </Link>
               </li>
 
               <li className="nav-item dropdown">
@@ -30,13 +82,13 @@ const Nav = () => {
                 </Link>
 
                 <ul className="dropdown-menu">
-                  <li>
+                  {/* <li>
                     <Link className="dropdown-item" to="/" onClick={() => setUserSession({})}>
                       Sair
                     </Link>
-                  </li>
+                  </li> */}
 
-                  {
+                  {/* {
                     userSession.role_id == 1 && (
                       <li>
                         <Link className="dropdown-item" to="/users">
@@ -44,7 +96,7 @@ const Nav = () => {
                         </Link>
                       </li>
                     )
-                  }
+                  } */}
 
                   <li>
                     <Link className="dropdown-item" to="/workers">
@@ -59,7 +111,7 @@ const Nav = () => {
                   </li>
 
                   <li>
-                    <Link className="dropdown-item" to="/scale">
+                    <Link className="dropdown-item" to="/see-scale">
                       Planejamento de folgas
                     </Link>
                   </li>
@@ -72,7 +124,7 @@ const Nav = () => {
 
       <div className="m-3 text-end">
         <Link to="/steps">
-          Você está em: {selectedSubsidiarie.label}
+          Você está visualizando dados de: {selectedSubsidiarie.label}
         </Link>
       </div>
     </>

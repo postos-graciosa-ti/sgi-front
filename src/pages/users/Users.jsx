@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
-import Nav from "../components/Nav"
-import useUserSessionStore from "../data/userSession"
-import getUsers from "../requests/getUsers"
+import Nav from "../../components/Nav"
+import useUserSessionStore from "../../data/userSession"
+import getUsers from "../../requests/getUsers"
 import DeleteUserModal from "./DeleteUserModal"
 import UserModal from "./UserModal"
 import UpdateUserModal from "./UpdateUserModal"
+import { Pen, Plus, Question, Trash } from "react-bootstrap-icons"
 
 const Users = () => {
   const [users, setUsers] = useState()
@@ -44,15 +45,26 @@ const Users = () => {
       <Nav />
 
       <div className="container">
-        <button
-          className="btn btn-sm btn-primary mt-4"
-          onClick={() => setModalOpen(true)}
-        >
-          Cadastrar novo usuário
-        </button>
+        <h4>Cadastro de usuários</h4>
+
+        <div className="mt-3 mb-3">
+          <button
+            className="btn btn-warning me-2"
+            onClick={() => setModalOpen(true)}
+          >
+            <Question />
+          </button>
+
+          <button
+            className="btn btn-primary"
+            onClick={() => setModalOpen(true)}
+          >
+            <Plus />
+          </button>
+        </div>
 
         <div className="table-responsive mt-3">
-          <table className="table">
+          <table className="table table-hover">
             <thead>
               <tr>
                 <th>Nome</th>
@@ -83,23 +95,23 @@ const Users = () => {
 
                     <td>
                       <button
-                        className="btn btn-sm btn-primary mt-2 me-2"
+                        className="btn btn-warning mt-2 me-2"
                         onClick={() => {
                           setOpenUpdateUserModal(true)
                           setSelectedUser(user)
                         }}
                       >
-                        Editar
+                        <Pen />
                       </button>
 
                       <button
-                        className="btn btn-sm btn-danger mt-2 me-2"
+                        className="btn btn-danger mt-2 me-2"
                         onClick={() => {
                           setOpenDeleteUserModal(true)
                           setSelectedUser(user)
                         }}
                       >
-                        Excluir
+                        <Trash />
                       </button>
                     </td>
                   </tr>
@@ -116,9 +128,9 @@ const Users = () => {
         setModalOpen={setModalOpen}
       />
 
-      <UpdateUserModal 
+      <UpdateUserModal
         openUpdateUserModal={openUpdateUserModal}
-        setOpenUpdateUserModal={setOpenUpdateUserModal}      
+        setOpenUpdateUserModal={setOpenUpdateUserModal}
       />
 
       <DeleteUserModal

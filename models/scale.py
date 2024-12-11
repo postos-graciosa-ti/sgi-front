@@ -1,8 +1,9 @@
-from sqlmodel import Field, Session, SQLModel, create_engine, select
-import datetime
+from typing import Optional
+from sqlmodel import SQLModel, Field
+from datetime import date
 
 class Scale(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    date: str = Field(index=True)
-    subsidiarie_id: int = Field(default=None, foreign_key="subsidiarie.id")
-    workers: str = Field(default="[]")
+    id: int = Field(default=None, primary_key=True)
+    date: date
+    worker_id: Optional[int] = Field(default=None, foreign_key="worker.id")
+    month_id: Optional[int] = Field(default=None, foreign_key="month.id")

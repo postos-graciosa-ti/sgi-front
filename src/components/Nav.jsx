@@ -30,6 +30,16 @@ const Nav = () => {
                 </Link>
               </li>
 
+              <li className="nav-item">
+                <Link
+                  className="nav-link"
+                  aria-current="page"
+                  to="/scale"
+                >
+                  Escala
+                </Link>
+              </li>
+
               {
                 userSession.role_id == 1 && (
                   <li className="nav-item">
@@ -58,8 +68,7 @@ const Nav = () => {
                 <Link
                   className="nav-link"
                   aria-current="page"
-                  to="/"
-                  onClick={() => setUserSession({})}
+                  to="/workers"
                 >
                   Cadastro de colaboradores
                 </Link>

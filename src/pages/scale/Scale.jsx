@@ -3,129 +3,99 @@ import React, { useEffect, useState } from 'react'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 import ReactSelect from 'react-select'
-import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
 import useUserSessionStore from '../../data/userSession'
-import getSundays from "../../functions/getSundays"
-import getWeek from "../../functions/getWeek"
-import getWorkersBySubsidiarie from '../../requests/getWorkersBySubsidiarie'
-import postScaleCreate from "../../requests/postScaleCreate"
-import postValidateSundays from '../../requests/postValidateSundays'
-import postValidateWeekdays from '../../requests/postValidateWeekdays'
-import api from '../../services/api'
-import { useNavigate } from 'react-router-dom'
-import { QuestionCircle } from 'react-bootstrap-icons'
-import driverObj from "../../functions/driverObj"
+import getMonths from '../../requests/getMonths'
+import getTurns from '../../requests/getTurns'
+import getWorkersByTurnAndSubsidiarie from '../../requests/getWorkersByTurnAndSubsidiarie'
 
 const Scale = () => {
-  const navigate = useNavigate()
+  const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
-  const firstDayOfMonth = moment().startOf('month').toDate()
+  const [workersTurnList, setWorkersTurnList] = useState()
 
-  const lastDayOfMonth = moment().endOf('month').toDate()
+  const [selectedTurn, setSelectedTurn] = useState()
 
-  let timedata = {
-    "month": moment().month() + 1,
-    "year": moment().year()
-  }
+  const [workersList, setWorkersList] = useState()
 
-  const [selectedDays, setSelectedDays] = useState([])
+  const [selectedWorker, setSelectedWorker] = useState()
 
-  const [selectedDate, setSelectedDate] = useState(null)
+  const [monthsList, setMonthsList] = useState()
 
-  const selectedSubsdiarie = useUserSessionStore((state) => state.selectedSubsdiarie)
+  const [selectedDates, setSelectedDates] = useState()
 
-  const [workersOptions, setWorkersOptions] = useState()
-
-  const [selectedWorkers, setSelectedWorkers] = useState('[]')
+  const [seeButton, setSeeButton] = useState(false)
 
   useEffect(() => {
-    api
-      .post("/generate-day-off", timedata)
-      .then((response) => {
-        setSelectedDays(response.data.folgas_regulares)
-      })
-      .catch((error) => console.error(error))
+    getWorkersTurns()
+  }, [])
 
-    getWorkersBySubsidiarie(selectedSubsdiarie.value)
+  useEffect(() => {
+    GetWorkersByTurnAndSubsidiarie()
+
+    GetMonths()
+  }, [selectedTurn])
+
+  const getWorkersTurns = () => {
+    getTurns()
+      .then((response) => {
+        let workerTurnsData = response.data
+
+        let workersTurnsOptions = []
+
+        workerTurnsData && workerTurnsData.map((turn) => {
+          workersTurnsOptions.push({ "label": `${turn.name} - ${turn.time}`, "value": turn.id })
+        })
+
+        setWorkersTurnList(workersTurnsOptions)
+      })
+  }
+
+  const GetWorkersByTurnAndSubsidiarie = () => {
+    getWorkersByTurnAndSubsidiarie(selectedTurn, selectedSubsdiarie.value)
       .then((response) => {
         let workersData = response.data
 
-        let options = []
+        let workersDataOptions = []
 
         workersData && workersData.map((worker) => {
-          options.push({ "label": worker.name, "value": worker.id })
+          workersDataOptions.push({ "label": worker.name, "value": worker.id })
         })
 
-        setWorkersOptions(options)
+        setWorkersList(workersDataOptions)
       })
-  }, [])
-
-  const tileClassName = ({ date, view }) => {
-    if (view === 'month') {
-      const day = date.getDate()
-
-      return selectedDays.includes(day) ? 'highlight' : null
-    }
-
-    return null
   }
 
-  const onChange = (newDate) => {
-    setSelectedDate(newDate)
-  }
-
-  const handleSubmitScale = (e) => {
-    e.preventDefault()
-
-    let weekdays = `${getWeek(selectedDate)}`.replace(/(\d{4}-\d{2}-\d{2})/g, '"$1"')
-
-    let sundays = `${getSundays(selectedDate)}`.replace(/(\d{4}-\d{2}-\d{2})/g, '"$1"')
-
-    let workersIds = selectedWorkers.map(worker => worker.value).join(',')
-
-    let formData = {
-      "date": `${moment(selectedDate).format("YYYY-MM-DD")}`,
-      "workers_ids": `[${workersIds}]`,
-      "subsidiarie_id": selectedSubsdiarie.value,
-      "days_of_week": weekdays,
-      "sundays": sundays,
-      "agreed": false,
-    }
-
-    postValidateWeekdays(selectedDate, workersIds, selectedSubsdiarie, weekdays)
+  const GetMonths = () => {
+    getMonths()
       .then((response) => {
-        if (response.data.success == true) {
-          postValidateSundays(selectedDate, workersIds, selectedSubsdiarie, sundays)
-            .then((response) => {
-              if (response.data.success == true) {
-                postScaleCreate(formData)
-                  .then((response) => {
-                    console.log(response)
-                    Swal.fire({
-                      title: "Sucesso",
-                      text: "Planejamento de folgas cadastrado com sucesso",
-                      icon: "success"
-                    })
-                  })
-              } else {
-                Swal.fire({
-                  title: "Erro ao planejar folgas de domingo",
-                  text: `${response.data.message}`,
-                  icon: "error"
-                })
-                throw new Error("Erro ao planejar folgas de domingo")
-              }
-            })
-        } else {
-          Swal.fire({
-            title: "Erro ao planejar folgas da semana",
-            text: `${response.data.message}`,
-            icon: "error"
-          })
-          throw new Error("Erro ao planejar folgas da semana")
-        }
+        let monthsData = response.data
+
+        let monthsDataOptions = []
+
+        monthsData && monthsData.map((month) => {
+          monthsDataOptions.push({ "label": month.name, "value": month.id })
+        })
+
+        setMonthsList(monthsDataOptions)
       })
+  }
+
+  const handleOnChangeDates = (value) => {
+    setSeeButton(true)
+
+    setSelectedDates((prevState) => {
+      return (
+        prevState ? [...prevState, moment(value).format("YYYY-MM-DD")]
+          : [moment(value).format("YYYY-MM-DD")]
+      )
+    })
+  }
+
+  // console.log(selectedDates)
+
+  const handleSaveDates = () => {
+    
   }
 
   return (
@@ -133,72 +103,55 @@ const Scale = () => {
       <Nav />
 
       <div className="container">
-        <button
-          id="seeScale"
-          className="btn btn-primary"
-          onClick={() => navigate('/see-scale', { replace: true })}
-        >
-          Ver escala de folgas
-        </button>
+        {
+          seeButton && (
+            <>
+              <button 
+                className="btn btn-success mb-3"
+                onClick={handleSaveDates}
+              >
+                Salvar
+              </button>
+            </>
+          )
+        }
 
-        <button
-          id="help"
-          className="btn btn-warning ms-2"
-          onClick={() => driverObj.drive()}
-        >
-          <QuestionCircle />
-        </button>
-
-        <div className="mt-3 mb-3">
-          <h3>Planejamento de folgas</h3>
-          <span>Selecione uma data no calendário e os colaboradores que vão folgar nesse dia</span>
-        </div>
-
-        <div className="row">
-          <div className="col" id="calendar">
-            <Calendar
-              onChange={onChange}
-              value={selectedDate}
-              tileClassName={tileClassName}
-              minDate={firstDayOfMonth}
-              maxDate={lastDayOfMonth}
+        <div className="row mb-3">
+          <div className="col">
+            <ReactSelect
+              className="disable"
+              placeholder="Filial"
+              value={{ "value": selectedSubsdiarie.value, "label": selectedSubsdiarie.label }}
             />
           </div>
 
           <div className="col">
-            {
-              <form onSubmit={(e) => handleSubmitScale(e)}>
-                <div id="workers">
-                  <b>
-                    {selectedDate && moment(selectedDate.toDateString()).format("DD/MM/YYYY")}
-                  </b>
+            <ReactSelect
+              placeholder="Turnos"
+              options={workersTurnList}
+              onChange={(e) => setSelectedTurn(e.value)}
+            />
+          </div>
 
-                  <ReactSelect
-                    className="mt-2 mb-3"
-                    placeholder="Colaboradores"
-                    options={workersOptions}
-                    isMulti
-                    onChange={(e) => setSelectedWorkers(e)}
-                  />
+          <div className="col">
+            <ReactSelect
+              placeholder="Colaborador"
+              options={workersList}
+            />
+          </div>
 
-                  <button type="submit" className="btn btn-sm btn-primary">
-                    Cadastrar escala
-                  </button>
-                </div>
-              </form>
-            }
+          <div className="col">
+            <ReactSelect
+              placeholder="Mês"
+              options={monthsList}
+            />
           </div>
         </div>
 
-        <style>
-          {`
-          .highlight {
-            background-color: #ffff76;
-            color: grey;
-            // border-radius: 50%;
-          }
-        `}
-        </style>
+        <Calendar
+          className="w-100"
+          onChange={(value) => handleOnChangeDates(value)}
+        />
       </div>
     </>
   )

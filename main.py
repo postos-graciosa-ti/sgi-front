@@ -16,7 +16,12 @@ from controllers.scales_controller import (
     handle_get_scales_history,
     handle_get_week_scale,
 )
-from controllers.subsidiaries import handle_get_subsidiaries, handle_post_subsidiaries, handle_put_subsidiarie, handle_delete_subsidiarie
+from controllers.subsidiaries import (
+    handle_get_subsidiaries,
+    handle_post_subsidiaries,
+    handle_put_subsidiarie,
+    handle_delete_subsidiarie,
+)
 from database.sqlite import create_db_and_tables, engine
 from functions.scale import is_valid_scale
 from middlewares.cors_middleware import add_cors_middleware
@@ -42,6 +47,10 @@ from seeds.seed_all import (
     seed_users,
 )
 from services.firebase import initialize_firebase
+from controllers.turn import handle_get_turns
+from controllers.workers import handle_get_workers_by_turn_and_subsidiarie
+from models.month import Month
+from controllers.months import handle_get_months
 
 load_dotenv()
 
@@ -65,23 +74,34 @@ def docs():
 
 # default standart get, get by id, post, put, delete
 
+# months routes
+
+@app.get("/months")
+def get_months():
+    return handle_get_months()
+
 # scale routes
 
-@app.get("/scales/history/subsidiarie/{subsidiarie_id}")
-def get_scales_history(subsidiarie_id: int):
-    return handle_get_scales_history(subsidiarie_id)
+
+# @app.get("/scales/history/subsidiarie/{subsidiarie_id}")
+# def get_scales_history(subsidiarie_id: int):
+#     return handle_get_scales_history(subsidiarie_id)
+
 
 # xx
 
 # subsidiaries routes
 
+
 @app.get("/subsidiaries")
 def get_subsidiaries():
     return handle_get_subsidiaries()
 
+
 @app.post("/subsidiaries")
 def post_subsidiaries(formData: Subsidiarie):
     return handle_post_subsidiaries(formData)
+
 
 class PutSubsidiarie(BaseModel):
     name: str
@@ -89,15 +109,39 @@ class PutSubsidiarie(BaseModel):
     phone: str
     email: str
 
+
 @app.put("/subsidiaries/{id}")
 def put_subsidiaries(id: int, formData: PutSubsidiarie):
     return handle_put_subsidiarie(id, formData)
+
 
 @app.delete("/subsidiaries/{id}")
 def delete_subsidiaries(id: int):
     return handle_delete_subsidiarie(id)
 
+
 # xx
+
+# turn routes
+
+
+@app.get("/turns")
+def get_turns():
+    return handle_get_turns()
+
+
+# xx
+
+# workers routes
+
+
+@app.get("/workers/turns/{turn_id}/subsidiarie/{subsidiarie_id}")
+def get_workers_by_turn_and_subsidiarie(turn_id: int, subsidiarie_id: int):
+    return handle_get_workers_by_turn_and_subsidiarie(turn_id, subsidiarie_id)
+
+
+# xx
+
 
 @app.post("/default_scale")
 def create_default_scale(default_scale: DefaultScale):
@@ -113,13 +157,6 @@ def get_default_scale():
     with Session(engine) as session:
         default_scale = session.exec(select(DefaultScale)).all()
     return default_scale
-
-
-@app.get("/turns")
-def get_turns():
-    with Session(engine) as session:
-        turns = session.exec(select(Turn)).all()
-    return turns
 
 
 @app.get("/workers/active/subsidiarie/{subsidiarie_id}/function/{function_id}")

@@ -8,9 +8,8 @@ import useUserSessionStore from '../../data/userSession'
 import getMonths from '../../requests/getMonths'
 import getTurns from '../../requests/getTurns'
 import getWorkersByTurnAndSubsidiarie from '../../requests/getWorkersByTurnAndSubsidiarie'
-import api from '../../services/api'
-import putScales from '../../requests/putScales'
 import postScale from '../../requests/postScale'
+import api from '../../services/api'
 
 const Scale = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -99,8 +98,8 @@ const Scale = () => {
 
     setSelectedDates((prevState) => {
       return (
-        prevState ? [...prevState, moment(value).format("YYYY-MM-DD")]
-          : [moment(value).format("YYYY-MM-DD")]
+        prevState ? [...prevState, moment(value).format("DD-MM-YYYY")]
+          : [moment(value).format("DD-MM-YYYY")]
       )
     })
   }
@@ -135,46 +134,22 @@ const Scale = () => {
   }
 
   const handleSaveDates = () => {
-    let needPutRequest = scales && scales.length > 0
+    let dates = selectedDates.map(date => `'${date}'`)
 
-    if (needPutRequest) {
-      let formatScales = scales.map(scale => `'${scale}'`)
-
-      let formatDates = selectedDates.map(date => `'${date}'`)
-
-      let dates = [...formatScales, ...formatDates]
-
-      let formData = {
-        date: `[${dates}]`,
-        worker_id: selectedWorker,
-        month_id: selectedMonth
-      }
-
-      putScales(selectedScale, formData)
-        .then((response) => {
-          console.log(response)
-          
-          let options = []
-
-          let scales = eval(response.data.date)
-
-          scales.map((scale) => {
-            options.push(scale)
-          })
-
-          setScales(options)
-        })
-    } else {
-      let formData = {
-        date: selectedDates,
-        worker_id: selectedWorker,
-        month_id: selectedMonth
-      }
-
-      console.log(formData)
-
-      // postScale(formData)
+    let postScaleFormData = {
+      date: `[${dates}]`,
+      worker_id: selectedWorker,
+      month_id: selectedMonth
     }
+
+    console.log(postScaleFormData)
+    debugger;;
+
+    postScale(postScaleFormData)
+      .then((response) => {
+        console.log(response)
+        debugger;;
+      })
   }
 
   return (

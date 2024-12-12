@@ -8,6 +8,8 @@ import useUserSessionStore from '../../data/userSession'
 import getMonths from '../../requests/getMonths'
 import getTurns from '../../requests/getTurns'
 import getWorkersByTurnAndSubsidiarie from '../../requests/getWorkersByTurnAndSubsidiarie'
+import api from '../../services/api'
+import putScale from '../../requests/putScale'
 import postScale from '../../requests/postScale'
 import api from '../../services/api'
 
@@ -45,8 +47,10 @@ const Scale = () => {
   }, [selectedTurn])
 
   useEffect(() => {
-    getWorkerScalesByMonth()
-  }, [selectedTurn, selectedWorker, selectedMonth, scales])
+    if (selectedTurn && selectedWorker && selectedMonth && scales) {
+      getWorkerScalesByMonth()
+    }
+  }, [selectedMonth])
 
   const getWorkersTurns = () => {
     getTurns()
@@ -134,22 +138,40 @@ const Scale = () => {
   }
 
   const handleSaveDates = () => {
-    let dates = selectedDates.map(date => `'${date}'`)
+    let needPutMethod = scales.length > 0 && true || false
 
-    let postScaleFormData = {
-      date: `[${dates}]`,
-      worker_id: selectedWorker,
-      month_id: selectedMonth
+    if (needPutMethod) {
+      let dates = [...scales, ...selectedDates]
+
+      let formData = {
+        date: `[${dates.map(date => `'${date}'`).join(',')}]`,
+        worker_id: selectedWorker,
+        month_id: selectedMonth
+      }
+
+      putScale(selectedScale, formData)
+        .then(() => {
+          getWorkerScalesByMonth()
+
+          setSeeButton(false)
+        })
+
+    } else {
+      let formData = {
+        date: `[${selectedDates.map(date => `'${date}'`).join(',')}]`,
+        worker_id: selectedWorker,
+        month_id: selectedMonth
+      }
+
+      postScale(formData)
+        .then(() => {
+          getWorkerScalesByMonth()
+
+          setSeeButton(false)
+        })
+
     }
 
-    console.log(postScaleFormData)
-    debugger;;
-
-    postScale(postScaleFormData)
-      .then((response) => {
-        console.log(response)
-        debugger;;
-      })
   }
 
   return (
@@ -216,7 +238,7 @@ const Scale = () => {
         <Calendar
           value={selectedDates}
           onChange={(value) => handleOnChangeDates(value)}
-          className="w-100"
+          className="w-100 rounded-3"
           tileClassName={tileClassName}
         />
       </div >

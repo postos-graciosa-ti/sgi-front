@@ -68,6 +68,16 @@ const Nav = () => {
                 <Link
                   className="nav-link"
                   aria-current="page"
+                  to="/turns"
+                >
+                  Cadastro de turnos
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link
+                  className="nav-link"
+                  aria-current="page"
                   to="/workers"
                 >
                   Cadastro de colaboradores

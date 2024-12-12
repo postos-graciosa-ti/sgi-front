@@ -8,6 +8,9 @@ import useUserSessionStore from '../../data/userSession'
 import getMonths from '../../requests/getMonths'
 import getTurns from '../../requests/getTurns'
 import getWorkersByTurnAndSubsidiarie from '../../requests/getWorkersByTurnAndSubsidiarie'
+import api from '../../services/api'
+import putScales from '../../requests/putScales'
+import postScale from '../../requests/postScale'
 
 const Scale = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -26,6 +29,12 @@ const Scale = () => {
 
   const [seeButton, setSeeButton] = useState(false)
 
+  const [selectedMonth, setSelectedMonth] = useState()
+
+  const [scales, setScales] = useState([])
+
+  const [selectedScale, setSelectedScale] = useState()
+
   useEffect(() => {
     getWorkersTurns()
   }, [])
@@ -35,6 +44,10 @@ const Scale = () => {
 
     GetMonths()
   }, [selectedTurn])
+
+  useEffect(() => {
+    getWorkerScalesByMonth()
+  }, [selectedTurn, selectedWorker, selectedMonth, scales])
 
   const getWorkersTurns = () => {
     getTurns()
@@ -92,10 +105,76 @@ const Scale = () => {
     })
   }
 
-  // console.log(selectedDates)
+  const getWorkerScalesByMonth = () => {
+    api
+      .get(`/scale/worker/${selectedWorker}/month/${selectedMonth}`)
+      .then((response) => {
+        let options = []
+
+        let scales = eval(response.data.date)
+
+        scales.map((scale) => {
+          options.push(scale)
+        })
+
+        setScales(options)
+
+        setSelectedScale(response.data.id)
+      })
+      .catch((error) => console.error(error))
+  }
+
+  const tileClassName = ({ date, view }) => {
+    if (view === 'month') {
+      const day = moment(date).format("DD-MM-YYYY")
+
+      return scales.some(scale => scale === day) ? 'highlight' : null
+    }
+
+    return null
+  }
 
   const handleSaveDates = () => {
-    
+    let needPutRequest = scales && scales.length > 0
+
+    if (needPutRequest) {
+      let formatScales = scales.map(scale => `'${scale}'`)
+
+      let formatDates = selectedDates.map(date => `'${date}'`)
+
+      let dates = [...formatScales, ...formatDates]
+
+      let formData = {
+        date: `[${dates}]`,
+        worker_id: selectedWorker,
+        month_id: selectedMonth
+      }
+
+      putScales(selectedScale, formData)
+        .then((response) => {
+          console.log(response)
+          
+          let options = []
+
+          let scales = eval(response.data.date)
+
+          scales.map((scale) => {
+            options.push(scale)
+          })
+
+          setScales(options)
+        })
+    } else {
+      let formData = {
+        date: selectedDates,
+        worker_id: selectedWorker,
+        month_id: selectedMonth
+      }
+
+      console.log(formData)
+
+      // postScale(formData)
+    }
   }
 
   return (
@@ -106,7 +185,7 @@ const Scale = () => {
         {
           seeButton && (
             <>
-              <button 
+              <button
                 className="btn btn-success mb-3"
                 onClick={handleSaveDates}
               >
@@ -129,7 +208,10 @@ const Scale = () => {
             <ReactSelect
               placeholder="Turnos"
               options={workersTurnList}
-              onChange={(e) => setSelectedTurn(e.value)}
+              onChange={(e) => {
+                setScales([])
+                setSelectedTurn(e.value)
+              }}
             />
           </div>
 
@@ -137,6 +219,10 @@ const Scale = () => {
             <ReactSelect
               placeholder="Colaborador"
               options={workersList}
+              onChange={(e) => {
+                setScales([])
+                setSelectedWorker(e.value)
+              }}
             />
           </div>
 
@@ -144,15 +230,32 @@ const Scale = () => {
             <ReactSelect
               placeholder="Mês"
               options={monthsList}
+              onChange={(e) => {
+                setScales([])
+                setSelectedMonth(e.value)
+              }}
             />
           </div>
         </div>
 
         <Calendar
-          className="w-100"
+          value={selectedDates}
           onChange={(value) => handleOnChangeDates(value)}
+          className="w-100"
+          tileClassName={tileClassName}
         />
-      </div>
+      </div >
+
+      <style>
+        {`
+          .highlight {
+            background-color: #ECFFDC;
+            color: grey;
+            // border-radius: 50%;
+          }
+        `}
+      </style>
+
     </>
   )
 }

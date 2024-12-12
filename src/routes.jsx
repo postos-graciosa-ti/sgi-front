@@ -15,6 +15,7 @@ import SeeScale from "./pages/scale/SeeScale"
 import CandidateFirstInterview from "./pages/candidates/CandidateFirstInterview"
 import ScaleHistory from "./pages/scale/ScaleHistory"
 import Subsidiaries from "./pages/subsidiaries/Subsidiaries"
+import Turns from "./pages/turns/Turns"
 
 const Routes = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -33,6 +34,7 @@ const Routes = createBrowserRouter([
   { path: "/candidate-first-interview", element: <CandidateFirstInterview /> },
   { path: "/scale-history", element: <ScaleHistory /> },
   { path: "/subsidiaries", element: <Subsidiaries /> },
+  { path: "/turns", element: <Turns /> },
 ])
 
 export default Routes

@@ -11,6 +11,7 @@ import getWorkersByTurnAndSubsidiarie from '../../requests/getWorkersByTurnAndSu
 import api from '../../services/api'
 import putScale from '../../requests/putScale'
 import postScale from '../../requests/postScale'
+import api from '../../services/api'
 
 const Scale = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)

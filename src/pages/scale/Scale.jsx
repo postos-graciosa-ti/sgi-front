@@ -9,7 +9,7 @@ import getMonths from '../../requests/getMonths'
 import getTurns from '../../requests/getTurns'
 import getWorkersByTurnAndSubsidiarie from '../../requests/getWorkersByTurnAndSubsidiarie'
 import api from '../../services/api'
-import putScales from '../../requests/putScales'
+import putScale from '../../requests/putScale'
 import postScale from '../../requests/postScale'
 
 const Scale = () => {
@@ -46,8 +46,10 @@ const Scale = () => {
   }, [selectedTurn])
 
   useEffect(() => {
-    getWorkerScalesByMonth()
-  }, [selectedTurn, selectedWorker, selectedMonth, scales])
+    if (selectedTurn && selectedWorker && selectedMonth && scales) {
+      getWorkerScalesByMonth()
+    }
+  }, [selectedMonth])
 
   const getWorkersTurns = () => {
     getTurns()
@@ -99,8 +101,8 @@ const Scale = () => {
 
     setSelectedDates((prevState) => {
       return (
-        prevState ? [...prevState, moment(value).format("YYYY-MM-DD")]
-          : [moment(value).format("YYYY-MM-DD")]
+        prevState ? [...prevState, moment(value).format("DD-MM-YYYY")]
+          : [moment(value).format("DD-MM-YYYY")]
       )
     })
   }
@@ -135,46 +137,40 @@ const Scale = () => {
   }
 
   const handleSaveDates = () => {
-    let needPutRequest = scales && scales.length > 0
+    let needPutMethod = scales.length > 0 && true || false
 
-    if (needPutRequest) {
-      let formatScales = scales.map(scale => `'${scale}'`)
-
-      let formatDates = selectedDates.map(date => `'${date}'`)
-
-      let dates = [...formatScales, ...formatDates]
+    if (needPutMethod) {
+      let dates = [...scales, ...selectedDates]
 
       let formData = {
-        date: `[${dates}]`,
+        date: `[${dates.map(date => `'${date}'`).join(',')}]`,
         worker_id: selectedWorker,
         month_id: selectedMonth
       }
 
-      putScales(selectedScale, formData)
-        .then((response) => {
-          console.log(response)
-          
-          let options = []
+      putScale(selectedScale, formData)
+        .then(() => {
+          getWorkerScalesByMonth()
 
-          let scales = eval(response.data.date)
-
-          scales.map((scale) => {
-            options.push(scale)
-          })
-
-          setScales(options)
+          setSeeButton(false)
         })
+
     } else {
       let formData = {
-        date: selectedDates,
+        date: `[${selectedDates.map(date => `'${date}'`).join(',')}]`,
         worker_id: selectedWorker,
         month_id: selectedMonth
       }
 
-      console.log(formData)
+      postScale(formData)
+        .then(() => {
+          getWorkerScalesByMonth()
 
-      // postScale(formData)
+          setSeeButton(false)
+        })
+
     }
+
   }
 
   return (
@@ -241,7 +237,7 @@ const Scale = () => {
         <Calendar
           value={selectedDates}
           onChange={(value) => handleOnChangeDates(value)}
-          className="w-100"
+          className="w-100 rounded-3"
           tileClassName={tileClassName}
         />
       </div >

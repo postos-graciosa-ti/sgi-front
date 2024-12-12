@@ -8,7 +8,6 @@ import useUserSessionStore from '../../data/userSession'
 import getMonths from '../../requests/getMonths'
 import getTurns from '../../requests/getTurns'
 import getWorkersByTurnAndSubsidiarie from '../../requests/getWorkersByTurnAndSubsidiarie'
-import api from '../../services/api'
 import putScale from '../../requests/putScale'
 import postScale from '../../requests/postScale'
 

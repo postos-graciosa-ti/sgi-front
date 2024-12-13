@@ -103,7 +103,12 @@ const Turns = () => {
                         className="btn btn-danger mt-2"
                         onClick={() => handleOpenDeleteTurnModal(turn)}
                       >
+                        <Trash />
+                      </button>
                     </td>
+                  </tr>
+                ))
+              }
             </tbody>
           </table>
         </div>

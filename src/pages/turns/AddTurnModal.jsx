@@ -68,12 +68,11 @@ const AddTurnModal = (props) => {
               Hora de início do turno
             </label>
 
-            <Datetime
-              dateFormat={false}
-              timeFormat="HH:mm:ss"
-              value={startTime}
+            <input
+              type="time"
+              className="form-control"
+              placeholder="Hora de início do turno"
               onChange={(e) => setStartTime(e.target.value)}
-              inputProps={{ className: 'form-control', placeholder: 'hh:mm:ss' }}
             />
           </div>
 
@@ -82,12 +81,11 @@ const AddTurnModal = (props) => {
               Hora de início do intervalo
             </label>
 
-            <Datetime
-              dateFormat={false}
-              timeFormat="HH:mm:ss"
-              value={startIntervalTime}
+            <input
+              type="time"
+              className="form-control"
+              placeholder="Hora de início do intervalo"
               onChange={(e) => setStartIntervalTime(e.target.value)}
-              inputProps={{ className: 'form-control', placeholder: 'hh:mm:ss' }}
             />
           </div>
 
@@ -96,12 +94,11 @@ const AddTurnModal = (props) => {
               Hora de término do intervalo
             </label>
 
-            <Datetime
-              dateFormat={false}
-              timeFormat="HH:mm:ss"
-              value={endIntervalTime}
+            <input
+              type="time"
+              className="form-control"
+              placeholder="Hora de término do intervalo"
               onChange={(e) => setEndIntervalTime(e.target.value)}
-              inputProps={{ className: 'form-control', placeholder: 'hh:mm:ss' }}
             />
           </div>
 
@@ -110,13 +107,12 @@ const AddTurnModal = (props) => {
               Hora de término do turno
             </label>
 
-            <Datetime 
-              dateFormat={false}
-              timeFormat="HH:mm:ss"
-              value={endTime}
+            <input
+              type="time"
+              className="form-control"
+              placeholder="Hora de término do turno"
               onChange={(e) => setEndTime(e.target.value)}
-              inputProps={{ className: 'form-control', placeholder: 'hh:mm:ss' }}
-            />
+            /> 
           </div>
         </Modal.Body>
 

@@ -5,8 +5,12 @@ import { useEffect, useState } from "react"
 import getTurns from "../../requests/getTurns"
 import EditTurnModal from "./EditTurnModal"
 import DeleteTurnModal from "./DeleteTurnModal"
+import { useLocation } from "react-router-dom"
+import mountTour from "../../functions/mountTour"
 
 const Turns = () => {
+  const location = useLocation()
+
   const [addTurnModalOpen, setAddTurnModalOpen] = useState(false)
 
   const [turnsList, setTurnsList] = useState()
@@ -46,6 +50,14 @@ const Turns = () => {
       })
   }
 
+  const setTour = () => {
+    let route = location.pathname
+
+    let driverObj = mountTour(route)
+
+    driverObj.drive()
+  }
+
   return (
     <>
       <Nav />
@@ -53,13 +65,16 @@ const Turns = () => {
       <div className="container">
         <div className="mt-3 mb-3">
           <button
+            id="help"
             type="button"
             className="btn btn-warning me-2"
+            onClick={setTour}
           >
             <Question />
           </button>
 
           <button
+            id="addTurn"
             type="button"
             className="btn btn-primary"
             onClick={handleOpenAddTurnModal}
@@ -80,7 +95,7 @@ const Turns = () => {
               </tr>
             </thead>
 
-            <tbody>
+            <tbody id="turnsTable">
               {
                 turnsList && turnsList.map((turn) => (
                   <tr key={turn.id}>
@@ -91,6 +106,7 @@ const Turns = () => {
                     <td>{turn.end_time}</td>
                     <td>
                       <button
+                        id="editTurn"
                         type="button"
                         className="btn btn-warning mt-2 me-2"
                         onClick={() => handleOpenEditTurnModal(turn)}
@@ -99,6 +115,7 @@ const Turns = () => {
                       </button>
 
                       <button
+                        id="deleteTurn"
                         type="button"
                         className="btn btn-danger mt-2"
                         onClick={() => handleOpenDeleteTurnModal(turn)}

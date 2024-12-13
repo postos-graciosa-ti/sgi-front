@@ -37,37 +37,9 @@ const Scale = () => {
 
   const [selectedScale, setSelectedScale] = useState()
 
-  const [minDate, setMinDate] = useState(new Date("2024-12-01"))
+  const [firstDayCurrentMonth, setFirstDayCurrentMonth] = useState(new Date(2024, 11, 1))
 
-  const [maxDate, setMaxDate] = useState(new Date("2024-12-31"))
-
-  function primeiroEUltimoDiaDoMes(mes) {
-    const ano = 2024
-
-    const primeiroDia = new Date(ano, mes - 1, 1)
-
-    const ultimoDia = new Date(ano, mes, 0)
-
-    const formatDate = (date) => {
-      const dia = String(date.getDate()).padStart(2, '0');
-      const mes = String(date.getMonth() + 1).padStart(2, '0');
-      const ano = date.getFullYear();
-      return `${dia}-${mes}-${ano}`;
-    }
-
-    return {
-      primeiroDia: formatDate(primeiroDia),
-      ultimoDia: formatDate(ultimoDia)
-    }
-  }
-
-  useEffect(() => {
-    const resultado = primeiroEUltimoDiaDoMes(selectedMonth);
-
-    setMinDate(resultado.primeiroDia)
-
-    setMaxDate(resultado.ultimoDia)
-  }, [selectedMonth])
+  const [lastDayCurrentMonth, setLastDayCurrentMonth] = useState(new Date(2024, 11, 31))
 
   useEffect(() => {
     getAllScales()
@@ -87,14 +59,22 @@ const Scale = () => {
     }
   }, [selectedMonth])
 
+  useEffect(() => {
+    console.log("teste")
+
+    console.log(selectedMonth)
+
+    setFirstDayCurrentMonth(new Date(2024, selectedMonth - 1, 1))
+
+    setLastDayCurrentMonth(new Date(2024, selectedMonth, 0))
+  }, [selectedMonth])
+
   const getAllScales = () => {
     api
       .get('/scales')
       .then((response) => {
         response.data && response.data.map((scale) => {
-          console.log(scale.scale.date)
-
-          scale.scale.date = JSON.parse(scale.scale.date)
+          console.log(JSON.parse(scale.scale.date.replace(/'/g, '"')))
         })
 
         setAllScales(response.data)
@@ -218,12 +198,8 @@ const Scale = () => {
 
           setSeeButton(false)
         })
-
     }
-
   }
-
-
 
   return (
     <>
@@ -291,8 +267,8 @@ const Scale = () => {
           onChange={(value) => handleOnChangeDates(value)}
           className="w-100 rounded-3"
           tileClassName={tileClassName}
-          // minDate={minDate}
-          // maxDate={maxDate}
+          minDate={firstDayCurrentMonth}
+          maxDate={lastDayCurrentMonth}
         />
 
         <div className="mt-3">
@@ -307,21 +283,27 @@ const Scale = () => {
               </thead>
 
               <tbody>
-                {
-                  allScales && allScales.map((scale) => (
-                    <tr>
-                      <td>{scale.month.name}</td>
-                      <td>{scale.worker.name}</td>
-                      <td>{scale.scale.date}</td>
-                      {/* <td>{JSON.parse(scale.date).map(date => <span>{date}</span>)}</td>   */}
-                    </tr>
-                  ))
-                }
+                {allScales && allScales.map((scale, index) => (
+                  <tr key={index}>
+                    <td>{scale.month.name}</td>
+                    <td>{scale.worker.name}</td>
+                    <td>
+                      <div className="badge-container">
+                        {scale.scale.date && JSON.parse(scale.scale.date.replace(/'/g, '"')).map((date, dateIndex) => (
+                          <>
+                            <span key={dateIndex} className="badge text-bg-primary">
+                              {date}&nbsp;
+                            </span>
+                          </>
+                        ))}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
         </div>
-
       </div >
 
       <style>

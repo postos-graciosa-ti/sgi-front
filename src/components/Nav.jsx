@@ -55,7 +55,7 @@ const Nav = () => {
       </nav>
 
       <div className="m-3 text-end">
-        <Link to="/steps">
+        <Link id="subsidiarie" to="/steps">
           Você está visualizando dados de: {selectedSubsidiarie.label}
         </Link>
       </div>

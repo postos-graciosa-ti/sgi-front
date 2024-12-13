@@ -40,6 +40,8 @@ const Users = () => {
 
   // const handleOpenDeleteModal = () => {}
 
+  // console.log(userList)
+
   return (
     <>
       <Nav />

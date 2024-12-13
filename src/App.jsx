@@ -35,7 +35,13 @@ function App() {
 
       <div className="container mt-3">
         <form onSubmit={(e) => handleLogin(e)}>
-          <h1 className="mb-4">Entrar</h1>
+          <div className="mb-3 mt-3">
+            <h1>Entrar</h1>
+
+            <span>
+              Seja bem vindo ao SGI (Sistema de Gestão integrado) da rede de postos Graciosa
+            </span>
+          </div>
 
           <div className="mb-3">
             <input

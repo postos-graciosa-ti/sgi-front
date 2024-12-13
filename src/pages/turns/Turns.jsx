@@ -1,18 +1,49 @@
-import { Plus } from "react-bootstrap-icons"
+import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
-import getTurns from "../../requests/getTurns"
+import AddTurnModal from "./AddTurnModal"
 import { useEffect, useState } from "react"
+import getTurns from "../../requests/getTurns"
+import EditTurnModal from "./EditTurnModal"
+import DeleteTurnModal from "./DeleteTurnModal"
 
 const Turns = () => {
+  const [addTurnModalOpen, setAddTurnModalOpen] = useState(false)
+
   const [turnsList, setTurnsList] = useState()
+
+  const [turnToEdit, setTurnToEdit] = useState()
+
+  const [editTurnModalOpen, setEditTurnModalOpen] = useState(false)
+
+  const [turnToDelete, setTurnToDelete] = useState()
+
+  const [deleteTurnModalOpen, setDeleteTurnModalOpen] = useState(false)
 
   useEffect(() => {
     GetTurns()
   }, [])
 
+  const handleOpenAddTurnModal = () => {
+    setAddTurnModalOpen(true)
+  }
+
+  const handleOpenEditTurnModal = (turn) => {
+    setTurnToEdit(turn)
+
+    setEditTurnModalOpen(true)
+  }
+
+  const handleOpenDeleteTurnModal = (turn) => {
+    setTurnToDelete(turn)
+
+    setDeleteTurnModalOpen(true)
+  }
+
   const GetTurns = () => {
     getTurns()
-      .then((response) => setTurnsList(response.data))
+      .then((response) => {
+        setTurnsList(response.data)
+      })
   }
 
   return (
@@ -20,10 +51,18 @@ const Turns = () => {
       <Nav />
 
       <div className="container">
-        <div>
+        <div className="mt-3 mb-3">
+          <button
+            type="button"
+            className="btn btn-warning me-2"
+          >
+            <Question />
+          </button>
+
           <button
             type="button"
             className="btn btn-primary"
+            onClick={handleOpenAddTurnModal}
           >
             <Plus />
           </button>
@@ -33,54 +72,62 @@ const Turns = () => {
           <table className="table table-hover">
             <thead>
               <tr>
-                <th>
-                  Colaborador
-                </th>
-
-                <th>
-                  Filial
-                </th>
-
-                <th>
-                  Dias de folga
-                </th>
-
-                <th></th>
+                <th>Nome</th>
+                <th>Início do turno</th>
+                <th>Início do intervalo</th>
+                <th>Fim do intervalo</th>
+                <th>Fim do turno</th>
               </tr>
             </thead>
 
             <tbody>
-              {/* {
+              {
                 turnsList && turnsList.map((turn) => (
-                  <tr>
+                  <tr key={turn.id}>
+                    <td>{turn.name}</td>
+                    <td>{turn.start_time}</td>
+                    <td>{turn.start_interval_time}</td>
+                    <td>{turn.end_interval_time}</td>
+                    <td>{turn.end_time}</td>
                     <td>
-                      {turn.worker_name}
-                    </td>
-
-                    <td>
-                      {turn.subsidiarie_name}
-                    </td>
-
-                    <td>
-                      {turn.holidays}
-                    </td>
-
-                    <td>
-                      <button type="button" className="btn btn-primary">
+                      <button
+                        type="button"
+                        className="btn btn-warning mt-2 me-2"
+                        onClick={() => handleOpenEditTurnModal(turn)}
+                      >
                         <Pencil />
                       </button>
 
-                      <button type="button" className="btn btn-danger">
-                        <Trash />
-                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-danger mt-2"
+                        onClick={() => handleOpenDeleteTurnModal(turn)}
+                      >
                     </td>
-                  </tr>
-                ))
-              } */}
             </tbody>
           </table>
         </div>
       </div>
+
+      <AddTurnModal
+        addTurnModalOpen={addTurnModalOpen}
+        setAddTurnModalOpen={setAddTurnModalOpen}
+        GetTurns={GetTurns}
+      />
+
+      <EditTurnModal
+        editTurnModalOpen={editTurnModalOpen}
+        setEditTurnModalOpen={setEditTurnModalOpen}
+        GetTurns={GetTurns}
+        turnToEdit={turnToEdit}
+      />
+
+      <DeleteTurnModal
+        deleteTurnModalOpen={deleteTurnModalOpen}
+        setDeleteTurnModalOpen={setDeleteTurnModalOpen}
+        GetTurns={GetTurns}
+        turnToDelete={turnToDelete}
+      />
     </>
   )
 }

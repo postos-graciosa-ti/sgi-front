@@ -19,6 +19,7 @@
     "react-bootstrap": "^2.10.6",
     "react-bootstrap-icons": "^1.11.4",
     "react-calendar": "^5.1.0",
+    "react-datetime": "^3.3.0",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.0.1",
     "react-select": "^5.8.3",

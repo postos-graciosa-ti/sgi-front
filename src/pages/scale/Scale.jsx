@@ -8,12 +8,14 @@ import useUserSessionStore from '../../data/userSession'
 import getMonths from '../../requests/getMonths'
 import getTurns from '../../requests/getTurns'
 import getWorkersByTurnAndSubsidiarie from '../../requests/getWorkersByTurnAndSubsidiarie'
-import api from '../../services/api'
 import putScale from '../../requests/putScale'
 import postScale from '../../requests/postScale'
+import api from '../../services/api'
 
 const Scale = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
+  const [allScales, setAllScales] = useState()
 
   const [workersTurnList, setWorkersTurnList] = useState()
 
@@ -35,7 +37,41 @@ const Scale = () => {
 
   const [selectedScale, setSelectedScale] = useState()
 
+  const [minDate, setMinDate] = useState(new Date("2024-12-01"))
+
+  const [maxDate, setMaxDate] = useState(new Date("2024-12-31"))
+
+  function primeiroEUltimoDiaDoMes(mes) {
+    const ano = 2024
+
+    const primeiroDia = new Date(ano, mes - 1, 1)
+
+    const ultimoDia = new Date(ano, mes, 0)
+
+    const formatDate = (date) => {
+      const dia = String(date.getDate()).padStart(2, '0');
+      const mes = String(date.getMonth() + 1).padStart(2, '0');
+      const ano = date.getFullYear();
+      return `${dia}-${mes}-${ano}`;
+    }
+
+    return {
+      primeiroDia: formatDate(primeiroDia),
+      ultimoDia: formatDate(ultimoDia)
+    }
+  }
+
   useEffect(() => {
+    const resultado = primeiroEUltimoDiaDoMes(selectedMonth);
+
+    setMinDate(resultado.primeiroDia)
+
+    setMaxDate(resultado.ultimoDia)
+  }, [selectedMonth])
+
+  useEffect(() => {
+    getAllScales()
+
     getWorkersTurns()
   }, [])
 
@@ -51,6 +87,20 @@ const Scale = () => {
     }
   }, [selectedMonth])
 
+  const getAllScales = () => {
+    api
+      .get('/scales')
+      .then((response) => {
+        response.data && response.data.map((scale) => {
+          console.log(scale.scale.date)
+
+          scale.scale.date = JSON.parse(scale.scale.date)
+        })
+
+        setAllScales(response.data)
+      })
+  }
+
   const getWorkersTurns = () => {
     getTurns()
       .then((response) => {
@@ -59,7 +109,7 @@ const Scale = () => {
         let workersTurnsOptions = []
 
         workerTurnsData && workerTurnsData.map((turn) => {
-          workersTurnsOptions.push({ "label": `${turn.name} - ${turn.time}`, "value": turn.id })
+          workersTurnsOptions.push({ "label": turn.name, "value": turn.id })
         })
 
         setWorkersTurnList(workersTurnsOptions)
@@ -173,6 +223,8 @@ const Scale = () => {
 
   }
 
+
+
   return (
     <>
       <Nav />
@@ -239,7 +291,37 @@ const Scale = () => {
           onChange={(value) => handleOnChangeDates(value)}
           className="w-100 rounded-3"
           tileClassName={tileClassName}
+          // minDate={minDate}
+          // maxDate={maxDate}
         />
+
+        <div className="mt-3">
+          <div className="table-responsive">
+            <table className="table table-hover">
+              <thead>
+                <tr>
+                  <th>Mês</th>
+                  <th>Colaborador</th>
+                  <th>Folgas</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {
+                  allScales && allScales.map((scale) => (
+                    <tr>
+                      <td>{scale.month.name}</td>
+                      <td>{scale.worker.name}</td>
+                      <td>{scale.scale.date}</td>
+                      {/* <td>{JSON.parse(scale.date).map(date => <span>{date}</span>)}</td>   */}
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </div >
 
       <style>

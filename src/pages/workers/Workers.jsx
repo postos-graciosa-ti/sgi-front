@@ -6,6 +6,7 @@ import getWorkersBySubsidiarie from "../../requests/getWorkersBySubsidiarie"
 import api from "../../services/api"
 import CreateWorkerModal from "./CreateWorkerModal"
 import SecurityPasswordModal from "./SecurityPasswordModal"
+import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
 
 const Workers = () => {
   const userSession = useUserSessionStore(state => state.userSession)
@@ -61,10 +62,17 @@ const Workers = () => {
 
         <button
           type="button"
-          className="btn btn-sm btn-primary mt-3 me-2"
+          className="btn btn-warning me-2"
+        >
+          <Question />
+        </button>
+
+        <button
+          type="button"
+          className="btn btn-primary"
           onClick={() => setCreateWorkerModalOpen(true)}
         >
-          Adicionar colaborador
+          <Plus />
         </button>
 
         <div className="table-responsive mt-3">
@@ -83,33 +91,17 @@ const Workers = () => {
                   <td>{worker.is_active == true && "Sim" || "Não"}</td>
                   <td>
                     <button
-                      className="btn btn-sm btn-primary me-2"
+                      className="btn btn-primary"
                       onClick={() => handleUpdateWorker(worker)}
                     >
-                      Editar
+                      <Pencil />
                     </button>
 
-                    {/* {
-                      userSession.role_id == 1 && (
-                        <button
-                          type="button"
-                          className="btn btn-sm btn-secondary me-2"
-                          onClick={() => {
-                            setSelectedWorker(worker)
-                            setSecurityPasswordModalOpen(true)
-                          }}
-                        >
-                          Cadastrar senha de segurança
-                        </button>
-                      )
-                    } */}
-
                     <button
-                      type="button"
-                      className="btn btn-sm btn-danger"
+                      className="btn btn-danger"
                       onClick={() => handleDeleteWorker(worker)}
                     >
-                      Remover
+                      <Trash />
                     </button>
                   </td>
                 </tr>

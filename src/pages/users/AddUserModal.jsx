@@ -3,12 +3,13 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
 import useUserSessionStore from '../../data/userSession'
+import getFunctions from '../../requests/getFunctions'
 import getRoles from '../../requests/getRoles'
 import getSubsidiaries from '../../requests/getSubsidiaries'
-import getUsers from '../../requests/getUsers'
 import postUser from '../../requests/postUser'
+import getUsers from '../../requests/getUsers'
 
-const UserModal = (props) => {
+const AddUserModal = (props) => {
   const {
     id,
     modalOpen,
@@ -27,9 +28,13 @@ const UserModal = (props) => {
 
   const [subsidiariesList, setSubsidiariesList] = useState()
 
+  const [functionsList, setFunctionsList] = useState()
+
   const [selectedSubsidiaries, setSelectedSubsidiaries] = useState([])
 
   const [selectAllSubsidiaries, setSelectAllSubsidiaries] = useState()
+
+  const [selectedFunction, setSelectedFunction] = useState()
 
   useEffect(() => {
     getRoles()
@@ -58,36 +63,47 @@ const UserModal = (props) => {
         setSubsidiariesList(options)
       })
 
-  }, [])
+    getFunctions()
+      .then((response) => {
+        let functionsData = response.data
 
-  console.log(role)
+        console.log(functionsData)
+
+        let options = []
+
+        functionsData && functionsData.map((data) => {
+          options.push({ "label": data.name, "value": data.id })
+        })
+
+        setFunctionsList(options)
+      })
+
+  }, [])
 
   const handleCreateUser = (e) => {
     e.preventDefault()
 
     let subsidiariesString = selectedSubsidiaries.map(subsidiary => subsidiary.value).join(',');
 
-    let userData = {
+    let formData = {
       "name": name,
       "email": email,
-      "password": "1",
+      // "password": "1",
       "role_id": role,
-      "subsidiaries_id": subsidiariesString
+      "subsidiaries_id": `[${subsidiariesString}]`,
+      "function_id": selectedFunction.value
     }
 
-    postUser(userData)
-      .then((response) => {
-        if (response.status == 200) {
-          getUsers()
-            .then((response) => {
-              setUserList(response.data)
+    postUser(formData)
+      .then(() => {
+        getUsers()
+          .then((response) => {
+            setUserList(response.data)
 
-              setSelectAllSubsidiaries(false)
+            setSelectAllSubsidiaries(false)
 
-              setModalOpen(false)
-            })
-            .catch((error) => console.error(error))
-        }
+            setModalOpen(false)
+          })
       })
   }
 
@@ -118,15 +134,6 @@ const UserModal = (props) => {
           <Modal.Body>
             <div className="mb-3">
               <input
-                type="text"
-                className="form-control"
-                placeholder="Nome"
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-
-            <div className="mb-3">
-              <input
                 type="email"
                 className="form-control"
                 placeholder="Email"
@@ -135,8 +142,17 @@ const UserModal = (props) => {
             </div>
 
             <div className="mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Nome"
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-3">
               <Select
-                placeholder="Cargo"
+                placeholder="Tipo"
                 options={rolesOptions}
                 onChange={(e) => handleSelectRole(e.value)}
               />
@@ -147,8 +163,16 @@ const UserModal = (props) => {
                 placeholder="Filial"
                 options={subsidiariesList}
                 isMulti
-                value={selectAllSubsidiaries && subsidiariesList || false}
+                value={selectAllSubsidiaries && subsidiariesList || selectedSubsidiaries}
                 onChange={(e) => setSelectedSubsidiaries(e)}
+              />
+            </div>
+
+            <div className="mb-3">
+              <Select
+                placeholder="Função"
+                options={functionsList}
+                onChange={(e) => setSelectedFunction(e)}
               />
             </div>
           </Modal.Body>
@@ -174,4 +198,4 @@ const UserModal = (props) => {
   )
 }
 
-export default UserModal
+export default AddUserModal

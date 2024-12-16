@@ -3,7 +3,7 @@ import api from "../services/api"
 const getUsers = () => {
   return (
     api
-      .get("/users_roles")
+      .get("/users")
       .then((response) => response)
       .catch((error) => console.error(error))
   )

@@ -1,9 +1,9 @@
 import api from "../services/api"
 
-const postUser = (userData) => {
+const postUser = (formData) => {
   return (
     api
-      .post("/users", userData)
+      .post("/users", formData)
       .then((response) => response)
       .catch((error) => console.error(error))
   )

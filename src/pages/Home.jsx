@@ -4,6 +4,8 @@ import useUserSessionStore from "../data/userSession"
 const Home = () => {
   const userSession = useUserSessionStore(state => state.userSession)
 
+  console.log(userSession)
+
   return (
     <>
       <Nav />

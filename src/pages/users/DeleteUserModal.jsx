@@ -4,9 +4,6 @@ import useUserSessionStore from "../../data/userSession"
 import deleteUser from '../../requests/deleteUser'
 import getUsers from '../../requests/getUsers'
 
-// pedir senha para confirmação uma exclusão de usuário?
-// lembrar que somente admins acessam essa página
-
 const DeleteUserModal = (props) => {
   const {
     openDeleteUserModal,
@@ -18,15 +15,13 @@ const DeleteUserModal = (props) => {
   const selectedUser = useUserSessionStore(state => state.selectedUser)
 
   const handleDeleteUser = () => {
-    deleteUser(selectedUser.id)
-      .then((response) => {
-        if (response.status == 200) {
-          getUsers()
-            .then((response) => {
-              setUserList(response.data)
-              setOpenDeleteUserModal(false)
-            })
-        }
+    deleteUser(selectedUser.user_id)
+      .then(() => {
+        getUsers()
+          .then((response) => {
+            setUserList(response.data)
+            setOpenDeleteUserModal(false)
+          })
       })
   }
 

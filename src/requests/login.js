@@ -4,7 +4,7 @@ import Swal from "sweetalert2"
 const login = (data) => {
   return (
     api
-      .post("/login", data)
+      .post("/users/login", data)
       .then((response) => response)
       .catch((error) => {
         console.error(error)

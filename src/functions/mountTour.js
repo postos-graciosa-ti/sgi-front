@@ -106,6 +106,60 @@ const mountTour = (route) => {
       })
       break
 
+    case '/users':
+      driverObj = driver({
+        showProgress: true,
+        steps: [
+          {
+            element: '#subsidiarie',
+            popover: {
+              title: 'Filial',
+              description: 'Essa tag mostra a filial que você está visualizando'
+            }
+          },
+          {
+            element: '#help',
+            popover: {
+              title: 'Ajuda',
+              description: 'Caso fique em dúvida sobre algo nessa página, esse botão irá fornecer mais informações'
+            }
+          },
+          {
+            element: '#addUser',
+            popover: {
+              title: 'Adicionar usuário',
+              description: 'Clique nesse botão para adicionar um novo usuário'
+            }
+          },
+          {
+            element: '#users-table',
+            popover: {
+              title: 'Tabela de usuários',
+              description: 'Essa tabela mostra todos os usuários cadastrados'
+            }
+          },
+          {
+            element: '#editUser',
+            popover: {
+              title: 'Editar usuário',
+              description: 'Clique nesse botão para editar um usuário'
+            }
+          },
+          {
+            element: '#deleteUser',
+            popover: {
+              title: 'Excluir usuário',
+              description: 'Clique nesse botão para excluir um usuário'
+            }
+          }
+        ],
+        nextBtnText: 'Próximo Passo',
+        prevBtnText: 'Passo Anterior',
+        closeBtnText: 'Fechar Tour',
+        doneBtnText: 'Finalizar Tour'
+      })
+      break
+
     default:
       break
   }

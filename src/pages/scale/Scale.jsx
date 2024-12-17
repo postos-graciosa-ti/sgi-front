@@ -6,6 +6,7 @@ import 'react-calendar/dist/Calendar.css'
 import ReactSelect from 'react-select'
 import Nav from "../../components/Nav"
 import useUserSessionStore from '../../data/userSession'
+import mountTour from '../../functions/mountTour'
 import getMonths from '../../requests/getMonths'
 import getTurns from '../../requests/getTurns'
 import getWorkersByTurnAndSubsidiarie from '../../requests/getWorkersByTurnAndSubsidiarie'
@@ -218,23 +219,20 @@ const Scale = () => {
       })
   }
 
-  // useEffect(() => {
-  //   api
-  //     .get(`/workers/on-track/turn/${turnWorkersOnTrack}/subsidiarie/${selectedSubsdiarie.value}`)
-  //     .then((response) => {
-  //       console.log(response.data)
+  const setTour = () => {
+    let route = location.pathname
 
-  //       setWorkersOnTrack(response.data)
-  //     })
+    let driverObj = mountTour(route)
 
-  // }, [turnWorkersOnTrack])
+    driverObj.drive()
+  }
 
   return (
     <>
       <Nav />
 
       <div className="container">
-        <button className="btn btn-warning mb-3 me-2">
+        <button id="help" className="btn btn-warning mb-3 me-2" onClick={setTour}>
           <Question />
         </button>
 
@@ -253,59 +251,62 @@ const Scale = () => {
 
         <div className="row">
           <div className="col">
-            <div className="row mb-3">
-              <div className="col">
-                <ReactSelect
-                  className="disable"
-                  placeholder="Filial"
-                  value={{ "value": selectedSubsdiarie.value, "label": selectedSubsdiarie.label }}
-                />
+
+            <div id="scale-container">
+              <div className="row mb-3">
+                <div className="col">
+                  <ReactSelect
+                    className="disable"
+                    placeholder="Filial"
+                    value={{ "value": selectedSubsdiarie.value, "label": selectedSubsdiarie.label }}
+                  />
+                </div>
+
+                <div className="col">
+                  <ReactSelect
+                    placeholder="Turnos"
+                    options={workersTurnList}
+                    onChange={(e) => {
+                      setScales([])
+                      setSelectedTurn(e.value)
+                    }}
+                  />
+                </div>
+
+                <div className="col">
+                  <ReactSelect
+                    placeholder="Colaborador"
+                    options={workersList}
+                    onChange={(e) => {
+                      setScales([])
+                      setSelectedWorker(e.value)
+                    }}
+                  />
+                </div>
+
+                <div className="col">
+                  <ReactSelect
+                    placeholder="Mês"
+                    options={monthsList}
+                    onChange={(e) => {
+                      setScales([])
+                      setSelectedMonth(e.value)
+                    }}
+                  />
+                </div>
               </div>
 
-              <div className="col">
-                <ReactSelect
-                  placeholder="Turnos"
-                  options={workersTurnList}
-                  onChange={(e) => {
-                    setScales([])
-                    setSelectedTurn(e.value)
-                  }}
-                />
-              </div>
-
-              <div className="col">
-                <ReactSelect
-                  placeholder="Colaborador"
-                  options={workersList}
-                  onChange={(e) => {
-                    setScales([])
-                    setSelectedWorker(e.value)
-                  }}
-                />
-              </div>
-
-              <div className="col">
-                <ReactSelect
-                  placeholder="Mês"
-                  options={monthsList}
-                  onChange={(e) => {
-                    setScales([])
-                    setSelectedMonth(e.value)
-                  }}
-                />
-              </div>
+              <Calendar
+                value={selectedDates}
+                onChange={(value) => handleOnChangeDates(value)}
+                className="w-100 rounded-3"
+                tileClassName={tileClassName}
+                minDate={firstDayCurrentMonth}
+                maxDate={lastDayCurrentMonth}
+              />
             </div>
 
-            <Calendar
-              value={selectedDates}
-              onChange={(value) => handleOnChangeDates(value)}
-              className="w-100 rounded-3"
-              tileClassName={tileClassName}
-              minDate={firstDayCurrentMonth}
-              maxDate={lastDayCurrentMonth}
-            />
-
-            <div className="mt-3">
+            <div id="scale-table" className="mt-3">
               <div className="table-responsive">
                 <table className="table table-hover">
                   <thead>
@@ -340,7 +341,7 @@ const Scale = () => {
             </div>
           </div >
 
-          <div className="col">
+          <div id="scale-track" className="col">
             <h4 className="mb-4">Funcionários na pista neste turno</h4>
 
             <div className="row">
@@ -378,24 +379,6 @@ const Scale = () => {
                     </tbody>
                   </table>
                 </div>
-
-                {/* {
-                  workersOnTrack?.map((onTrack) => (
-                    <>
-                      {
-                        onTrack.worker_name
-                      }
-                    </>
-                  ))
-                } */}
-
-                {/* {
-                  workersOnTrack && workersOnTrack.map((worker, index) => (
-                    <div key={index}>
-                      <p>{worker.worker.name}</p>
-                    </div>
-                  ))
-                } */}
               </div>
 
               <div className="col">

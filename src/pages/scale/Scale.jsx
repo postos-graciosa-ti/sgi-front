@@ -12,6 +12,7 @@ import getTurns from '../../requests/getTurns'
 import getWorkersByTurnAndSubsidiarie from '../../requests/getWorkersByTurnAndSubsidiarie'
 import postScale from '../../requests/postScale'
 import putScale from '../../requests/putScale'
+import resetScale from '../../requests/resetScale'
 import api from '../../services/api'
 
 const Scale = () => {
@@ -247,6 +248,19 @@ const Scale = () => {
     driverObj.drive()
   }
 
+  const handleResetScale = () => {
+    resetScale(selectedWorker, selectedMonth)
+      .then(() => {
+        getWorkerScalesByMonth()
+
+        handleFindWorkersOnTrack()
+
+        getAllScales()
+
+        setSeeButton(false)
+      })
+  }
+
   return (
     <>
       <Nav />
@@ -260,10 +274,14 @@ const Scale = () => {
           seeButton && (
             <>
               <button
-                className="btn btn-success mb-3"
+                className="btn btn-success mb-3 me-2"
                 onClick={handleSaveDates}
               >
                 Salvar
+              </button>
+
+              <button className='btn btn-danger mb-3' onClick={handleResetScale}>
+                Resetar escala
               </button>
             </>
           )
@@ -326,7 +344,7 @@ const Scale = () => {
               />
             </div>
 
-            <div id="scale-table" className="mt-3">
+            {/* <div id="scale-table" className="mt-3">
               <div className="table-responsive">
                 <table className="table table-hover">
                   <thead>
@@ -358,7 +376,7 @@ const Scale = () => {
                   </tbody>
                 </table>
               </div>
-            </div>
+            </div> */}
           </div >
 
           <div id="scale-track" className="col">

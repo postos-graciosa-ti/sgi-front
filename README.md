@@ -1,8 +1,41 @@
-# React + Vite
+# Overview
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Front end do SGI (Sistema de Gerenciamento Integrado) da rede de postos Graciosa
 
-Currently, two official plugins are available:
+### Tech Stack:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Vite, uma ferramenta de front-end para construir aplicações web 
+
+- React.js, uma ferramenta para construir componentes de UI
+
+- Bootstrap CSS, uma ferramenta de frontend com recursos avançados
+
+# Iniciando
+
+### Clonando o projeto:
+
+```bash
+git clone https://github.com/postos-graciosa-ti/sgi-front.git
+```
+
+### Adicionando o arquivo .env:
+
+```bash
+cd sgi-front
+```
+
+```bash
+VITE_API_BASE_URL=your-api-url
+```
+
+### Instalando as dependências:
+
+```bash
+npm install
+```
+
+### Rodando o projeto localmente:
+
+```bash
+npm run dev
+```

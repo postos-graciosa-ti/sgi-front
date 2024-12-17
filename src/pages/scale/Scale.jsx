@@ -1,5 +1,6 @@
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
+import { Question } from 'react-bootstrap-icons'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 import ReactSelect from 'react-select'
@@ -8,8 +9,8 @@ import useUserSessionStore from '../../data/userSession'
 import getMonths from '../../requests/getMonths'
 import getTurns from '../../requests/getTurns'
 import getWorkersByTurnAndSubsidiarie from '../../requests/getWorkersByTurnAndSubsidiarie'
-import putScale from '../../requests/putScale'
 import postScale from '../../requests/postScale'
+import putScale from '../../requests/putScale'
 import api from '../../services/api'
 
 const Scale = () => {
@@ -201,11 +202,42 @@ const Scale = () => {
     }
   }
 
+  const [turnWorkersOnTrack, setTurnWorkersOnTrack] = useState([])
+
+  const [workersOnTrack, setWorkersOnTrack] = useState([])
+
+  const handleFindWorkersOnTrack = () => {
+    console.log("teste")
+
+    api
+      .get(`/workers/on-track/turn/${turnWorkersOnTrack}/subsidiarie/${selectedSubsdiarie.value}`)
+      .then((response) => {
+        console.log(response.data)
+
+        setWorkersOnTrack(response.data)
+      })
+  }
+
+  // useEffect(() => {
+  //   api
+  //     .get(`/workers/on-track/turn/${turnWorkersOnTrack}/subsidiarie/${selectedSubsdiarie.value}`)
+  //     .then((response) => {
+  //       console.log(response.data)
+
+  //       setWorkersOnTrack(response.data)
+  //     })
+
+  // }, [turnWorkersOnTrack])
+
   return (
     <>
       <Nav />
 
       <div className="container">
+        <button className="btn btn-warning mb-3 me-2">
+          <Question />
+        </button>
+
         {
           seeButton && (
             <>
@@ -219,92 +251,162 @@ const Scale = () => {
           )
         }
 
-        <div className="row mb-3">
+        <div className="row">
           <div className="col">
-            <ReactSelect
-              className="disable"
-              placeholder="Filial"
-              value={{ "value": selectedSubsdiarie.value, "label": selectedSubsdiarie.label }}
+            <div className="row mb-3">
+              <div className="col">
+                <ReactSelect
+                  className="disable"
+                  placeholder="Filial"
+                  value={{ "value": selectedSubsdiarie.value, "label": selectedSubsdiarie.label }}
+                />
+              </div>
+
+              <div className="col">
+                <ReactSelect
+                  placeholder="Turnos"
+                  options={workersTurnList}
+                  onChange={(e) => {
+                    setScales([])
+                    setSelectedTurn(e.value)
+                  }}
+                />
+              </div>
+
+              <div className="col">
+                <ReactSelect
+                  placeholder="Colaborador"
+                  options={workersList}
+                  onChange={(e) => {
+                    setScales([])
+                    setSelectedWorker(e.value)
+                  }}
+                />
+              </div>
+
+              <div className="col">
+                <ReactSelect
+                  placeholder="Mês"
+                  options={monthsList}
+                  onChange={(e) => {
+                    setScales([])
+                    setSelectedMonth(e.value)
+                  }}
+                />
+              </div>
+            </div>
+
+            <Calendar
+              value={selectedDates}
+              onChange={(value) => handleOnChangeDates(value)}
+              className="w-100 rounded-3"
+              tileClassName={tileClassName}
+              minDate={firstDayCurrentMonth}
+              maxDate={lastDayCurrentMonth}
             />
-          </div>
+
+            <div className="mt-3">
+              <div className="table-responsive">
+                <table className="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Mês</th>
+                      <th>Colaborador</th>
+                      <th>Folgas</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {allScales && allScales.map((scale, index) => (
+                      <tr key={index}>
+                        <td>{scale.month.name}</td>
+                        <td>{scale.worker.name}</td>
+                        <td>
+                          <div className="badge-container">
+                            {scale.scale.date && JSON.parse(scale.scale.date.replace(/'/g, '"')).map((date, dateIndex) => (
+                              <>
+                                <span key={dateIndex} className="badge text-bg-primary">
+                                  {date}&nbsp;
+                                </span>
+                              </>
+                            ))}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div >
 
           <div className="col">
-            <ReactSelect
-              placeholder="Turnos"
-              options={workersTurnList}
-              onChange={(e) => {
-                setScales([])
-                setSelectedTurn(e.value)
-              }}
-            />
-          </div>
+            <h4 className="mb-4">Funcionários na pista neste turno</h4>
 
-          <div className="col">
-            <ReactSelect
-              placeholder="Colaborador"
-              options={workersList}
-              onChange={(e) => {
-                setScales([])
-                setSelectedWorker(e.value)
-              }}
-            />
-          </div>
+            <div className="row">
+              <div className="col">
+                <div>
+                  <ReactSelect
+                    placeholder="Turno"
+                    options={workersTurnList}
+                    onChange={(e) => {
+                      setTurnWorkersOnTrack(e.value)
+                    }}
+                  />
+                </div>
 
-          <div className="col">
-            <ReactSelect
-              placeholder="Mês"
-              options={monthsList}
-              onChange={(e) => {
-                setScales([])
-                setSelectedMonth(e.value)
-              }}
-            />
+                <div className="table-responsive mt-3">
+                  <table className="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Nome do colaborador</th>
+
+                        <th>Função</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {
+                        workersOnTrack?.map((onTrack) => (
+                          <tr>
+                            <td>{onTrack.worker_name}</td>
+
+                            <td>{onTrack.function_name}</td>
+                          </tr>
+                        ))
+                      }
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* {
+                  workersOnTrack?.map((onTrack) => (
+                    <>
+                      {
+                        onTrack.worker_name
+                      }
+                    </>
+                  ))
+                } */}
+
+                {/* {
+                  workersOnTrack && workersOnTrack.map((worker, index) => (
+                    <div key={index}>
+                      <p>{worker.worker.name}</p>
+                    </div>
+                  ))
+                } */}
+              </div>
+
+              <div className="col">
+                <button className="btn btn-success" onClick={handleFindWorkersOnTrack}>
+                  Buscar
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-
-        <Calendar
-          value={selectedDates}
-          onChange={(value) => handleOnChangeDates(value)}
-          className="w-100 rounded-3"
-          tileClassName={tileClassName}
-          minDate={firstDayCurrentMonth}
-          maxDate={lastDayCurrentMonth}
-        />
-
-        <div className="mt-3">
-          <div className="table-responsive">
-            <table className="table table-hover">
-              <thead>
-                <tr>
-                  <th>Mês</th>
-                  <th>Colaborador</th>
-                  <th>Folgas</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {allScales && allScales.map((scale, index) => (
-                  <tr key={index}>
-                    <td>{scale.month.name}</td>
-                    <td>{scale.worker.name}</td>
-                    <td>
-                      <div className="badge-container">
-                        {scale.scale.date && JSON.parse(scale.scale.date.replace(/'/g, '"')).map((date, dateIndex) => (
-                          <>
-                            <span key={dateIndex} className="badge text-bg-primary">
-                              {date}&nbsp;
-                            </span>
-                          </>
-                        ))}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div >
+      </div>
 
       <style>
         {`

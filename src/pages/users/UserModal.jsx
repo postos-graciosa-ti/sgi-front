@@ -1,0 +1,213 @@
+import { useEffect, useState } from 'react'
+import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
+import Select from 'react-select'
+import useUserSessionStore from '../../data/userSession'
+import getFunctions from '../../requests/getFunctions'
+import getRoles from '../../requests/getRoles'
+import getSubsidiaries from '../../requests/getSubsidiaries'
+import postUser from '../../requests/postUser'
+import getUsers from '../../requests/getUsers'
+
+const AddUserModal = (props) => {
+  const {
+    id,
+    modalOpen,
+    setModalOpen,
+  } = props
+
+  const setUserList = useUserSessionStore(state => state.setUserList)
+
+  const [rolesOptions, setRolesOptions] = useState()
+
+  const [name, setName] = useState()
+
+  const [email, setEmail] = useState()
+
+  const [role, setRole] = useState()
+
+  const [subsidiariesList, setSubsidiariesList] = useState()
+
+  const [functionsList, setFunctionsList] = useState()
+
+  const [selectedSubsidiaries, setSelectedSubsidiaries] = useState([])
+
+  const [selectAllSubsidiaries, setSelectAllSubsidiaries] = useState()
+
+  const [selectedFunction, setSelectedFunction] = useState()
+
+  useEffect(() => {
+    getRoles()
+      .then((response) => {
+        let rolesData = response.data
+
+        let options = []
+
+        rolesData && rolesData.map((data) => {
+          options.push({ "label": data.name, "value": data.id })
+        })
+
+        setRolesOptions(options)
+      })
+
+    getSubsidiaries()
+      .then((response) => {
+        let subsidiariesData = response.data
+
+        let options = []
+
+        subsidiariesData && subsidiariesData.map((data) => {
+          options.push({ "label": data.name, "value": data.id })
+        })
+
+        setSubsidiariesList(options)
+      })
+
+    getFunctions()
+      .then((response) => {
+        let functionsData = response.data
+
+        console.log(functionsData)
+
+        let options = []
+
+        functionsData && functionsData.map((data) => {
+          options.push({ "label": data.name, "value": data.id })
+        })
+
+        setFunctionsList(options)
+      })
+
+  }, [])
+
+  const handleCreateUser = (e) => {
+    e.preventDefault()
+
+    let subsidiariesString = selectedSubsidiaries.map(subsidiary => subsidiary.value).join(',');
+
+    let formData = {
+      "name": name,
+      "email": email,
+      "password": "1",
+      "role_id": role.value,
+      "subsidiaries_id": `[${subsidiariesString}]`,
+      "function_id": selectedFunction.value
+    }
+
+    console.log(formData)
+    debugger
+
+    // {
+    //   "email": "aaaaaaaaaa@gmail.com",
+    //   "name": "teste",
+    //   "role_id": 1,
+    //   "subsidiaries_id": "[1,2,3]",
+    //   "function_id": 1,
+    //   "is_active": true
+    // }
+
+    postUser(formData)
+      .then(() => {
+        getUsers()
+          .then((response) => {
+            setUserList(response.data)
+
+            setSelectAllSubsidiaries(false)
+
+            setModalOpen(false)
+          })
+      })
+  }
+
+  const handleSelectRole = (role) => {
+    if (role == 1)
+      setSelectAllSubsidiaries(true)
+
+    setRole(role)
+  }
+
+  return (
+    <>
+      <Modal
+        show={modalOpen}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {
+              id == "CreateUserModal" && "Criar novo usuário"
+              || "Editar usuário"
+            }
+          </Modal.Title>
+        </Modal.Header>
+
+        <form onSubmit={(e) => handleCreateUser(e)}>
+          <Modal.Body>
+            <div className="mb-3">
+              <input
+                type="email"
+                className="form-control"
+                placeholder="Email"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Nome"
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-3">
+              <Select
+                placeholder="Tipo"
+                options={rolesOptions}
+                onChange={(e) => handleSelectRole(e.value)}
+              />
+            </div>
+
+            <div className="mb-3">
+              <Select
+                placeholder="Filial"
+                options={subsidiariesList}
+                isMulti
+                value={selectAllSubsidiaries && subsidiariesList || selectedSubsidiaries}
+                onChange={(e) => setSelectedSubsidiaries(e)}
+              />
+            </div>
+
+            <div className="mb-3">
+              <Select
+                placeholder="Função"
+                options={functionsList}
+                onChange={(e) => setSelectedFunction(e)}
+              />
+            </div>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button
+              variant="light"
+              onClick={() => {
+                setModalOpen(false)
+                setSelectAllSubsidiaries(false)
+              }}
+            >
+              Fechar
+            </Button>
+
+            <Button type="submit" variant="success">
+              Criar
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
+    </>
+  )
+}
+
+export default AddUserModal

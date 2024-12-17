@@ -258,6 +258,21 @@ const Scale = () => {
         getAllScales()
 
         setSeeButton(false)
+
+        api
+          .get(`/scale/worker/${selectedWorker}/month/${selectedMonth}`)
+          .then((response) => {
+            let scalesData = response.data
+
+            let scalesDataOptions = []
+
+            scalesData && scalesData.map((scale) => {
+              scalesDataOptions.push(scale.date)
+            })
+
+            setScales(scalesDataOptions)
+          })
+          .catch((error) => console.error(error))
       })
   }
 

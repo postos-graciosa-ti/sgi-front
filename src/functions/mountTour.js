@@ -30,13 +30,13 @@ const mountTour = (route) => {
               description: 'Calendário para planejamento de escala'
             }
           },
-          {
-            element: '#scale-table',
-            popover: {
-              title: 'Histórico de escala',
-              description: 'Essa tabela mostra o histórico de escala'
-            }
-          },
+          // {
+          //   element: '#scale-table',
+          //   popover: {
+          //     title: 'Histórico de escala',
+          //     description: 'Essa tabela mostra o histórico de escala'
+          //   }
+          // },
           {
             element: '#scale-track',
             popover: {

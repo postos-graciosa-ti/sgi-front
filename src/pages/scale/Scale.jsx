@@ -43,6 +43,10 @@ const Scale = () => {
 
   const [lastDayCurrentMonth, setLastDayCurrentMonth] = useState(new Date(2024, 11, 31))
 
+  const [turnWorkersOnTrack, setTurnWorkersOnTrack] = useState([])
+
+  const [workersOnTrack, setWorkersOnTrack] = useState([])
+
   useEffect(() => {
     getAllScales()
 
@@ -158,6 +162,16 @@ const Scale = () => {
       .catch((error) => console.error(error))
   }
 
+  const handleFindWorkersOnTrack = () => {
+    api
+      .get(`/workers/on-track/turn/${turnWorkersOnTrack}/subsidiarie/${selectedSubsdiarie.value}`)
+      .then((response) => {
+        console.log(response.data)
+
+        setWorkersOnTrack(response.data)
+      })
+  }
+
   const tileClassName = ({ date, view }) => {
     if (view === 'month') {
       const day = moment(date).format("DD-MM-YYYY")
@@ -184,6 +198,10 @@ const Scale = () => {
         .then(() => {
           getWorkerScalesByMonth()
 
+          handleFindWorkersOnTrack()
+
+          getAllScales()
+
           setSeeButton(false)
         })
 
@@ -198,26 +216,28 @@ const Scale = () => {
         .then(() => {
           getWorkerScalesByMonth()
 
+          handleFindWorkersOnTrack()
+
+          getAllScales()
+
           setSeeButton(false)
         })
     }
   }
 
-  const [turnWorkersOnTrack, setTurnWorkersOnTrack] = useState([])
+  // const [turnWorkersOnTrack, setTurnWorkersOnTrack] = useState([])
 
-  const [workersOnTrack, setWorkersOnTrack] = useState([])
+  // const [workersOnTrack, setWorkersOnTrack] = useState([])
 
-  const handleFindWorkersOnTrack = () => {
-    console.log("teste")
+  // const handleFindWorkersOnTrack = () => {
+  //   api
+  //     .get(`/workers/on-track/turn/${turnWorkersOnTrack}/subsidiarie/${selectedSubsdiarie.value}`)
+  //     .then((response) => {
+  //       console.log(response.data)
 
-    api
-      .get(`/workers/on-track/turn/${turnWorkersOnTrack}/subsidiarie/${selectedSubsdiarie.value}`)
-      .then((response) => {
-        console.log(response.data)
-
-        setWorkersOnTrack(response.data)
-      })
-  }
+  //       setWorkersOnTrack(response.data)
+  //     })
+  // }
 
   const setTour = () => {
     let route = location.pathname

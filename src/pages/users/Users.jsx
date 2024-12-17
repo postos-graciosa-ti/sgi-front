@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react"
+import { Pen, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import getUsers from "../../requests/getUsers"
-import DeleteUserModal from "./DeleteUserModal"
 import AddUserModal from "./AddUserModal"
-import UpdateUserModal from "./EditUserModal"
-import { Pen, Plus, Question, Trash } from "react-bootstrap-icons"
+import DeleteUserModal from "./DeleteUserModal"
 import EditUserModal from "./EditUserModal"
+import mountTour from "../../functions/mountTour"
 
 const Users = () => {
   const userList = useUserSessionStore(state => state.userList)
 
   const setUserList = useUserSessionStore(state => state.setUserList)
 
-  const [selectedUser, setSelectedUser] = useState()
+  const selectedUser = useUserSessionStore(state => state.selectedUser)
+
+  const setSelectedUser = useUserSessionStore(state => state.setSelectedUser)
 
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -28,6 +30,14 @@ const Users = () => {
       })
   }, [])
 
+  const setTour = () => {
+    let route = location.pathname
+
+    let driverObj = mountTour(route)
+
+    driverObj.drive()
+  }
+
   return (
     <>
       <Nav />
@@ -37,13 +47,15 @@ const Users = () => {
 
         <div className="mt-3 mb-3">
           <button
+            id="help"
             className="btn btn-warning me-2"
-            onClick={() => setModalOpen(true)}
+            onClick={setTour}
           >
             <Question />
           </button>
 
           <button
+            id="addUser"
             className="btn btn-primary"
             onClick={() => setModalOpen(true)}
           >
@@ -69,7 +81,7 @@ const Users = () => {
               </tr>
             </thead>
 
-            <tbody>
+            <tbody id="users-table">
               {userList && userList.map((user) => (
                 <>
                   <tr>
@@ -113,6 +125,7 @@ const Users = () => {
 
                     <td>
                       <button
+                        id="editUser"
                         className="btn btn-warning mt-2 me-2"
                         onClick={() => {
                           setEditUserModalOpen(true);
@@ -123,6 +136,7 @@ const Users = () => {
                       </button>
 
                       <button
+                        id="deleteUser"
                         className="btn btn-danger mt-2 me-2"
                         onClick={() => {
                           setOpenDeleteUserModal(true);

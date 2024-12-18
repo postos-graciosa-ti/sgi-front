@@ -10,30 +10,30 @@ const Nav = () => {
 
   return (
     <>
-      <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">SGI</a>
+      <nav className="navbar navbar-expand-lg bg-body-tertiary">
+        <div className="container-fluid">
+          <a className="navbar-brand" href="#">SGI</a>
 
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-              <li class="nav-item">
+          <div className="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul className="navbar-nav">
+              <li className="nav-item">
                 <Link className="nav-link" to="/home">Início</Link>
               </li>
 
-              <li class="nav-item">
+              <li className="nav-item">
                 <Link className="nav-link" to="/scale">Escalas</Link>
               </li>
 
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <li className="nav-item dropdown">
+                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Cadastros
                 </a>
 
-                <ul class="dropdown-menu">
+                <ul className="dropdown-menu">
                   <li><Link className="dropdown-item" to="/workers">Colaboradores</Link></li>
 
                   <li><Link className="dropdown-item" to="/candidates">Candidatos</Link></li>
@@ -46,7 +46,7 @@ const Nav = () => {
                 </ul>
               </li>
 
-              <li class="nav-item">
+              <li className="nav-item">
                 <Link className="nav-link" to="/" onClick={() => setUserSession({})}>Sair</Link>
               </li>
             </ul>

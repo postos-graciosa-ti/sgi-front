@@ -6,9 +6,15 @@ import getFunctions from '../../requests/getFunctions'
 import getRoles from '../../requests/getRoles'
 import getSubsidiaries from '../../requests/getSubsidiaries'
 import putUser from '../../requests/putUser'
+import useUserSessionStore from '../../data/userSession'
+import getUsers from '../../requests/getUsers'
 
 const EditUserModal = (props) => {
-  const { editUserModalOpen, setEditUserModalOpen, selectedUser } = props
+  const { editUserModalOpen, setEditUserModalOpen } = props
+
+  const selectedUser = useUserSessionStore(state => state.selectedUser)
+
+  const setUserList = useUserSessionStore(state => state.setUserList)
 
   const [rolesList, setRolesList] = useState()
 
@@ -25,8 +31,6 @@ const EditUserModal = (props) => {
   const [functions, setFunctions] = useState()
 
   const [subsidiaries, setSubsidiaries] = useState()
-
-  console.log(selectedUser)
 
   useEffect(() => {
     GetRoles()
@@ -79,25 +83,36 @@ const EditUserModal = (props) => {
       })
   }
 
+  const GetUsers = () => {
+    getUsers()
+      .then(response => setUserList(response.data))
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
-
-    console.log(email, name, role, functions, subsidiaries)
 
     const subsidiariesString = subsidiaries?.map(subsidiary => subsidiary.value).join(',') || ''
 
     const selectedUserSubsidiariesString = selectedUser?.subsidiaries ? selectedUser?.subsidiaries.map((subsidiary) => subsidiary.id).join(',') : ''
 
+    let subsidiariesId = (
+      subsidiariesString.length > 0 && `[${subsidiariesString}]` ||
+      selectedUserSubsidiariesString.length > 0 && `[${selectedUserSubsidiariesString}]`
+    )
+
     let formData = {
-      email: email || selectedUser?.user_email,
-      name: name || selectedUser?.user_name,
-      role: role || selectedUser?.role_id,
-      functions: functions || selectedUser?.function_id,
-      subsidiaries: `[${subsidiariesString}]` || `[${selectedUserSubsidiariesString}]`
+      "email": email || selectedUser?.user_email,
+      "name": name || selectedUser?.user_name,
+      "role_id": role || selectedUser?.role_id,
+      "subsidiaries_id": subsidiariesId,
+      "function_id": functions || selectedUser?.function_id,
+      "is_active": true
     }
 
     putUser(selectedUser?.user_id, formData)
-      .then((response) => {
+      .then(() => {
+        GetUsers()
+
         setEditUserModalOpen(false)
       })
   }

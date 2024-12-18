@@ -13,8 +13,6 @@ const Users = () => {
 
   const setUserList = useUserSessionStore(state => state.setUserList)
 
-  const selectedUser = useUserSessionStore(state => state.selectedUser)
-
   const setSelectedUser = useUserSessionStore(state => state.setSelectedUser)
 
   const [modalOpen, setModalOpen] = useState(false)
@@ -164,7 +162,6 @@ const Users = () => {
       <EditUserModal
         editUserModalOpen={editUserModalOpen}
         setEditUserModalOpen={setEditUserModalOpen}
-        selectedUser={selectedUser}
       />
 
       <DeleteUserModal

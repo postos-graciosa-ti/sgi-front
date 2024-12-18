@@ -1,21 +1,22 @@
 import { createBrowserRouter } from "react-router-dom"
 import App from "./App"
-import Steps from "./pages/Steps"
-import Home from "./pages/Home"
-import Users from "./pages/users/Users"
-import Candidates from "./pages/candidates/Candidates"
-import Jobs from "./pages/candidates/Jobs"
-import FirstAcess from "./pages/FirstAcess"
 import AllJobs from "./pages/candidates/AllJobs"
-import RegisterCandidate from "./pages/candidates/RegisterCandidate"
-import FirstInterview from "./pages/candidates/FirstInterview"
-import Workers from "./pages/workers/Workers"
-import Scale from "./pages/scale/Scale"
-import SeeScale from "./pages/scale/SeeScale"
 import CandidateFirstInterview from "./pages/candidates/CandidateFirstInterview"
+import Candidates from "./pages/candidates/Candidates"
+import FirstInterview from "./pages/candidates/FirstInterview"
+import Jobs from "./pages/candidates/Jobs"
+import RegisterCandidate from "./pages/candidates/RegisterCandidate"
+import FirstAcess from "./pages/FirstAcess"
+import Functions from "./pages/functions/Functions"
+import Home from "./pages/Home"
+import Scale from "./pages/scale/Scale"
 import ScaleHistory from "./pages/scale/ScaleHistory"
+import SeeScale from "./pages/scale/SeeScale"
+import Steps from "./pages/Steps"
 import Subsidiaries from "./pages/subsidiaries/Subsidiaries"
 import Turns from "./pages/turns/Turns"
+import Users from "./pages/users/Users"
+import Workers from "./pages/workers/Workers"
 
 const Routes = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -35,6 +36,7 @@ const Routes = createBrowserRouter([
   { path: "/scale-history", element: <ScaleHistory /> },
   { path: "/subsidiaries", element: <Subsidiaries /> },
   { path: "/turns", element: <Turns /> },
+  { path: "/functions", element: <Functions /> },
 ])
 
 export default Routes

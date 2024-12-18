@@ -43,6 +43,8 @@ const Nav = () => {
                   {userSession.role_id == 1 && <li><Link className="dropdown-item" to="/subsidiaries">Filiais</Link></li>}
 
                   {userSession.role_id == 1 && <li><Link className="dropdown-item" to="/users">Usuários</Link></li>}
+
+                  {userSession.role_id == 1 && <li><Link className="dropdown-item" to="/functions">Funções</Link></li>}
                 </ul>
               </li>
 

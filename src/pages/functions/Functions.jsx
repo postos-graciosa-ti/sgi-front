@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
+import mountTour from "../../functions/mountTour"
 import getFunctions from "../../requests/getFunctions"
 import AddFunctionsModal from "./AddFunctionsModal"
 import DeleteFunctionsModal from "./DeleteFunctionsModal"
@@ -38,16 +39,24 @@ const Functions = () => {
     setDeleteFunctionModalOpen(true)
   }
 
+  const setTour = () => {
+    let route = location.pathname
+
+    let driverObj = mountTour(route)
+
+    driverObj.drive()
+  }
+
   return (
     <>
       <Nav />
 
       <div className="container">
-        <button className="btn btn-warning me-2">
+        <button id="help" className="btn btn-warning me-2" onClick={setTour}>
           <Question />
         </button>
 
-        <button className="btn btn-primary" onClick={handleOnClickAddFunction}>
+        <button id="addFunction" className="btn btn-primary" onClick={handleOnClickAddFunction}>
           <Plus />
         </button>
 
@@ -63,7 +72,7 @@ const Functions = () => {
               </tr>
             </thead>
 
-            <tbody>
+            <tbody id="functionsTableBody">
               {
                 functionsList?.map((func) => (
                   <tr key={func.id}>
@@ -72,11 +81,11 @@ const Functions = () => {
                     <td>{func.description}</td>
 
                     <td>
-                      <button className="btn btn-warning me-2 mt-1" onClick={() => handleOnClickEditFunction(func)}>
+                      <button id="editFunction" className="btn btn-warning me-2 mt-1" onClick={() => handleOnClickEditFunction(func)}>
                         <Pencil />
                       </button>
 
-                      <button className="btn btn-danger me-2 mt-1" onClick={() => handleOnClickDeleteFunction(func)}>
+                      <button id="deleteFunction" className="btn btn-danger me-2 mt-1" onClick={() => handleOnClickDeleteFunction(func)}>
                         <Trash />
                       </button>
                     </td>

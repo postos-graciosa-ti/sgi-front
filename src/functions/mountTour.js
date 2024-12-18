@@ -2,7 +2,7 @@ import { driver } from "driver.js"
 import "driver.js/dist/driver.css"
 
 const mountTour = (route) => {
-  let driverObj;
+  let driverObj
 
   switch (route) {
     case '/scale':
@@ -150,6 +150,60 @@ const mountTour = (route) => {
             popover: {
               title: 'Excluir usuário',
               description: 'Clique nesse botão para excluir um usuário'
+            }
+          }
+        ],
+        nextBtnText: 'Próximo Passo',
+        prevBtnText: 'Passo Anterior',
+        closeBtnText: 'Fechar Tour',
+        doneBtnText: 'Finalizar Tour'
+      })
+      break
+
+    case '/functions':
+      driverObj = driver({
+        showProgress: true,
+        steps: [
+          {
+            element: '#subsidiarie',
+            popover: {
+              title: 'Filial',
+              description: 'Essa tag mostra a filial que você está visualizando'
+            }
+          },
+          {
+            element: '#help',
+            popover: {
+              title: 'Ajuda',
+              description: 'Caso fique em dúvida sobre algo nessa página, esse botão irá fornecer mais informações'
+            }
+          },
+          {
+            element: '#addFunction',
+            popover: {
+              title: 'Adicionar função',
+              description: 'Clique nesse botão para adicionar uma nova função'
+            }
+          },
+          {
+            element: '#functionsTableBody',
+            popover: {
+              title: 'Tabela de funções',
+              description: 'Essa tabela mostra todas as funções cadastradas'
+            }
+          },
+          {
+            element: '#editFunction',
+            popover: {
+              title: 'Editar função',
+              description: 'Clique nesse botão para editar uma função'
+            }
+          },
+          {
+            element: '#deleteFunction',
+            popover: {
+              title: 'Excluir função',
+              description: 'Clique nesse botão para excluir uma função'
             }
           }
         ],

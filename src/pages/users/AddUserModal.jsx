@@ -67,8 +67,6 @@ const AddUserModal = (props) => {
       .then((response) => {
         let functionsData = response.data
 
-        console.log(functionsData)
-
         let options = []
 
         functionsData && functionsData.map((data) => {

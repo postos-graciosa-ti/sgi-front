@@ -1,12 +1,13 @@
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
+import { Printer, Question, Trash } from 'react-bootstrap-icons'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 import ReactSelect from 'react-select'
 import Nav from "../../components/Nav"
 import useUserSessionStore from '../../data/userSession'
+import mountTour from '../../functions/mountTour'
 import api from '../../services/api'
-import { Pencil, Printer, Trash } from 'react-bootstrap-icons'
 import DeleteScaleModal from './DeleteScaleModal'
 import SignatureScaleModal from './SignatureScaleModal'
 
@@ -537,12 +538,20 @@ const Scales = () => {
       })
   }
 
+  const setTour = () => {
+    let route = location.pathname
+
+    let driverObj = mountTour(route)
+
+    driverObj.drive()
+  }
+
   return (
     <>
       <Nav />
 
       <div className="container">
-        <div className="row">
+        <div id="scale-container" className="row">
           <div className="col">
             <ReactSelect
               isDisabled={true}
@@ -569,6 +578,7 @@ const Scales = () => {
           </div>
         </div>
 
+        <div id="scale-calendar" className="row">
         <Calendar
           className="w-100 rounded-3 mt-3"
           onChange={(value) => {
@@ -577,9 +587,14 @@ const Scales = () => {
             setSeeButton(true)
           }}
         />
+        </div>
 
         <div className='d-inline-flex mb-3 mt-3'>
-          <button className='btn btn-primary' onClick={() => setSignatureScaleModalOpen(true)}>
+          <button id="help" className='btn btn-warning me-2' onClick={setTour}>
+            <Question />
+          </button>
+
+          <button id="print" className='btn btn-light' onClick={() => setSignatureScaleModalOpen(true)}>
             <Printer />
           </button>
 
@@ -592,7 +607,7 @@ const Scales = () => {
           }
         </div>
 
-        <div className="table-responsive">
+        <div id="scale-table" className="table-responsive">
           <table className="table table-hover">
             <thead>
               <tr>

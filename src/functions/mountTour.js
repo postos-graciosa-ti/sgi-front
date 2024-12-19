@@ -24,24 +24,31 @@ const mountTour = (route) => {
             }
           },
           {
+            element: '#print',
+            popover: {
+              title: 'Imprimir escala',
+              description: 'Clique nesse botão para imprimir a escala'
+              }
+            },
+          {
             element: '#scale-container',
             popover: {
-              title: 'Planejamento de escala',
+              title: 'Informações da escala',
+              description: 'Informações da escala'
+            }
+          },
+          {
+            element: '#scale-calendar',
+            popover: {
+              title: 'Calendário',
               description: 'Calendário para planejamento de escala'
             }
           },
-          // {
-          //   element: '#scale-table',
-          //   popover: {
-          //     title: 'Histórico de escala',
-          //     description: 'Essa tabela mostra o histórico de escala'
-          //   }
-          // },
           {
-            element: '#scale-track',
+            element: '#scale-table',
             popover: {
-              title: 'Funcionários na pista neste turno',
-              description: 'Essa tabela mostra os funcionários que estão na pista neste turno'
+              title: 'Tabela de escala',
+              description: 'Contém as informações da escala'
             }
           }
         ],

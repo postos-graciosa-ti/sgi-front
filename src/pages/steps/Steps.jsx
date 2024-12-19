@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import Select from "react-select"
-import useUserSessionStore from "../data/userSession"
-import api from "../services/api"
+import useUserSessionStore from "../../data/userSession"
+import api from "../../services/api"
 import { Link, useNavigate } from "react-router-dom"
 
 const Steps = () => {

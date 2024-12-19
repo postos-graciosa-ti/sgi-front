@@ -1,5 +1,5 @@
-import Nav from "../components/Nav.jsx"
-import useUserSessionStore from "../data/userSession"
+import Nav from "../../components/Nav.jsx"
+import useUserSessionStore from "../../data/userSession.js"
 
 const Home = () => {
   const userSession = useUserSessionStore(state => state.userSession)

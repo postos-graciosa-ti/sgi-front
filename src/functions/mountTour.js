@@ -5,6 +5,60 @@ const mountTour = (route) => {
   let driverObj
 
   switch (route) {
+    case '/workers':
+      driverObj = driver({
+        showProgress: true,
+        steps: [
+          {
+            element: '#subsidiarie',
+            popover: {
+              title: 'Filial',
+              description: 'Essa tag mostra a filial que você está visualizando'
+            }
+          },
+          {
+            element: '#help',
+            popover: {
+              title: 'Ajuda',
+              description: 'Caso fique em dúvida sobre algo nessa página, esse botão irá fornecer mais informações'
+            }
+          },
+          {
+            element: '#add-worker',
+            popover: {
+              title: 'Adicionar colaborador',
+              description: 'Clique nesse botão para adicionar um novo colaborador'
+            }
+          },
+          {
+            element: '#table-container',
+            popover: {
+              title: 'Tabela de colaboradores',
+              description: 'Essa tabela mostra todos os colaboradores cadastrados'
+            }
+          },
+          {
+            element: '#edit-worker',
+            popover: {
+              title: 'Editar colaborador',
+              description: 'Clique nesse botão para editar um colaborador'
+            }
+          },
+          {
+            element: '#delete-worker',
+            popover: {
+              title: 'Excluir colaborador',
+              description: 'Clique nesse botão para excluir um colaborador'
+            }
+          }
+        ],
+        nextBtnText: 'Próximo Passo',
+        prevBtnText: 'Passo Anterior',
+        closeBtnText: 'Fechar Tour',
+        doneBtnText: 'Finalizar Tour'
+      })
+      break
+
     case '/scale':
       driverObj = driver({
         showProgress: true,
@@ -28,8 +82,8 @@ const mountTour = (route) => {
             popover: {
               title: 'Imprimir escala',
               description: 'Clique nesse botão para imprimir a escala'
-              }
-            },
+            }
+          },
           {
             element: '#scale-container',
             popover: {

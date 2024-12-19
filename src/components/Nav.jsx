@@ -25,6 +25,10 @@ const Nav = () => {
               </li>
 
               <li className="nav-item">
+                <Link className="nav-link" to="/candidates">Processos Seletivos</Link>
+              </li>
+
+              <li className="nav-item">
                 <Link className="nav-link" to="/scale">Escalas</Link>
               </li>
 
@@ -35,8 +39,6 @@ const Nav = () => {
 
                 <ul className="dropdown-menu">
                   <li><Link className="dropdown-item" to="/workers">Colaboradores</Link></li>
-
-                  <li><Link className="dropdown-item" to="/candidates">Candidatos</Link></li>
 
                   <li><Link className="dropdown-item" to="/turns">Turnos</Link></li>
 

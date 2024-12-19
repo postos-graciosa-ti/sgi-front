@@ -1,19 +1,21 @@
+import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import getFunctions from "../../requests/getFunctions"
 import Select from 'react-select'
-import { useEffect, useState } from 'react'
-import getSubsidiaries from '../../requests/getSubsidiaries'
-import postWorker from '../../requests/postWorker'
+import useUserSessionStore from '../../data/userSession'
+import getFunctions from "../../requests/getFunctions"
 import getTurns from '../../requests/getTurns'
 import getWorkersBySubsidiarie from '../../requests/getWorkersBySubsidiarie'
-import useUserSessionStore from '../../data/userSession'
+import postWorker from '../../requests/postWorker'
 
 const CreateWorkerModal = (props) => {
   const {
     createWorkerModalOpen,
     setCreateWorkerModalOpen,
+    setWorkersList
   } = props
+
+  const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const [name, setSelectedName] = useState()
 
@@ -21,21 +23,11 @@ const CreateWorkerModal = (props) => {
 
   const [selectedFunction, setSelectedFunction] = useState()
 
-  const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
-
   const [turnsList, setTurnsList] = useState()
 
   const [selectedTurn, setSelectedTurn] = useState()
 
-  const setWorkersList = useUserSessionStore((state) => state.setWorkersList)
-
   useEffect(() => {
-    GetFunctions()
-
-    GetTurns()
-  }, [])
-
-  const GetFunctions = () => {
     getFunctions()
       .then((response) => {
         let functionsData = response.data
@@ -48,9 +40,7 @@ const CreateWorkerModal = (props) => {
 
         setFunctionsList(options)
       })
-  }
 
-  const GetTurns = () => {
     getTurns()
       .then((response) => {
         let turnsData = response.data
@@ -63,7 +53,7 @@ const CreateWorkerModal = (props) => {
 
         setTurnsList(options)
       })
-  }
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -127,11 +117,11 @@ const CreateWorkerModal = (props) => {
           </Modal.Body>
 
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setCreateWorkerModalOpen(false)}>
+            <Button variant="light" onClick={() => setCreateWorkerModalOpen(false)}>
               Fechar
             </Button>
 
-            <Button type="submit" variant="primary">Adicionar</Button>
+            <Button type="submit" variant="success">Adicionar</Button>
           </Modal.Footer>
         </form>
       </Modal>

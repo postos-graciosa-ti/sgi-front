@@ -1,57 +1,46 @@
 import { useEffect, useState } from "react"
+import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
 import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import getWorkersBySubsidiarie from "../../requests/getWorkersBySubsidiarie"
 import api from "../../services/api"
 import CreateWorkerModal from "./CreateWorkerModal"
-import SecurityPasswordModal from "./SecurityPasswordModal"
-import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
+import DeleteWorkerModal from "./DeleteWorkerModal"
+import EditWorkerModal from "./EditWorkerModal"
 
 const Workers = () => {
-  const userSession = useUserSessionStore(state => state.userSession)
-
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
-  const [createWorkerModalOpen, setCreateWorkerModalOpen] = useState(false)
-
-  const setWorkersList = useUserSessionStore((state) => state.setWorkersList)
-
-  const workersList = useUserSessionStore((state) => state.workersList)
-
-  const [securityPasswordModalOpen, setSecurityPasswordModalOpen] = useState(false)
+  const [workersList, setWorkersList] = useState()
 
   const [selectedWorker, setSelectedWorker] = useState()
 
+  const [createWorkerModalOpen, setCreateWorkerModalOpen] = useState(false)
+
+  const [editWorkerModalOpen, setEditWorkerModalOpen] = useState(false)
+
+  const [deleteWorkerModalOpen, setDeleteWorkerModalOpen] = useState(false)
+
   useEffect(() => {
     getWorkersBySubsidiarie(selectedSubsdiarie.value)
-      .then((response) => setWorkersList(response.data))
+      .then((response) => {
+        console.log(response.data)
+        setWorkersList(response.data)
+      })
   }, [])
 
-  const handleUpdateWorker = () => {
+  const handleOpenEditWorkerModal = (worker) => {
+    setSelectedWorker(worker)
 
+    setEditWorkerModalOpen(true)
   }
 
-  const handleDeleteWorker = (worker) => {
-    api
-      .put(`/workers/deactivate/${worker.id}`)
-      .then((response) => {
-        console.log(response)
-
-        if (response.status == 200) {
-          Swal.fire({
-            title: `${worker.name} foi desativado`,
-            // text: "You clicked the button!",
-            icon: "success"
-          })
-
-          getWorkersBySubsidiarie(selectedSubsdiarie.value)
-            .then((response) => setWorkersList(response.data))
-        }
-      })
+  const handleOpenDeleteWorkerModal = (worker) => {
+    setSelectedWorker(worker)
+    
+    setDeleteWorkerModalOpen(true)
   }
-
-  console.log(userSession)
 
   return (
     <>
@@ -75,7 +64,57 @@ const Workers = () => {
           <Plus />
         </button>
 
-        <div className="table-responsive mt-3">
+        <div className="table-responsive">
+          <table className="table table-hover">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                
+                <th>Função</th>
+
+                <th>Turno</th>
+                
+                <th>Ativo</th>
+                
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {
+                workersList?.map((worker) => (
+                  <tr key={worker.id}>
+                    <td>{worker.worker_name}</td>
+                    
+                    <td>{worker.function_name}</td>
+
+                    <td>{worker.turn_name}</td>
+
+                    <td>{worker.worker_is_active == true && "Sim" || "Não"}</td>
+                    
+                    <td>
+                      <button
+                        className="btn btn-warning me-2 mt-2"
+                        onClick={() => handleOpenEditWorkerModal(worker)}
+                      >
+                        <Pencil />
+                      </button>
+
+                      <button
+                        className="btn btn-danger me-2 mt-2"
+                        onClick={() => handleOpenDeleteWorkerModal(worker)}
+                      >
+                        <Trash />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+
+        {/* <div className="table-responsive mt-3">
           <table className="table">
             <tr>
               <th>Nome</th>
@@ -99,7 +138,7 @@ const Workers = () => {
 
                     <button
                       className="btn btn-danger"
-                      onClick={() => handleDeleteWorker(worker)}
+                      onClick={() => handleOpenDeleteWorkerModal(worker)}
                     >
                       <Trash />
                     </button>
@@ -108,18 +147,27 @@ const Workers = () => {
               ))
             }
           </table>
-        </div>
+        </div> */}
       </div>
 
       <CreateWorkerModal
         createWorkerModalOpen={createWorkerModalOpen}
         setCreateWorkerModalOpen={setCreateWorkerModalOpen}
+        setWorkersList={setWorkersList}
       />
 
-      <SecurityPasswordModal
+      <EditWorkerModal
+        editWorkerModalOpen={editWorkerModalOpen}
+        setEditWorkerModalOpen={setEditWorkerModalOpen}
         selectedWorker={selectedWorker}
-        securityPasswordModalOpen={securityPasswordModalOpen}
-        setSecurityPasswordModalOpen={setSecurityPasswordModalOpen}
+        setWorkersList={setWorkersList}
+      />
+
+      <DeleteWorkerModal 
+        deleteWorkerModalOpen={deleteWorkerModalOpen}
+        setDeleteWorkerModalOpen={setDeleteWorkerModalOpen}
+        selectedWorker={selectedWorker}
+        setWorkersList={setWorkersList}
       />
     </>
   )

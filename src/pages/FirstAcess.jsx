@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import api from "../services/api"
+import { Link } from "react-router-dom"
 
 const FirstAcess = () => {
   const [enablePassword, setEnablePassword] = useState(false)
@@ -42,7 +43,16 @@ const FirstAcess = () => {
   return (
     <>
       <div className="container">
-        <h3>Informe seu e-mail e pressione Tab</h3>
+        <div className="mt-3">
+          <Link to="/" className="btn btn-primary">
+            Voltar
+          </Link>
+        </div>
+
+        <div className="mt-3">
+          <h3>Informe seu e-mail e pressione Tab</h3>
+        </div>
+
 
         <div className="mt-3 mb-3">
           <input

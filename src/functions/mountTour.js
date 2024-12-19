@@ -167,6 +167,56 @@ const mountTour = (route) => {
       })
       break
 
+    case '/subsidiaries':
+      driverObj = driver({
+        showProgress: true,
+        steps: [
+          {
+            element: '#subsidiarie',
+            popover: {
+              title: 'Filial',
+              description: 'Essa tag mostra a filial que você está visualizando'
+            }
+          },
+          {
+            element: '#help',
+            popover: {
+              title: 'Ajuda',
+              description: 'Caso fique em dúvida sobre algo nessa página, esse botão irá fornecer mais informações'
+            }
+          },
+          {
+            element: '#add-subsidiarie',
+            popover: {
+              title: 'Adicionar filial',
+              description: 'Clique nesse botão para adicionar uma nova filial'
+            }
+          },
+          {
+            element: '#table-container',
+            popover: {
+              title: 'Tabela de filiais',
+              description: 'Essa tabela mostra todas as filiais cadastradas'
+            }
+          },
+          {
+            element: '#edit-subsidiarie',
+            popover: {
+              title: 'Editar filial',
+              description: 'Clique nesse botão para editar uma filial'
+            }
+          },
+          {
+            element: '#delete-subsidiarie',
+            popover: {
+              title: 'Excluir filial',
+              description: 'Clique nesse botão para excluir uma filial'
+            }
+          }
+        ]
+      })
+      break
+
     case '/users':
       driverObj = driver({
         showProgress: true,

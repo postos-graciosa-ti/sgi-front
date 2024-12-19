@@ -10,8 +10,8 @@ const login = (data) => {
         console.error(error)
 
         Swal.fire({
-          title: "Sucesso",
-          text: "Planejamento de folgas cadastrado com sucesso",
+          title: "Erro ao logar",
+          text: "O usuário ou senha não conferem",
           icon: "error"
         })
       })

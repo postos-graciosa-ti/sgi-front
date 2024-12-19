@@ -23,6 +23,10 @@ const DeleteScaleModal = (props) => {
     api
       .delete(`/scales/${selectedScale.scale_id}`)
       .then(() => {
+        setScalesList([])
+
+        setDeleteScaleModalOpen(false)
+
         api
           .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
           .then((response) => {

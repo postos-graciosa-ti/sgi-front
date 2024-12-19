@@ -4,6 +4,7 @@ import { Printer, Question, Trash } from 'react-bootstrap-icons'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 import ReactSelect from 'react-select'
+import Swal from 'sweetalert2'
 import Nav from "../../components/Nav"
 import useUserSessionStore from '../../data/userSession'
 import mountTour from '../../functions/mountTour'
@@ -490,7 +491,7 @@ const Scales = () => {
         let workersOptions = []
 
         workersData && workersData.map((worker) => {
-          workersOptions.push({ "label": worker.name, "value": worker.id })
+          workersOptions.push({ "label": `${worker.worker_name} - ${worker.turn_name} - ${worker.function_name}`, "value": worker.worker_id })
         })
 
         setWorkersOptions(workersOptions)
@@ -525,7 +526,19 @@ const Scales = () => {
       workers_off: `[${selectedWorkersOff.join(',')}]`
     }
 
-    console.log(formData)
+    let hasSameScale = scalesList?.find((scale) => moment(scale.date).format("DD/MM/YYYY") === moment(selectedDate).format("DD/MM/YYYY"))
+
+    if (hasSameScale) {
+      Swal.fire({
+        title: "Erro",
+        text: "Já existe uma escala para esta data",
+        icon: "error"
+      })
+
+      setSeeButton(false)
+
+      return
+    }
 
     api
       .post("/scales", formData)
@@ -579,14 +592,14 @@ const Scales = () => {
         </div>
 
         <div id="scale-calendar" className="row">
-        <Calendar
-          className="w-100 rounded-3 mt-3"
-          onChange={(value) => {
-            setSelectedDate(value)
+          <Calendar
+            className="w-100 rounded-3 mt-3"
+            onChange={(value) => {
+              setSelectedDate(value)
 
-            setSeeButton(true)
-          }}
-        />
+              setSeeButton(true)
+            }}
+          />
         </div>
 
         <div className='d-inline-flex mb-3 mt-3'>
@@ -630,7 +643,9 @@ const Scales = () => {
                     <td>
                       {
                         scale.workers_on.map((worker) => (
-                          <span className="badge text-bg-primary" key={worker.id}>{worker.name}</span>
+                          <span className="badge text-bg-primary" key={worker.id}>
+                            {worker.name} - {worker.turn.name} - {worker.function.name}
+                          </span>
                         ))
                       }
                     </td>
@@ -638,7 +653,9 @@ const Scales = () => {
                     <td>
                       {
                         scale.workers_off.map((worker) => (
-                          <span className="badge text-bg-primary" key={worker.id}>{worker.name}</span>
+                          <span className="badge text-bg-primary" key={worker.id}>
+                            {worker.name} - {worker.turn.name} - {worker.function.name}
+                          </span>
                         ))
                       }
                     </td>

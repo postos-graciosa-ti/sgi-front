@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import api from '../../services/api';
-import ReactSelect from 'react-select';
-import { Printer, Search } from 'react-bootstrap-icons';
-import moment from 'moment';
+import moment from 'moment'
+import { useState } from 'react'
+import { Printer, Search } from 'react-bootstrap-icons'
+import Modal from 'react-bootstrap/Modal'
+import api from '../../services/api'
 
 const SignatureScaleModal = (props) => {
   const { signatureScaleModalOpen, setSignatureScaleModalOpen, selectedScale, setSelectedScale } = props
@@ -16,8 +14,6 @@ const SignatureScaleModal = (props) => {
   const [datesToPrint, setDatesToPrint] = useState()
 
   const handleSearchDates = () => {
-    console.log(initialDate, finalDate)
-
     let formData = {
       initial_date: `${moment(initialDate).format('DD/MM/YYYY')}`,
       final_date: `${moment(finalDate).format('DD/MM/YYYY')}`,
@@ -34,26 +30,35 @@ const SignatureScaleModal = (props) => {
   }
 
   const handlePrint = () => {
-    const printContent = document.getElementById("modalContent");
-    const newWindow = window.open("", "_blank");
-    newWindow.document.write(printContent.innerHTML);
-    newWindow.document.close();
-    newWindow.print();
-  }
+    const printContent = document.getElementById("modalContent")
 
+    const newWindow = window.open("", "_blank")
+
+    newWindow.document.write(printContent.innerHTML)
+
+    newWindow.document.close()
+
+    newWindow.print()
+
+    setDatesToPrint([])
+  }
 
   return (
     <Modal
       show={signatureScaleModalOpen}
-      onHide={() => setSignatureScaleModalOpen(false)}
+      onHide={() => {
+        setSignatureScaleModalOpen(false)
+
+        setDatesToPrint([])
+      }}
       backdrop="static"
       keyboard={false}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Detalhes da Escala</Modal.Title>
+        <Modal.Title>Imprimir Escala</Modal.Title>
       </Modal.Header>
 
-      <Modal.Body>
+      <Modal.Body id="modalContent">
         <div className="row">
           <div className="col">
             <input type="date" className="form-control" onChange={(e) => setInitialDate(e.target.value)} />
@@ -67,11 +72,11 @@ const SignatureScaleModal = (props) => {
         {
           datesToPrint && (
             datesToPrint.map((date) => (
-              <div id="modalContent" key={date.id} className="mt-4">
+              <div key={date.id} className="mt-4">
                 <h3>{date.date}</h3>
 
                 <div className="mt-3">
-                  <h5>Trabalhadores Presentes:</h5>
+                  <h5>Trabalhando:</h5>
                   {date.workers_on.map(worker => (
                     <div key={worker.id} className="d-flex align-items-center mb-3">
                       <span>{worker.name}</span>
@@ -81,7 +86,7 @@ const SignatureScaleModal = (props) => {
                 </div>
 
                 <div className="mt-3">
-                  <h5>Trabalhadores Ausentes:</h5>
+                  <h5>Folgando:</h5>
                   {date.workers_off.map(worker => (
                     <div key={worker.id} className="d-flex align-items-center mb-3">
                       <span>{worker.name}</span>

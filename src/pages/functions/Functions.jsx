@@ -52,6 +52,10 @@ const Functions = () => {
       <Nav />
 
       <div className="container">
+        <div className="mt-3 mb-3">
+          <h4>Cadastro de funções</h4>
+        </div>
+
         <button id="help" className="btn btn-warning me-2" onClick={setTour}>
           <Question />
         </button>

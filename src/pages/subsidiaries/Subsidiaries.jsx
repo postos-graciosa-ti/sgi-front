@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import getSubsidiaries from "../../requests/getSubsidiaries"
 import Nav from "../../components/Nav"
 import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
+import mountTour from "../../functions/mountTour"
 import AddSubsidiarieModal from "./AddSubsidiarieModal"
 import EditSubsidiarieModal from "./EditSubsidiarieModal"
 import DeleteSubsidiarieModal from "./DeleteSubsidiarieModal"
@@ -38,6 +39,12 @@ const Subsidiaries = () => {
     setDeleteSubsidiarieModalOpen(true)
   }
 
+  const setTour = () => {
+    let driverObj = mountTour('/subsidiaries')
+
+    driverObj.drive()
+  }
+
   return (
     <>
       <Nav />
@@ -48,19 +55,22 @@ const Subsidiaries = () => {
         <div className="mt-3 mb-3">
           <button
             className="btn btn-warning me-2"
+            onClick={setTour}
+            id="help"
           >
             <Question />
           </button>
-          
+
           <button
             className="btn btn-primary"
             onClick={handleOpenAddModal}
+            id="add-subsidiarie"
           >
             <Plus />
           </button>
         </div>
 
-        <div className="table-responsive">
+        <div id="table-container" className="table-responsive">
           <table className="table table-hover">
             <thead>
               <tr>
@@ -105,27 +115,23 @@ const Subsidiaries = () => {
                     </td>
 
                     <td>
-                      <div className="row">
-                        <div className="col">
-                          <button
-                            type="button"
-                            className="btn btn-warning"
-                            onClick={() => handleOpenEditModal(subsidiarie)}
-                          >
-                            <Pencil />
-                          </button>
-                        </div>
+                      <button
+                        type="button"
+                        className="btn btn-warning mt-1 ms-1"
+                        onClick={() => handleOpenEditModal(subsidiarie)}
+                        id="edit-subsidiarie"
+                      >
+                        <Pencil />
+                      </button>
 
-                        <div className="col">
-                          <button
-                            type="button"
-                            className="btn btn-danger"
-                            onClick={() => handleOpenDeleteModal(subsidiarie)}
-                          >
-                            <Trash />
-                          </button>
-                        </div>
-                      </div>
+                      <button
+                        type="button"
+                        className="btn btn-danger mt-1 ms-1"
+                        onClick={() => handleOpenDeleteModal(subsidiarie)}
+                        id="delete-subsidiarie"
+                      >
+                        <Trash />
+                      </button>
                     </td>
                   </tr>
                 ))

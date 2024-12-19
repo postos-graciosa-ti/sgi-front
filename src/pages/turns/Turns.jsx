@@ -64,6 +64,10 @@ const Turns = () => {
 
       <div className="container">
         <div className="mt-3 mb-3">
+          <h4>Cadastro de turnos</h4>
+        </div>
+
+        <div className="mt-3 mb-3">
           <button
             id="help"
             type="button"

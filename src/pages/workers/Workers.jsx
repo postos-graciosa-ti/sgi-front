@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react"
 import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
-import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
+import mountTour from "../../functions/mountTour"
 import getWorkersBySubsidiarie from "../../requests/getWorkersBySubsidiarie"
-import api from "../../services/api"
 import CreateWorkerModal from "./CreateWorkerModal"
 import DeleteWorkerModal from "./DeleteWorkerModal"
 import EditWorkerModal from "./EditWorkerModal"
@@ -38,8 +37,16 @@ const Workers = () => {
 
   const handleOpenDeleteWorkerModal = (worker) => {
     setSelectedWorker(worker)
-    
+
     setDeleteWorkerModalOpen(true)
+  }
+
+  const setTour = () => {
+    let route = location.pathname
+
+    let driverObj = mountTour(route)
+
+    driverObj.drive()
   }
 
   return (
@@ -52,6 +59,8 @@ const Workers = () => {
         <button
           type="button"
           className="btn btn-warning me-2"
+          onClick={setTour}
+          id="help"
         >
           <Question />
         </button>
@@ -60,22 +69,23 @@ const Workers = () => {
           type="button"
           className="btn btn-primary"
           onClick={() => setCreateWorkerModalOpen(true)}
+          id="add-worker"
         >
           <Plus />
         </button>
 
-        <div className="table-responsive">
+        <div id="table-container" className="table-responsive">
           <table className="table table-hover">
             <thead>
               <tr>
                 <th>Nome</th>
-                
+
                 <th>Função</th>
 
                 <th>Turno</th>
-                
+
                 <th>Ativo</th>
-                
+
                 <th></th>
               </tr>
             </thead>
@@ -85,17 +95,18 @@ const Workers = () => {
                 workersList?.map((worker) => (
                   <tr key={worker.id}>
                     <td>{worker.worker_name}</td>
-                    
+
                     <td>{worker.function_name}</td>
 
                     <td>{worker.turn_name}</td>
 
                     <td>{worker.worker_is_active == true && "Sim" || "Não"}</td>
-                    
+
                     <td>
                       <button
                         className="btn btn-warning me-2 mt-2"
                         onClick={() => handleOpenEditWorkerModal(worker)}
+                        id="edit-worker"
                       >
                         <Pencil />
                       </button>
@@ -103,6 +114,7 @@ const Workers = () => {
                       <button
                         className="btn btn-danger me-2 mt-2"
                         onClick={() => handleOpenDeleteWorkerModal(worker)}
+                        id="delete-worker"
                       >
                         <Trash />
                       </button>
@@ -163,7 +175,7 @@ const Workers = () => {
         setWorkersList={setWorkersList}
       />
 
-      <DeleteWorkerModal 
+      <DeleteWorkerModal
         deleteWorkerModalOpen={deleteWorkerModalOpen}
         setDeleteWorkerModalOpen={setDeleteWorkerModalOpen}
         selectedWorker={selectedWorker}

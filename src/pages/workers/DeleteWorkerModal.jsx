@@ -9,12 +9,15 @@ const DeleteWorkerModal = (props) => {
     deleteWorkerModalOpen,
     setDeleteWorkerModalOpen,
     selectedWorker,
+    setSelectedWorker,
     setWorkersList
   } = props
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const handleClose = () => {
+    setSelectedWorker({})
+    
     setDeleteWorkerModalOpen(false)
   }
 

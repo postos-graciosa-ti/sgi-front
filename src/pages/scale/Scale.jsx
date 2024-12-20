@@ -1,6 +1,6 @@
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
-import { Printer, Question, Trash } from 'react-bootstrap-icons'
+import { ExclamationTriangle, Printer, Question, Trash } from 'react-bootstrap-icons'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 import ReactSelect from 'react-select'
@@ -569,6 +569,10 @@ const Scales = () => {
 
   let lastDay = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
+  // const dataAtual = new Date()
+  // const primeiroDiaSemana = new Date(dataAtual.setDate(dataAtual.getDate() - dataAtual.getDay()))
+  // const ultimoDiaSemana = new Date(dataAtual.setDate(dataAtual.getDate() - dataAtual.getDay() + 6))
+
   useEffect(() => {
     getScalesBySubsidiarie()
   }, [])
@@ -579,6 +583,53 @@ const Scales = () => {
       .then((response) => setScalesList(response.data))
       .catch((error) => console.error(error))
   }
+
+  function trabalhaMaisDe8DiasPorSemana(diasTrabalhados, diasFolga) {
+    const diasTrabalhoSet = new Set(diasTrabalhados);
+    const diasFolgaSet = new Set(diasFolga);
+
+    // Filtra dias válidos
+    const diasTrabalhadosValidos = diasTrabalhados.filter(dia => !diasFolgaSet.has(dia));
+
+    // Função para obter a semana do ano de uma data
+    function getWeekOfYear(date) {
+      const d = new Date(date);
+      const startOfYear = new Date(d.getFullYear(), 0, 1);
+      const dayOfYear = Math.floor((d - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
+      return Math.ceil(dayOfYear / 7);
+    }
+
+    // Agrupa os dias trabalhados por semana
+    const semanas = {};
+    diasTrabalhadosValidos.forEach(dia => {
+      const semana = getWeekOfYear(dia);
+      if (!semanas[semana]) semanas[semana] = 0;
+      semanas[semana]++;
+    });
+
+    // Verifica se alguma semana excedeu 8 dias trabalhados
+    return Object.values(semanas).some(contagem => contagem > 8);
+  }
+
+  // Exemplo de uso
+  const diasTrabalhados = [
+    "2024-12-01",
+    "2024-12-02",
+    "2024-12-03",
+    "2024-12-04",
+    "2024-12-05",
+    "2024-12-06",
+    "2024-12-07",
+    "2024-12-08",
+    "2024-12-09",
+    "2024-12-10"
+  ];
+
+  // const diasFolga = ["2024-12-08", "2024-12-09"];
+
+  // const resultado = trabalhaMaisDe8DiasPorSemana(diasTrabalhados, diasFolga);
+  // console.log(resultado); // true ou false
+
 
   const handleSaveDaysOff = () => {
     let diasDoMes = []
@@ -598,6 +649,11 @@ const Scales = () => {
     //   days_on: `[${diasSemFolga.map(dia => `'${dia}'`).join(',')}]`
     // }
 
+    let trabalhaMaisDe8Dias = trabalhaMaisDe8DiasPorSemana(diasSemFolga, selectedDaysOff)
+
+    console.log(trabalhaMaisDe8Dias)
+
+
     let formData = {
       worker_id: selectedWorkerId,
       subsidiarie_id: selectedSubsdiarie.value,
@@ -605,16 +661,44 @@ const Scales = () => {
       days_off: `[${selectedDaysOff.map(dia => `'${dia.value}'`).join(',')}]`
     }
 
-    console.log(formData)
-
     api
       .post("/scales", formData)
       .then((response) => {
-        console.log(response)
-
         getScalesBySubsidiarie()
+
+        setSelectedDaysOff([])
       })
       .catch((error) => console.error(error))
+  }
+
+  // const titleClassName = ({ date, view }) => {
+  //   if (view === 'month') {
+  //     const day = moment(date).format("DD-MM-YYYY")
+
+  //     return selectedDaysOff.some(scale => scale.days_off.includes(day)) ? 'highlight' : null
+  //   }
+
+  //   return null
+  // }
+
+  // const dataAtual = new Date()
+  // const primeiroDiaSemana = new Date(dataAtual.setDate(dataAtual.getDate() - dataAtual.getDay()))
+  // const ultimoDiaSemana = new Date(dataAtual.setDate(dataAtual.getDate() - dataAtual.getDay() + 6))
+
+  const titleClassName = ({ date, view }) => {
+    if (view === 'month') {
+      const day = moment(date).format("DD-MM-YYYY")
+
+      return selectedDaysOff.some(diaFolga => diaFolga.value === day) ? 'highlight' : null
+    }
+
+    return null
+  }
+
+  const handleDeleteScale = (scaleId) => {
+    api
+      .delete(`/scales/${scaleId}`)
+      .then(() => getScalesBySubsidiarie())
   }
 
   return (
@@ -638,18 +722,27 @@ const Scales = () => {
 
         <div className="row mt-3">
           <div className="col-12">
-            <label htmlFor="days-off">Dias de folga</label>
+            <div className="row">
+              <div className="col-10">
+                {/* <label htmlFor="days-off">Dias de folga</label> */}
 
-            <ReactSelect
-              isMulti={true}
-              // isDisabled={true}
-              placeholder="Dias de folga selecionados"
-              value={selectedDaysOff}
-            />
+                <ReactSelect
+                  isMulti={true}
+                  // isDisabled={true}
+                  placeholder="Dias de folga selecionados"
+                  value={selectedDaysOff}
+                />
+              </div>
+
+              <div className="col-2">
+                <button className="btn btn-danger" onClick={() => setSelectedDaysOff([])}>Limpar</button>
+              </div>
+            </div>
           </div>
         </div>
 
         <Calendar
+          tileClassName={titleClassName}
           className="w-100 rounded-3 mt-3"
           onChange={(value) => {
             setSelectedDaysOff((prevState) => {
@@ -659,6 +752,8 @@ const Scales = () => {
               )
             })
           }}
+          minDate={firstDay}
+          maxDate={lastDay}
         />
 
         <button className="btn btn-success mt-3" onClick={handleSaveDaysOff}>Salvar</button>
@@ -669,9 +764,13 @@ const Scales = () => {
               <tr>
                 <th>Colaborador</th>
 
+                {/* <th>Escala</th> */}
+
                 <th>Dias de trabalho</th>
 
                 <th>Dias de folga</th>
+
+                <th></th>
               </tr>
             </thead>
 
@@ -681,9 +780,27 @@ const Scales = () => {
                   <tr>
                     <td>{scale.worker.name}</td>
 
+                    {/* <td className="text-center">{scale.days_on?.length}x{scale.days_off?.length}</td> */}
+
                     <td>{scale.days_on?.map(dia => <span className="badge text-bg-success">{dia}</span>)}</td>
 
                     <td>{scale.days_off?.map(dia => <span className="badge text-bg-danger">{dia}</span>)}</td>
+
+                    <td className="text-center">
+                      {/* {
+                        scale.days_on?.length > 8 && (
+                          <>
+                            <button className="btn btn-warning">
+                              <ExclamationTriangle />
+                            </button>
+                          </>
+                        )
+                      } */}
+
+                      <button className="btn btn-danger" onClick={() => handleDeleteScale(scale.id)}>
+                        <Trash />
+                      </button>
+                    </td>
                   </tr>
                 ))
               }
@@ -691,6 +808,16 @@ const Scales = () => {
           </table>
         </div>
       </div>
+
+      <style>
+        {`
+          .highlight {
+            background-color: #ECFFDC;
+            color: grey;
+            // border-radius: 50%;
+          }
+        `}
+      </style>
     </>
   )
 }

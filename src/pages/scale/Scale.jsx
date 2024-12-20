@@ -11,6 +11,8 @@ import mountTour from '../../functions/mountTour'
 import api from '../../services/api'
 import DeleteScaleModal from './DeleteScaleModal'
 import SignatureScaleModal from './SignatureScaleModal'
+import CalendarPopup from './CalendarPopup'
+import useDaysOffStore from '../../data/daysOffStore'
 
 // const Scale = () => {
 //   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -460,13 +462,21 @@ import SignatureScaleModal from './SignatureScaleModal'
 const Scales = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
+  const daysOffStore = useDaysOffStore(state => state.daysOff)
+
+  const resetDaysOff = useDaysOffStore(state => state.resetDaysOff)
+
+  const [calendarPopupOpen, setCalendarPopupOpen] = useState(false)
+
   const [scalesList, setScalesList] = useState()
 
   const [workersOptions, setWorkersOptions] = useState()
 
-  const [selectedWorkerId, setSelectedWorkerId] = useState()
+  const [selectedWorkerId, setSelectedWorkerId] = useState(null)
 
-  const [selectedDaysOff, setSelectedDaysOff] = useState([])
+  // const [selectedDaysOff, setSelectedDaysOff] = useState([])
+
+  const [selectedDate, setSelectedDate] = useState()
 
   let firstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 
@@ -512,7 +522,7 @@ const Scales = () => {
       dataAtual.setDate(dataAtual.getDate() + 1)
     }
 
-    let diasSemFolga = diasDoMes.filter(dia => !selectedDaysOff.some(diaFolga => diaFolga.value === dia))
+    let diasSemFolga = diasDoMes.filter(dia => !daysOffStore.some(diaFolga => diaFolga === dia))
 
     let temMaisDeOitoDiasConsecutivos = false;
 
@@ -545,7 +555,7 @@ const Scales = () => {
 
     let diasTrabalhadosPorSemana = Math.round(diasSemFolga.length / 4)
 
-    let diasFolgadosPorSemana = Math.round(selectedDaysOff.length / 4);
+    let diasFolgadosPorSemana = Math.round(daysOffStore.length / 4);
 
     const mdc = (a, b) => b === 0 ? a : mdc(b, a % b);
 
@@ -559,14 +569,20 @@ const Scales = () => {
       worker_id: selectedWorkerId,
       subsidiarie_id: selectedSubsdiarie.value,
       days_on: `[${diasSemFolga.map(dia => `'${dia}'`).join(',')}]`,
-      days_off: `[${selectedDaysOff.map(dia => `'${dia.value}'`).join(',')}]`,
+      days_off: `[${daysOffStore.map(dia => `'${dia}'`).join(',')}]`,
       need_alert: temMaisDeOitoDiasConsecutivos ? true : false,
       proportion: `${proporcaoTrabalhoSemanal}x${proporcaoFolgaSemanal}`
     }
 
     api
       .post("/scales", formData)
-      .then(() => getScalesBySubsidiarie())
+      .then(() => {
+        getScalesBySubsidiarie()
+
+        // setSelectedDaysOff([])
+
+        resetDaysOff()
+      })
       .catch((error) => console.error(error))
   }
 
@@ -574,7 +590,9 @@ const Scales = () => {
     if (view === 'month') {
       const day = moment(date).format("DD-MM-YYYY")
 
-      return selectedDaysOff.some(diaFolga => diaFolga.value === day) ? 'highlight' : null
+      const isDayOff = daysOffStore.some(diaFolga => diaFolga === day)
+
+      return isDayOff ? 'highlight' : null
     }
 
     return null
@@ -593,13 +611,11 @@ const Scales = () => {
       <div className="container">
         <div className="row">
           <div className="col-12">
-            <label htmlFor="workers-on">Colaboradores</label>
-
             <ReactSelect
               placeholder="Colaboradores"
               options={workersOptions}
               onChange={(e) => {
-                setSelectedDaysOff([])
+                // setSelectedDaysOff([])
 
                 setSelectedWorkerId(e.value)
               }}
@@ -607,34 +623,13 @@ const Scales = () => {
           </div>
         </div>
 
-        <div className="row mt-3">
-          <div className="col-12">
-            <div className="row">
-              <div className="col-10">
-                <ReactSelect
-                  isMulti={true}
-                  placeholder="Dias de folga selecionados"
-                  value={selectedDaysOff}
-                />
-              </div>
-
-              <div className="col-2">
-                <button className="btn btn-danger" onClick={() => setSelectedDaysOff([])}>Limpar</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <Calendar
           tileClassName={titleClassName}
           className="w-100 rounded-3 mt-3"
           onChange={(value) => {
-            setSelectedDaysOff((prevState) => {
-              return (
-                prevState ? [...prevState, { label: moment(value).format("DD-MM-YYYY"), value: moment(value).format("DD-MM-YYYY") }]
-                  : [{ label: moment(value).format("DD-MM-YYYY"), value: moment(value).format("DD-MM-YYYY") }]
-              )
-            })
+            setSelectedDate(value)
+
+            setCalendarPopupOpen(true)
           }}
           minDate={firstDay}
           maxDate={lastDay}
@@ -648,11 +643,11 @@ const Scales = () => {
               <tr>
                 <th>Colaborador</th>
 
+                <th>Trabalho</th>
+
+                <th>Folga</th>
+
                 <th>Proporção</th>
-
-                <th>Dias de trabalho</th>
-
-                <th>Dias de folga</th>
 
                 <th></th>
               </tr>
@@ -664,14 +659,18 @@ const Scales = () => {
                   <tr>
                     <td>{scale.worker.name}</td>
 
-                    <td>{scale.proportion}</td>
-
                     <td>{scale.days_on?.map(dia => <span className="badge text-bg-success">{dia}</span>)}</td>
 
                     <td>{scale.days_off?.map(dia => <span className="badge text-bg-danger">{dia}</span>)}</td>
 
+                    <td>{scale.proportion}</td>
+
                     <td>
                       <div className="d-inline-flex">
+                        <button className="btn btn-danger mt-2 me-2" onClick={() => handleDeleteScale(scale.id)}>
+                          <Trash />
+                        </button>
+
                         {
                           scale.need_alert === true && (
                             <>
@@ -681,10 +680,6 @@ const Scales = () => {
                             </>
                           )
                         }
-
-                        <button className="btn btn-danger mt-2 me-2" onClick={() => handleDeleteScale(scale.id)}>
-                          <Trash />
-                        </button>
                       </div>
                     </td>
                   </tr>
@@ -694,6 +689,12 @@ const Scales = () => {
           </table>
         </div>
       </div>
+
+      <CalendarPopup
+        calendarPopupOpen={calendarPopupOpen}
+        setCalendarPopupOpen={setCalendarPopupOpen}
+        selectedDate={selectedDate}
+      />
 
       <style>
         {`

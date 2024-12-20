@@ -103,9 +103,9 @@ const EditUserModal = (props) => {
     let formData = {
       "email": email || selectedUser?.user_email,
       "name": name || selectedUser?.user_name,
-      "role_id": role || selectedUser?.role_id,
+      "role_id": role?.value || selectedUser?.role_id,
       "subsidiaries_id": subsidiariesId,
-      "function_id": functions || selectedUser?.function_id,
+      "function_id": functions?.value || selectedUser?.function_id,
       "is_active": true
     }
 

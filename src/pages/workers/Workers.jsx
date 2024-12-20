@@ -125,41 +125,6 @@ const Workers = () => {
             </tbody>
           </table>
         </div>
-
-        {/* <div className="table-responsive mt-3">
-          <table className="table">
-            <tr>
-              <th>Nome</th>
-              <th>Cargo</th>
-              <th>Ativo</th>
-              <th></th>
-            </tr>
-            {
-              workersList && workersList.map((worker) => (
-                <tr key={worker.id}>
-                  <td>{worker.name}</td>
-                  <td>{worker.function_id == 1 && "Frentista"}</td>
-                  <td>{worker.is_active == true && "Sim" || "Não"}</td>
-                  <td>
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => handleUpdateWorker(worker)}
-                    >
-                      <Pencil />
-                    </button>
-
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleOpenDeleteWorkerModal(worker)}
-                    >
-                      <Trash />
-                    </button>
-                  </td>
-                </tr>
-              ))
-            }
-          </table>
-        </div> */}
       </div>
 
       <CreateWorkerModal
@@ -172,6 +137,7 @@ const Workers = () => {
         editWorkerModalOpen={editWorkerModalOpen}
         setEditWorkerModalOpen={setEditWorkerModalOpen}
         selectedWorker={selectedWorker}
+        setSelectedWorker={setSelectedWorker}
         setWorkersList={setWorkersList}
       />
 
@@ -179,6 +145,7 @@ const Workers = () => {
         deleteWorkerModalOpen={deleteWorkerModalOpen}
         setDeleteWorkerModalOpen={setDeleteWorkerModalOpen}
         selectedWorker={selectedWorker}
+        setSelectedWorker={setSelectedWorker}
         setWorkersList={setWorkersList}
       />
     </>

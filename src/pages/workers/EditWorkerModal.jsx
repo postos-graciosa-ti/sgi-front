@@ -14,6 +14,7 @@ const EditWorkerModal = (props) => {
     editWorkerModalOpen,
     setEditWorkerModalOpen,
     selectedWorker,
+    setSelectedWorker,
     setWorkersList
   } = props
 
@@ -60,6 +61,8 @@ const EditWorkerModal = (props) => {
   }, [])
 
   const handleClose = () => {
+    setSelectedWorker({})
+
     setEditWorkerModalOpen(false)
   }
 

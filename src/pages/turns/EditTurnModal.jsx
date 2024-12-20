@@ -31,9 +31,6 @@ const EditTurnModal = (props) => {
       "end_time": endTime || turnToEdit.end_time
     }
 
-    console.log(formData)
-    debugger
-
     putTurn(turnToEdit.id, formData)
       .then((response) => {
         console.log(response)

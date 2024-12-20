@@ -33,8 +33,6 @@ const AddSubsidiarieModal = (props) => {
       "email": email
     }
 
-    console.log(formData)
-
     postSubsidiarie(formData)
       .then(() => {
         getSubsidiaries()

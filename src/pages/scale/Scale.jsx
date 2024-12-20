@@ -462,27 +462,23 @@ const Scales = () => {
 
   const [scalesList, setScalesList] = useState()
 
-  const [selectedScale, setSelectedScale] = useState()
-
-  const [selectedDate, setSelectedDate] = useState()
-
   const [workersOptions, setWorkersOptions] = useState()
 
-  const [selectedWorkersOn, setSelectedWorkersOn] = useState()
+  const [selectedWorkerId, setSelectedWorkerId] = useState()
 
-  const [selectedWorkersOff, setSelectedWorkersOff] = useState()
+  const [selectedDaysOff, setSelectedDaysOff] = useState([])
 
-  const [seeButton, setSeeButton] = useState(false)
+  let firstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 
-  const [deleteScaleModalOpen, setDeleteScaleModalOpen] = useState(false)
-
-  const [signatureScaleModalOpen, setSignatureScaleModalOpen] = useState(false)
+  let lastDay = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
   useEffect(() => {
-    api
-      .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
-      .then((response) => setScalesList(response.data))
+    getWorkersBySubsidiarie()
 
+    getScalesBySubsidiarie()
+  }, [])
+
+  const getWorkersBySubsidiarie = () => {
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => {
@@ -496,86 +492,7 @@ const Scales = () => {
 
         setWorkersOptions(workersOptions)
       })
-  }, [])
-
-  const handleOnChangeWorkersOn = (workers) => {
-    let workersOnIds = []
-
-    workers?.map((worker) => {
-      workersOnIds.push(worker.value)
-    })
-
-    setSelectedWorkersOn(workersOnIds)
   }
-
-  const handleOnChangeWorkersOff = (workers) => {
-    let workersOffIds = []
-
-    workers?.map((worker) => {
-      workersOffIds.push(worker.value)
-    })
-
-    setSelectedWorkersOff(workersOffIds)
-  }
-
-  const handleSubmitScales = () => {
-    let formData = {
-      date: moment(selectedDate).format("DD/MM/YYYY"),
-      subsidiarie_id: selectedSubsdiarie.value,
-      workers_on: `[${selectedWorkersOn.join(',')}]`,
-      workers_off: `[${selectedWorkersOff.join(',')}]`
-    }
-
-    let hasSameScale = scalesList?.find((scale) => moment(scale.date).format("DD/MM/YYYY") === moment(selectedDate).format("DD/MM/YYYY"))
-
-    if (hasSameScale) {
-      Swal.fire({
-        title: "Erro",
-        text: "Já existe uma escala para esta data",
-        icon: "error"
-      })
-
-      setSeeButton(false)
-
-      return
-    }
-
-    api
-      .post("/scales", formData)
-      .then(() => {
-        setSeeButton(false)
-
-        api
-          .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
-          .then((response) => setScalesList(response.data))
-      })
-  }
-
-  const setTour = () => {
-    let route = location.pathname
-
-    let driverObj = mountTour(route)
-
-    driverObj.drive()
-  }
-
-  // xx
-
-  const [selectedWorkerId, setSelectedWorkerId] = useState()
-
-  const [selectedDaysOff, setSelectedDaysOff] = useState([])
-
-  let firstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-
-  let lastDay = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
-
-  // const dataAtual = new Date()
-  // const primeiroDiaSemana = new Date(dataAtual.setDate(dataAtual.getDate() - dataAtual.getDay()))
-  // const ultimoDiaSemana = new Date(dataAtual.setDate(dataAtual.getDate() - dataAtual.getDay() + 6))
-
-  useEffect(() => {
-    getScalesBySubsidiarie()
-  }, [])
 
   const getScalesBySubsidiarie = () => {
     api
@@ -583,53 +500,6 @@ const Scales = () => {
       .then((response) => setScalesList(response.data))
       .catch((error) => console.error(error))
   }
-
-  function trabalhaMaisDe8DiasPorSemana(diasTrabalhados, diasFolga) {
-    const diasTrabalhoSet = new Set(diasTrabalhados);
-    const diasFolgaSet = new Set(diasFolga);
-
-    // Filtra dias válidos
-    const diasTrabalhadosValidos = diasTrabalhados.filter(dia => !diasFolgaSet.has(dia));
-
-    // Função para obter a semana do ano de uma data
-    function getWeekOfYear(date) {
-      const d = new Date(date);
-      const startOfYear = new Date(d.getFullYear(), 0, 1);
-      const dayOfYear = Math.floor((d - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
-      return Math.ceil(dayOfYear / 7);
-    }
-
-    // Agrupa os dias trabalhados por semana
-    const semanas = {};
-    diasTrabalhadosValidos.forEach(dia => {
-      const semana = getWeekOfYear(dia);
-      if (!semanas[semana]) semanas[semana] = 0;
-      semanas[semana]++;
-    });
-
-    // Verifica se alguma semana excedeu 8 dias trabalhados
-    return Object.values(semanas).some(contagem => contagem > 8);
-  }
-
-  // Exemplo de uso
-  const diasTrabalhados = [
-    "2024-12-01",
-    "2024-12-02",
-    "2024-12-03",
-    "2024-12-04",
-    "2024-12-05",
-    "2024-12-06",
-    "2024-12-07",
-    "2024-12-08",
-    "2024-12-09",
-    "2024-12-10"
-  ];
-
-  // const diasFolga = ["2024-12-08", "2024-12-09"];
-
-  // const resultado = trabalhaMaisDe8DiasPorSemana(diasTrabalhados, diasFolga);
-  // console.log(resultado); // true ou false
-
 
   const handleSaveDaysOff = () => {
     let diasDoMes = []
@@ -644,46 +514,61 @@ const Scales = () => {
 
     let diasSemFolga = diasDoMes.filter(dia => !selectedDaysOff.some(diaFolga => diaFolga.value === dia))
 
-    // let formData = {
-    //   days_off: `[${selectedDaysOff.map(dia => `'${dia.value}'`).join(',')}]`,
-    //   days_on: `[${diasSemFolga.map(dia => `'${dia}'`).join(',')}]`
-    // }
+    let temMaisDeOitoDiasConsecutivos = false;
 
-    let trabalhaMaisDe8Dias = trabalhaMaisDe8DiasPorSemana(diasSemFolga, selectedDaysOff)
+    let diasConsecutivos = 0;
 
-    console.log(trabalhaMaisDe8Dias)
+    let diaAnterior = null;
 
+    for (let dia of diasSemFolga) {
+      let dataAtual = moment(dia, "DD-MM-YYYY");
+
+      if (diaAnterior) {
+        let diferenca = dataAtual.diff(diaAnterior, 'days');
+
+        if (diferenca === 1) {
+          diasConsecutivos++;
+
+          if (diasConsecutivos > 8) {
+            temMaisDeOitoDiasConsecutivos = true;
+            break;
+          }
+        } else {
+          diasConsecutivos = 1;
+        }
+      } else {
+        diasConsecutivos = 1;
+      }
+
+      diaAnterior = dataAtual;
+    }
+
+    let diasTrabalhadosPorSemana = Math.round(diasSemFolga.length / 4)
+
+    let diasFolgadosPorSemana = Math.round(selectedDaysOff.length / 4);
+
+    const mdc = (a, b) => b === 0 ? a : mdc(b, a % b);
+
+    let divisor = mdc(diasTrabalhadosPorSemana, diasFolgadosPorSemana);
+
+    let proporcaoTrabalhoSemanal = diasTrabalhadosPorSemana / divisor;
+
+    let proporcaoFolgaSemanal = diasFolgadosPorSemana / divisor;
 
     let formData = {
       worker_id: selectedWorkerId,
       subsidiarie_id: selectedSubsdiarie.value,
       days_on: `[${diasSemFolga.map(dia => `'${dia}'`).join(',')}]`,
-      days_off: `[${selectedDaysOff.map(dia => `'${dia.value}'`).join(',')}]`
+      days_off: `[${selectedDaysOff.map(dia => `'${dia.value}'`).join(',')}]`,
+      need_alert: temMaisDeOitoDiasConsecutivos ? true : false,
+      proportion: `${proporcaoTrabalhoSemanal}x${proporcaoFolgaSemanal}`
     }
 
     api
       .post("/scales", formData)
-      .then((response) => {
-        getScalesBySubsidiarie()
-
-        setSelectedDaysOff([])
-      })
+      .then(() => getScalesBySubsidiarie())
       .catch((error) => console.error(error))
   }
-
-  // const titleClassName = ({ date, view }) => {
-  //   if (view === 'month') {
-  //     const day = moment(date).format("DD-MM-YYYY")
-
-  //     return selectedDaysOff.some(scale => scale.days_off.includes(day)) ? 'highlight' : null
-  //   }
-
-  //   return null
-  // }
-
-  // const dataAtual = new Date()
-  // const primeiroDiaSemana = new Date(dataAtual.setDate(dataAtual.getDate() - dataAtual.getDay()))
-  // const ultimoDiaSemana = new Date(dataAtual.setDate(dataAtual.getDate() - dataAtual.getDay() + 6))
 
   const titleClassName = ({ date, view }) => {
     if (view === 'month') {
@@ -714,6 +599,8 @@ const Scales = () => {
               placeholder="Colaboradores"
               options={workersOptions}
               onChange={(e) => {
+                setSelectedDaysOff([])
+
                 setSelectedWorkerId(e.value)
               }}
             />
@@ -724,11 +611,8 @@ const Scales = () => {
           <div className="col-12">
             <div className="row">
               <div className="col-10">
-                {/* <label htmlFor="days-off">Dias de folga</label> */}
-
                 <ReactSelect
                   isMulti={true}
-                  // isDisabled={true}
                   placeholder="Dias de folga selecionados"
                   value={selectedDaysOff}
                 />
@@ -764,7 +648,7 @@ const Scales = () => {
               <tr>
                 <th>Colaborador</th>
 
-                {/* <th>Escala</th> */}
+                <th>Proporção</th>
 
                 <th>Dias de trabalho</th>
 
@@ -780,26 +664,28 @@ const Scales = () => {
                   <tr>
                     <td>{scale.worker.name}</td>
 
-                    {/* <td className="text-center">{scale.days_on?.length}x{scale.days_off?.length}</td> */}
+                    <td>{scale.proportion}</td>
 
                     <td>{scale.days_on?.map(dia => <span className="badge text-bg-success">{dia}</span>)}</td>
 
                     <td>{scale.days_off?.map(dia => <span className="badge text-bg-danger">{dia}</span>)}</td>
 
-                    <td className="text-center">
-                      {/* {
-                        scale.days_on?.length > 8 && (
-                          <>
-                            <button className="btn btn-warning">
-                              <ExclamationTriangle />
-                            </button>
-                          </>
-                        )
-                      } */}
+                    <td>
+                      <div className="d-inline-flex">
+                        {
+                          scale.need_alert === true && (
+                            <>
+                              <button title="Alerta" className="btn btn-warning mt-2 me-2">
+                                <ExclamationTriangle />
+                              </button>
+                            </>
+                          )
+                        }
 
-                      <button className="btn btn-danger" onClick={() => handleDeleteScale(scale.id)}>
-                        <Trash />
-                      </button>
+                        <button className="btn btn-danger mt-2 me-2" onClick={() => handleDeleteScale(scale.id)}>
+                          <Trash />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

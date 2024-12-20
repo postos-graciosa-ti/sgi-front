@@ -559,78 +559,119 @@ const Scales = () => {
     driverObj.drive()
   }
 
+  // xx
+
+  const [selectedWorkerId, setSelectedWorkerId] = useState()
+
+  const [selectedDaysOff, setSelectedDaysOff] = useState([])
+
+  let firstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+
+  let lastDay = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+
+  useEffect(() => {
+    getScalesBySubsidiarie()
+  }, [])
+
+  const getScalesBySubsidiarie = () => {
+    api
+      .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
+      .then((response) => setScalesList(response.data))
+      .catch((error) => console.error(error))
+  }
+
+  const handleSaveDaysOff = () => {
+    let diasDoMes = []
+
+    let dataAtual = firstDay
+
+    while (dataAtual <= lastDay) {
+      diasDoMes.push(moment(dataAtual).format("DD-MM-YYYY"))
+
+      dataAtual.setDate(dataAtual.getDate() + 1)
+    }
+
+    let diasSemFolga = diasDoMes.filter(dia => !selectedDaysOff.some(diaFolga => diaFolga.value === dia))
+
+    // let formData = {
+    //   days_off: `[${selectedDaysOff.map(dia => `'${dia.value}'`).join(',')}]`,
+    //   days_on: `[${diasSemFolga.map(dia => `'${dia}'`).join(',')}]`
+    // }
+
+    let formData = {
+      worker_id: selectedWorkerId,
+      subsidiarie_id: selectedSubsdiarie.value,
+      days_on: `[${diasSemFolga.map(dia => `'${dia}'`).join(',')}]`,
+      days_off: `[${selectedDaysOff.map(dia => `'${dia.value}'`).join(',')}]`
+    }
+
+    console.log(formData)
+
+    api
+      .post("/scales", formData)
+      .then((response) => {
+        console.log(response)
+
+        getScalesBySubsidiarie()
+      })
+      .catch((error) => console.error(error))
+  }
+
   return (
     <>
       <Nav />
 
       <div className="container">
-        <div id="scale-container" className="row">
-          <div className="col">
-            <ReactSelect
-              isDisabled={true}
-              value={{ "label": moment(selectedDate).format("DD-MM-YYYY"), "value": moment(selectedDate).format("DD-MM-YYYY") }}
-            />
-          </div>
+        <div className="row">
+          <div className="col-12">
+            <label htmlFor="workers-on">Colaboradores</label>
 
-          <div className="col">
             <ReactSelect
-              placeholder="Funcionários de folga"
+              placeholder="Colaboradores"
               options={workersOptions}
-              onChange={(e) => handleOnChangeWorkersOn(e)}
-              isMulti={true}
+              onChange={(e) => {
+                setSelectedWorkerId(e.value)
+              }}
             />
           </div>
+        </div>
 
-          <div className="col">
+        <div className="row mt-3">
+          <div className="col-12">
+            <label htmlFor="days-off">Dias de folga</label>
+
             <ReactSelect
-              placeholder="Funcionários trabalhando"
-              options={workersOptions}
-              onChange={(e) => handleOnChangeWorkersOff(e)}
               isMulti={true}
+              // isDisabled={true}
+              placeholder="Dias de folga selecionados"
+              value={selectedDaysOff}
             />
           </div>
         </div>
 
-        <div id="scale-calendar" className="row">
-          <Calendar
-            className="w-100 rounded-3 mt-3"
-            onChange={(value) => {
-              setSelectedDate(value)
+        <Calendar
+          className="w-100 rounded-3 mt-3"
+          onChange={(value) => {
+            setSelectedDaysOff((prevState) => {
+              return (
+                prevState ? [...prevState, { label: moment(value).format("DD-MM-YYYY"), value: moment(value).format("DD-MM-YYYY") }]
+                  : [{ label: moment(value).format("DD-MM-YYYY"), value: moment(value).format("DD-MM-YYYY") }]
+              )
+            })
+          }}
+        />
 
-              setSeeButton(true)
-            }}
-          />
-        </div>
+        <button className="btn btn-success mt-3" onClick={handleSaveDaysOff}>Salvar</button>
 
-        <div className='d-inline-flex mb-3 mt-3'>
-          <button id="help" className='btn btn-warning me-2' onClick={setTour}>
-            <Question />
-          </button>
-
-          <button id="print" className='btn btn-light' onClick={() => setSignatureScaleModalOpen(true)}>
-            <Printer />
-          </button>
-
-          {
-            seeButton && (
-              <div className="ms-2">
-                <button className="btn btn-success" onClick={handleSubmitScales}>Salvar</button>
-              </div>
-            )
-          }
-        </div>
-
-        <div id="scale-table" className="table-responsive">
+        <div className="table-responsive mt-3">
           <table className="table table-hover">
             <thead>
               <tr>
-                <th>Data</th>
+                <th>Colaborador</th>
 
-                <th>Funcionários de folga</th>
+                <th>Dias de trabalho</th>
 
-                <th>Funcionários trabalhando</th>
-
-                <th></th>
+                <th>Dias de folga</th>
               </tr>
             </thead>
 
@@ -638,51 +679,11 @@ const Scales = () => {
               {
                 scalesList?.map((scale) => (
                   <tr>
-                    <td>{moment(scale.date).format('DD/MM/YYYY')}</td>
+                    <td>{scale.worker.name}</td>
 
-                    <td>
-                      {
-                        scale.workers_on.map((worker) => (
-                          <span className="badge text-bg-primary" key={worker.id}>
-                            {worker.name} - {worker.turn.name} - {worker.function.name}
-                          </span>
-                        ))
-                      }
-                    </td>
+                    <td>{scale.days_on?.map(dia => <span className="badge text-bg-success">{dia}</span>)}</td>
 
-                    <td>
-                      {
-                        scale.workers_off.map((worker) => (
-                          <span className="badge text-bg-primary" key={worker.id}>
-                            {worker.name} - {worker.turn.name} - {worker.function.name}
-                          </span>
-                        ))
-                      }
-                    </td>
-
-                    <td>
-                      {/* <button
-                        className="btn btn-warning mt-2 me-2"
-                        onClick={() => {
-                          setSelectedScale(scale)
-
-                          setSignatureScaleModalOpen(true)
-                        }}
-                      >
-                        <Pencil />
-                      </button> */}
-
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => {
-                          setSelectedScale(scale)
-
-                          setDeleteScaleModalOpen(true)
-                        }}
-                      >
-                        <Trash />
-                      </button>
-                    </td>
+                    <td>{scale.days_off?.map(dia => <span className="badge text-bg-danger">{dia}</span>)}</td>
                   </tr>
                 ))
               }
@@ -690,19 +691,6 @@ const Scales = () => {
           </table>
         </div>
       </div>
-
-      <SignatureScaleModal
-        signatureScaleModalOpen={signatureScaleModalOpen}
-        setSignatureScaleModalOpen={setSignatureScaleModalOpen}
-        selectedScale={selectedScale}
-      />
-
-      <DeleteScaleModal
-        deleteScaleModalOpen={deleteScaleModalOpen}
-        setDeleteScaleModalOpen={setDeleteScaleModalOpen}
-        selectedScale={selectedScale}
-        setScalesList={setScalesList}
-      />
     </>
   )
 }

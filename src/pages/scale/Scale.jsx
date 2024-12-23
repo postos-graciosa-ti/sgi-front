@@ -109,47 +109,49 @@ const Scales = () => {
 
     let diasSemFolga = diasDoMes.filter(dia => !daysOffStore.some(diaFolga => diaFolga === dia))
 
-    // verifica se tem mais de 8 dias consecutivos
-    let temMaisDeOitoDiasConsecutivos = false;
+    // calcula proporção e verifica se tem mais de 8 dias consecutivos
+    let allDates = [...diasSemFolga, ...daysOffStore].sort()
 
-    let diasConsecutivos = 0;
+    let options = []
 
-    let diaAnterior = null;
-
-    for (let dia of diasSemFolga) {
-      let dataAtual = moment(dia, "DD-MM-YYYY");
-
-      if (diaAnterior) {
-        let diferenca = dataAtual.diff(diaAnterior, 'days');
-
-        if (diferenca === 1) {
-          diasConsecutivos++;
-
-          if (diasConsecutivos > 8) {
-            temMaisDeOitoDiasConsecutivos = true;
-            break;
-          }
-        } else {
-          diasConsecutivos = 1;
-        }
-      } else {
-        diasConsecutivos = 1;
+    allDates?.map((date) => {
+      if (daysOffStore.includes(date)) {
+        options.push({ dayOff: true, value: date })
+      } else if (diasSemFolga.includes(date)) {
+        options.push({ dayOff: false, value: date })
       }
+    })
 
-      diaAnterior = dataAtual;
-    }
+    let diasConsecutivos = []
 
-    let diasTrabalhadosPorSemana = Math.round(diasSemFolga.length / 4)
+    let contador = 0
 
-    let diasFolgadosPorSemana = Math.round(daysOffStore.length / 4);
+    let dataFolga = null
 
-    const mdc = (a, b) => b === 0 ? a : mdc(b, a % b);
+    let temMaisDeOitoDiasConsecutivos = false
 
-    let divisor = mdc(diasTrabalhadosPorSemana, diasFolgadosPorSemana);
+    options.forEach((dia, index) => {
+      if (dia.dayOff === true) {
+        diasConsecutivos.push({
+          dias: contador,
+          dataFolga: dia.value
+        })
+        contador = 0
+      } else {
+        contador++
+        if (contador > 8) {
+          temMaisDeOitoDiasConsecutivos = true
+        }
+      }
+    })
 
-    let proporcaoTrabalhoSemanal = diasTrabalhadosPorSemana / divisor;
-
-    let proporcaoFolgaSemanal = diasFolgadosPorSemana / divisor;
+    let proporcoes = diasConsecutivos.map((item, index) => {
+      return {
+        folga: index + 1,
+        data: item.dataFolga,
+        proporcao: `${item.dias}x1`
+      }
+    })
 
     let formData = {
       worker_id: selectedWorkerId,
@@ -157,8 +159,11 @@ const Scales = () => {
       days_on: `[${diasSemFolga.map(dia => `'${dia}'`).join(',')}]`,
       days_off: `[${daysOffStore.map(dia => `'${dia}'`).join(',')}]`,
       need_alert: temMaisDeOitoDiasConsecutivos ? true : false,
-      proportion: `${proporcaoTrabalhoSemanal}x${proporcaoFolgaSemanal}`
+      proportion: JSON.stringify(proporcoes)
     }
+
+    console.log(formData)
+    debugger
 
     if (eval(formData.days_off).length == 0) {
       Swal.fire({
@@ -202,7 +207,7 @@ const Scales = () => {
       .delete(`/scales/${scaleId}/subsidiaries/${selectedSubsdiarie.value}`)
       .then(() => {
         getScalesBySubsidiarie()
-        
+
         api
           .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${selectedWorkerId}`)
           .then((response) => {
@@ -243,9 +248,9 @@ const Scales = () => {
 
   const handlePrintScale = () => {
     const content = ReactDOMServer.renderToString(printContent(scalesList))
-    
+
     const printWindow = window.open('', '_blank')
-    
+
     printWindow.document.write(`
       <html>
         <head>
@@ -315,6 +320,70 @@ const Scales = () => {
         <button id="save-scale" className="btn btn-success mt-3" onClick={handleSaveDaysOff}>Salvar</button>
 
         <div className="table-responsive mt-3">
+          <table id="scale-table" className="table table-hover table-bordered table-striped text-center">
+            <thead className="table-dark">
+              <tr>
+                <th>Colaborador</th>
+                <th>Trabalho</th>
+                <th>Folga</th>
+                <th>Proporção</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {scalesList?.map((scale) => (
+                <tr key={scale.id}>
+                  <td>{scale.worker.name}</td>
+                  <td>
+                    {scale.days_on?.map((dia, index) => (
+                      <div key={index}>
+                        <span className="badge text-bg-success">{dia}</span>
+                      </div>
+                    ))}
+                  </td>
+                  <td>
+                    {scale.days_off?.map((dia, index) => (
+                      <div key={index}>
+                        <span className="badge text-bg-danger">{dia}</span>
+                      </div>
+                    ))}
+                  </td>
+                  <td className="text-center">
+                    {JSON.parse(scale.proportion).map((item) => (
+                      <div key={item.data}>
+                        <span className="badge text-bg-primary">
+                          {item.data}: {item.proporcao}
+                        </span>
+                      </div>
+                    ))}
+                  </td>
+                  <td>
+                    <div className="d-inline-flex">
+                      <button
+                        id="delete-scale"
+                        className="btn btn-danger mt-2 me-2"
+                        onClick={() => handleDeleteScale(scale.id)}
+                      >
+                        <Trash />
+                      </button>
+                      {scale.need_alert === true && (
+                        <button
+                          id="alert-scale"
+                          title="Alerta de usuário com mais de 8 dias consecutivos"
+                          className="btn btn-warning mt-2 me-2"
+                        >
+                          <ExclamationTriangle />
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* <div className="table-responsive mt-3">
           <table id="scale-table" className="table table-hover">
             <thead>
               <tr>
@@ -336,11 +405,33 @@ const Scales = () => {
                   <tr>
                     <td>{scale.worker.name}</td>
 
-                    <td>{scale.days_on?.map(dia => <span className="badge text-bg-success">{dia}</span>)}</td>
+                    <td>
+                      {scale.days_on?.map(dia => (
+                        <div>
+                          <span className="badge text-bg-success">{dia}</span>
+                        </div>
+                      ))}
+                    </td>
 
-                    <td>{scale.days_off?.map(dia => <span className="badge text-bg-danger">{dia}</span>)}</td>
+                    <td>
+                      {scale.days_off?.map(dia => (
+                        <div>
+                          <span className="badge text-bg-danger">{dia}</span>
+                        </div>
+                      ))}
+                    </td>
 
-                    <td className="text-center">{scale.proportion}</td>
+                    <td className="text-center">
+                      {
+                        JSON.parse(scale.proportion).map(item => (
+                          <div key={item.data}>
+                            <span className="badge text-bg-primary">
+                              {item.data}: {item.proporcao}
+                            </span>
+                          </div>
+                        ))
+                      }
+                    </td>
 
                     <td>
                       <div className="d-inline-flex">
@@ -364,7 +455,7 @@ const Scales = () => {
               }
             </tbody>
           </table>
-        </div>
+        </div> */}
       </div>
 
       <CalendarPopup

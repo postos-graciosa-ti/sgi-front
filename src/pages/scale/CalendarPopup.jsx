@@ -40,7 +40,9 @@ const CalendarPopup = (props) => {
       .post(`/scales/workers/${selectedWorkerId}`, {
         date: moment(selectedDate).format("DD-MM-YYYY")
       })
-      .then(() => {
+      .then((response) => {
+        console.log(response)
+
         api
           .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
           .then((response) => {

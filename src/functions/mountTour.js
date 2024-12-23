@@ -78,31 +78,45 @@ const mountTour = (route) => {
             }
           },
           {
-            element: '#print',
+            element: '#workers-select',
             popover: {
-              title: 'Imprimir escala',
-              description: 'Clique nesse botão para imprimir a escala'
-            }
-          },
-          {
-            element: '#scale-container',
-            popover: {
-              title: 'Informações da escala',
-              description: 'Informações da escala'
+              title: 'Selecione um colaborador',
+              description: 'Selecione um colaborador para montar a escala'
             }
           },
           {
             element: '#scale-calendar',
             popover: {
               title: 'Calendário',
-              description: 'Calendário para planejamento de escala'
+              description: 'Calendário para montar a escala'
+            }
+          },
+          {
+            element: '#save-scale',
+            popover: {
+              title: 'Salvar escala',
+              description: 'Clique nesse botão para salvar a escala'
             }
           },
           {
             element: '#scale-table',
             popover: {
               title: 'Tabela de escala',
-              description: 'Contém as informações da escala'
+              description: 'Tabela de escala'
+            }
+          },
+          {
+            element: '#delete-scale',
+            popover: {
+              title: 'Excluir escala',
+              description: 'Clique nesse botão para excluir a escala'
+            }
+          },
+          {
+            element: '#alert-scale',
+            popover: {
+              title: 'Alerta de usuário com mais de 8 dias consecutivos',
+              description: 'Esse botão aparece quando o usuário tem mais de 8 dias consecutivos sem folga'
             }
           }
         ],

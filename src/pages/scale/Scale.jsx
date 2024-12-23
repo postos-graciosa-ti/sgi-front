@@ -464,6 +464,8 @@ const Scales = () => {
 
   const daysOffStore = useDaysOffStore(state => state.daysOff)
 
+  const setDaysOff = useDaysOffStore(state => state.setDaysOff)
+
   const resetDaysOff = useDaysOffStore(state => state.resetDaysOff)
 
   const [calendarPopupOpen, setCalendarPopupOpen] = useState(false)
@@ -574,6 +576,17 @@ const Scales = () => {
       proportion: `${proporcaoTrabalhoSemanal}x${proporcaoFolgaSemanal}`
     }
 
+    if (eval(formData.days_off).length == 0) {
+      Swal.fire({
+        title: "Erro",
+        text: "Não é possível salvar sem dias de folga",
+        icon: "error",
+        confirmButtonText: "OK"
+      })
+
+      return
+    }
+
     api
       .post("/scales", formData)
       .then(() => {
@@ -604,6 +617,32 @@ const Scales = () => {
       .then(() => getScalesBySubsidiarie())
   }
 
+  const setTour = () => {
+    let route = location.pathname
+
+    let driverObj = mountTour(route)
+
+    driverObj.drive()
+  }
+
+  console.log(daysOffStore)
+
+  const handleOnChangeWorker = (e) => {
+    resetDaysOff()
+
+    setSelectedWorkerId(e.value)
+
+    api
+      .get(`scales/subsidiaries/${selectedSubsdiarie.value}/workers/${e.value}`)
+      .then((response) => {
+        // console.log(response.data)
+
+        response.data.days_off.forEach(day => {
+          setDaysOff(day)
+        })
+      })
+  }
+
   return (
     <>
       <Nav />
@@ -612,33 +651,36 @@ const Scales = () => {
         <div className="row">
           <div className="col-12">
             <ReactSelect
+              id="workers-select"
               placeholder="Colaboradores"
               options={workersOptions}
               onChange={(e) => {
-                // setSelectedDaysOff([])
-
-                setSelectedWorkerId(e.value)
+                handleOnChangeWorker(e)
               }}
             />
           </div>
         </div>
 
-        <Calendar
-          tileClassName={titleClassName}
-          className="w-100 rounded-3 mt-3"
-          onChange={(value) => {
-            setSelectedDate(value)
+        <div id="scale-calendar">
+          <Calendar
+            tileClassName={titleClassName}
+            className="w-100 rounded-3 mt-3"
+            onChange={(value) => {
+              setSelectedDate(value)
 
-            setCalendarPopupOpen(true)
-          }}
-          minDate={firstDay}
-          maxDate={lastDay}
-        />
+              setCalendarPopupOpen(true)
+            }}
+            minDate={firstDay}
+            maxDate={lastDay}
+          />
+        </div>
 
-        <button className="btn btn-success mt-3" onClick={handleSaveDaysOff}>Salvar</button>
+        <button id="help" className="btn btn-warning mt-3 me-2" onClick={setTour}><Question /></button>
+
+        <button id="save-scale" className="btn btn-success mt-3" onClick={handleSaveDaysOff}>Salvar</button>
 
         <div className="table-responsive mt-3">
-          <table className="table table-hover">
+          <table id="scale-table" className="table table-hover">
             <thead>
               <tr>
                 <th>Colaborador</th>
@@ -663,18 +705,18 @@ const Scales = () => {
 
                     <td>{scale.days_off?.map(dia => <span className="badge text-bg-danger">{dia}</span>)}</td>
 
-                    <td>{scale.proportion}</td>
+                    <td className="text-center">{scale.proportion}</td>
 
                     <td>
                       <div className="d-inline-flex">
-                        <button className="btn btn-danger mt-2 me-2" onClick={() => handleDeleteScale(scale.id)}>
+                        <button id="delete-scale" className="btn btn-danger mt-2 me-2" onClick={() => handleDeleteScale(scale.id)}>
                           <Trash />
                         </button>
 
                         {
                           scale.need_alert === true && (
                             <>
-                              <button title="Alerta" className="btn btn-warning mt-2 me-2">
+                              <button id="alert-scale" title="Alerta de usuário com mais de 8 dias consecutivos" className="btn btn-warning mt-2 me-2">
                                 <ExclamationTriangle />
                               </button>
                             </>

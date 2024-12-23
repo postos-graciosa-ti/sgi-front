@@ -199,9 +199,13 @@ const Scales = () => {
     api
       .delete(`/scales/${scaleId}/subsidiaries/${selectedSubsdiarie.value}`)
       .then(() => {
-        setExistentWorkerDaysOff([])
-
         getScalesBySubsidiarie()
+        
+        api
+          .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${selectedWorkerId}`)
+          .then((response) => {
+            setExistentWorkerDaysOff(response.data)
+          })
       })
   }
 

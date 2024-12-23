@@ -96,6 +96,7 @@ const Scales = () => {
   }
 
   const handleSaveDaysOff = () => {
+    // pega os dias sem folga do mês
     let diasDoMes = []
 
     let dataAtual = firstDay
@@ -108,6 +109,7 @@ const Scales = () => {
 
     let diasSemFolga = diasDoMes.filter(dia => !daysOffStore.some(diaFolga => diaFolga === dia))
 
+    // verifica se tem mais de 8 dias consecutivos
     let temMaisDeOitoDiasConsecutivos = false;
 
     let diasConsecutivos = 0;
@@ -215,6 +217,14 @@ const Scales = () => {
     let driverObj = mountTour(route)
 
     driverObj.drive()
+  }
+
+  const findExistentWorkerDaysOff = () => {
+    api
+      .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${selectedWorkerId}`)
+      .then((response) => {
+        setExistentWorkerDaysOff(response.data)
+      })
   }
 
   const handleOnChangeWorker = (e) => {
@@ -361,6 +371,12 @@ const Scales = () => {
         calendarPopupOpen={calendarPopupOpen}
         setCalendarPopupOpen={setCalendarPopupOpen}
         selectedDate={selectedDate}
+        existentWorkerDaysOff={existentWorkerDaysOff}
+        setExistentWorkerDaysOff={setExistentWorkerDaysOff}
+        findExistentWorkerDaysOff={findExistentWorkerDaysOff}
+        selectedWorkerId={selectedWorkerId}
+        getScalesBySubsidiarie={getScalesBySubsidiarie}
+        setScalesList={setScalesList}
       />
 
       <style>

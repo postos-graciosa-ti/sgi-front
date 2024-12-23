@@ -334,6 +334,7 @@ const Scales = () => {
               {scalesList?.map((scale) => (
                 <tr key={scale.id}>
                   <td>{scale.worker.name}</td>
+
                   <td>
                     {scale.days_on?.map((dia, index) => (
                       <div key={index}>
@@ -341,6 +342,7 @@ const Scales = () => {
                       </div>
                     ))}
                   </td>
+
                   <td>
                     {scale.days_off?.map((dia, index) => (
                       <div key={index}>
@@ -348,6 +350,7 @@ const Scales = () => {
                       </div>
                     ))}
                   </td>
+
                   <td className="text-center">
                     {JSON.parse(scale.proportion).map((item) => (
                       <div key={item.data}>
@@ -357,6 +360,7 @@ const Scales = () => {
                       </div>
                     ))}
                   </td>
+
                   <td>
                     <div className="d-inline-flex">
                       <button
@@ -366,6 +370,7 @@ const Scales = () => {
                       >
                         <Trash />
                       </button>
+
                       {scale.need_alert === true && (
                         <button
                           id="alert-scale"
@@ -382,80 +387,6 @@ const Scales = () => {
             </tbody>
           </table>
         </div>
-
-        {/* <div className="table-responsive mt-3">
-          <table id="scale-table" className="table table-hover">
-            <thead>
-              <tr>
-                <th>Colaborador</th>
-
-                <th>Trabalho</th>
-
-                <th>Folga</th>
-
-                <th>Proporção</th>
-
-                <th></th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {
-                scalesList?.map((scale) => (
-                  <tr>
-                    <td>{scale.worker.name}</td>
-
-                    <td>
-                      {scale.days_on?.map(dia => (
-                        <div>
-                          <span className="badge text-bg-success">{dia}</span>
-                        </div>
-                      ))}
-                    </td>
-
-                    <td>
-                      {scale.days_off?.map(dia => (
-                        <div>
-                          <span className="badge text-bg-danger">{dia}</span>
-                        </div>
-                      ))}
-                    </td>
-
-                    <td className="text-center">
-                      {
-                        JSON.parse(scale.proportion).map(item => (
-                          <div key={item.data}>
-                            <span className="badge text-bg-primary">
-                              {item.data}: {item.proporcao}
-                            </span>
-                          </div>
-                        ))
-                      }
-                    </td>
-
-                    <td>
-                      <div className="d-inline-flex">
-                        <button id="delete-scale" className="btn btn-danger mt-2 me-2" onClick={() => handleDeleteScale(scale.id)}>
-                          <Trash />
-                        </button>
-
-                        {
-                          scale.need_alert === true && (
-                            <>
-                              <button id="alert-scale" title="Alerta de usuário com mais de 8 dias consecutivos" className="btn btn-warning mt-2 me-2">
-                                <ExclamationTriangle />
-                              </button>
-                            </>
-                          )
-                        }
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
-        </div> */}
       </div>
 
       <CalendarPopup

@@ -14,7 +14,9 @@ const CalendarPopup = (props) => {
     setExistentWorkerDaysOff,
     selectedWorkerId,
     getScalesBySubsidiarie,
-    setScalesList
+    setScalesList,
+    allDaysOff,
+    handleSaveDaysOff
   } = props
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -32,25 +34,17 @@ const CalendarPopup = (props) => {
   }
 
   const handleDelete = () => {
-    const daysOffToRemove = existentWorkerDaysOff.filter(day => day !== moment(selectedDate).format("DD-MM-YYYY"))
+    const formattedDate = moment(selectedDate).format("DD-MM-YYYY")
 
-    setExistentWorkerDaysOff(daysOffToRemove)
+    const updatedDaysOff = allDaysOff.filter(dayOff => dayOff !== formattedDate)
 
-    api
-      .post(`/scales/workers/${selectedWorkerId}`, {
-        date: moment(selectedDate).format("DD-MM-YYYY")
-      })
-      .then((response) => {
-        console.log(response)
+    allDaysOff.length = 0
+    
+    allDaysOff.push(...updatedDaysOff)
 
-        api
-          .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
-          .then((response) => {
-            setScalesList(response.data)
-
-            setCalendarPopupOpen(false)
-          })
-      })
+    handleSaveDaysOff() 
+    
+    setCalendarPopupOpen(false)
   }
 
   return (

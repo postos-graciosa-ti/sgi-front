@@ -5,7 +5,6 @@ import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from 'react-select'
-import Swal from 'sweetalert2'
 import Nav from "../../components/Nav"
 import useDaysOffStore from '../../data/daysOffStore'
 import useUserSessionStore from '../../data/userSession'
@@ -34,7 +33,7 @@ const printContent = (scalesList) => {
                   <div key={idx}>{day}</div>
                 ))}
               </td>
-              <td style={{ padding: '20px 0' }}></td> {/* Espaço para assinatura */}
+              <td style={{ padding: '20px 0' }}></td>
             </tr>
           ))}
         </tbody>
@@ -66,6 +65,8 @@ const Scales = () => {
 
   let lastDay = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
+  let allDaysOff = [...existentWorkerDaysOff, ...daysOffStore].sort() || []
+
   useEffect(() => {
     getWorkersBySubsidiarie()
 
@@ -96,84 +97,12 @@ const Scales = () => {
   }
 
   const handleSaveDaysOff = () => {
-    // pega os dias sem folga do mês
-    let diasDoMes = []
-
-    let dataAtual = firstDay
-
-    while (dataAtual <= lastDay) {
-      diasDoMes.push(moment(dataAtual).format("DD-MM-YYYY"))
-
-      dataAtual.setDate(dataAtual.getDate() + 1)
-    }
-
-    let diasSemFolga = diasDoMes.filter(dia => !daysOffStore.some(diaFolga => diaFolga === dia))
-
-    // calcula proporção e verifica se tem mais de 8 dias consecutivos
-    let allDates = [...diasSemFolga, ...daysOffStore].sort()
-
-    let options = []
-
-    allDates?.map((date) => {
-      if (daysOffStore.includes(date)) {
-        options.push({ dayOff: true, value: date })
-      } else if (diasSemFolga.includes(date)) {
-        options.push({ dayOff: false, value: date })
-      }
-    })
-
-    let diasConsecutivos = []
-
-    let contador = 0
-
-    let dataFolga = null
-
-    let temMaisDeOitoDiasConsecutivos = false
-
-    options.forEach((dia, index) => {
-      if (dia.dayOff === true) {
-        diasConsecutivos.push({
-          dias: contador,
-          dataFolga: dia.value
-        })
-        contador = 0
-      } else {
-        contador++
-        if (contador > 8) {
-          temMaisDeOitoDiasConsecutivos = true
-        }
-      }
-    })
-
-    let proporcoes = diasConsecutivos.map((item, index) => {
-      return {
-        folga: index + 1,
-        data: item.dataFolga,
-        proporcao: `${item.dias}x1`
-      }
-    })
-
     let formData = {
-      worker_id: selectedWorkerId,
-      subsidiarie_id: selectedSubsdiarie.value,
-      days_on: `[${diasSemFolga.map(dia => `'${dia}'`).join(',')}]`,
-      days_off: `[${daysOffStore.map(dia => `'${dia}'`).join(',')}]`,
-      need_alert: temMaisDeOitoDiasConsecutivos ? true : false,
-      proportion: JSON.stringify(proporcoes)
-    }
-
-    console.log(formData)
-    debugger
-
-    if (eval(formData.days_off).length == 0) {
-      Swal.fire({
-        title: "Erro",
-        text: "Não é possível salvar sem dias de folga",
-        icon: "error",
-        confirmButtonText: "OK"
-      })
-
-      return
+      "worker_id": selectedWorkerId,
+      "subsidiarie_id": selectedSubsdiarie.value,
+      "days_off": `[${allDaysOff.map(dia => `'${dia}'`).join(',')}]`,
+      "first_day": moment(firstDay).format("DD-MM-YYYY"),
+      "last_day": moment(lastDay).format("DD-MM-YYYY")
     }
 
     api
@@ -192,7 +121,7 @@ const Scales = () => {
     if (view === 'month') {
       const day = moment(date).format("DD-MM-YYYY")
 
-      const isDayOff = daysOffStore.some(diaFolga => diaFolga === day)
+      const isDayOff = allDaysOff.some(diaFolga => diaFolga === day)
 
       const isDayOffExistentWorker = existentWorkerDaysOff.some(diaFolga => diaFolga === day)
 
@@ -399,6 +328,8 @@ const Scales = () => {
         selectedWorkerId={selectedWorkerId}
         getScalesBySubsidiarie={getScalesBySubsidiarie}
         setScalesList={setScalesList}
+        allDaysOff={allDaysOff}
+        handleSaveDaysOff={handleSaveDaysOff}
       />
 
       <style>

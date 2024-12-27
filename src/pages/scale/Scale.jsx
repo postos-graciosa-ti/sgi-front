@@ -13,34 +13,62 @@ import api from '../../services/api'
 import CalendarPopup from './CalendarPopup'
 
 const printContent = (scalesList) => {
+  const currentDate = new Date()
+
+  const currentMonth = currentDate.getMonth()
+
   return (
     <div>
-      <h3>Escala de Colaboradores</h3>
+      <h3>Escala de Colaboradores — {moment().format('MM/YYYY')}</h3>
+
       <table>
         <thead>
           <tr>
             <th>Colaborador</th>
+
             <th>Folga</th>
+
             <th>Assinatura</th>
           </tr>
         </thead>
+
         <tbody>
-          {scalesList?.map((scale, index) => (
-            <tr key={index}>
-              <td>{scale.worker.name}</td>
-              <td>
-                {scale.days_off.map((day, idx) => (
-                  <div key={idx}>{day}</div>
-                ))}
-              </td>
-              <td style={{ padding: '20px 0' }}></td>
-            </tr>
-          ))}
+          {
+            scalesList && scalesList.map((scale) => (
+              <tr key={scale.worker.id}>
+                <td>{scale.worker.name}</td>
+
+                <td>
+                  <div className="badge-container">
+                    {scale.days_off?.map((dayOff, index) => (
+
+                      <div key={index} className="badge text-bg-success">
+                        {dayOff.date} (
+                        {
+                          dayOff.weekday === "Monday" ? "Segunda-Feira" :
+                            dayOff.weekday === "Tuesday" ? "Terça-Feira" :
+                              dayOff.weekday === "Wednesday" ? "Quarta-Feira" :
+                                dayOff.weekday === "Thursday" ? "Quinta-Feira" :
+                                  dayOff.weekday === "Friday" ? "Sexta-Feira" :
+                                    dayOff.weekday === "Saturday" ? "Sábado" :
+                                      dayOff.weekday === "Sunday" ? "Domingo" :
+                                        ""
+                        })
+                      </div>
+                    ))}
+                  </div>
+                </td>
+
+                <td></td>
+              </tr>
+            ))
+          }
         </tbody>
       </table>
     </div>
   );
 }
+
 
 const Scales = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -61,9 +89,9 @@ const Scales = () => {
 
   const [selectedDate, setSelectedDate] = useState()
 
-  let firstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  let firstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
 
-  let lastDay = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+  let lastDay = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
 
   let allDaysOff = [...existentWorkerDaysOff, ...daysOffStore].sort() || []
 
@@ -171,7 +199,17 @@ const Scales = () => {
     api
       .get(`scales/subsidiaries/${selectedSubsdiarie.value}/workers/${e.value}`)
       .then((response) => {
-        setExistentWorkerDaysOff(response.data)
+        let existentScales = response.data
+
+        let existentDaysOff = []
+
+        {
+          existentScales && existentScales.map((scale) => {
+            existentDaysOff.push(scale.date)
+          })
+        }
+
+        setExistentWorkerDaysOff(existentDaysOff)
       })
   }
 
@@ -183,6 +221,7 @@ const Scales = () => {
     printWindow.document.write(`
       <html>
         <head>
+          <meta charset="utf-8" />
           <title>Escala de Colaboradores</title>
           <style>
             table, th, td {
@@ -210,12 +249,36 @@ const Scales = () => {
     printWindow.print()
   }
 
+  const handleOnChangeCalendar = (value) => {
+    setSelectedDate(value)
+
+    setCalendarPopupOpen(true)
+  }
+
   return (
     <>
       <Nav />
 
       <div className="container">
-        <div className="row">
+        {/* <div className="row">
+          <div className="col-6">
+            <div className="mb-2">
+              <b>Data de início de planejamento</b>
+            </div>
+
+            <input type="date" className="form-control" onChange={e => setFirstDay(e.target.value)} />
+          </div>
+
+          <div className="col-6">
+            <div className="mb-2">
+              <b>Data final de planejamento</b>
+            </div>
+
+            <input type="date" className="form-control" onChange={e => setLastDay(e.target.value)} />
+          </div>
+        </div> */}
+
+        <div className="row mt-3">
           <div className="col-12">
             <ReactSelect
               id="workers-select"
@@ -232,13 +295,8 @@ const Scales = () => {
           <Calendar
             tileClassName={titleClassName}
             className="w-100 rounded-3 mt-3"
-            onChange={(value) => {
-              setSelectedDate(value)
-
-              setCalendarPopupOpen(true)
-            }}
-            minDate={firstDay}
-            maxDate={lastDay}
+            onChange={value => handleOnChangeCalendar(value)}
+            showNeighboringMonth={false}
           />
         </div>
 
@@ -249,7 +307,7 @@ const Scales = () => {
         <button id="save-scale" className="btn btn-success mt-3" onClick={handleSaveDaysOff}>Salvar</button>
 
         <div className="table-responsive mt-3">
-          <table id="scale-table" className="table table-hover table-bordered table-striped text-center">
+          <table id="scale-table" className="table table-hover text-center">
             <thead className="table-dark">
               <tr>
                 <th>Colaborador</th>
@@ -265,30 +323,72 @@ const Scales = () => {
                   <td>{scale.worker.name}</td>
 
                   <td>
-                    {scale.days_on?.map((dia, index) => (
-                      <div key={index}>
-                        <span className="badge text-bg-success">{dia}</span>
-                      </div>
-                    ))}
+                    <div className="badge-container">
+                      {scale.days_on?.map((dayOn, index) => (
+                        dayOn.date && dayOn.weekday ? (
+                          <span key={index} className="badge text-bg-success">
+                            {dayOn.date} (
+                            {
+                              dayOn.weekday === "Monday" ? "segunda-feira" :
+                                dayOn.weekday === "Tuesday" ? "terça-feira" :
+                                  dayOn.weekday === "Wednesday" ? "quarta-feira" :
+                                    dayOn.weekday === "Thursday" ? "quinta-feira" :
+                                      dayOn.weekday === "Friday" ? "sexta-feira" :
+                                        dayOn.weekday === "Saturday" ? "sábado" :
+                                          dayOn.weekday === "Sunday" ? "domingo" :
+                                            ""
+                            })
+                          </span>
+                        ) : null
+                      ))}
+                    </div>
                   </td>
 
+
+
                   <td>
-                    {scale.days_off?.map((dia, index) => (
-                      <div key={index}>
-                        <span className="badge text-bg-danger">{dia}</span>
-                      </div>
-                    ))}
+                    <div className="badge-container">
+                      {scale.days_off?.map((dayOff, index) => (
+                        <span key={index} className="badge text-bg-success">
+                          {dayOff.date} (
+                          {
+                            dayOff.weekday === "Monday" ? "Segunda-Feira" :
+                              dayOff.weekday === "Tuesday" ? "Terça-Feira" :
+                                dayOff.weekday === "Wednesday" ? "Quarta-Feira" :
+                                  dayOff.weekday === "Thursday" ? "Quinta-Feira" :
+                                    dayOff.weekday === "Friday" ? "Sexta-Feira" :
+                                      dayOff.weekday === "Saturday" ? "Sábado" :
+                                        dayOff.weekday === "Sunday" ? "Domingo" :
+                                          ""
+                          })
+                        </span>
+                      ))}
+                    </div>
                   </td>
 
                   <td className="text-center">
-                    {JSON.parse(scale.proportion).map((item) => (
-                      <div key={item.data}>
-                        <span className="badge text-bg-primary">
-                          {item.data}: {item.proporcao}
-                        </span>
-                      </div>
-                    ))}
+                    <div className="badge-container">
+                      {JSON.parse(scale.proportion).map((item) => (
+                        <div key={item.data}>
+                          <span className="badge text-bg-primary">
+                            {item.data} (
+                            {
+                              item.weekday === "Monday" ? "Segunda-Feira" :
+                                item.weekday === "Tuesday" ? "Terça-Feira" :
+                                  item.weekday === "Wednesday" ? "Quarta-Feira" :
+                                    item.weekday === "Thursday" ? "Quinta-Feira" :
+                                      item.weekday === "Friday" ? "Sexta-Feira" :
+                                        item.weekday === "Saturday" ? "Sábado" :
+                                          item.weekday === "Sunday" ? "Domingo" :
+                                            ""
+                            }
+                            ): {item.proporcao}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </td>
+
 
                   <td>
                     <div className="d-inline-flex">
@@ -339,6 +439,18 @@ const Scales = () => {
             color: grey;
             // border-radius: 50%;
           }
+
+          // .badge-container {
+          //   display: flex;
+          //   flex-wrap: wrap;
+          //   justify-content: center; /* Centraliza as badges na linha */
+          // }
+
+          // .badge {
+          //   margin: 5px; /* Ajuste o espaço entre as badges */
+          //   width: calc(33.33% - 10px); /* 3 badges por linha, considerando o espaço entre elas */
+          //   box-sizing: border-box; /* Garante que o padding e margin não quebrem o layout */
+          // }
         `}
       </style>
     </>

@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom"
 import App from "./App"
+import ErrorBoundary from "./components/ErrorBoundary"
 import AllJobs from "./pages/candidates/AllJobs"
 import CandidateFirstInterview from "./pages/candidates/CandidateFirstInterview"
 import Candidates from "./pages/candidates/Candidates"
@@ -19,24 +20,96 @@ import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 
 const Routes = createBrowserRouter([
-  { path: "/", element: <App /> },
-  { path: "/steps", element: <Steps /> },
-  { path: "/home", element: <Home /> },
-  { path: "/users", element: <Users /> },
-  { path: "/candidates", element: <Candidates /> },
-  { path: "/jobs", element: <Jobs /> },
-  { path: "/first-access", element: <FirstAcess /> },
-  { path: "/all-jobs", element: <AllJobs /> },
-  { path: "/register-candidate", element: <RegisterCandidate /> },
-  { path: "/first-interview", element: <FirstInterview /> },
-  { path: "/workers", element: <Workers /> },
-  { path: "/scale", element: <Scale /> },
-  { path: "/see-scale", element: <SeeScale /> },
-  { path: "/candidate-first-interview", element: <CandidateFirstInterview /> },
-  { path: "/scale-history", element: <ScaleHistory /> },
-  { path: "/subsidiaries", element: <Subsidiaries /> },
-  { path: "/turns", element: <Turns /> },
-  { path: "/functions", element: <Functions /> },
+  {
+    path: "/",
+    element: <App />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/steps",
+    element: <Steps />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/home",
+    element: <Home />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/users",
+    element: <Users />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/candidates",
+    element: <Candidates />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/jobs",
+    element: <Jobs />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/first-access",
+    element: <FirstAcess />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/all-jobs",
+    element: <AllJobs />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/register-candidate",
+    element: <RegisterCandidate />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/first-interview",
+    element: <FirstInterview />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/workers",
+    element: <Workers />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/scale",
+    element: <Scale />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/see-scale",
+    element: <SeeScale />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/candidate-first-interview",
+    element: <CandidateFirstInterview />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/scale-history",
+    element: <ScaleHistory />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/subsidiaries",
+    element: <Subsidiaries />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/turns",
+    element: <Turns />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/functions",
+    element: <Functions />,
+    errorElement: <ErrorBoundary />
+  },
 ])
 
 export default Routes

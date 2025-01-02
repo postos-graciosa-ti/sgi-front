@@ -19,7 +19,7 @@ function App() {
     api
       .get("/render-server/activate")
       .then((response) => {
-        console.log(response, "Render server activate")
+        console.log(response.data, "Render server activate")
       })
   }, [])
 

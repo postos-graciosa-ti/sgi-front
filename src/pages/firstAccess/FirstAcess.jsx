@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
 import api from "../../services/api"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import Swal from "sweetalert2"
+import sweetAlert from "../../components/sweetAlert"
 
 const FirstAcess = () => {
-  const [enablePassword, setEnablePassword] = useState(false)
+  const navigate = useNavigate()
 
   const [email, setEmail] = useState()
 
@@ -11,91 +13,60 @@ const FirstAcess = () => {
 
   const [passwordConfirm, setPasswordConfirm] = useState()
 
-  useEffect(() => {
-    email && api
-      .post("/verify-email", { "email": email })
-      .then((response) => {
-        let data = response.data
-
-        if (data.status == "true") {
-          setEnablePassword(true)
-        }
-
+  const handleSubmit = () => {
+    if (password !== passwordConfirm) {
+      Swal.fire({
+        icon: "error",
+        title: "Erro",
+        text: "A senha atual não confere",
       })
-      .catch((error) => console.error(error))
 
-  }, [email])
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-
-    if (password == passwordConfirm) {
-      api
-        .post("/confirm-password", {
-          "email": email,
-          "password": password
-        })
-        .then((response) => console.log(response))
-        .catch((error) => console.error(error))
+      return
     }
+
+    let formData = {
+      email: email,
+      password: password,
+    }
+
+    api
+      .post("/users/create-password", formData)
+      .then(() => navigate('/', { replace: true }))
+      .catch(() => sweetAlert({
+        title: "Erro",
+        text: "Usuário já possui senha",
+        icon: "error"
+      }))
   }
 
   return (
-    <>
-      <div className="container">
-        <div className="mt-3">
-          <Link to="/" className="btn btn-primary">
-            Voltar
-          </Link>
-        </div>
-
-        <div className="mt-3">
-          <h3>Informe seu e-mail e pressione Tab</h3>
-        </div>
-
-
-        <div className="mt-3 mb-3">
-          <input
-            type="text"
-            placeholder="E-mail"
-            className="form-control"
-            onBlur={(e) => setEmail(e.target.value)}
-          />
-        </div>
-
-        {
-          enablePassword && (
-            <>
-              <form onSubmit={(e) => handleSubmit(e)}>
-                <div className="mb-3">
-                  <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Crie sua senha"
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Confirme sua senha"
-                    onChange={(e) => setPasswordConfirm(e.target.value)}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <button type="submit" className="btn btn-primary">
-                    confirmar
-                  </button>
-                </div>
-              </form>
-            </>
-          )
-        }
+    <div className="container">
+      <div className="mt-3">
+        <Link to="/" className="btn btn-primary">Voltar</Link>
       </div>
-    </>
+
+      <div className="mt-3 mb-3">
+        <h4>Primeiro acesso</h4>
+      </div>
+
+      <div className="mb-3">
+        <input type="email" className="form-control" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
+      </div>
+
+      <div className="mb-3">
+        <input type="password" className="form-control" placeholder="Senha" onChange={(e) => setPassword(e.target.value)} />
+      </div>
+
+      <div className="mb-3">
+        <input type="password" className="form-control" placeholder="Confirmar senha" onChange={(e) => setPasswordConfirm(e.target.value)} />
+      </div>
+
+      <div className="mt-3 text-end">
+        <button className="btn btn-success" onClick={handleSubmit}>
+          Confirmar
+        </button>
+      </div>
+    </div>
   )
 }
 

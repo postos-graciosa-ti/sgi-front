@@ -9,6 +9,8 @@ import EditUserModal from "./EditUserModal"
 import mountTour from "../../functions/mountTour"
 
 const Users = () => {
+  const bearerToken = useUserSessionStore(state => state.bearerToken)
+
   const userList = useUserSessionStore(state => state.userList)
 
   const setUserList = useUserSessionStore(state => state.setUserList)
@@ -22,7 +24,7 @@ const Users = () => {
   const [editUserModalOpen, setEditUserModalOpen] = useState(false)
 
   useEffect(() => {
-    getUsers()
+    getUsers(bearerToken)
       .then((response) => {
         setUserList(response.data)
       })

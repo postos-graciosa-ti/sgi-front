@@ -10,6 +10,8 @@ const DeleteUserModal = (props) => {
     setOpenDeleteUserModal,
   } = props
 
+  const bearerToken = useUserSessionStore(state => state.bearerToken)
+
   const setUserList = useUserSessionStore(state => state.setUserList)
 
   const selectedUser = useUserSessionStore(state => state.selectedUser)
@@ -17,7 +19,7 @@ const DeleteUserModal = (props) => {
   const handleDeleteUser = () => {
     deleteUser(selectedUser.user_id)
       .then(() => {
-        getUsers()
+        getUsers(bearerToken)
           .then((response) => {
             setUserList(response.data)
             setOpenDeleteUserModal(false)

@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import useUserSessionStore from './data/userSession'
 import login from './requests/login'
+import api from './services/api'
 
 function App() {
   const navigate = useNavigate()
@@ -13,6 +14,14 @@ function App() {
   const userSession = useUserSessionStore(state => state.userSession)
 
   const setUserSession = useUserSessionStore(state => state.setUserSession)
+
+  useEffect(() => {
+    api
+      .get("/render-server/activate")
+      .then((response) => {
+        console.log(response, "Render server activate")
+      })
+  }, [])
 
   const handleLogin = (e) => {
     e.preventDefault()

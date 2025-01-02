@@ -11,9 +11,9 @@ function App() {
 
   const [password, setPassword] = useState()
 
-  const userSession = useUserSessionStore(state => state.userSession)
-
   const setUserSession = useUserSessionStore(state => state.setUserSession)
+
+  const setBearerToken = useUserSessionStore(state => state.setBearerToken)
 
   useEffect(() => {
     api
@@ -33,7 +33,9 @@ function App() {
 
     login(formData)
       .then((response) => {
-        setUserSession(response.data)
+        setBearerToken(response.data.token)
+
+        setUserSession(response.data.data)
 
         navigate('/steps', { replace: true })
       })

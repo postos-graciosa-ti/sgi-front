@@ -19,6 +19,8 @@ const useUserSessionStore = create((set) => ({
 
   selectedCandidate: {},
 
+  bearerToken: "",
+
   setUserSession: (newUserSession) => set(() => ({ userSession: newUserSession })),
 
   resetState: () => set(() => ({ userSession: {} })),
@@ -38,6 +40,8 @@ const useUserSessionStore = create((set) => ({
   setWorkersList: (newWorkersList) => set(() => ({ workersList: newWorkersList })),
 
   setSelectedCandidate: (newCandidate) => set(() => ({ selectedCandidate: newCandidate })),
+
+  setBearerToken: (newToken) => set(() => ({ bearerToken: newToken })),
 }))
 
 export default useUserSessionStore

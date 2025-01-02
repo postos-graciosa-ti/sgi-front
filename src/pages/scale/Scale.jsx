@@ -308,7 +308,7 @@ const Scales = () => {
 
         <div className="table-responsive mt-3">
           <table id="scale-table" className="table table-hover text-center">
-            <thead className="table-dark">
+            <thead>
               <tr>
                 <th>Colaborador</th>
                 <th>Trabalho</th>

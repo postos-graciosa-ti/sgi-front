@@ -105,12 +105,14 @@ const Scales = () => {
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => {
+        console.log(response)
+
         let workersData = response.data
 
         let workersOptions = []
 
         workersData && workersData.map((worker) => {
-          workersOptions.push({ "label": `${worker.worker_name} - ${worker.turn_name} - ${worker.function_name}`, "value": worker.worker_id })
+          workersOptions.push({ "label": `${worker.worker_name} - ${worker.turn_name} (${worker.turn_start_time} - ${worker.turn_end_time}) - ${worker.function_name}`, "value": worker.worker_id })
         })
 
         setWorkersOptions(workersOptions)
@@ -254,6 +256,8 @@ const Scales = () => {
 
     setCalendarPopupOpen(true)
   }
+
+  console.log(scalesList)
 
   return (
     <>

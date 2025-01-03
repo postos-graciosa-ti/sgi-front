@@ -98,7 +98,7 @@ const Workers = () => {
 
                     <td>{worker.function_name}</td>
 
-                    <td>{worker.turn_name}</td>
+                    <td>{worker.turn_name} ({worker.turn_start_time} - {worker.turn_end_time})</td>
 
                     <td>{worker.worker_is_active == true && "Sim" || "Não"}</td>
 

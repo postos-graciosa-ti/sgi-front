@@ -11,6 +11,7 @@ import useUserSessionStore from '../../data/userSession'
 import mountTour from '../../functions/mountTour'
 import api from '../../services/api'
 import CalendarPopup from './CalendarPopup'
+import ConfirmModal from './ConfirmModal'
 
 const printContent = (scalesList) => {
   const currentDate = new Date()
@@ -95,6 +96,8 @@ const Scales = () => {
 
   let allDaysOff = [...existentWorkerDaysOff, ...daysOffStore].sort() || []
 
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false)
+
   useEffect(() => {
     getWorkersBySubsidiarie()
 
@@ -136,15 +139,29 @@ const Scales = () => {
     }
 
     api
-      .post("/scales", formData)
-      .then((response) => {
-        getScalesBySubsidiarie()
-
-        resetDaysOff()
-
-        setExistentWorkerDaysOff(response.data)
+      .post("/scales/need-alert", {
+        "days_off": `[${allDaysOff.map(dia => `'${dia}'`).join(',')}]`,
+        "first_day": moment(firstDay).format("DD-MM-YYYY"),
+        "last_day": moment(lastDay).format("DD-MM-YYYY")
       })
-      .catch((error) => console.error(error))
+      .then((response) => {
+        let needConfirm = response.data == true ? true : false
+
+        if (needConfirm) {
+          setConfirmModalOpen(true)
+        } else {
+          api
+            .post("/scales", formData)
+            .then((response) => {
+              getScalesBySubsidiarie()
+
+              resetDaysOff()
+
+              setExistentWorkerDaysOff(response.data)
+            })
+            .catch((error) => console.error(error))
+        }
+      })
   }
 
   const titleClassName = ({ date, view }) => {
@@ -335,7 +352,7 @@ const Scales = () => {
             </thead>
             <tbody>
               {scalesList?.map((scale) => (
-                <tr key={scale.id}>
+                <tr key={scale.id} className={scale.need_alert && "table-warning"}>
                   <td>{scale.worker.name}</td>
 
                   <td>
@@ -411,6 +428,19 @@ const Scales = () => {
         setScalesList={setScalesList}
         allDaysOff={allDaysOff}
         handleSaveDaysOff={handleSaveDaysOff}
+      />
+
+      <ConfirmModal
+        confirmModalOpen={confirmModalOpen}
+        setConfirmModalOpen={setConfirmModalOpen}
+        getScalesBySubsidiarie={getScalesBySubsidiarie}
+        resetDaysOff={resetDaysOff}
+        setExistentWorkerDaysOff={setExistentWorkerDaysOff}
+        selectedWorkerId={selectedWorkerId}
+        selectedSubsdiarie={selectedSubsdiarie}
+        allDaysOff={allDaysOff}
+        firstDay={firstDay}
+        lastDay={lastDay}
       />
 
       <style>

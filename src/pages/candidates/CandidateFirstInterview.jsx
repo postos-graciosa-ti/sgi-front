@@ -26,22 +26,22 @@ const CandidateFirstInterview = () => {
     { "label": "Joinville", "value": 1 }
   ]
 
-  const [jobsOptions, setJobsOptions] = useState([])
+  // const [jobsOptions, setJobsOptions] = useState([])
 
-  useEffect(() => {
-    getJobs(selectedSubsidiarie.value)
-      .then((response) => {
-        let jobsData = response.data
+  // useEffect(() => {
+  //   getJobs(selectedSubsidiarie.value)
+  //     .then((response) => {
+  //       let jobsData = response.data
 
-        let options = []
+  //       let options = []
 
-        jobsData && jobsData.map((data) => {
-          options.push({ "value": data.id, "label": data.name })
-        })
+  //       jobsData && jobsData.map((data) => {
+  //         options.push({ "value": data.id, "label": data.name })
+  //       })
 
-        setJobsOptions(options)
-      })
-  }, [])
+  //       setJobsOptions(options)
+  //     })
+  // }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -87,13 +87,13 @@ const CandidateFirstInterview = () => {
             />
           </div>
 
-          <div className="mb-3">
+          {/* <div className="mb-3">
             <ReactSelect
               placeholder={"Vagas disponíveis"}
               options={jobsOptions}
               onChange={(e) => setSelectedJob(e.target.value)}
             />
-          </div>
+          </div> */}
 
           <div className="mb-3">
             <ReactSelect

@@ -74,57 +74,54 @@ const Workers = () => {
           <Plus />
         </button>
 
-        <div id="table-container" className="table-responsive">
+        <div id="table-container" className="table-responsive" style={{ maxHeight: "800px", overflowY: "auto" }}>
           <table className="table table-hover">
             <thead>
               <tr>
                 <th>Nome</th>
-
                 <th>Função</th>
-
                 <th>Turno</th>
-
                 <th>Ativo</th>
-
                 <th></th>
               </tr>
             </thead>
-
-            <tbody>
-              {
-                workersList?.map((worker) => (
-                  <tr key={worker.id}>
-                    <td>{worker.worker_name}</td>
-
-                    <td>{worker.function_name}</td>
-
-                    <td>{worker.turn_name} ({worker.turn_start_time} - {worker.turn_end_time})</td>
-
-                    <td>{worker.worker_is_active == true && "Sim" || "Não"}</td>
-
-                    <td>
-                      <button
-                        className="btn btn-warning me-2 mt-2"
-                        onClick={() => handleOpenEditWorkerModal(worker)}
-                        id="edit-worker"
-                      >
-                        <Pencil />
-                      </button>
-
-                      <button
-                        className="btn btn-danger me-2 mt-2"
-                        onClick={() => handleOpenDeleteWorkerModal(worker)}
-                        id="delete-worker"
-                      >
-                        <Trash />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              }
-            </tbody>
           </table>
+
+          <div style={{ overflowY: "auto", maxHeight: "500px" }}>
+            <table className="table table-hover">
+              <tbody>
+                {
+                  workersList?.map((worker) => (
+                    <tr key={worker.id}>
+                      <td>{worker.worker_name}</td>
+                      <td>{worker.function_name}</td>
+                      <td>{worker.turn_start_time} - {worker.turn_end_time}</td>
+                      <td>{worker.worker_is_active == true ? "Sim" : "Não"}</td>
+                      <td>
+                        <button
+                          className="btn btn-warning me-2 mt-2"
+                          onClick={() => handleOpenEditWorkerModal(worker)}
+                          id="edit-worker"
+                        >
+                          <Pencil />
+                        </button>
+                        <button
+                          className="btn btn-danger me-2 mt-2"
+                          onClick={() => handleOpenDeleteWorkerModal(worker)}
+                          id="delete-worker"
+                        >
+                          <Trash />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
+
+
       </div>
 
       <CreateWorkerModal

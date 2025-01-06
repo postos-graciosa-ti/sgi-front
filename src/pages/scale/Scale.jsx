@@ -257,7 +257,19 @@ const Scales = () => {
     setCalendarPopupOpen(true)
   }
 
-  console.log(scalesList)
+  const translateWeekday = (weekday) => {
+    const days = {
+      Monday: "Segunda-Feira",
+      Tuesday: "Terça-Feira",
+      Wednesday: "Quarta-Feira",
+      Thursday: "Quinta-Feira",
+      Friday: "Sexta-Feira",
+      Saturday: "Sábado",
+      Sunday: "Domingo",
+    }
+
+    return days[weekday] || "";
+  }
 
   return (
     <>
@@ -331,40 +343,18 @@ const Scales = () => {
                       {scale.days_on?.map((dayOn, index) => (
                         dayOn.date && dayOn.weekday ? (
                           <span key={index} className="badge text-bg-success">
-                            {dayOn.date} (
-                            {
-                              dayOn.weekday === "Monday" ? "segunda-feira" :
-                                dayOn.weekday === "Tuesday" ? "terça-feira" :
-                                  dayOn.weekday === "Wednesday" ? "quarta-feira" :
-                                    dayOn.weekday === "Thursday" ? "quinta-feira" :
-                                      dayOn.weekday === "Friday" ? "sexta-feira" :
-                                        dayOn.weekday === "Saturday" ? "sábado" :
-                                          dayOn.weekday === "Sunday" ? "domingo" :
-                                            ""
-                            })
+                            {`${dayOn.date} (${translateWeekday(dayOn.weekday)})`}
                           </span>
                         ) : null
                       ))}
                     </div>
                   </td>
 
-
-
                   <td>
                     <div className="badge-container">
                       {scale.days_off?.map((dayOff, index) => (
-                        <span key={index} className="badge text-bg-success">
-                          {dayOff.date} (
-                          {
-                            dayOff.weekday === "Monday" ? "Segunda-Feira" :
-                              dayOff.weekday === "Tuesday" ? "Terça-Feira" :
-                                dayOff.weekday === "Wednesday" ? "Quarta-Feira" :
-                                  dayOff.weekday === "Thursday" ? "Quinta-Feira" :
-                                    dayOff.weekday === "Friday" ? "Sexta-Feira" :
-                                      dayOff.weekday === "Saturday" ? "Sábado" :
-                                        dayOff.weekday === "Sunday" ? "Domingo" :
-                                          ""
-                          })
+                        <span key={index} className="badge text-bg-danger">
+                          {`${dayOff.date} (${translateWeekday(dayOff.weekday)})`}
                         </span>
                       ))}
                     </div>
@@ -372,27 +362,13 @@ const Scales = () => {
 
                   <td className="text-center">
                     <div className="badge-container">
-                      {JSON.parse(scale.proportion).map((item) => (
-                        <div key={item.data}>
-                          <span className="badge text-bg-primary">
-                            {item.data} (
-                            {
-                              item.weekday === "Monday" ? "Segunda-Feira" :
-                                item.weekday === "Tuesday" ? "Terça-Feira" :
-                                  item.weekday === "Wednesday" ? "Quarta-Feira" :
-                                    item.weekday === "Thursday" ? "Quinta-Feira" :
-                                      item.weekday === "Friday" ? "Sexta-Feira" :
-                                        item.weekday === "Saturday" ? "Sábado" :
-                                          item.weekday === "Sunday" ? "Domingo" :
-                                            ""
-                            }
-                            ): {item.proporcao}
-                          </span>
-                        </div>
+                      {JSON.parse(scale.proportion).map((item, index) => (
+                        <span key={index} className="badge text-bg-primary">
+                          {`${item.data} (${translateWeekday(item.weekday)}): ${item.proporcao}`}
+                        </span>
                       ))}
                     </div>
                   </td>
-
 
                   <td>
                     <div className="d-inline-flex">
@@ -400,14 +376,15 @@ const Scales = () => {
                         id="delete-scale"
                         className="btn btn-danger mt-2 me-2"
                         onClick={() => handleDeleteScale(scale.id)}
+                        title="Excluir escala"
                       >
                         <Trash />
                       </button>
 
-                      {scale.need_alert === true && (
+                      {scale.need_alert && (
                         <button
                           id="alert-scale"
-                          title="Alerta de usuário com mais de 8 dias consecutivos"
+                          title="Usuário com mais de 8 dias consecutivos"
                           className="btn btn-warning mt-2 me-2"
                         >
                           <ExclamationTriangle />

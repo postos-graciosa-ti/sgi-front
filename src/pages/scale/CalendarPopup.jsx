@@ -16,7 +16,8 @@ const CalendarPopup = (props) => {
     getScalesBySubsidiarie,
     setScalesList,
     allDaysOff,
-    handleSaveDaysOff
+    handleSaveDaysOff,
+    setIlegalDates
   } = props
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -25,6 +26,8 @@ const CalendarPopup = (props) => {
 
   const handleClose = () => {
     setCalendarPopupOpen(false)
+
+    setIlegalDates([])
   }
 
   const handleSave = () => {

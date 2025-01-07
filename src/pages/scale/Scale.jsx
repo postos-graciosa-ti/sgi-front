@@ -98,6 +98,8 @@ const Scales = () => {
 
   const [confirmModalOpen, setConfirmModalOpen] = useState(false)
 
+  const [ilegalDates, setIlegalDates] = useState([])
+
   useEffect(() => {
     getWorkersBySubsidiarie()
 
@@ -139,29 +141,15 @@ const Scales = () => {
     }
 
     api
-      .post("/scales/need-alert", {
-        "days_off": `[${allDaysOff.map(dia => `'${dia}'`).join(',')}]`,
-        "first_day": moment(firstDay).format("DD-MM-YYYY"),
-        "last_day": moment(lastDay).format("DD-MM-YYYY")
-      })
+      .post("/scales", formData)
       .then((response) => {
-        let needConfirm = response.data == true ? true : false
+        getScalesBySubsidiarie()
 
-        if (needConfirm) {
-          setConfirmModalOpen(true)
-        } else {
-          api
-            .post("/scales", formData)
-            .then((response) => {
-              getScalesBySubsidiarie()
+        resetDaysOff()
 
-              resetDaysOff()
-
-              setExistentWorkerDaysOff(response.data)
-            })
-            .catch((error) => console.error(error))
-        }
+        setExistentWorkerDaysOff(response.data)
       })
+      .catch((error) => console.error(error))
   }
 
   const titleClassName = ({ date, view }) => {
@@ -172,7 +160,9 @@ const Scales = () => {
 
       const isDayOffExistentWorker = existentWorkerDaysOff.some(diaFolga => diaFolga === day)
 
-      return isDayOff ? 'highlight' : isDayOffExistentWorker ? 'highlight' : null
+      const isIlegalDay = ilegalDates.some(diaFolga => moment(diaFolga).format("DD-MM-YYYY") === day)
+
+      return isIlegalDay ? 'red-highlight' : isDayOff ? 'highlight' : isDayOffExistentWorker ? 'highlight' : null
     }
 
     return null
@@ -269,6 +259,62 @@ const Scales = () => {
   }
 
   const handleOnChangeCalendar = (value) => {
+    if (allDaysOff.length === 0) {
+      api
+        .post("/testing", {
+          date_from_calendar: `${moment(firstDay).format("DD-MM-YYYY")}`,
+          date_to_compare: `${moment(value).format("DD-MM-YYYY")}`
+        })
+        .then((response) => {
+          if (response.data.date_difference >= 6) {
+            setIlegalDates((prevState) => {
+              if (prevState) {
+                return [...prevState, value]
+              } else {
+                return [moment(value).format("DD-MM-YYYY")]
+              }
+            })
+
+            setSelectedDate(value)
+
+            setConfirmModalOpen(true)
+
+            setCalendarPopupOpen(true)
+          } else {
+            setSelectedDate(value)
+
+            setCalendarPopupOpen(true)
+          }
+        })
+    } else {
+      api
+        .post("/testing", {
+          date_from_calendar: `${allDaysOff[allDaysOff.length - 1]}`,
+          date_to_compare: `${moment(value).format("DD-MM-YYYY")}`
+        })
+        .then((response) => {
+          if (response.data.date_difference >= 6) {
+            setIlegalDates((prevState) => {
+              if (prevState) {
+                return [...prevState, value]
+              } else {
+                return [moment(value).format("DD-MM-YYYY")]
+              }
+            })
+
+            setSelectedDate(value)
+
+            setConfirmModalOpen(true)
+
+            setCalendarPopupOpen(true)
+          } else {
+            setSelectedDate(value)
+
+            setCalendarPopupOpen(true)
+          }
+        })
+    }
+
     setSelectedDate(value)
 
     setCalendarPopupOpen(true)
@@ -428,6 +474,7 @@ const Scales = () => {
         setScalesList={setScalesList}
         allDaysOff={allDaysOff}
         handleSaveDaysOff={handleSaveDaysOff}
+        setIlegalDates={setIlegalDates}
       />
 
       <ConfirmModal
@@ -441,6 +488,7 @@ const Scales = () => {
         allDaysOff={allDaysOff}
         firstDay={firstDay}
         lastDay={lastDay}
+        setIlegalDates={setIlegalDates}
       />
 
       <style>
@@ -449,6 +497,11 @@ const Scales = () => {
             background-color: #ECFFDC;
             color: grey;
             // border-radius: 50%;
+          }
+
+          .red-highlight {
+            background-color: red;
+            color: white;
           }
 
           // .badge-container {

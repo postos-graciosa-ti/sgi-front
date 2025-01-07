@@ -16,7 +16,8 @@ const ConfirmModal = (props) => {
     selectedSubsdiarie,
     allDaysOff,
     firstDay,
-    lastDay
+    lastDay,
+    setIlegalDates
   } = props
 
   const handleClose = () => {
@@ -29,6 +30,8 @@ const ConfirmModal = (props) => {
     resetDaysOff()
 
     handleClose()
+
+    setIlegalDates([])
   }
 
   const handleConfirm = () => {
@@ -72,7 +75,7 @@ const ConfirmModal = (props) => {
       <Modal.Footer>
         <Button variant="light" onClick={handleDeny}>Cancelar</Button>
 
-        <Button variant="danger" onClick={handleConfirm}>Confirmar</Button>
+        <Button variant="danger" onClick={handleClose}>Confirmar</Button>
       </Modal.Footer>
     </Modal>
   )

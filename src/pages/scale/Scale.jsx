@@ -159,7 +159,7 @@ const Scales = () => {
 
       const isDayOffExistentWorker = existentWorkerDaysOff.some(diaFolga => diaFolga === day)
 
-      const isIlegalDay = ilegalDates.some(diaFolga => moment(diaFolga).format("DD-MM-YYYY") === day)
+      const isIlegalDay = ilegalDates.some(diaFolga => diaFolga === day)
 
       return isIlegalDay ? 'red-highlight' : isDayOff ? 'highlight' : isDayOffExistentWorker ? 'highlight' : null
     }
@@ -197,16 +197,22 @@ const Scales = () => {
       })
   }
 
+  console.log(ilegalDates)
+
   const handleOnChangeWorker = (e) => {
     resetDaysOff()
 
     setExistentWorkerDaysOff([])
+
+    setIlegalDates([])
 
     setSelectedWorkerId(e.value)
 
     api
       .get(`scales/subsidiaries/${selectedSubsdiarie.value}/workers/${e.value}`)
       .then((response) => {
+        console.log(response)
+
         let existentScales = response.data.days_off
 
         let existentDaysOff = []

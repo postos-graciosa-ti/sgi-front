@@ -110,8 +110,6 @@ const Scales = () => {
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => {
-        console.log(response)
-
         let workersData = response.data
 
         let workersOptions = []
@@ -137,7 +135,8 @@ const Scales = () => {
       "subsidiarie_id": selectedSubsdiarie.value,
       "days_off": `[${allDaysOff.map(dia => `'${dia}'`).join(',')}]`,
       "first_day": moment(firstDay).format("DD-MM-YYYY"),
-      "last_day": moment(lastDay).format("DD-MM-YYYY")
+      "last_day": moment(lastDay).format("DD-MM-YYYY"),
+      "ilegal_dates": `[${ilegalDates.map(dia => `'${moment(dia).format("DD-MM-YYYY")}'`).join(',')}]`,
     }
 
     api
@@ -147,7 +146,7 @@ const Scales = () => {
 
         resetDaysOff()
 
-        setExistentWorkerDaysOff(response.data)
+        setExistentWorkerDaysOff(response.data.days_off)
       })
       .catch((error) => console.error(error))
   }
@@ -208,7 +207,7 @@ const Scales = () => {
     api
       .get(`scales/subsidiaries/${selectedSubsdiarie.value}/workers/${e.value}`)
       .then((response) => {
-        let existentScales = response.data
+        let existentScales = response.data.days_off
 
         let existentDaysOff = []
 
@@ -219,6 +218,8 @@ const Scales = () => {
         }
 
         setExistentWorkerDaysOff(existentDaysOff)
+
+        setIlegalDates(response.data.ilegal_dates)
       })
   }
 

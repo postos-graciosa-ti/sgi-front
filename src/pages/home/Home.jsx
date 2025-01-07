@@ -31,12 +31,9 @@ const Home = () => {
   useEffect(() => {
     getSubsidiarieById(selectedSubsdiarie.value)
       .then((response) => {
-        console.log(response.data)
         setSelectedSubsidiarieInfo(response.data)
       })
   }, [])
-
-  console.log(selectedSubsdiarie)
 
   return (
     <>

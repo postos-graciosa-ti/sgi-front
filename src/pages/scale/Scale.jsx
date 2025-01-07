@@ -100,6 +100,10 @@ const Scales = () => {
 
   const [ilegalDates, setIlegalDates] = useState([])
 
+  const [existentIlegalDates, setExistentIlegalDates] = useState([])
+
+  let allIlegalDates = [...ilegalDates, existentIlegalDates].sort() || []
+
   useEffect(() => {
     getWorkersBySubsidiarie()
 
@@ -136,7 +140,7 @@ const Scales = () => {
       "days_off": `[${allDaysOff.map(dia => `'${dia}'`).join(',')}]`,
       "first_day": moment(firstDay).format("DD-MM-YYYY"),
       "last_day": moment(lastDay).format("DD-MM-YYYY"),
-      "ilegal_dates": `[${ilegalDates.map(dia => `'${moment(dia).format("DD-MM-YYYY")}'`).join(',')}]`,
+      "ilegal_dates": `[${allIlegalDates.map(dia => `'${moment(dia).format("DD-MM-YYYY")}'`).join(',')}]`,
     }
 
     api
@@ -146,7 +150,27 @@ const Scales = () => {
 
         resetDaysOff()
 
-        setExistentWorkerDaysOff(response.data.days_off)
+        // setExistentWorkerDaysOff(response.data.days_off)
+
+        api
+          .get(`scales/subsidiaries/${selectedSubsdiarie.value}/workers/${selectedWorkerId}`)
+          .then((response) => {
+            console.log(response)
+
+            let existentScales = response.data.days_off
+
+            let existentDaysOff = []
+
+            {
+              existentScales && existentScales.map((scale) => {
+                existentDaysOff.push(scale.date)
+              })
+            }
+
+            setExistentWorkerDaysOff(existentDaysOff)
+
+            setIlegalDates(response.data.ilegal_dates)
+          })
       })
       .catch((error) => console.error(error))
   }
@@ -159,9 +183,11 @@ const Scales = () => {
 
       const isDayOffExistentWorker = existentWorkerDaysOff.some(diaFolga => diaFolga === day)
 
-      const isIlegalDay = ilegalDates.some(diaFolga => diaFolga === day)
+      const isIlegalDay = allIlegalDates.some(diaFolga => diaFolga === day)
 
-      return isIlegalDay ? 'red-highlight' : isDayOff ? 'highlight' : isDayOffExistentWorker ? 'highlight' : null
+      const isExistentIlegalDate = existentIlegalDates.some(diaFolga => diaFolga === day)
+
+      return isIlegalDay ? 'red-highlight' : isExistentIlegalDate ? 'red-highlight' : isDayOff ? 'highlight' : isDayOffExistentWorker ? 'highlight' : null
     }
 
     return null

@@ -20,6 +20,8 @@ const Scale = () => {
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
+  const [subsidiarieScalesList, setSubsidiarieScalesList] = useState([])
+
   const [subsidiarieWorkersList, setSubsidiariesWorkersList] = useState([])
 
   const [subsidiarieSelectedWorker, setSubsidiarieSelectedWorker] = useState()
@@ -31,6 +33,12 @@ const Scale = () => {
   let allDaysOff = [...daysOff, ...ilegalDaysOff].sort() || []
 
   useEffect(() => {
+    api
+      .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
+      .then((response) => {
+        setSubsidiarieScalesList(response.data)
+      })
+
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => {
@@ -46,6 +54,20 @@ const Scale = () => {
       })
 
   }, [])
+
+  const translateWeekday = (weekday) => {
+    const days = {
+      Monday: "Segunda-Feira",
+      Tuesday: "Terça-Feira",
+      Wednesday: "Quarta-Feira",
+      Thursday: "Quinta-Feira",
+      Friday: "Sexta-Feira",
+      Saturday: "Sábado",
+      Sunday: "Domingo",
+    }
+
+    return days[weekday] || "";
+  }
 
   const getTitleClassName = ({ date, view }) => {
     if (view == "month") {
@@ -135,6 +157,12 @@ const Scale = () => {
         setIlegalDaysOff([])
 
         api
+          .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
+          .then((response) => {
+            setSubsidiarieScalesList(response.data)
+          })
+
+        api
           .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${subsidiarieSelectedWorker.value}`)
           .then((response) => {
             response.data.days_off = response.data.days_off
@@ -142,15 +170,32 @@ const Scale = () => {
               .map(dayOff => dayOff.date);
 
 
-            console.log(response.data.days_off, response.data.ilegal_dates)
-            debugger
-
             setDaysOff(response.data.days_off)
 
             setIlegalDaysOff(response.data.ilegal_dates)
           })
       })
   }
+
+  const handleDeleteScale = (scaleId) => {
+    api
+      .delete(`/scales/${scaleId}/subsidiaries/${selectedSubsdiarie.value}`)
+      .then(() => {
+        api
+          .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
+          .then((response) => {
+            setSubsidiarieScalesList(response.data)
+          })
+
+        api
+          .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${selectedWorkerId}`)
+          .then((response) => {
+            setExistentWorkerDaysOff(response.data)
+          })
+      })
+  }
+
+  console.log(subsidiarieScalesList)
 
   return (
     <>
@@ -183,6 +228,89 @@ const Scale = () => {
 
         <div>
           <button className="btn btn-success" onClick={handleSaveScale}>Salvar</button>
+        </div>
+
+        <div className="table-responsive">
+          <table className="table table-hover">
+            <thead>
+              <tr>
+                <th>Colaborador</th>
+                
+                <th>Trabalho</th>
+                
+                <th>Folga</th>
+                
+                <th>Proporção</th>
+                
+                <th>Ações</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {
+                subsidiarieScalesList && subsidiarieScalesList.map((scale) => (
+                  <tr key={scale.id} className={scale.ilegal_dates.length > 0 ? 'table-danger' : ''}>
+                    <td>{scale.worker.name}</td>
+
+                    <td>
+                      <div className="badge-container">
+                        {scale.days_on?.map((dayOn, index) => (
+                          dayOn.date && dayOn.weekday ? (
+                            <span key={index} className="badge text-bg-success">
+                              {`${dayOn.date} (${translateWeekday(dayOn.weekday)})`}
+                            </span>
+                          ) : null
+                        ))}
+                      </div>
+                    </td>
+
+                    <td>
+                      <div className="badge-container">
+                        {scale.days_off?.map((dayOff, index) => (
+                          <span key={index} className="badge text-bg-danger">
+                            {`${dayOff.date} (${translateWeekday(dayOff.weekday)})`}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+
+                    <td className="text-center">
+                      <div className="badge-container">
+                        {JSON.parse(scale.proportion).map((item, index) => (
+                          <span key={index} className="badge text-bg-primary">
+                            {`${item.data} (${translateWeekday(item.weekday)}): ${item.proporcao}`}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+
+                    <td>
+                      <div className="d-inline-flex">
+                        <button
+                          id="delete-scale"
+                          className="btn btn-danger mt-2 me-2"
+                          onClick={() => handleDeleteScale(scale.id)}
+                          title="Excluir escala"
+                        >
+                          <Trash />
+                        </button>
+
+                        {scale.ilegal_dates.length > 0 && (
+                          <button
+                            id="alert-scale"
+                            title="Usuário com mais de 8 dias consecutivos"
+                            className="btn btn-warning mt-2 me-2"
+                          >
+                            <ExclamationTriangle />
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
         </div>
       </div>
 

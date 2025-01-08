@@ -205,12 +205,34 @@ const Scale = () => {
         <div className="mb-3">
           <ReactSelect
             placeholder="Colaboradores"
-
             options={subsidiarieWorkersList}
+            onChange={(value) => {
+              setSubsidiarieSelectedWorker(value);
 
-            onChange={(value) => setSubsidiarieSelectedWorker(value)}
+              // Limpa os dias de folga e dias de folga ilegais antes da requisição
+              setDaysOff([]);
+              setIlegalDaysOff([]);
 
+              api
+                .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${value.value}`)
+                .then((response) => {
+                  const validDaysOff = response.data.days_off
+                    .filter((dayOff) => !response.data.ilegal_dates.includes(dayOff.date))
+                    .map((dayOff) => dayOff.date);
+
+                  console.log(validDaysOff, response.data.ilegal_dates);
+
+                  // Atualiza o estado com os dias de folga válidos
+                  setDaysOff(validDaysOff);
+                  setIlegalDaysOff(response.data.ilegal_dates);
+                })
+                .catch((error) => {
+                  // Lidar com possíveis erros na requisição
+                  console.error('Erro ao buscar dados:', error);
+                });
+            }}
           />
+
         </div>
 
         <div>
@@ -235,13 +257,13 @@ const Scale = () => {
             <thead>
               <tr>
                 <th>Colaborador</th>
-                
+
                 <th>Trabalho</th>
-                
+
                 <th>Folga</th>
-                
+
                 <th>Proporção</th>
-                
+
                 <th>Ações</th>
               </tr>
             </thead>

@@ -1,6 +1,6 @@
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
-import { ExclamationTriangle, Printer, Question, Trash } from 'react-bootstrap-icons'
+import { Check2All, ExclamationTriangle, Printer, Question, QuestionOctagon, Trash } from 'react-bootstrap-icons'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 import ReactDOMServer from 'react-dom/server'
@@ -249,10 +249,20 @@ const Scale = () => {
         </div>
 
         <div>
-          <button className="btn btn-success" onClick={handleSaveScale}>Salvar</button>
+          <button className="btn btn-light me-2">
+            <Printer />
+          </button>
+
+          <button className="btn btn-warning me-2">
+            <QuestionOctagon />
+          </button>
+
+          <button className="btn btn-success" onClick={handleSaveScale}>
+            <Check2All />
+          </button>
         </div>
 
-        <div className="table-responsive">
+        <div className="table-responsive mt-3">
           <table className="table table-hover">
             <thead>
               <tr>

@@ -14,6 +14,7 @@ import CalendarPopup from './CalendarPopup'
 import ConfirmModal from './ConfirmModal'
 import AddScaleModal from './AddScaleModal'
 import DeleteScaleModal from './DeleteScaleModal'
+import printContent from "./printContent"
 
 const Scale = () => {
   let monthFirstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
@@ -205,7 +206,47 @@ const Scale = () => {
       })
   }
 
-  console.log(subsidiarieScalesList)
+  const handlePrintScale = () => {
+    const content = ReactDOMServer.renderToString(printContent(subsidiarieScalesList))
+
+    const printWindow = window.open('', '_blank')
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <title>Escala de Colaboradores</title>
+          <style>
+            table, th, td {
+              border: 1px solid black;
+              border-collapse: collapse;
+            }
+            th, td {
+              padding: 5px;
+              text-align: left;
+              vertical-align: top;
+            }
+            td div {
+              margin-bottom: 10px; /* Espaçamento entre os dias de folga */
+            }
+          </style>
+        </head>
+        <body>
+          ${content}
+        </body>
+      </html>
+    `)
+
+    printWindow.document.close()
+
+    printWindow.print()
+  }
+
+  const setTour = () => {
+    let driverObj = mountTour('/scale')
+
+    driverObj.drive()
+  }
 
   return (
     <>
@@ -214,6 +255,7 @@ const Scale = () => {
       <div className="container">
         <div className="mb-3">
           <ReactSelect
+            id="workers-select"
             placeholder="Colaboradores"
             options={subsidiarieWorkersList}
             onChange={(value) => {
@@ -245,7 +287,7 @@ const Scale = () => {
 
         </div>
 
-        <div>
+        <div id="scale-calendar">
           <Calendar
             className="w-100 rounded mb-3"
 
@@ -340,15 +382,15 @@ const Scale = () => {
         </div>
 
         <div>
-          <button className="btn btn-light me-2">
+          <button id="print-days" className="btn btn-light me-2" onClick={handlePrintScale}>
             <Printer />
           </button>
 
-          <button className="btn btn-warning me-2">
+          <button id="help" className="btn btn-warning me-2" onClick={setTour}>
             <QuestionOctagon />
           </button>
 
-          <button className="btn btn-success" onClick={handleSaveScale}>
+          <button id="save-scale" className="btn btn-success" onClick={handleSaveScale}>
             <Check2All />
           </button>
         </div>
@@ -365,14 +407,14 @@ const Scale = () => {
 
                 <th>Proporção</th>
 
-                <th>Ações</th>
+                <th></th>
               </tr>
             </thead>
 
             <tbody>
               {
                 subsidiarieScalesList && subsidiarieScalesList.map((scale) => (
-                  <tr key={scale.id} className={scale.ilegal_dates.length > 0 ? 'table-danger' : ''}>
+                  <tr id="scale-table" key={scale.id} className={scale.ilegal_dates.length > 0 ? 'table-danger' : ''}>
                     <td>{scale.worker.name}</td>
 
                     <td>

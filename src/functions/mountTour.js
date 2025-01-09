@@ -71,10 +71,17 @@ const mountTour = (route) => {
             }
           },
           {
-            element: '#help',
+            element: '#changeSubsidiarie',
             popover: {
-              title: 'Ajuda',
-              description: 'Caso fique em dúvida sobre algo nessa página, esse botão irá fornecer mais informações'
+              title: 'Alterar filial',
+              description: 'Te redireciona para a tela de alteração de visualização de filial'
+            }
+          },
+          {
+            element: '#changePassword',
+            popover: {
+              title: 'Alterar senha',
+              description: 'Te redireciona para a tela de alteração de senha de usuário'
             }
           },
           {
@@ -89,6 +96,20 @@ const mountTour = (route) => {
             popover: {
               title: 'Calendário',
               description: 'Calendário para montar a escala'
+            }
+          },
+          {
+            element: '#print-days',
+            popover: {
+              title: 'Imprimir',
+              description: 'Imprimir escala para assinatura de funcionários'
+            }
+          },
+          {
+            element: '#help',
+            popover: {
+              title: 'Ajuda',
+              description: 'Caso fique em dúvida sobre algo nessa página, esse botão irá fornecer mais informações'
             }
           },
           {

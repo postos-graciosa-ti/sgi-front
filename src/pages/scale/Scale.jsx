@@ -12,6 +12,7 @@ import mountTour from '../../functions/mountTour'
 import api from '../../services/api'
 import CalendarPopup from './CalendarPopup'
 import ConfirmModal from './ConfirmModal'
+import AddScaleModal from './AddScaleModal'
 
 const Scale = () => {
   let monthFirstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
@@ -31,6 +32,12 @@ const Scale = () => {
   const [ilegalDaysOff, setIlegalDaysOff] = useState([])
 
   let allDaysOff = [...daysOff, ...ilegalDaysOff].sort() || []
+
+  const [addScaleModalOpen, setAddScaleModalOpen] = useState(false)
+
+  const [calendarPopupOpen, setCalendarPopupOpen] = useState(false)
+
+  const [selectedDate, setSelectedDate] = useState()
 
   useEffect(() => {
     api
@@ -241,7 +248,80 @@ const Scale = () => {
 
             showNeighboringMonth={false}
 
-            onClickDay={handleOnClickCalendar}
+            // onClickDay={handleOnClickCalendar}
+
+            onClickDay={(date) => {
+              setSelectedDate(date)
+
+              if (allDaysOff.length == 0) {
+                api
+                  .post("/testing", {
+                    date_from_calendar: `${moment(monthFirstDay).format("DD-MM-YYYY")}`,
+                    date_to_compare: `${moment(date).format("DD-MM-YYYY")}`
+                  })
+                  .then((response) => {
+                    let dateDifference = response.data.date_difference
+
+                    if (dateDifference >= 6) {
+                      // setIlegalDaysOff((prevState) => {
+                      //   if (prevState) {
+                      //     return [...prevState, moment(date).format("DD-MM-YYYY")]
+                      //   } else {
+                      //     return [moment(date).format("DD-MM-YYYY")]
+                      //   }
+                      // })
+
+                      setAddScaleModalOpen(true)
+
+                      
+                    } else {
+                      // setDaysOff((prevState) => {
+                      //   if (prevState) {
+                      //     return [...prevState, moment(date).format("DD-MM-YYYY")]
+                      //   } else {
+                      //     return [moment(date).format("DD-MM-YYYY")]
+                      //   }
+                      // })
+
+                      setCalendarPopupOpen(true)
+
+                    }
+                  })
+              } else {
+                api
+                  .post("/testing", {
+                    date_from_calendar: `${allDaysOff[allDaysOff.length - 1]}`,
+                    date_to_compare: `${moment(date).format("DD-MM-YYYY")}`
+                  })
+                  .then((response) => {
+                    let dateDifference = response.data.date_difference
+
+                    if (dateDifference >= 6) {
+                      // setIlegalDaysOff((prevState) => {
+                      //   if (prevState) {
+                      //     return [...prevState, moment(date).format("DD-MM-YYYY")]
+                      //   } else {
+                      //     return [moment(date).format("DD-MM-YYYY")]
+                      //   }
+                      // })
+
+                      setAddScaleModalOpen(true)
+
+                    } else {
+                      // setDaysOff((prevState) => {
+                      //   if (prevState) {
+                      //     return [...prevState, moment(date).format("DD-MM-YYYY")]
+                      //   } else {
+                      //     return [moment(date).format("DD-MM-YYYY")]
+                      //   }
+                      // })
+
+                      setCalendarPopupOpen(true)
+
+                    }
+                  })
+              }
+            }}
 
             tileClassName={getTitleClassName}
 
@@ -345,6 +425,21 @@ const Scale = () => {
           </table>
         </div>
       </div>
+
+      <AddScaleModal 
+        addScaleModalOpen={addScaleModalOpen}
+        setAddScaleModalOpen={setAddScaleModalOpen}
+        selectedDate={selectedDate}
+        handleOnClickCalendar={handleOnClickCalendar}
+      />
+
+      <CalendarPopup
+        calendarPopupOpen={calendarPopupOpen}
+        setCalendarPopupOpen={setCalendarPopupOpen}
+        selectedDate={selectedDate}
+        handleOnClickCalendar={handleOnClickCalendar}
+        allDaysOff={allDaysOff}
+      />
 
       <style>
         {`

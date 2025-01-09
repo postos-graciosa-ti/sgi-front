@@ -6,54 +6,40 @@ import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 
 const CalendarPopup = (props) => {
-  const {
-    calendarPopupOpen,
-    setCalendarPopupOpen,
-    selectedDate,
-    existentWorkerDaysOff,
-    setExistentWorkerDaysOff,
-    selectedWorkerId,
-    getScalesBySubsidiarie,
-    setScalesList,
-    allDaysOff,
-    handleSaveDaysOff,
-    setIlegalDates
-  } = props
+  const { calendarPopupOpen, setCalendarPopupOpen, selectedDate, handleOnClickCalendar, allDaysOff } = props
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const setDaysOff = useDaysOffStore(state => state.setDaysOff)
 
-  const handleClose = () => {
-    setCalendarPopupOpen(false)
+  // const handleClose = () => {
+  //   setCalendarPopupOpen(false)
 
-    setIlegalDates([])
-  }
+  //   setIlegalDates([])
+  // }
 
-  const handleSave = () => {
-    setDaysOff(moment(selectedDate).format("DD-MM-YYYY"))
+  // const handleSave = () => {
+  //   setDaysOff(moment(selectedDate).format("DD-MM-YYYY"))
 
-    setCalendarPopupOpen(false)
-  }
+  //   setCalendarPopupOpen(false)
+  // }
 
   const handleDelete = () => {
-    const formattedDate = moment(selectedDate).format("DD-MM-YYYY")
-
-    const updatedDaysOff = allDaysOff.filter(dayOff => dayOff !== formattedDate)
+    const updatedDaysOff = allDaysOff.filter(dayOff => dayOff !== selectedDate)
 
     allDaysOff.length = 0
-    
+
     allDaysOff.push(...updatedDaysOff)
 
-    handleSaveDaysOff() 
-    
+    handleOnClickCalendar()
+
     setCalendarPopupOpen(false)
   }
 
   return (
     <Modal
       show={calendarPopupOpen}
-      onHide={handleClose}
+      onHide={() => setCalendarPopupOpen(false)}
       backdrop="static"
       keyboard={false}
     >
@@ -68,7 +54,7 @@ const CalendarPopup = (props) => {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="light" onClick={handleClose}>
+        <Button variant="light" onClick={() => setCalendarPopupOpen(false)}>
           Fechar
         </Button>
 
@@ -76,7 +62,10 @@ const CalendarPopup = (props) => {
           Remover
         </Button>
 
-        <Button variant="success" onClick={handleSave}>
+        <Button variant="success" onClick={() => {
+          handleOnClickCalendar(selectedDate)
+          setCalendarPopupOpen(false)
+        }}>
           Adicionar
         </Button>
       </Modal.Footer>

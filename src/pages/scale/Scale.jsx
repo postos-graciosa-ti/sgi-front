@@ -175,7 +175,7 @@ const Scale = () => {
               setDaysOff([])
 
               setSelectedWorker(value)
-              
+
               api
                 .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${value.value}`)
                 .then((response) => {
@@ -273,7 +273,33 @@ const Scale = () => {
                         <button
                           id="delete-scale"
                           className="btn btn-danger mt-2 me-2"
-                          onClick={() => handleDeleteScale(scale.id)}
+                          onClick={() => {
+                            api
+                              .delete(`/scales/${scale.id}/subsidiaries/${selectedSubsdiarie.value}`)
+                              .then(() => {
+                                api
+                                  .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
+                                  .then((response) => setScalesList(response.data))
+
+                                setDaysOff([])
+
+                                api
+                                  .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${selectedWorker.value}`)
+                                  .then((response) => {
+                                    console.log(response)
+
+                                    let scales = response.data
+
+                                    let options = []
+
+                                    scales.days_off?.map((scale) => {
+                                      options.push(scale.date)
+                                    })
+
+                                    setDaysOff(options)
+                                  })
+                              })
+                          }}
                           title="Excluir escala"
                         >
                           <Trash />

@@ -13,6 +13,7 @@ import api from '../../services/api'
 import CalendarPopup from './CalendarPopup'
 import ConfirmModal from './ConfirmModal'
 import AddScaleModal from './AddScaleModal'
+import DeleteScaleModal from './DeleteScaleModal'
 
 const Scale = () => {
   let monthFirstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
@@ -36,6 +37,8 @@ const Scale = () => {
   const [addScaleModalOpen, setAddScaleModalOpen] = useState(false)
 
   const [calendarPopupOpen, setCalendarPopupOpen] = useState(false)
+
+  const [deleteScaleModalOpen, setDeleteScaleModalOpen] = useState(false)
 
   const [selectedDate, setSelectedDate] = useState()
 
@@ -253,6 +256,14 @@ const Scale = () => {
             onClickDay={(date) => {
               setSelectedDate(date)
 
+              let alreadyIsDayOff = allDaysOff.some((dayOff) => dayOff == moment(date).format("DD-MM-YYYY"))
+
+              if (alreadyIsDayOff) {
+                setDeleteScaleModalOpen(true)
+
+                return
+              }
+
               if (allDaysOff.length == 0) {
                 api
                   .post("/testing", {
@@ -273,7 +284,7 @@ const Scale = () => {
 
                       setAddScaleModalOpen(true)
 
-                      
+
                     } else {
                       // setDaysOff((prevState) => {
                       //   if (prevState) {
@@ -426,7 +437,7 @@ const Scale = () => {
         </div>
       </div>
 
-      <AddScaleModal 
+      <AddScaleModal
         addScaleModalOpen={addScaleModalOpen}
         setAddScaleModalOpen={setAddScaleModalOpen}
         selectedDate={selectedDate}
@@ -439,6 +450,18 @@ const Scale = () => {
         selectedDate={selectedDate}
         handleOnClickCalendar={handleOnClickCalendar}
         allDaysOff={allDaysOff}
+      />
+
+      <DeleteScaleModal
+        deleteScaleModalOpen={deleteScaleModalOpen}
+        setDeleteScaleModalOpen={setDeleteScaleModalOpen}
+        selectedDate={selectedDate}
+        allDaysOff={allDaysOff}
+        ilegalDaysOff={ilegalDaysOff}
+        subsidiarieSelectedWorker={subsidiarieSelectedWorker}
+        setDaysOff={setDaysOff}
+        setIlegalDaysOff={setIlegalDaysOff}
+        setSubsidiarieScalesList={setSubsidiarieScalesList}
       />
 
       <style>

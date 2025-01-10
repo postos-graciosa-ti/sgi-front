@@ -2,6 +2,7 @@ import moment from "moment"
 import { useEffect, useState } from "react"
 import { Check2All, ExclamationOctagon, Printer, Trash } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
+import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
@@ -12,6 +13,7 @@ import api from "../../services/api"
 import DeleteScaleModal from "./DeleteScaleModal"
 import addDaysOffValidations from "./functions/addDaysOffValidations"
 import iterateScaleTemplate from "./functions/iterateScaleTemplate"
+import printContent from "./printContent"
 
 const Scale = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -144,7 +146,41 @@ const Scale = () => {
     driverObj.drive()
   }
 
-  // console.log(workersOptions)
+  const handlePrintScale = () => {
+    const content = ReactDOMServer.renderToString(printContent(scalesList))
+
+    const printWindow = window.open('', '_blank')
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <title>Escala de Colaboradores</title>
+          <style>
+            table, th, td {
+              border: 1px solid black;
+              border-collapse: collapse;
+            }
+            th, td {
+              padding: 5px;
+              text-align: left;
+              vertical-align: top;
+            }
+            td div {
+              margin-bottom: 10px; /* Espaçamento entre os dias de folga */
+            }
+          </style>
+        </head>
+        <body>
+          ${content}
+        </body>
+      </html>
+    `)
+
+    printWindow.document.close()
+
+    printWindow.print()
+  }
 
   return (
     <>
@@ -250,7 +286,7 @@ const Scale = () => {
             <b>*os dias que aparecem em verde no calendário são dias de folga</b>
           </div>
 
-          <button id="print-days" className="btn btn-light mt-3 me-3" onClick={handleSubmitDaysOff}>
+          <button id="print-days" className="btn btn-light mt-3 me-3" onClick={handlePrintScale}>
             <Printer />
           </button>
 

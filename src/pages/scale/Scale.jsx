@@ -11,6 +11,7 @@ import CalendarPopup from "../../pages/scale/CalendarPopup"
 import api from "../../services/api"
 import DeleteScaleModal from "./DeleteScaleModal"
 import addDaysOffValidations from "./functions/addDaysOffValidations"
+import iterateScaleTemplate from "./functions/iterateScaleTemplate"
 
 const Scale = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -32,6 +33,8 @@ const Scale = () => {
   const [scalesList, setScalesList] = useState([])
 
   const [deleteScaleModalOpen, setDeleteScaleModalOpen] = useState(false)
+
+  const [selectedTemplate, setSelectedTemplate] = useState()
 
   useEffect(() => {
     api
@@ -156,6 +159,8 @@ const Scale = () => {
             onChange={(value) => {
               setDaysOff([])
 
+              setSelectedTemplate([])
+
               setSelectedWorker(value)
 
               api
@@ -177,7 +182,48 @@ const Scale = () => {
           />
         </div>
 
-        <div></div>
+        <div className="mb-3">
+          <ReactSelect
+            id="scaleTemplate"
+
+            placeholder="Pré-definir escala"
+
+            options={[
+              { "label": "escala 4x1", "value": 5 },
+              { "label": "escala 3x1", "value": 4 },
+              { "label": "escala 2x1", "value": 3 }
+            ]}
+
+            value={selectedTemplate}
+
+            onChange={(scale_template) => {
+              setSelectedTemplate(scale_template)
+
+              let daysOffTemplate = iterateScaleTemplate(scale_template.value)
+
+              // switch (scale_template.value) {
+              //   case 5:
+              //     daysOffTemplate = iterateScaleTemplate(5)
+              //     break
+
+              //   case 4:
+              //     daysOffTemplate = iterateScaleTemplate(4)
+              //     break
+
+              //   case 3:
+              //     daysOffTemplate = iterateScaleTemplate(3)
+              //     break
+
+              //   default:
+              //     break
+              // }
+
+              setDaysOff(daysOffTemplate)
+
+              // setSelectedTemplate([{}])
+            }}
+          />
+        </div>
 
         <div id="scale-calendar">
           <Calendar

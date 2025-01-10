@@ -92,6 +92,13 @@ const mountTour = (route) => {
             }
           },
           {
+            element: '#scaleTemplate',
+            popover: {
+              title: 'Pré-definição de escala',
+              description: 'Se você quiser, pode pré-selecionar um tipo de escala'
+            }
+          },
+          {
             element: '#scale-calendar',
             popover: {
               title: 'Calendário',

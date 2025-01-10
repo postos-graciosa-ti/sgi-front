@@ -1,0 +1,12 @@
+services:
+- type: web
+  name: sgi-front
+  runtime: static
+  repo: https://github.com/postos-graciosa-ti/sgi-front
+  plan: free
+  envVars:
+  - key: VITE_API_URL
+    sync: false
+  buildCommand: npm install; npm run build
+  staticPublishPath: ./dist
+version: "1"

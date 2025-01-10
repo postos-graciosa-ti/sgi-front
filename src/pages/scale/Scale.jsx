@@ -97,6 +97,8 @@ const Scale = () => {
   }
 
   const handleSubmitDaysOff = () => {
+    setDaysOff(daysOff.sort())
+
     let formData = {
       "worker_id": selectedWorker.value,
       "subsidiarie_id": selectedSubsdiarie.value,

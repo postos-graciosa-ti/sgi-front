@@ -133,13 +133,6 @@ const mountTour = (route) => {
               description: 'Clique nesse botão para excluir a escala'
             }
           },
-          {
-            element: '#alert-scale',
-            popover: {
-              title: 'Alerta de usuário com mais de 8 dias consecutivos',
-              description: 'Esse botão aparece quando o usuário tem mais de 8 dias consecutivos sem folga'
-            }
-          }
         ],
         nextBtnText: 'Próximo Passo',
         prevBtnText: 'Passo Anterior',

@@ -2,12 +2,13 @@ import Calendar from "react-calendar"
 import Nav from "../../components/Nav"
 import { useEffect, useState } from "react"
 import moment from "moment"
-import { Check2, Check2All, ExclamationTriangle, Trash } from "react-bootstrap-icons"
+import { Check2, Check2All, ExclamationOctagon, ExclamationTriangle, Printer, Trash } from "react-bootstrap-icons"
 import api from "../../services/api"
 import useUserSessionStore from "../../data/userSession"
 import ReactSelect from "react-select"
 import CalendarPopup from "../../pages/scale/CalendarPopup"
 import Swal from "sweetalert2"
+import mountTour from "../../functions/mountTour"
 
 const Scale = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -38,10 +39,12 @@ const Scale = () => {
       .then((response) => {
         let workers = response.data
 
+        console.log(workers)
+
         let workersOptions = []
 
         workers?.map((worker) => {
-          workersOptions.push({ "label": worker.worker_name, "value": worker.worker_id })
+          workersOptions.push({ "label": `${worker.worker_name} | ${worker.function_name} | ${worker.turn_start_time} - ${worker.turn_end_time}`, "value": worker.worker_id })
         })
 
         setWorkersOptions(workersOptions)
@@ -145,7 +148,15 @@ const Scale = () => {
           .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
           .then((response) => setScalesList(response.data))
       })
-      .catch((error) => console.error(error))
+      .catch((error) => {
+        // console.error(error.response.data.detail)
+
+        Swal.fire({
+          icon: "error",
+          title: "Erro",
+          text: `${error.response.data.detail}`
+        })
+      })
   }
 
   const translateWeekday = (weekday) => {
@@ -162,6 +173,14 @@ const Scale = () => {
     return days[weekday] || "";
   }
 
+  const setTour = () => {
+    let driverObj = mountTour('/scale')
+
+    driverObj.drive()
+  }
+
+  // console.log(workersOptions)
+
   return (
     <>
       <Nav />
@@ -169,6 +188,7 @@ const Scale = () => {
       <div className="container">
         <div className="mb-3">
           <ReactSelect
+            id="workers-select"
             placeholder="Colaboradores"
             options={workersOptions}
             onChange={(value) => {
@@ -195,10 +215,11 @@ const Scale = () => {
           />
         </div>
 
-        <div>
+        <div id="scale-calendar">
           <Calendar
             className="w-100 rounded"
             tileClassName={handleTitleClassname}
+            showNeighboringMonth={false}
             // onClickDay={handleOnclickDay}
             onClickDay={(value) => {
               setSelectedDate(value)
@@ -208,7 +229,15 @@ const Scale = () => {
         </div>
 
         <div>
-          <button className="btn btn-success mt-3" onClick={handleSubmitDaysOff}>
+          <button id="print-days" className="btn btn-light mt-3 me-3" onClick={handleSubmitDaysOff}>
+            <Printer />
+          </button>
+
+          <button id="help" className="btn btn-warning mt-3 me-3" onClick={setTour}>
+            <ExclamationOctagon />
+          </button>
+
+          <button id="save-scale" className="btn btn-success mt-3" onClick={handleSubmitDaysOff}>
             <Check2All />
           </button>
         </div>
@@ -234,7 +263,9 @@ const Scale = () => {
               {
                 scalesList && scalesList.map((scale) => (
                   <tr id="scale-table" key={scale.id}>
-                    <td>{scale.worker.name}</td>
+                    <td>
+                      {scale.worker.name} | {scale.worker.function.name} | {scale.worker.turn.start_time} - {scale.worker.turn.start_time}
+                    </td>
 
                     <td>
                       <div className="badge-container">

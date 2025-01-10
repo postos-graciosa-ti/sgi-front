@@ -4,6 +4,7 @@ services:
   runtime: static
   repo: https://github.com/postos-graciosa-ti/sgi-front
   plan: free
+  autoDeploy: true
   envVars:
   - key: VITE_API_URL
     sync: false

@@ -1,5 +1,5 @@
 services:
-- type: web
+- type: static
   name: sgi-front
   runtime: static
   repo: https://github.com/postos-graciosa-ti/sgi-front

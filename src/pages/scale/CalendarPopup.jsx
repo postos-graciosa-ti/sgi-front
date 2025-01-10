@@ -74,12 +74,12 @@ const CalendarPopup = (props) => {
           Fechar
         </Button>
 
-        <Button variant="danger" onClick={() => handleDelete(selectedDate)}>
+        {/* <Button variant="danger" onClick={() => handleDelete(selectedDate)}>
           Remover
-        </Button>
+        </Button> */}
 
         <Button variant="success" onClick={() => handleOnclickDay(selectedDate)}>
-          Confirmar
+          Adicionar
         </Button>
       </Modal.Footer>
     </Modal>

@@ -1,14 +1,16 @@
-import Calendar from "react-calendar"
-import Nav from "../../components/Nav"
-import { useEffect, useState } from "react"
 import moment from "moment"
-import { Check2, Check2All, ExclamationOctagon, ExclamationTriangle, Printer, Trash } from "react-bootstrap-icons"
-import api from "../../services/api"
-import useUserSessionStore from "../../data/userSession"
+import { useEffect, useState } from "react"
+import { Check2All, ExclamationOctagon, Printer, Trash } from "react-bootstrap-icons"
+import Calendar from "react-calendar"
 import ReactSelect from "react-select"
-import CalendarPopup from "../../pages/scale/CalendarPopup"
 import Swal from "sweetalert2"
+import Nav from "../../components/Nav"
+import useUserSessionStore from "../../data/userSession"
 import mountTour from "../../functions/mountTour"
+import CalendarPopup from "../../pages/scale/CalendarPopup"
+import api from "../../services/api"
+import DeleteScaleModal from "./DeleteScaleModal"
+import addDaysOffValidations from "./functions/addDaysOffValidations"
 
 const Scale = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -29,6 +31,8 @@ const Scale = () => {
 
   const [scalesList, setScalesList] = useState([])
 
+  const [deleteScaleModalOpen, setDeleteScaleModalOpen] = useState(false)
+
   useEffect(() => {
     api
       .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
@@ -38,8 +42,6 @@ const Scale = () => {
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => {
         let workers = response.data
-
-        console.log(workers)
 
         let workersOptions = []
 
@@ -62,71 +64,31 @@ const Scale = () => {
   }
 
   const handleOnclickDay = (date) => {
-    if (daysOff.length == 0) {
-      api
-        .post("/testing", {
-          date_from_calendar: `${moment(monthFirstDay).format("DD-MM-YYYY")}`,
-          date_to_compare: `${moment(date).format("DD-MM-YYYY")}`
-        })
-        .then((response) => {
-          let dateDifference = response.data.date_difference
+    // let isAlreadyDayOff = daysOff
 
-          if (dateDifference >= 6) {
-            setCalendarPopupOpen(false)
+    let validationResult = addDaysOffValidations(scalesList, daysOff, date)
 
-            // alert("impedido")
+    if (validationResult.hasError) {
+      Swal.fire({
+        icon: "error",
+        title: "Erro ao selecionar data",
+        text: `${validationResult.errorMessage}`
+      })
 
-            Swal.fire({
-              icon: "error",
-              title: "Erro",
-              text: "O dia que você selecionou ultrapassa os 6 dias permitidos por lei"
-            })
+      setCalendarPopupOpen(false)
 
-            return
-          } else {
-            setDaysOff((prevState) => {
-              if (prevState) {
-                return [...prevState, moment(date).format("DD-MM-YYYY")]
-              } else {
-                return [moment(date).format("DD-MM-YYYY")]
-              }
-            })
-            setCalendarPopupOpen(false)
-          }
-        })
-    } else {
-      api
-        .post("/testing", {
-          date_from_calendar: `${daysOff[daysOff.length - 1]}`,
-          date_to_compare: `${moment(date).format("DD-MM-YYYY")}`
-        })
-        .then((response) => {
-          let dateDifference = response.data.date_difference
-
-          if (dateDifference >= 6) {
-            setCalendarPopupOpen(false)
-
-            // alert("impedido")
-
-            Swal.fire({
-              icon: "error",
-              title: "Erro",
-              text: "O dia que você selecionou ultrapassa os 6 dias permitidos por lei"
-            })
-
-            return
-          } else {
-            setDaysOff((prevState) => {
-              if (prevState) {
-                return [...prevState, moment(date).format("DD-MM-YYYY")]
-              } else {
-                return [moment(date).format("DD-MM-YYYY")]
-              }
-            })
-            setCalendarPopupOpen(false)
-          }
-        })
+      return
     }
+
+    setDaysOff((prevState) => {
+      if (prevState) {
+        return [...prevState, moment(date).format("DD-MM-YYYY")]
+      } else {
+        return [moment(date).format("DD-MM-YYYY")]
+      }
+    })
+
+    setCalendarPopupOpen(false)
   }
 
   const handleSubmitDaysOff = () => {
@@ -215,6 +177,8 @@ const Scale = () => {
           />
         </div>
 
+        <div></div>
+
         <div id="scale-calendar">
           <Calendar
             className="w-100 rounded"
@@ -223,12 +187,23 @@ const Scale = () => {
             // onClickDay={handleOnclickDay}
             onClickDay={(value) => {
               setSelectedDate(value)
-              setCalendarPopupOpen(true)
+
+              let isAlreadyDayOff = daysOff.some((dayOff) => dayOff == moment(value).format("DD-MM-YYYY"))
+
+              if (isAlreadyDayOff) {
+                setDeleteScaleModalOpen(true)
+              } else {
+                setCalendarPopupOpen(true)
+              }
             }}
           />
         </div>
 
         <div>
+          <div className="mt-1">
+            <b>*os dias que aparecem em verde no calendário são dias de folga</b>
+          </div>
+
           <button id="print-days" className="btn btn-light mt-3 me-3" onClick={handleSubmitDaysOff}>
             <Printer />
           </button>
@@ -356,6 +331,16 @@ const Scale = () => {
         setDaysOff={setDaysOff}
       // handleOnClickCalendar={handleOnClickCalendar}
       // allDaysOff={allDaysOff}
+      />
+
+      <DeleteScaleModal
+        deleteScaleModalOpen={deleteScaleModalOpen}
+        setDeleteScaleModalOpen={setDeleteScaleModalOpen}
+        selectedDate={selectedDate}
+        daysOff={daysOff}
+        selectedWorker={selectedWorker}
+        setScalesList={setScalesList}
+        setDaysOff={setDaysOff}
       />
 
       <style>

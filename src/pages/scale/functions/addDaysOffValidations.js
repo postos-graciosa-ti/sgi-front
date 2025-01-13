@@ -1,53 +1,39 @@
 import moment from "moment"
 
-const calculateDateDifference = (startDate, endDate) => {
-  const [startDay, startMonth, startYear] = startDate.split('-').map(Number)
-
-  const [endDay, endMonth, endYear] = endDate.split('-').map(Number)
-
-  const initialDate = new Date(startYear, startMonth - 1, startDay)
-
-  const finalDate = new Date(endYear, endMonth - 1, endDay)
-
-  const differenceInMilliseconds = finalDate - initialDate
-
-  const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24)
-
-  return differenceInDays
-}
-
-const addDaysOffValidations = (scalesList, daysOff, date) => {
-  let monthFirstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-
+const addDaysOffValidations = (scalesList, daysOff, date, selectedWorker, allWorkers) => {
   let result = {}
 
-  scalesList?.map((scale) => {
-    let hasWorkerInThisDay = scale?.days_off.some((dayOff) => dayOff.date == moment(date).format("DD-MM-YYYY"))
+  let monthFirstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
 
-    if (hasWorkerInThisDay) {
-      result['hasError'] = true
-      result['errorMessage'] = "Já existe um colaborador do mesmo turno de folga no mesmo dia"
+  let worker = allWorkers.find(worker => worker.worker_id == selectedWorker.value)
+
+  scalesList?.map((scale) => {
+    if (scale.worker.turn.id == worker.turn_id && scale.worker.function.id == worker.function_id) {
+      scale?.days_off.map((dayOff) => {
+        if (dayOff.date == moment(date).format("DD-MM-YYYY")) {
+          result.hasError = true
+
+          result.errorMessage = "_Já existe um colaborador do mesmo turno e função de folga nesse dia_"
+        }
+      })
     }
   })
 
   let allDaysOff = [...daysOff, moment(date).format("DD-MM-YYYY")].sort()
 
   allDaysOff.reduce((prevDayOff, currentDayOff) => {
-    if (prevDayOff) {
-      let dateDifference = calculateDateDifference(prevDayOff, currentDayOff)
+    const currentDay = moment(currentDayOff, "DD-MM-YYYY")
 
-      if (dateDifference >= 7) {
-        result['hasError'] = true
-        result['errorMessage'] = "O dia selecionado ultrapassa os 6 dias permitidos por lei xxx"
-      }
+    const previousDay = prevDayOff ? moment(prevDayOff, "DD-MM-YYYY") : moment(monthFirstDay, "DD-MM-YYYY")
 
-    } else {
-      let dateDifference = calculateDateDifference(moment(monthFirstDay).format("DD-MM-YYYY"), currentDayOff)
+    const numberToCompare = prevDayOff ? 8 : 7
 
-      if (dateDifference >= 7) {
-        result['hasError'] = true;
-        result['errorMessage'] = "O dia selecionado ultrapassa os 6 dias permitidos por lei xxx"
-      }
+    const dateDifference = currentDay.diff(previousDay, "days")
+
+    if (dateDifference >= numberToCompare) {
+      result.hasError = true
+
+      result.errorMessage = "_O dia selecionado ultrapassa os 6 dias permitidos por lei_"
     }
 
     return currentDayOff

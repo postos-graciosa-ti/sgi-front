@@ -38,6 +38,8 @@ const Scale = () => {
 
   const [selectedTemplate, setSelectedTemplate] = useState()
 
+  const [allWorkers, setAllWorkers] = useState([])
+
   useEffect(() => {
     api
       .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
@@ -46,6 +48,8 @@ const Scale = () => {
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => {
+        setAllWorkers(response.data)
+
         let workers = response.data
 
         let workersOptions = []
@@ -69,9 +73,7 @@ const Scale = () => {
   }
 
   const handleOnclickDay = (date) => {
-    // let isAlreadyDayOff = daysOff
-
-    let validationResult = addDaysOffValidations(scalesList, daysOff, date)
+    let validationResult = addDaysOffValidations(scalesList, daysOff, date, selectedWorker, allWorkers)
 
     if (validationResult.hasError) {
       Swal.fire({
@@ -220,48 +222,25 @@ const Scale = () => {
           />
         </div>
 
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <ReactSelect
             id="scaleTemplate"
-
             placeholder="Pré-definir escala"
-
             options={[
               { "label": "escala 4x1", "value": 5 },
               { "label": "escala 3x1", "value": 4 },
               { "label": "escala 2x1", "value": 3 }
             ]}
-
             value={selectedTemplate}
-
             onChange={(scale_template) => {
               setSelectedTemplate(scale_template)
-
+              
               let daysOffTemplate = iterateScaleTemplate(scale_template.value)
-
-              // switch (scale_template.value) {
-              //   case 5:
-              //     daysOffTemplate = iterateScaleTemplate(5)
-              //     break
-
-              //   case 4:
-              //     daysOffTemplate = iterateScaleTemplate(4)
-              //     break
-
-              //   case 3:
-              //     daysOffTemplate = iterateScaleTemplate(3)
-              //     break
-
-              //   default:
-              //     break
-              // }
-
+              
               setDaysOff(daysOffTemplate)
-
-              // setSelectedTemplate([{}])
             }}
           />
-        </div>
+        </div> */}
 
         <div id="scale-calendar">
           <Calendar
@@ -323,7 +302,7 @@ const Scale = () => {
                 scalesList && scalesList.map((scale) => (
                   <tr id="scale-table" key={scale.id}>
                     <td>
-                      {scale.worker.name} | {scale.worker.function.name} | {scale.worker.turn.start_time} - {scale.worker.turn.start_time}
+                      {scale.worker.name} | {scale.worker.function.name} | {scale.worker.turn.start_time} - {scale.worker.turn.end_time}
                     </td>
 
                     <td>

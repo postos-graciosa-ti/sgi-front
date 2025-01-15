@@ -11,7 +11,6 @@ import FirstAcess from "./pages/firstAccess/FirstAcess"
 import Functions from "./pages/functions/Functions"
 import Home from "./pages/home/Home"
 import Scale from "./pages/scale/Scale"
-import ScaleHistory from "./pages/scale/ScaleHistory"
 import SeeScale from "./pages/scale/SeeScale"
 import Steps from "./pages/steps/Steps"
 import Subsidiaries from "./pages/subsidiaries/Subsidiaries"
@@ -95,11 +94,11 @@ const Routes = createBrowserRouter([
     element: <CandidateFirstInterview />,
     errorElement: <ErrorBoundary />
   },
-  {
-    path: "/scale-history",
-    element: <ScaleHistory />,
-    errorElement: <ErrorBoundary />
-  },
+  // {
+  //   path: "/scale-history",
+  //   element: <ScaleHistory />,
+  //   errorElement: <ErrorBoundary />
+  // },
   {
     path: "/subsidiaries",
     element: <Subsidiaries />,

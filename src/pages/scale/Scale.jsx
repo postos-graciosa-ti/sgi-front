@@ -1,6 +1,6 @@
 import moment from "moment"
 import { useEffect, useState } from "react"
-import { Check2All, ExclamationOctagon, Printer, Trash } from "react-bootstrap-icons"
+import { Check2All, ExclamationOctagon, FileEarmarkBreak, Printer, Trash } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
@@ -12,8 +12,8 @@ import CalendarPopup from "../../pages/scale/CalendarPopup"
 import api from "../../services/api"
 import DeleteScaleModal from "./DeleteScaleModal"
 import addDaysOffValidations from "./functions/addDaysOffValidations"
-import iterateScaleTemplate from "./functions/iterateScaleTemplate"
 import printContent from "./printContent"
+import ScaleHistoryModal from "./ScaleHistoryModal"
 
 const Scale = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -39,6 +39,8 @@ const Scale = () => {
   const [selectedTemplate, setSelectedTemplate] = useState()
 
   const [allWorkers, setAllWorkers] = useState([])
+
+  const [scaleHistoryModalOpen, setScaleHistoryModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -271,6 +273,10 @@ const Scale = () => {
             <Printer />
           </button>
 
+          <button className="btn btn-danger mt-3 me-3" onClick={() => setScaleHistoryModalOpen(true)}>
+            <FileEarmarkBreak />
+          </button>
+
           <button id="help" className="btn btn-warning mt-3 me-3" onClick={setTour}>
             <ExclamationOctagon />
           </button>
@@ -404,6 +410,11 @@ const Scale = () => {
         selectedWorker={selectedWorker}
         setScalesList={setScalesList}
         setDaysOff={setDaysOff}
+      />
+
+      <ScaleHistoryModal
+        scaleHistoryModalOpen={scaleHistoryModalOpen}
+        setScaleHistoryModalOpen={setScaleHistoryModalOpen}
       />
 
       <style>

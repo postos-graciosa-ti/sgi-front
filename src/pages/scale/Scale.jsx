@@ -13,6 +13,7 @@ import api from "../../services/api"
 import DeleteScaleModal from "./DeleteScaleModal"
 import addDaysOffValidations from "./functions/addDaysOffValidations"
 import printContent from "./printContent"
+import PrintModal from "./PrintModal"
 import ScaleHistoryModal from "./ScaleHistoryModal"
 
 const Scale = () => {
@@ -43,6 +44,8 @@ const Scale = () => {
   const [allWorkers, setAllWorkers] = useState([])
 
   const [scaleHistoryModalOpen, setScaleHistoryModalOpen] = useState(false)
+
+  const [printModalOpen, setPrintModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -282,7 +285,13 @@ const Scale = () => {
             <b>*os dias que aparecem em verde no calendário são dias de folga</b>
           </div>
 
-          <button id="print-days" className="btn btn-light mt-3 me-3" onClick={handlePrintScale}>
+          <button
+            id="print-days"
+            className="btn btn-light mt-3 me-3"
+            onClick={() => {
+              setPrintModalOpen(true)
+            }}
+          >
             <Printer />
           </button>
 
@@ -428,6 +437,13 @@ const Scale = () => {
       <ScaleHistoryModal
         scaleHistoryModalOpen={scaleHistoryModalOpen}
         setScaleHistoryModalOpen={setScaleHistoryModalOpen}
+      />
+
+      <PrintModal
+        printModalOpen={printModalOpen}
+        setPrintModalOpen={setPrintModalOpen}
+        handlePrintScale={handlePrintScale}
+        scalesList={scalesList}
       />
 
       <style>

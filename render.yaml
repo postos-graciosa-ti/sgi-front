@@ -8,7 +8,6 @@ services:
     envVars:
       - key: VITE_API_URL
 
-services:
   - type: web
     name: sgi-front-producao
     plan: free

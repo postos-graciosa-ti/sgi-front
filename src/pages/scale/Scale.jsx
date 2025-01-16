@@ -30,6 +30,8 @@ const Scale = () => {
 
   const [selectedWorker, setSelectedWorker] = useState()
 
+  const [selectedWorkerInfo, setSelectedWorkerInfo] = useState()
+
   const [calendarPopupOpen, setCalendarPopupOpen] = useState(false)
 
   const [scalesList, setScalesList] = useState([])
@@ -109,8 +111,13 @@ const Scale = () => {
       "first_day": moment(monthFirstDay).format("DD-MM-YYYY"),
       "last_day": moment(monthLastDay).format("DD-MM-YYYY"),
       "days_off": `[${daysOff.map(dayOff => `'${dayOff}'`).join(',')}]`,
-      "ilegal_dates": `[${daysOff.map(dayOff => `'${dayOff}'`).join(',')}]`
+      "ilegal_dates": `[${daysOff.map(dayOff => `'${dayOff}'`).join(',')}]`,
+      "worker_turn_id": selectedWorkerInfo.turn_id,
+      "worker_function_id": selectedWorkerInfo.function_id
     }
+
+    console.log(formData)
+    debugger
 
     api
       .post(`/scales`, formData)
@@ -204,6 +211,12 @@ const Scale = () => {
               setSelectedTemplate([])
 
               setSelectedWorker(value)
+
+              api
+                .get(`/workers/${value.value}`)
+                .then((response) => {
+                  setSelectedWorkerInfo(response.data)
+                })
 
               api
                 .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${value.value}`)

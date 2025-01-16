@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: sgi-front-homologacao
+    plan: free
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: VITE_API_URL
+
+services:
+  - type: web
+    name: sgi-front-producao
+    plan: free
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: VITE_API_URL

@@ -119,9 +119,6 @@ const Scale = () => {
       "worker_function_id": selectedWorkerInfo.function_id
     }
 
-    console.log(formData)
-    debugger
-
     api
       .post(`/scales`, formData)
       .then((response) => {

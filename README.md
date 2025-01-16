@@ -2,6 +2,12 @@
 
 Front end do SGI (Sistema de Gerenciamento Integrado) da rede de postos Graciosa
 
+### Ambientes:
+
+- Homologação: https://sgi-api-homologacao.onrender.com
+
+- Produção: https://sgi-api-producao.onrender.com
+
 ### Tech Stack:
 
 - Vite, uma ferramenta de front-end para construir aplicações web 

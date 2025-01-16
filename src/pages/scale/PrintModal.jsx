@@ -17,14 +17,33 @@ export const ContentPrint = (scales) => {
           </div>
           <div className="card-body">
             <div className="mb-2 text-muted">{firstTurn && firstTurn.date}</div>
+
+            {/* Frentistas */}
             {firstTurn && firstTurn.frentistas && firstTurn.frentistas.length > 0 ? (
-              <ul className="list-group">
-                {firstTurn.frentistas.map((frentista) => (
-                  <li key={frentista.name} className="list-group-item">{frentista.name}</li>
-                ))}
-              </ul>
+              <div className="mb-3">
+                <h6>Frentistas:</h6>
+                <ul className="list-group">
+                  {firstTurn.frentistas.map((frentista) => (
+                    <li key={frentista.name} className="list-group-item">{frentista.name}</li>
+                  ))}
+                </ul>
+              </div>
             ) : (
               <div className="text-danger">Sem frentistas</div>
+            )}
+
+            {/* Trocadores */}
+            {firstTurn && firstTurn.trocadores && firstTurn.trocadores.length > 0 ? (
+              <div>
+                <h6>Trocadores:</h6>
+                <ul className="list-group">
+                  {firstTurn.trocadores.map((trocador) => (
+                    <li key={trocador.name} className="list-group-item">{trocador.name}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <div className="text-danger">Sem trocadores</div>
             )}
           </div>
         </div>
@@ -37,14 +56,33 @@ export const ContentPrint = (scales) => {
           </div>
           <div className="card-body">
             <div className="mb-2 text-muted">{secondTurn && secondTurn.date}</div>
+
+            {/* Frentistas */}
             {secondTurn && secondTurn.frentistas && secondTurn.frentistas.length > 0 ? (
-              <ul className="list-group">
-                {secondTurn.frentistas.map((frentista) => (
-                  <li key={frentista.name} className="list-group-item">{frentista.name}</li>
-                ))}
-              </ul>
+              <div className="mb-3">
+                <h6>Frentistas:</h6>
+                <ul className="list-group">
+                  {secondTurn.frentistas.map((frentista) => (
+                    <li key={frentista.name} className="list-group-item">{frentista.name}</li>
+                  ))}
+                </ul>
+              </div>
             ) : (
               <div className="text-danger">Sem frentistas</div>
+            )}
+
+            {/* Trocadores */}
+            {secondTurn && secondTurn.trocadores && secondTurn.trocadores.length > 0 ? (
+              <div>
+                <h6>Trocadores:</h6>
+                <ul className="list-group">
+                  {secondTurn.trocadores.map((trocador) => (
+                    <li key={trocador.name} className="list-group-item">{trocador.name}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <div className="text-danger">Sem trocadores</div>
             )}
           </div>
         </div>
@@ -57,14 +95,33 @@ export const ContentPrint = (scales) => {
           </div>
           <div className="card-body">
             <div className="mb-2 text-muted">{thirdTurn && thirdTurn.date}</div>
+
+            {/* Frentistas */}
             {thirdTurn && thirdTurn.frentistas && thirdTurn.frentistas.length > 0 ? (
-              <ul className="list-group">
-                {thirdTurn.frentistas.map((frentista) => (
-                  <li key={frentista.name} className="list-group-item">{frentista.name}</li>
-                ))}
-              </ul>
+              <div className="mb-3">
+                <h6>Frentistas:</h6>
+                <ul className="list-group">
+                  {thirdTurn.frentistas.map((frentista) => (
+                    <li key={frentista.name} className="list-group-item">{frentista.name}</li>
+                  ))}
+                </ul>
+              </div>
             ) : (
               <div className="text-danger">Sem frentistas</div>
+            )}
+
+            {/* Trocadores */}
+            {thirdTurn && thirdTurn.trocadores && thirdTurn.trocadores.length > 0 ? (
+              <div>
+                <h6>Trocadores:</h6>
+                <ul className="list-group">
+                  {thirdTurn.trocadores.map((trocador) => (
+                    <li key={trocador.name} className="list-group-item">{trocador.name}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <div className="text-danger">Sem trocadores</div>
             )}
           </div>
         </div>

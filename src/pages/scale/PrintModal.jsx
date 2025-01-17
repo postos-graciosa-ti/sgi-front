@@ -10,11 +10,15 @@ import api from "../../services/api";
 export const ContentPrint = (scales) => {
   return (
     <>
+      <div>
+        <h1>Escala de dias de folga</h1>
+      </div>
       {scales && scales.primeiro_turno_folgas && scales.primeiro_turno_folgas.map((firstTurn, index) => (
         <div key={index} className="card mb-4">
           <div className="card-header">
             {firstTurn.turn_info && <h5>Turno 01 ({firstTurn.turn_info.start_time} - {firstTurn.turn_info.end_time})</h5>}
           </div>
+
           <div className="card-body">
             <div className="mb-2 text-muted">{firstTurn && firstTurn.date}</div>
 
@@ -167,19 +171,81 @@ const PrintModal = (props) => {
               <head>
                 <meta charset="utf-8" />
                 <title>Escala de Colaboradores</title>
-                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
                 <style>
-                  table, th, td {
-                    border: 1px solid black;
-                    border-collapse: collapse;
+                  /* General Styles */
+                  body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                    line-height: 1.5;
                   }
-                  th, td {
-                    padding: 5px;
-                    text-align: left;
-                    vertical-align: top;
+
+                  /* Card Styles */
+                  .card {
+                    border: 1px solid #dee2e6;
+                    border-radius: 0.25rem;
+                    background-color: #fff;
+                    margin-bottom: 1rem;
+                    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
                   }
-                  td div {
-                    margin-bottom: 10px; /* Espaçamento entre os dias de folga */
+
+                  .card-header {
+                    padding: 0.75rem 1.25rem;
+                    margin-bottom: 0;
+                    background-color: #f8f9fa;
+                    border-bottom: 1px solid #dee2e6;
+                    font-size: 1.25rem;
+                    font-weight: 500;
+                  }
+
+                  .card-body {
+                    padding: 1.25rem;
+                  }
+
+                  /* List Group Styles */
+                  .list-group {
+                    list-style-type: none;
+                    padding-left: 0;
+                    margin: 0;
+                  }
+
+                  .list-group-item {
+                    padding: 0.75rem 1.25rem;
+                    margin-bottom: -1px;
+                    background-color: #fff;
+                    border: 1px solid #dee2e6;
+                  }
+
+                  .list-group-item:last-child {
+                    border-bottom-right-radius: 0.25rem;
+                    border-bottom-left-radius: 0.25rem;
+                  }
+
+                  .list-group-item:first-child {
+                    border-top-right-radius: 0.25rem;
+                    border-top-left-radius: 0.25rem;
+                  }
+
+                  /* Text Utilities */
+                  .text-muted {
+                    color: #6c757d !important;
+                  }
+
+                  .text-danger {
+                    color: #dc3545 !important;
+                  }
+
+                  /* Spacing Utilities */
+                  .mb-4 {
+                    margin-bottom: 1.5rem !important;
+                  }
+
+                  .mb-3 {
+                    margin-bottom: 1rem !important;
+                  }
+
+                  .mb-2 {
+                    margin-bottom: 0.5rem !important;
                   }
                 </style>
               </head>

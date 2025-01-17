@@ -32,6 +32,8 @@ const Turns = () => {
   }
 
   const handleOpenEditTurnModal = (turn) => {
+    setTurnToEdit()
+
     setTurnToEdit(turn)
 
     setEditTurnModalOpen(true)
@@ -146,6 +148,7 @@ const Turns = () => {
         setEditTurnModalOpen={setEditTurnModalOpen}
         GetTurns={GetTurns}
         turnToEdit={turnToEdit}
+        setTurnToEdit={setTurnToEdit}
       />
 
       <DeleteTurnModal

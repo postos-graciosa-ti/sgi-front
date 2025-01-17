@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal'
 import putTurn from '../../requests/putTurn'
 
 const EditTurnModal = (props) => {
-  const { editTurnModalOpen, setEditTurnModalOpen, GetTurns, turnToEdit } = props
+  const { editTurnModalOpen, setEditTurnModalOpen, GetTurns, turnToEdit, setTurnToEdit } = props
 
   const [name, setName] = useState('')
   
@@ -17,29 +17,34 @@ const EditTurnModal = (props) => {
   const [endTime, setEndTime] = useState('')
 
   const handleClose = () => {
+    setTurnToEdit({});
+
     setEditTurnModalOpen(false)
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
+  
     let formData = {
       "name": name || turnToEdit.name,
-      "start_time": startTime || turnToEdit.start_time,
-      "start_interval_time": startIntervalTime || turnToEdit.start_interval_time,
-      "end_interval_time": endIntervalTime || turnToEdit.end_interval_time,
-      "end_time": endTime || turnToEdit.end_time
+      "start_time": startTime || turnToEdit.start_time.replace(/:\d{2}$/, ''),
+      "start_interval_time": startIntervalTime || turnToEdit.start_interval_time.replace(/:\d{2}$/, ''),
+      "end_interval_time": endIntervalTime || turnToEdit.end_interval_time.replace(/:\d{2}$/, ''),
+      "end_time": endTime || turnToEdit.end_time.replace(/:\d{2}$/, '')
     }
-
+  
     putTurn(turnToEdit.id, formData)
       .then((response) => {
         console.log(response)
-
+  
         GetTurns()
-
+  
         handleClose()
+  
+        // Limpa o estado após a submissão
+        setTurnToEdit({});
       })
-  }
+  }  
 
   return (
     <Modal

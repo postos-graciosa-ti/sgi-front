@@ -278,7 +278,7 @@ const Scale = () => {
         </div>
 
         <div>
-          <div className="mt-1">
+          <div className="mt-1 text-danger fst-italic">
             <b>*os dias que aparecem em verde no calendário são dias de folga</b>
           </div>
 

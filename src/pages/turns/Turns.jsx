@@ -104,10 +104,10 @@ const Turns = () => {
                 turnsList && turnsList.map((turn) => (
                   <tr key={turn.id}>
                     <td>{turn.name}</td>
-                    <td>{turn.start_time}</td>
-                    <td>{turn.start_interval_time}</td>
-                    <td>{turn.end_interval_time}</td>
-                    <td>{turn.end_time}</td>
+                    <td>{turn.start_time.replace(/:\d{2}$/, '')}</td>
+                    <td>{turn.start_interval_time.replace(/:\d{2}$/, '')}</td>
+                    <td>{turn.end_interval_time.replace(/:\d{2}$/, '')}</td>
+                    <td>{turn.end_time.replace(/:\d{2}$/, '')}</td>
                     <td>
                       <button
                         id="editTurn"

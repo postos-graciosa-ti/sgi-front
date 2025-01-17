@@ -90,7 +90,7 @@ const Workers = () => {
                 <tr key={worker.id} style={{ display: "table", width: "100%", tableLayout: "fixed" }}>
                   <td>{worker.worker_name}</td>
                   <td>{worker.function_name}</td>
-                  <td>{worker.turn_start_time} - {worker.turn_end_time}</td>
+                  <td>{worker.turn_start_time.replace(/:\d{2}$/, '')} - {worker.turn_end_time.replace(/:\d{2}$/, '')}</td>
                   <td>{worker.worker_is_active ? "Sim" : "Não"}</td>
                   <td>
                     <button

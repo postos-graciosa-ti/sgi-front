@@ -63,8 +63,12 @@ const ScaleHistoryModal = (props) => {
               report.primeiro_turno_report &&
               report.primeiro_turno_report.map((firstTurnReport, index) => (
                 <>
-
-                  <h5>{firstTurnReport.turno_info && `Turno 01 (${firstTurnReport.turno_info.start_time} - ${firstTurnReport.turno_info.end_time})`}</h5>
+                  <h5>
+                    {
+                      firstTurnReport.turno_info &&
+                      `Turno 01 (${firstTurnReport.turno_info.start_time.replace(/:\d{2}$/, '')} - ${firstTurnReport.turno_info.end_time.replace(/:\d{2}$/, '')})`
+                    }
+                  </h5>
 
                   {
                     !firstTurnReport.turno_info && (
@@ -112,7 +116,10 @@ const ScaleHistoryModal = (props) => {
               report.segundo_turno_report.map((secondTurnReport, index) => (
                 <>
                   <h5>
-                    {secondTurnReport.turno_info && `Turno 02 (${secondTurnReport.turno_info.start_time} - ${secondTurnReport.turno_info.end_time})`}
+                    {
+                      secondTurnReport.turno_info &&
+                      `Turno 02 (${secondTurnReport.turno_info.start_time.replace(/:\d{2}$/, '')} - ${secondTurnReport.turno_info.end_time.replace(/:\d{2}$/, '')})`
+                    }
                   </h5>
 
                   {
@@ -164,7 +171,7 @@ const ScaleHistoryModal = (props) => {
               report.terceiro_turno_report.map((thirdTurnReport, index) => (
                 <>
                   <h5>
-                    {thirdTurnReport.turno_info && `Turno 03 (${thirdTurnReport.turno_info.start_time} - ${thirdTurnReport.turno_info.end_time})`}
+                    {thirdTurnReport.turno_info && `Turno 03 (${thirdTurnReport.turno_info.start_time.replace(/:\d{2}$/, '')} - ${thirdTurnReport.turno_info.end_time.replace(/:\d{2}$/, '')})`}
                   </h5>
 
                   {

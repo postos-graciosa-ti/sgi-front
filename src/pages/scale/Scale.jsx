@@ -73,7 +73,7 @@ const Scale = () => {
     if (view == "month") {
       let isDayOff = daysOff.some((dayOff) => dayOff == moment(date).format("DD-MM-YYYY"))
 
-      return isDayOff && 'highlight' || null
+      return isDayOff && 'bg-danger text-white' || null
     }
 
     return
@@ -443,15 +443,6 @@ const Scale = () => {
         handlePrintScale={handlePrintScale}
         scalesList={scalesList}
       />
-
-      <style>
-        {`
-          .highlight {
-            background-color: green;
-            color: white;
-          }
-        `}
-      </style>
     </>
   )
 }

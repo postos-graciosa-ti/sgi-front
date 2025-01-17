@@ -11,13 +11,11 @@ import FirstAcess from "./pages/firstAccess/FirstAcess"
 import Functions from "./pages/functions/Functions"
 import Home from "./pages/home/Home"
 import Scale from "./pages/scale/Scale"
-import SeeScale from "./pages/scale/SeeScale"
 import Steps from "./pages/steps/Steps"
 import Subsidiaries from "./pages/subsidiaries/Subsidiaries"
 import Turns from "./pages/turns/Turns"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
-import SlaScale from "./pages/scale/SlaScale"
 
 const Routes = createBrowserRouter([
   {
@@ -78,15 +76,6 @@ const Routes = createBrowserRouter([
   {
     path: "/scale",
     element: <Scale />,
-    errorElement: <ErrorBoundary />
-  },
-  {
-    path: "/scale-two",
-    element: <SlaScale />
-  },
-  {
-    path: "/see-scale",
-    element: <SeeScale />,
     errorElement: <ErrorBoundary />
   },
   {

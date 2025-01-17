@@ -429,6 +429,7 @@ const Scale = () => {
         selectedWorker={selectedWorker}
         setScalesList={setScalesList}
         setDaysOff={setDaysOff}
+        selectedWorkerInfo={selectedWorkerInfo}
       />
 
       <ScaleHistoryModal

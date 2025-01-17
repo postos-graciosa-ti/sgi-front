@@ -1,10 +1,9 @@
 import moment from 'moment'
-import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import api from '../../services/api'
-import useUserSessionStore from '../../data/userSession'
 import Swal from 'sweetalert2'
+import useUserSessionStore from '../../data/userSession'
+import api from '../../services/api'
 
 const calculateDateDifference = (startDate, endDate) => {
   const [startDay, startMonth, startYear] = startDate.split('-').map(Number)
@@ -30,14 +29,8 @@ const DeleteScaleModal = (props) => {
     daysOff,
     selectedWorker,
     setScalesList,
-    setDaysOff
-
-    // allDaysOff,
-    // ilegalDaysOff,
-    // subsidiarieSelectedWorker,
-    // setDaysOff,
-    // setIlegalDaysOff,
-    // setSubsidiarieScalesList
+    setDaysOff,
+    selectedWorkerInfo
   } = props
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -46,56 +39,16 @@ const DeleteScaleModal = (props) => {
 
   let monthLastDay = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
 
-  // const handleRemoveDayOff = () => {
-  //   let updatedIlegalDaysOff = []
-
-  //   if (ilegalDaysOff) {
-  //     updatedIlegalDaysOff = ilegalDaysOff.filter((dayOff) => dayOff != moment(selectedDate).format("DD-MM-YYYY"))
-  //   }
-
-  //   let updatedDaysOff = allDaysOff.filter((dayOff) => dayOff != moment(selectedDate).format("DD-MM-YYYY"))
-
-  //   let formData = {
-  //     "worker_id": subsidiarieSelectedWorker.value,
-  //     "subsidiarie_id": selectedSubsdiarie.value,
-  //     "first_day": moment(monthFirstDay).format("DD-MM-YYYY"),
-  //     "last_day": moment(monthLastDay).format("DD-MM-YYYY"),
-  //     "days_off": `[${updatedDaysOff.map(dayOff => `'${dayOff}'`).join(',')}]`,
-  //     "ilegal_dates": `[${updatedIlegalDaysOff.map(ilegalDayOff => `'${ilegalDayOff}'`).join(',')}]`
-  //   }
-
-  //   api
-  //     .post("/scales", formData)
-  //     .then(() => {
-  //       setDaysOff([])
-
-  //       setIlegalDaysOff([])
-
-  //       api
-  //         .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
-  //         .then((response) => {
-  //           setSubsidiarieScalesList(response.data)
-  //         })
-
-  //       api
-  //         .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${subsidiarieSelectedWorker.value}`)
-  //         .then((response) => {
-  //           response.data.days_off = response.data.days_off
-  //             .filter(dayOff => !response.data.ilegal_dates.includes(dayOff.date))
-  //             .map(dayOff => dayOff.date);
-
-
-  //           setDaysOff(response.data.days_off)
-
-  //           setIlegalDaysOff(response.data.ilegal_dates)
-
-  //           setDeleteScaleModalOpen(false)
-  //         })
-  //     })
-  // }
-
   const handleRemoveDayOff = () => {
     let updatedDaysOff = daysOff.filter((dayOff) => dayOff != moment(selectedDate).format("DD-MM-YYYY"))
+
+    if (daysOff.length == 1) {
+      setDaysOff(updatedDaysOff)
+
+      setDeleteScaleModalOpen(false)
+
+      return
+    }
 
     let result = {}
 
@@ -134,6 +87,8 @@ const DeleteScaleModal = (props) => {
 
     let formData = {
       "worker_id": selectedWorker.value,
+      "worker_turn_id": selectedWorkerInfo.turn_id,
+      "worker_function_id": selectedWorkerInfo.function_id,
       "subsidiarie_id": selectedSubsdiarie.value,
       "first_day": moment(monthFirstDay).format("DD-MM-YYYY"),
       "last_day": moment(monthLastDay).format("DD-MM-YYYY"),
@@ -155,7 +110,7 @@ const DeleteScaleModal = (props) => {
           })
       })
       .catch((error) => {
-        // console.error(error.response.data.detail)
+        console.error(error.response.data.detail)
 
         Swal.fire({
           icon: "error",

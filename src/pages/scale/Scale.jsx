@@ -237,6 +237,26 @@ const Scale = () => {
           />
         </div>
 
+        {/* <div className="mb-3">
+          <ReactSelect
+            id="scaleTemplate"
+            placeholder="Pré-definir escala"
+            options={[
+              { "label": "escala 4x1", "value": 5 },
+              { "label": "escala 3x1", "value": 4 },
+              { "label": "escala 2x1", "value": 3 }
+            ]}
+            value={selectedTemplate}
+            onChange={(scale_template) => {
+              setSelectedTemplate(scale_template)
+              
+              let daysOffTemplate = iterateScaleTemplate(scale_template.value)
+              
+              setDaysOff(daysOffTemplate)
+            }}
+          />
+        </div> */}
+
         <div id="scale-calendar">
           <Calendar
             className="w-100 rounded"

@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
+import { format } from "date-fns"
 
 const ScaleHistoryModal = (props) => {
   const { scaleHistoryModalOpen, setScaleHistoryModalOpen } = props
@@ -51,7 +52,7 @@ const ScaleHistoryModal = (props) => {
       fullscreen={true}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Relatório de dias</Modal.Title>
+        <Modal.Title>Relatório de dias {selectedSubsdiarie.label}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>

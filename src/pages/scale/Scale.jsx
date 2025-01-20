@@ -12,6 +12,7 @@ import CalendarPopup from "../../pages/scale/CalendarPopup"
 import api from "../../services/api"
 import DeleteScaleModal from "./DeleteScaleModal"
 import addDaysOffValidations from "./functions/addDaysOffValidations"
+import iterateScaleTemplate from "./functions/iterateScaleTemplate"
 import printContent from "./printContent"
 import PrintModal from "./PrintModal"
 import ScaleHistoryModal from "./ScaleHistoryModal"
@@ -237,25 +238,29 @@ const Scale = () => {
           />
         </div>
 
-        {/* <div className="mb-3">
+        <div className="mb-3">
+          <span>Ideia de jerico  adicionar essa possibilidade? (vou apagar esse texto depois)</span>
           <ReactSelect
             id="scaleTemplate"
             placeholder="Pré-definir escala"
             options={[
-              { "label": "escala 4x1", "value": 5 },
-              { "label": "escala 3x1", "value": 4 },
-              { "label": "escala 2x1", "value": 3 }
+              { "label": "Pré-definir 6x1", "value": 7 },
+              { "label": "Pré-definir 5x1", "value": 6 },
+              { "label": "Pré-definir 4x1", "value": 5 },
+              { "label": "Pré-definir 3x1", "value": 4 },
+              { "label": "Pré-definir 2x1", "value": 3 },
+              { "label": "Pré-definir 1x1", "value": 2 },
             ]}
             value={selectedTemplate}
             onChange={(scale_template) => {
               setSelectedTemplate(scale_template)
-              
+
               let daysOffTemplate = iterateScaleTemplate(scale_template.value)
-              
+
               setDaysOff(daysOffTemplate)
             }}
           />
-        </div> */}
+        </div>
 
         <div id="scale-calendar">
           <Calendar

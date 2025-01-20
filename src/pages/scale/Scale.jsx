@@ -239,17 +239,17 @@ const Scale = () => {
         </div>
 
         <div className="mb-3">
-          <span>Ideia de jerico  adicionar essa possibilidade? (vou apagar esse texto depois)</span>
+          <span>Ideia de jerico  adicionar essa possibilidade? (vou apagar esse texto depois, as demais funcionalidades seguem normais também)</span>
           <ReactSelect
             id="scaleTemplate"
             placeholder="Pré-definir escala"
             options={[
-              { "label": "Pré-definir 6x1", "value": 7 },
-              { "label": "Pré-definir 5x1", "value": 6 },
-              { "label": "Pré-definir 4x1", "value": 5 },
-              { "label": "Pré-definir 3x1", "value": 4 },
-              { "label": "Pré-definir 2x1", "value": 3 },
-              { "label": "Pré-definir 1x1", "value": 2 },
+              { "label": `Pré-definir 6x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 7 },
+              { "label": `Pré-definir 5x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 6 },
+              { "label": `Pré-definir 4x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 5 },
+              { "label": `Pré-definir 3x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 4 },
+              { "label": `Pré-definir 2x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 3 },
+              { "label": `Pré-definir 1x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 2 },
             ]}
             value={selectedTemplate}
             onChange={(scale_template) => {

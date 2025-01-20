@@ -238,7 +238,7 @@ const Scale = () => {
           />
         </div>
 
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <span>Ideia de jerico  adicionar essa possibilidade? (vou apagar esse texto depois, as demais funcionalidades seguem normais também)</span>
           <ReactSelect
             id="scaleTemplate"
@@ -260,7 +260,7 @@ const Scale = () => {
               setDaysOff(daysOffTemplate)
             }}
           />
-        </div>
+        </div> */}
 
         <div id="scale-calendar">
           <Calendar

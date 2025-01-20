@@ -48,6 +48,10 @@ const Scale = () => {
 
   const [printModalOpen, setPrintModalOpen] = useState(false)
 
+  const userSession = useUserSessionStore((state) => state.userSession)
+
+  console.log(userSession)
+
   useEffect(() => {
     api
       .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
@@ -128,6 +132,14 @@ const Scale = () => {
         api
           .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
           .then((response) => setScalesList(response.data))
+
+        api
+          .post("/logs/scales", {
+            user_id: userSession.id,
+            worker_id: selectedWorker.value,
+            inserted_at: new Date().toLocaleDateString('pt-BR'),
+            at_time: new Date().toLocaleTimeString('pt-BR')
+          })
       })
       .catch((error) => {
         // console.error(error.response.data.detail)

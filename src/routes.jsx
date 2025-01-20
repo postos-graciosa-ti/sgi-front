@@ -12,12 +12,13 @@ import Functions from "./pages/functions/Functions"
 import Home from "./pages/home/Home"
 import Scale from "./pages/scale/Scale"
 import SeeScale from "./pages/scale/SeeScale"
+import SlaScale from "./pages/scale/SlaScale"
 import Steps from "./pages/steps/Steps"
 import Subsidiaries from "./pages/subsidiaries/Subsidiaries"
 import Turns from "./pages/turns/Turns"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
-import SlaScale from "./pages/scale/SlaScale"
+import ScalesLogs from "./pages/logsPages/ScalesLogs"
 
 const Routes = createBrowserRouter([
   {
@@ -112,6 +113,11 @@ const Routes = createBrowserRouter([
   {
     path: "/functions",
     element: <Functions />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/scales-logs",
+    element: <ScalesLogs />,
     errorElement: <ErrorBoundary />
   },
 ])

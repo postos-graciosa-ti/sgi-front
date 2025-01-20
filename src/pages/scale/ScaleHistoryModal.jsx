@@ -99,11 +99,50 @@ const ScaleHistoryModal = (props) => {
                           <div>
                             <i>{firstTurnReport.status && `Status: ${firstTurnReport.status}`}</i>
                           </div>
+
+                          {
+                            firstTurnReport.dados_frentistas.length > 0 && (
+                              <div>
+                                <span>
+                                  <i>
+                                    <b>
+                                      Frentistas:
+                                    </b>
+                                  </i>
+                                </span>
+
+                                <ul>
+                                  {firstTurnReport.dados_frentistas.map((frentista) => (
+                                    <li key={frentista.dados.name}>{frentista.dados.name}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )
+                          }
+
+                          {
+                            firstTurnReport.dados_trocadores.length > 0 && (
+                              <div>
+                                <span>
+                                  <i>
+                                    <b>
+                                      Trocadores:
+                                    </b>
+                                  </i>
+                                </span>
+
+                                <ul>
+                                  {firstTurnReport.dados_trocadores.map((trocador) => (
+                                    <li key={trocador.dados.name}>{trocador.dados.name}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )
+                          }
                         </div>
                       </div>
                     )
                   }
-
                 </>
               ))
             }
@@ -155,6 +194,46 @@ const ScaleHistoryModal = (props) => {
                               {secondTurnReport.status && `Status: ${secondTurnReport.status}`}
                             </i>
                           </div>
+
+                          {
+                            secondTurnReport.dados_frentistas.length > 0 && (
+                              <div>
+                                <span>
+                                  <i>
+                                    <b>
+                                      Frentistas:
+                                    </b>
+                                  </i>
+                                </span>
+
+                                <ul>
+                                  {secondTurnReport.dados_frentistas.map((frentista) => (
+                                    <li key={frentista.dados.name}>{frentista.dados.name}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )
+                          }
+
+                          {
+                            secondTurnReport.dados_trocadores.length > 0 && (
+                              <div>
+                                <span>
+                                  <i>
+                                    <b>
+                                      Trocadores:
+                                    </b>
+                                  </i>
+                                </span>
+
+                                <ul>
+                                  {secondTurnReport.dados_trocadores.map((trocador) => (
+                                    <li key={trocador.dados.name}>{trocador.dados.name}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )
+                          }
                         </div>
                       </div>
                     )
@@ -207,6 +286,46 @@ const ScaleHistoryModal = (props) => {
                               {thirdTurnReport.status && `Status: ${thirdTurnReport.status}`}
                             </i>
                           </div>
+
+                          {
+                            thirdTurnReport.dados_frentistas.length > 0 && (
+                              <div>
+                                <span>
+                                  <i>
+                                    <b>
+                                      Frentistas:
+                                    </b>
+                                  </i>
+                                </span>
+
+                                <ul>
+                                  {thirdTurnReport.dados_frentistas.map((frentista) => (
+                                    <li key={frentista.dados.name}>{frentista.dados.name}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )
+                          }
+
+                          {
+                            thirdTurnReport.dados_trocadores.length > 0 && (
+                              <div>
+                                <span>
+                                  <i>
+                                    <b>
+                                      Trocadores:
+                                    </b>
+                                  </i>
+                                </span>
+
+                                <ul>
+                                  {thirdTurnReport.dados_trocadores.map((trocador) => (
+                                    <li key={trocador.dados.name}>{trocador.dados.name}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )
+                          }
                         </div>
                       </div>
                     )

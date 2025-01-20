@@ -301,9 +301,9 @@ const Scale = () => {
             <FileEarmarkBreak />
           </button>
 
-          <button id="help" className="btn btn-warning mt-3 me-3" onClick={setTour}>
+          {/* <button id="help" className="btn btn-warning mt-3 me-3" onClick={setTour}>
             <ExclamationOctagon />
-          </button>
+          </button> */}
 
           <button id="save-scale" className="btn btn-success mt-3" onClick={handleSubmitDaysOff}>
             <Check2All />

@@ -177,6 +177,8 @@ const Nav = () => {
 
                   <li><Link className="dropdown-item" to="/cost-center">Centros de custos</Link></li>
 
+                  <li><Link className="dropdown-item" to="/departments">Setores</Link></li>
+
                   {userSession.role_id === 1 && <li><Link className="dropdown-item" to="/subsidiaries">Filiais</Link></li>}
 
                   {userSession.role_id === 1 && <li><Link className="dropdown-item" to="/users">Usuários</Link></li>}

@@ -19,6 +19,7 @@ import Turns from "./pages/turns/Turns"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 import ScalesLogs from "./pages/logsPages/ScalesLogs"
+import CostCenter from "./pages/costCenter/CostCenter"
 
 const Routes = createBrowserRouter([
   {
@@ -119,6 +120,11 @@ const Routes = createBrowserRouter([
     path: "/scales-logs",
     element: <ScalesLogs />,
     errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/cost-center",
+    element: <CostCenter />,
+    errorElement: <ErrorBoundary />,
   },
 ])
 

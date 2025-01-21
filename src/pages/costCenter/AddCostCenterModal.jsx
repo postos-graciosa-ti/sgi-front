@@ -37,7 +37,7 @@ const AddCostCenterModal = (props) => {
       keyboard={false}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Modal title</Modal.Title>
+        <Modal.Title>Adicionar centro de custo</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -51,7 +51,7 @@ const AddCostCenterModal = (props) => {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="light" onClick={() => setAddCostCenterModalOpen(false)}>Close</Button>
+        <Button variant="light" onClick={() => setAddCostCenterModalOpen(false)}>Fechar</Button>
 
         <Button variant="success" onClick={handleSubmit}>Adicionar</Button>
       </Modal.Footer>

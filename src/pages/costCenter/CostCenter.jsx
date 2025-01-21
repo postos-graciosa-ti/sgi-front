@@ -4,6 +4,7 @@ import Nav from "../../components/Nav"
 import api from "../../services/api"
 import AddCostCenterModal from "./AddCostCenterModal"
 import EditCostCenterModal from "./EditCostCenterModal"
+import DeleteCostCenterModal from "./DeleteCostCenterModal"
 
 const CostCenter = () => {
   const [costCenterList, setCostCenterList] = useState([])
@@ -13,6 +14,8 @@ const CostCenter = () => {
   const [addCostCenterModalOpen, setAddCostCenterModalOpen] = useState(false)
 
   const [editCostCenterModalOpen, setEditCostCenterModalOpen] = useState(false)
+
+  const [deleteCostCenterModalOpen, setDeleteCostCenterModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -24,6 +27,12 @@ const CostCenter = () => {
     setSelectedCostCenter(costCenter)
 
     setEditCostCenterModalOpen(true)
+  }
+
+  const handleOpenDeleteCostCenterModal = (costCenter) => {
+    setSelectedCostCenter(costCenter)
+
+    setDeleteCostCenterModalOpen(true)
   }
 
   return (
@@ -74,7 +83,7 @@ const CostCenter = () => {
                         id="deleteTurn"
                         type="button"
                         className="btn btn-danger mt-2"
-                      // onClick={() => handleOpenDeleteTurnModal(turn)}
+                        onClick={() => handleOpenDeleteCostCenterModal(costCenter)}
                       >
                         <Trash />
                       </button>
@@ -95,6 +104,13 @@ const CostCenter = () => {
       <EditCostCenterModal
         editCostCenterModalOpen={editCostCenterModalOpen}
         setEditCostCenterModalOpen={setEditCostCenterModalOpen}
+        selectedCostCenter={selectedCostCenter}
+        setCostCenterList={setCostCenterList}
+      />
+
+      <DeleteCostCenterModal
+        deleteCostCenterModalOpen={deleteCostCenterModalOpen}
+        setDeleteCostCenterModalOpen={setDeleteCostCenterModalOpen}
         selectedCostCenter={selectedCostCenter}
         setCostCenterList={setCostCenterList}
       />

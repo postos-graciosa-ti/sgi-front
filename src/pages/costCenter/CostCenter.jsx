@@ -1,16 +1,30 @@
 import { useEffect, useState } from "react"
-import api from "../../services/api"
+import { Pencil, Plus, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
-import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
+import api from "../../services/api"
+import AddCostCenterModal from "./AddCostCenterModal"
+import EditCostCenterModal from "./EditCostCenterModal"
 
 const CostCenter = () => {
   const [costCenterList, setCostCenterList] = useState([])
+
+  const [selectedCostCenter, setSelectedCostCenter] = useState(null)
+
+  const [addCostCenterModalOpen, setAddCostCenterModalOpen] = useState(false)
+
+  const [editCostCenterModalOpen, setEditCostCenterModalOpen] = useState(false)
 
   useEffect(() => {
     api
       .get("/cost-center")
       .then((response) => setCostCenterList(response.data))
   }, [])
+
+  const handleOpenEditCostCenterModal = (costCenter) => {
+    setSelectedCostCenter(costCenter)
+
+    setEditCostCenterModalOpen(true)
+  }
 
   return (
     <>
@@ -23,19 +37,10 @@ const CostCenter = () => {
 
         <div className="mt-3 mb-3">
           <button
-            id="help"
-            type="button"
-            className="btn btn-warning me-2"
-          // onClick={setTour}
-          >
-            <Question />
-          </button>
-
-          <button
             id="addTurn"
             type="button"
             className="btn btn-primary"
-          // onClick={handleOpenAddTurnModal}
+            onClick={() => setAddCostCenterModalOpen(true)}
           >
             <Plus />
           </button>
@@ -46,47 +51,53 @@ const CostCenter = () => {
             <thead>
               <tr>
                 <th>Nome</th>
-
                 <th>Descrição</th>
-
                 <th></th>
               </tr>
             </thead>
-
             <tbody>
-              {
-                costCenterList && costCenterList.map((costCenter) => (
-                  <tr>
+              {costCenterList &&
+                costCenterList.map((costCenter) => (
+                  <tr key={costCenter.id}>
                     <td>{costCenter.name}</td>
-
                     <td>{costCenter.description}</td>
-
                     <td>
                       <button
                         id="editTurn"
                         type="button"
                         className="btn btn-warning mt-2 me-2"
-                        // onClick={() => handleOpenEditTurnModal(turn)}
+                        onClick={() => handleOpenEditCostCenterModal(costCenter)}
                       >
                         <Pencil />
                       </button>
-
                       <button
                         id="deleteTurn"
                         type="button"
                         className="btn btn-danger mt-2"
-                        // onClick={() => handleOpenDeleteTurnModal(turn)}
+                      // onClick={() => handleOpenDeleteTurnModal(turn)}
                       >
                         <Trash />
                       </button>
                     </td>
                   </tr>
-                ))
-              }
+                ))}
             </tbody>
           </table>
         </div>
       </div>
+
+      <AddCostCenterModal
+        addCostCenterModalOpen={addCostCenterModalOpen}
+        setAddCostCenterModalOpen={setAddCostCenterModalOpen}
+        setCostCenterList={setCostCenterList}
+      />
+
+      <EditCostCenterModal
+        editCostCenterModalOpen={editCostCenterModalOpen}
+        setEditCostCenterModalOpen={setEditCostCenterModalOpen}
+        selectedCostCenter={selectedCostCenter}
+        setCostCenterList={setCostCenterList}
+      />
     </>
   )
 }

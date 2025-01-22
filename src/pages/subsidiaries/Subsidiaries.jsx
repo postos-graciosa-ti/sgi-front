@@ -53,13 +53,13 @@ const Subsidiaries = () => {
         <h4>Cadastro de filiais</h4>
 
         <div className="mt-3 mb-3">
-          <button
+          {/* <button
             className="btn btn-warning me-2"
             onClick={setTour}
             id="help"
           >
             <Question />
-          </button>
+          </button> */}
 
           <button
             className="btn btn-primary"

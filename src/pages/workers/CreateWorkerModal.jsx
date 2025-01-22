@@ -7,6 +7,7 @@ import getFunctions from "../../requests/getFunctions"
 import getTurns from '../../requests/getTurns'
 import getWorkersBySubsidiarie from '../../requests/getWorkersBySubsidiarie'
 import postWorker from '../../requests/postWorker'
+import api from '../../services/api'
 
 const CreateWorkerModal = (props) => {
   const {
@@ -28,7 +29,21 @@ const CreateWorkerModal = (props) => {
   const [selectedTurn, setSelectedTurn] = useState()
 
   useEffect(() => {
-    getFunctions()
+    // getFunctions()
+    // .then((response) => {
+    //   let functionsData = response.data
+
+    //   let options = []
+
+    //   functionsData && functionsData.map((data) => {
+    //     options.push({ "value": data.id, "label": data.name })
+    //   })
+
+    //   setFunctionsList(options)
+    // })
+
+    api
+      .get("/functions/for-workers")
       .then((response) => {
         let functionsData = response.data
 

@@ -46,13 +46,13 @@ const Users = () => {
         <h4>Cadastro de usuários</h4>
 
         <div className="mt-3 mb-3">
-          <button
+          {/* <button
             id="help"
             className="btn btn-warning me-2"
             onClick={setTour}
           >
             <Question />
-          </button>
+          </button> */}
 
           <button
             id="addUser"

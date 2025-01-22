@@ -8,6 +8,7 @@ import getSubsidiaries from '../../requests/getSubsidiaries'
 import putUser from '../../requests/putUser'
 import useUserSessionStore from '../../data/userSession'
 import getUsers from '../../requests/getUsers'
+import api from '../../services/api'
 
 const EditUserModal = (props) => {
   const { editUserModalOpen, setEditUserModalOpen } = props
@@ -56,14 +57,16 @@ const EditUserModal = (props) => {
   }
 
   const GetFunctions = () => {
-    getFunctions()
+    api
+      .get("/functions/for-users")
       .then((response) => {
-        const functionsData = response.data;
+        let functionsData = response.data
 
-        const options = functionsData?.map((func) => ({
-          value: func.id,
-          label: func.name,
-        })) || []
+        let options = []
+
+        functionsData && functionsData.map((data) => {
+          options.push({ "label": data.name, "value": data.id })
+        })
 
         setFunctionsList(options)
       })

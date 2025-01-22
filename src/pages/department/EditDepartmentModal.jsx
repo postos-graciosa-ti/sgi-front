@@ -16,9 +16,6 @@ const EditDepartmentModal = (props) => {
       description: description
     }
 
-    console.log(formData, selectedDepartment)
-    debugger
-
     api
       .put(`/departments/${selectedDepartment.id}`, formData)
       .then(() => {

@@ -4,15 +4,18 @@ import Nav from "../../components/Nav"
 import api from "../../services/api"
 import AddDepartmentModal from "./AddDepartmentModal"
 import EditDepartmentModal from "./EditDepartmentModal"
+import DeleteDepartmentModal from "./DeleteDepartmentModal"
 
 const Department = () => {
   const [departmentsList, setDepartmentsList] = useState([])
 
   const [selectedDepartment, setSelectedDepartment] = useState()
-  
+
   const [addDepartmentModalOpen, setAddDepartmentModalOpen] = useState(false)
 
   const [editDepartmentModalOpen, setEditDepartmentModalOpen] = useState(false)
+
+  const [deleteDepartmentModalOpen, setDeleteDepartmentModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -24,6 +27,12 @@ const Department = () => {
     setSelectedDepartment(department)
 
     setEditDepartmentModalOpen(true)
+  }
+
+  const handleOpenDeleteDepartmentModal = (department) => {
+    setSelectedDepartment(department)
+
+    setDeleteDepartmentModalOpen(true)
   }
 
   return (
@@ -73,7 +82,7 @@ const Department = () => {
                       id="deleteTurn"
                       type="button"
                       className="btn btn-danger mt-2"
-                    // onClick={() => handleOpenDeleteTurnModal(turn)}
+                      onClick={() => handleOpenDeleteDepartmentModal(department)}
                     >
                       <Trash />
                     </button>
@@ -91,9 +100,16 @@ const Department = () => {
         setDepartmentsList={setDepartmentsList}
       />
 
-      <EditDepartmentModal 
+      <EditDepartmentModal
         editDepartmentModalOpen={editDepartmentModalOpen}
         setEditDepartmentModalOpen={setEditDepartmentModalOpen}
+        selectedDepartment={selectedDepartment}
+        setDepartmentsList={setDepartmentsList}
+      />
+
+      <DeleteDepartmentModal
+        deleteDepartmentModalOpen={deleteDepartmentModalOpen}
+        setDeleteDepartmentModalOpen={setDeleteDepartmentModalOpen}
         selectedDepartment={selectedDepartment}
         setDepartmentsList={setDepartmentsList}
       />

@@ -9,7 +9,8 @@ const EditSubsidiarieModal = (props) => {
     selectedSubsidiarie,
     editSubsidiarieModalOpen,
     setEditSubsidiarieModalOpen,
-    setSubsidiaries
+    setSubsidiaries,
+    setSelectedSubsidiarie
   } = props
 
   const [name, setName] = useState()
@@ -21,6 +22,16 @@ const EditSubsidiarieModal = (props) => {
   const [email, setEmail] = useState()
 
   const handleCloseModal = () => {
+    setSelectedSubsidiarie({})
+
+    setName()
+
+    setAdress()
+
+    setPhone()
+
+    setEmail()
+
     setEditSubsidiarieModalOpen(false)
   }
 
@@ -28,10 +39,10 @@ const EditSubsidiarieModal = (props) => {
     e.preventDefault()
 
     let formData = {
-      "name": name,
-      "adress": adress,
-      "phone": phone,
-      "email": email
+      "name": name || selectedSubsidiarie.name,
+      "adress": adress || selectedSubsidiarie.adress,
+      "phone": phone || selectedSubsidiarie.phone,
+      "email": email || selectedSubsidiarie.email
     }
 
     putSubsidiarie(selectedSubsidiarie.id, formData)
@@ -95,7 +106,7 @@ const EditSubsidiarieModal = (props) => {
                 type="text"
                 className="form-control"
                 placeholder="E-mail"
-                defaultValue={selectedSubsidiarie && selectedSubsidiarie.phone}
+                defaultValue={selectedSubsidiarie && selectedSubsidiarie.email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>

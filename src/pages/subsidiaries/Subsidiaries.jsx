@@ -152,6 +152,7 @@ const Subsidiaries = () => {
         editSubsidiarieModalOpen={editSubsidiarieModalOpen}
         setEditSubsidiarieModalOpen={setEditSubsidiarieModalOpen}
         setSubsidiaries={setSubsidiaries}
+        setSelectedSubsidiarie={setSelectedSubsidiarie}
       />
 
       <DeleteSubsidiarieModal

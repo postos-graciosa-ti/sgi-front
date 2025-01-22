@@ -50,9 +50,17 @@ const Scale = () => {
 
   const userSession = useUserSessionStore((state) => state.userSession)
 
-  console.log(userSession)
+  const [message, setMessage] = useState()
+
+  console.log(message)
 
   useEffect(() => {
+    api
+      .get("/scales/day-off/quantity")
+      .then((response) => {
+        setMessage(`*Quantidade ideal de dias de folga do mês atual (uma por semana): ${response.data}`)
+      })
+
     api
       .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
       .then((response) => setScalesList(response.data))
@@ -295,8 +303,10 @@ const Scale = () => {
         </div>
 
         <div>
-          <div className="mt-1 text-danger fst-italic text-end">
-            <b>*os dias que aparecem em vemelho no calendário são dias de folga</b>
+          <div className="mt-1 text-danger fw-bold fst-italic text-end">
+            <div>*os dias que aparecem em vemelho no calendário são dias de folga</div>
+
+            <div>{message}</div>
           </div>
 
           <button

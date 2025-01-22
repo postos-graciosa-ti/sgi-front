@@ -3,11 +3,11 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
 import useUserSessionStore from '../../data/userSession'
-import getFunctions from '../../requests/getFunctions'
 import getRoles from '../../requests/getRoles'
 import getSubsidiaries from '../../requests/getSubsidiaries'
-import postUser from '../../requests/postUser'
 import getUsers from '../../requests/getUsers'
+import postUser from '../../requests/postUser'
+import api from '../../services/api'
 
 const AddUserModal = (props) => {
   const {
@@ -63,7 +63,21 @@ const AddUserModal = (props) => {
         setSubsidiariesList(options)
       })
 
-    getFunctions()
+    // getFunctions()
+    //   .then((response) => {
+    //     let functionsData = response.data
+
+    //     let options = []
+
+    //     functionsData && functionsData.map((data) => {
+    //       options.push({ "label": data.name, "value": data.id })
+    //     })
+
+    //     setFunctionsList(options)
+    //   })
+
+    api
+      .get("/functions/for-users")
       .then((response) => {
         let functionsData = response.data
 

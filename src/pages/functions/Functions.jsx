@@ -56,9 +56,9 @@ const Functions = () => {
           <h4>Cadastro de funções</h4>
         </div>
 
-        <button id="help" className="btn btn-warning me-2" onClick={setTour}>
+        {/* <button id="help" className="btn btn-warning me-2" onClick={setTour}>
           <Question />
-        </button>
+        </button> */}
 
         <button id="addFunction" className="btn btn-primary" onClick={handleOnClickAddFunction}>
           <Plus />

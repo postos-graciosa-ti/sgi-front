@@ -56,14 +56,14 @@ const Workers = () => {
       <div className="container">
         <h4>Cadastro de colaboradores</h4>
 
-        <button
+        {/* <button
           type="button"
           className="btn btn-warning me-2"
           onClick={setTour}
           id="help"
         >
           <Question />
-        </button>
+        </button> */}
 
         <button
           type="button"
@@ -82,6 +82,8 @@ const Workers = () => {
                 <th>Função</th>
                 <th>Turno</th>
                 <th>Ativo</th>
+                <th>C. de custo</th>
+                <th>Setor</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -92,6 +94,8 @@ const Workers = () => {
                   <td>{worker.function_name}</td>
                   <td>{worker.turn_start_time.replace(/:\d{2}$/, '')} - {worker.turn_end_time.replace(/:\d{2}$/, '')}</td>
                   <td>{worker.worker_is_active ? "Sim" : "Não"}</td>
+                  <td>{worker.cost_center}</td>
+                  <td>{worker.department}</td>
                   <td>
                     <button
                       className="btn btn-warning me-2 mt-2"

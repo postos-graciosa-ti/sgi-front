@@ -35,12 +35,26 @@ const EditWorkerModal = (props) => {
   const [selectedTurn, setSelectedTurn] = useState()
 
   useEffect(() => {
-    getFunctions()
+    // getFunctions()
+    //   .then((response) => {
+    //     setFunctionsOptions(response.data.map((func) => ({
+    //       value: func.id,
+    //       label: func.name
+    //     })))
+    //   })
+
+    api
+      .get("/functions/for-workers")
       .then((response) => {
-        setFunctionsOptions(response.data.map((func) => ({
-          value: func.id,
-          label: func.name
-        })))
+        let functionsForWorkers = response.data
+
+        let options = []
+
+        functionsForWorkers && functionsForWorkers.map((func) => {
+          options.push({ "label": func.name, "value": func.id })
+        })
+
+        setFunctionsOptions(options)
       })
 
     getSubsidiaries()

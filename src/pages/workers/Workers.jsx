@@ -24,7 +24,6 @@ const Workers = () => {
   useEffect(() => {
     getWorkersBySubsidiarie(selectedSubsdiarie.value)
       .then((response) => {
-        console.log(response.data)
         setWorkersList(response.data)
       })
   }, [])

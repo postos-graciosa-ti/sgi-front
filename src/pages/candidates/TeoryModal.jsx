@@ -21,9 +21,7 @@ const MathCorrection = (props) => {
     { "label": "e", "value": 5 }
   ]
 
-  const handleCorrection = () => {
-    console.log(firstQuestion)
-  }
+  const handleCorrection = () => {}
 
   return (
     <>
@@ -44,7 +42,6 @@ const MathCorrection = (props) => {
             <Select
               options={answersOptions}
               placeholder="Questão 01"
-              onClick={(e) => console.log(e.target.value)}
             />
           </div>
 

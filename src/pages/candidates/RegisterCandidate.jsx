@@ -52,16 +52,9 @@ const RegisterCandidate = () => {
       "resume": resume.name
     }
 
-    console.log(formData)
-    debugger
-
     api
       .post("/candidates", formData)
-      .then((response) => console.log(response))
-      .catch((error) => console.error(error))
   }
-
-  console.log(name)
 
   return (
     <>
@@ -121,7 +114,6 @@ const RegisterCandidate = () => {
               className="form-control mt-3"
               placeholder="Jessé Gomes da Silva Filho"
               onChange={(e) => {
-                console.log(e.target.value)
                 setName(e.target.value)
               }}
             />

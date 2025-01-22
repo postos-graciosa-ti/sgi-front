@@ -5,7 +5,7 @@ const deleteFunction = (id) => {
     api
       .delete(`/functions/${id}`)
       .then((response) => response)
-      .catch((error) => console.log(error))
+      .catch((error) => console.error(error))
   )
 }
 

@@ -52,8 +52,6 @@ const Scale = () => {
 
   const [message, setMessage] = useState()
 
-  console.log(message)
-
   useEffect(() => {
     api
       .get("/scales/day-off/quantity")
@@ -242,8 +240,6 @@ const Scale = () => {
               api
                 .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${value.value}`)
                 .then((response) => {
-                  console.log(response)
-
                   let scales = response.data
 
                   let options = []
@@ -407,8 +403,6 @@ const Scale = () => {
                                 api
                                   .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${selectedWorker.value}`)
                                   .then((response) => {
-                                    console.log(response)
-
                                     let scales = response.data
 
                                     let options = []

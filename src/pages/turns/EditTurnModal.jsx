@@ -35,8 +35,6 @@ const EditTurnModal = (props) => {
   
     putTurn(turnToEdit.id, formData)
       .then((response) => {
-        console.log(response)
-  
         GetTurns()
   
         handleClose()

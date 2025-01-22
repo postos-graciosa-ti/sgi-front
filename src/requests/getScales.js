@@ -5,7 +5,7 @@ const getScales = (workerId, monthId) => {
     api
         .get(`/scales/worker/${workerId}/month/${monthId}`)
         .then((response) => response)
-        .catch((error) => console.log(error))
+        .catch((error) => console.error(error))
   )
 }
 

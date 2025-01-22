@@ -37,8 +37,6 @@ const CalendarPopup = (props) => {
         api
           .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${selectedWorker.value}`)
           .then((response) => {
-            console.log(response)
-
             let scales = response.data
 
             let options = []

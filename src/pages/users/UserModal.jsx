@@ -67,8 +67,6 @@ const AddUserModal = (props) => {
       .then((response) => {
         let functionsData = response.data
 
-        console.log(functionsData)
-
         let options = []
 
         functionsData && functionsData.map((data) => {
@@ -93,9 +91,6 @@ const AddUserModal = (props) => {
       "subsidiaries_id": `[${subsidiariesString}]`,
       "function_id": selectedFunction.value
     }
-
-    console.log(formData)
-    debugger
 
     // {
     //   "email": "aaaaaaaaaa@gmail.com",

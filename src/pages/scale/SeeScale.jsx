@@ -33,8 +33,6 @@ const SeeScale = () => {
 
   const endOfWeek = todayMoment.clone().endOf('week').format('YYYY-MM-DD');
 
-  // console.log(startOfWeek, endOfWeek)
-
   useEffect(() => {
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
@@ -114,8 +112,6 @@ const SeeScale = () => {
 
         api
           .post(`/scale`, scales)
-          .then((response) => console.log(response.data))
-          .catch((error) => console.error(error))
       })
   }
 
@@ -123,8 +119,6 @@ const SeeScale = () => {
     api
       .post("/shifts/", rowsToUpdate)
       .then((response) => {
-        console.log(response)
-
         setSeeButton(false)
       })
       .catch((error) => console.error(error))

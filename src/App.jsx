@@ -15,14 +15,6 @@ function App() {
 
   const setBearerToken = useUserSessionStore(state => state.setBearerToken)
 
-  useEffect(() => {
-    api
-      .get("/render-server/activate")
-      .then((response) => {
-        console.log(response.data, "Render server activate")
-      })
-  }, [])
-
   const handleLogin = (e) => {
     e.preventDefault()
 

@@ -23,8 +23,6 @@ const Scale = () => {
 
   const [trocadoresDeOleo, setTrocadoresDeOleo] = useState([])
 
-  console.log(scalesList)
-
   useEffect(() => {
     const monthFirstDay = moment().startOf("month")
 

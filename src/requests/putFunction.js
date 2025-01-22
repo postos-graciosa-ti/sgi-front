@@ -5,7 +5,7 @@ const putFunction = (id, formData) => {
     api
       .put(`/functions/${id}`, formData)
       .then((response) => response.data)
-      .catch((error) => console.log(error))
+      .catch((error) => console.error(error))
   )
 }
 

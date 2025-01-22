@@ -36,7 +36,6 @@ const ScaleHistoryModal = (props) => {
           "final_date": moment(monthLastDay).format("DD-MM-YYYY")
         })
         .then((response) => {
-          console.log(response.data)
           setReport(response.data)
         })
 

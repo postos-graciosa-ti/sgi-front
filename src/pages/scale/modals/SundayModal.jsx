@@ -69,9 +69,6 @@ const SundayModal = (props) => {
 
     api
       .post("/scale", formData)
-      .then((response) => {
-        console.log(response)
-      })
   }
 
   return (

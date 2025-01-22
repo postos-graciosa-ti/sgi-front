@@ -55,7 +55,7 @@ const AddDepartmentModal = (props) => {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="danger" onClick={() => setAddDepartmentModalOpen(false)}>Fechar</Button>
+        <Button variant="light" onClick={() => setAddDepartmentModalOpen(false)}>Fechar</Button>
         
         <Button variant="success" onClick={handleSubmit}>Criar</Button>
       </Modal.Footer>

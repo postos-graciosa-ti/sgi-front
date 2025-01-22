@@ -1,25 +1,30 @@
-import { useEffect, useState } from "react";
-import { Pencil, Plus, Trash } from "react-bootstrap-icons";
-import Nav from "../../components/Nav";
-import api from "../../services/api";
-import AddDepartmentModal from "./AddDepartmentModal";
+import { useEffect, useState } from "react"
+import { Pencil, Plus, Trash } from "react-bootstrap-icons"
+import Nav from "../../components/Nav"
+import api from "../../services/api"
+import AddDepartmentModal from "./AddDepartmentModal"
+import EditDepartmentModal from "./EditDepartmentModal"
 
 const Department = () => {
-  const [departmentsList, setDepartmentsList] = useState([]);
-  const [addDepartmentModalOpen, setAddDepartmentModalOpen] = useState(false);
+  const [departmentsList, setDepartmentsList] = useState([])
+
+  const [selectedDepartment, setSelectedDepartment] = useState()
+  
+  const [addDepartmentModalOpen, setAddDepartmentModalOpen] = useState(false)
+
+  const [editDepartmentModalOpen, setEditDepartmentModalOpen] = useState(false)
 
   useEffect(() => {
-    const fetchDepartments = async () => {
-      try {
-        const response = await api.get("/departments");
-        setDepartmentsList(response.data);
-      } catch (error) {
-        console.error("Error fetching departments:", error);
-      }
-    };
+    api
+      .get("/departments")
+      .then((response) => setDepartmentsList(response.data))
+  }, [])
 
-    fetchDepartments();
-  }, []);
+  const handleOpenEditDepartmentModal = (department) => {
+    setSelectedDepartment(department)
+
+    setEditDepartmentModalOpen(true)
+  }
 
   return (
     <>
@@ -60,7 +65,7 @@ const Department = () => {
                       id="editTurn"
                       type="button"
                       className="btn btn-warning mt-2 me-2"
-                    // onClick={() => handleOpenEditTurnModal(turn)}
+                      onClick={() => handleOpenEditDepartmentModal(department)}
                     >
                       <Pencil />
                     </button>
@@ -85,8 +90,15 @@ const Department = () => {
         setAddDepartmentModalOpen={setAddDepartmentModalOpen}
         setDepartmentsList={setDepartmentsList}
       />
-    </>
-  );
-};
 
-export default Department;
+      <EditDepartmentModal 
+        editDepartmentModalOpen={editDepartmentModalOpen}
+        setEditDepartmentModalOpen={setEditDepartmentModalOpen}
+        selectedDepartment={selectedDepartment}
+        setDepartmentsList={setDepartmentsList}
+      />
+    </>
+  )
+}
+
+export default Department

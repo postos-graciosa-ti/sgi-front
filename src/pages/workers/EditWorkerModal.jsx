@@ -3,7 +3,6 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactSelect from 'react-select'
 import useUserSessionStore from '../../data/userSession'
-import getFunctions from '../../requests/getFunctions'
 import getSubsidiaries from '../../requests/getSubsidiaries'
 import getTurns from '../../requests/getTurns'
 import getWorkersBySubsidiarie from '../../requests/getWorkersBySubsidiarie'
@@ -20,6 +19,8 @@ const EditWorkerModal = (props) => {
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
+  const setSelectedSubsidiarie = useUserSessionStore(state => state.setSelectedSubsidiarie)
+
   const [name, setName] = useState()
 
   const [functionsOptions, setFunctionsOptions] = useState()
@@ -35,14 +36,6 @@ const EditWorkerModal = (props) => {
   const [selectedTurn, setSelectedTurn] = useState()
 
   useEffect(() => {
-    // getFunctions()
-    //   .then((response) => {
-    //     setFunctionsOptions(response.data.map((func) => ({
-    //       value: func.id,
-    //       label: func.name
-    //     })))
-    //   })
-
     api
       .get("/functions/for-workers")
       .then((response) => {
@@ -77,6 +70,14 @@ const EditWorkerModal = (props) => {
   const handleClose = () => {
     setSelectedWorker({})
 
+    setSelectedFunction()
+
+    setSelectedSubsidiarieOption()
+
+    // setSelectedSubsidiarie({})
+
+    setSelectedTurn()
+
     setEditWorkerModalOpen(false)
   }
 
@@ -93,9 +94,11 @@ const EditWorkerModal = (props) => {
       .put(`/workers/${selectedWorker?.worker_id}`, formData)
       .then(() => {
         getWorkersBySubsidiarie(selectedSubsdiarie.value)
-          .then((response) => setWorkersList(response.data))
+          .then((response) => {
+            setWorkersList(response.data)
 
-        handleClose()
+            handleClose()
+          })
       })
   }
 

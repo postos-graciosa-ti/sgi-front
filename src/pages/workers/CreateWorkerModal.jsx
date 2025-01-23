@@ -3,7 +3,6 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
 import useUserSessionStore from '../../data/userSession'
-import getFunctions from "../../requests/getFunctions"
 import getTurns from '../../requests/getTurns'
 import getWorkersBySubsidiarie from '../../requests/getWorkersBySubsidiarie'
 import postWorker from '../../requests/postWorker'
@@ -18,6 +17,8 @@ const CreateWorkerModal = (props) => {
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
+  const setSelectedSubsidiarie = useUserSessionStore(state => state.setSelectedSubsidiarie)
+
   const [name, setSelectedName] = useState()
 
   const [functionsList, setFunctionsList] = useState()
@@ -29,19 +30,6 @@ const CreateWorkerModal = (props) => {
   const [selectedTurn, setSelectedTurn] = useState()
 
   useEffect(() => {
-    // getFunctions()
-    // .then((response) => {
-    //   let functionsData = response.data
-
-    //   let options = []
-
-    //   functionsData && functionsData.map((data) => {
-    //     options.push({ "value": data.id, "label": data.name })
-    //   })
-
-    //   setFunctionsList(options)
-    // })
-
     api
       .get("/functions/for-workers")
       .then((response) => {
@@ -70,6 +58,18 @@ const CreateWorkerModal = (props) => {
       })
   }, [])
 
+  const handleClose = () => {
+    setSelectedName()
+
+    setSelectedFunction()
+
+    setSelectedSubsidiarie({})
+
+    setSelectedTurn()
+
+    setCreateWorkerModalOpen(false)
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -95,7 +95,7 @@ const CreateWorkerModal = (props) => {
     <>
       <Modal
         show={createWorkerModalOpen}
-        onHide={() => setCreateWorkerModalOpen(false)}
+        onHide={handleClose}
         backdrop="static"
         keyboard={false}
       >
@@ -111,6 +111,7 @@ const CreateWorkerModal = (props) => {
                 className="form-control"
                 placeholder="Nome"
                 onChange={(e) => setSelectedName(e.target.value)}
+                required
               />
             </div>
 
@@ -119,6 +120,7 @@ const CreateWorkerModal = (props) => {
                 placeholder="Cargo"
                 options={functionsList}
                 onChange={(e) => setSelectedFunction(e.value)}
+                required
               />
             </div>
 
@@ -127,12 +129,13 @@ const CreateWorkerModal = (props) => {
                 placeholder="Turno"
                 options={turnsList}
                 onChange={(e) => setSelectedTurn(e.value)}
+                required
               />
             </div>
           </Modal.Body>
 
           <Modal.Footer>
-            <Button variant="light" onClick={() => setCreateWorkerModalOpen(false)}>
+            <Button variant="light" onClick={handleClose}>
               Fechar
             </Button>
 

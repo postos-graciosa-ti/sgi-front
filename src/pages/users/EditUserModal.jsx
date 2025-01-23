@@ -13,7 +13,11 @@ import api from '../../services/api'
 const EditUserModal = (props) => {
   const { editUserModalOpen, setEditUserModalOpen } = props
 
+  const bearerToken = useUserSessionStore(state => state.bearerToken)
+
   const selectedUser = useUserSessionStore(state => state.selectedUser)
+
+  const setSelectedUser = useUserSessionStore(state => state.setSelectedUser)
 
   const setUserList = useUserSessionStore(state => state.setUserList)
 
@@ -34,14 +38,6 @@ const EditUserModal = (props) => {
   const [subsidiaries, setSubsidiaries] = useState()
 
   useEffect(() => {
-    GetRoles()
-
-    GetFunctions()
-
-    GetSubsidiaries()
-  }, [])
-
-  const GetRoles = () => {
     getRoles()
       .then((response) => {
         let rolesData = response.data
@@ -54,9 +50,7 @@ const EditUserModal = (props) => {
 
         setRolesList(options)
       })
-  }
 
-  const GetFunctions = () => {
     api
       .get("/functions/for-users")
       .then((response) => {
@@ -70,9 +64,7 @@ const EditUserModal = (props) => {
 
         setFunctionsList(options)
       })
-  }
 
-  const GetSubsidiaries = () => {
     getSubsidiaries()
       .then((response) => {
         const subsidiariesData = response.data;
@@ -84,11 +76,21 @@ const EditUserModal = (props) => {
 
         setSubsidiariesList(options)
       })
-  }
 
-  const GetUsers = () => {
-    getUsers()
-      .then(response => setUserList(response.data))
+  }, [])
+
+  const handleClose = () => {
+    setSelectedUser({})
+
+    setEmail()
+
+    setName()
+
+    setRole({})
+
+    setSubsidiaries()
+
+    setEditUserModalOpen(false)
   }
 
   const handleSubmit = (e) => {
@@ -114,18 +116,19 @@ const EditUserModal = (props) => {
 
     putUser(selectedUser?.user_id, formData)
       .then(() => {
-        GetUsers()
+        getUsers(bearerToken)
+          .then(response => {
+            setUserList(response.data)
 
-        setEditUserModalOpen(false)
+            handleClose()
+          })
       })
   }
 
   return (
     <Modal
       show={editUserModalOpen}
-      onHide={() => {
-        setEditUserModalOpen(false)
-      }}
+      onHide={handleClose}
       backdrop="static"
       keyboard={false}
     >
@@ -193,11 +196,7 @@ const EditUserModal = (props) => {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="light" onClick={() => {
-            setEditUserModalOpen(false)
-          }}>
-            Fechar
-          </Button>
+          <Button variant="light" onClick={handleClose}>Fechar</Button>
 
           <Button type="submit" variant="success">Salvar</Button>
         </Modal.Footer>

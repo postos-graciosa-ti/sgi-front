@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react"
-import { Pen, Plus, Question, Trash } from "react-bootstrap-icons"
+import { Pen, Plus, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import getUsers from "../../requests/getUsers"
 import AddUserModal from "./AddUserModal"
 import DeleteUserModal from "./DeleteUserModal"
 import EditUserModal from "./EditUserModal"
-import mountTour from "../../functions/mountTour"
 
 const Users = () => {
   const bearerToken = useUserSessionStore(state => state.bearerToken)
@@ -30,14 +29,6 @@ const Users = () => {
       })
   }, [])
 
-  const setTour = () => {
-    let route = location.pathname
-
-    let driverObj = mountTour(route)
-
-    driverObj.drive()
-  }
-
   return (
     <>
       <Nav />
@@ -46,14 +37,6 @@ const Users = () => {
         <h4>Cadastro de usuários</h4>
 
         <div className="mt-3 mb-3">
-          {/* <button
-            id="help"
-            className="btn btn-warning me-2"
-            onClick={setTour}
-          >
-            <Question />
-          </button> */}
-
           <button
             id="addUser"
             className="btn btn-primary"

@@ -11,10 +11,11 @@ import api from '../../services/api'
 
 const AddUserModal = (props) => {
   const {
-    id,
     modalOpen,
     setModalOpen,
   } = props
+
+  const bearerToken = useUserSessionStore(state => state.bearerToken)
 
   const setUserList = useUserSessionStore(state => state.setUserList)
 
@@ -32,9 +33,9 @@ const AddUserModal = (props) => {
 
   const [selectedSubsidiaries, setSelectedSubsidiaries] = useState([])
 
-  const [selectAllSubsidiaries, setSelectAllSubsidiaries] = useState()
-
   const [selectedFunction, setSelectedFunction] = useState()
+
+  const [hideSubsidiaries, setHideSubsidiaries] = useState(false)
 
   useEffect(() => {
     getRoles()
@@ -63,19 +64,6 @@ const AddUserModal = (props) => {
         setSubsidiariesList(options)
       })
 
-    // getFunctions()
-    //   .then((response) => {
-    //     let functionsData = response.data
-
-    //     let options = []
-
-    //     functionsData && functionsData.map((data) => {
-    //       options.push({ "label": data.name, "value": data.id })
-    //     })
-
-    //     setFunctionsList(options)
-    //   })
-
     api
       .get("/functions/for-users")
       .then((response) => {
@@ -89,8 +77,13 @@ const AddUserModal = (props) => {
 
         setFunctionsList(options)
       })
-
   }, [])
+
+  const handleClose = () => {
+    setSelectedSubsidiaries([])
+
+    setModalOpen(false)
+  }
 
   const handleCreateUser = (e) => {
     e.preventDefault()
@@ -100,7 +93,6 @@ const AddUserModal = (props) => {
     let formData = {
       "name": name,
       "email": email,
-      // "password": "1",
       "role_id": role,
       "subsidiaries_id": `[${subsidiariesString}]`,
       "function_id": selectedFunction.value
@@ -108,11 +100,9 @@ const AddUserModal = (props) => {
 
     postUser(formData)
       .then(() => {
-        getUsers()
+        getUsers(bearerToken)
           .then((response) => {
             setUserList(response.data)
-
-            setSelectAllSubsidiaries(false)
 
             setModalOpen(false)
           })
@@ -120,9 +110,6 @@ const AddUserModal = (props) => {
   }
 
   const handleSelectRole = (role) => {
-    if (role == 1)
-      setSelectAllSubsidiaries(true)
-
     setRole(role)
   }
 
@@ -132,13 +119,11 @@ const AddUserModal = (props) => {
         show={modalOpen}
         backdrop="static"
         keyboard={false}
+        onHide={handleClose}
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {
-              id == "CreateUserModal" && "Criar novo usuário"
-              || "Editar usuário"
-            }
+            Criar novo usuário
           </Modal.Title>
         </Modal.Header>
 
@@ -175,7 +160,7 @@ const AddUserModal = (props) => {
                 placeholder="Filial"
                 options={subsidiariesList}
                 isMulti
-                value={selectAllSubsidiaries && subsidiariesList || selectedSubsidiaries}
+                value={selectedSubsidiaries && selectedSubsidiaries}
                 onChange={(e) => setSelectedSubsidiaries(e)}
               />
             </div>
@@ -190,13 +175,7 @@ const AddUserModal = (props) => {
           </Modal.Body>
 
           <Modal.Footer>
-            <Button
-              variant="light"
-              onClick={() => {
-                setModalOpen(false)
-                setSelectAllSubsidiaries(false)
-              }}
-            >
+            <Button variant="light" onClick={handleClose}>
               Fechar
             </Button>
 

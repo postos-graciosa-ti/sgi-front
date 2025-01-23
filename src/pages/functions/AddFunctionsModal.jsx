@@ -16,6 +16,10 @@ const AddFunctionsModal = (props) => {
   const [functionDescription, setFunctionDescription] = useState()
 
   const handleCloseModal = () => {
+    setFunctionName()
+
+    setFunctionDescription()
+
     setAddFunctionModalOpen(false)
   }
 
@@ -50,11 +54,11 @@ const AddFunctionsModal = (props) => {
       <form onSubmit={handleOnSubmit}>
         <Modal.Body>
           <div className="mb-3">
-            <input type="text" className="form-control" placeholder="Nome" onChange={(e) => setFunctionName(e.target.value)} />
+            <input type="text" className="form-control" placeholder="Nome" required onChange={(e) => setFunctionName(e.target.value)} />
           </div>
 
           <div className="mb-3">
-            <input type="text" className="form-control" placeholder="Descrição" onChange={(e) => setFunctionDescription(e.target.value)} />
+            <input type="text" className="form-control" placeholder="Descrição" required onChange={(e) => setFunctionDescription(e.target.value)} />
           </div>
         </Modal.Body>
 

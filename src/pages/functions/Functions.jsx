@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
-import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
+import { Pencil, Plus, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
-import mountTour from "../../functions/mountTour"
 import getFunctions from "../../requests/getFunctions"
 import AddFunctionsModal from "./AddFunctionsModal"
 import DeleteFunctionsModal from "./DeleteFunctionsModal"
@@ -39,14 +38,6 @@ const Functions = () => {
     setDeleteFunctionModalOpen(true)
   }
 
-  const setTour = () => {
-    let route = location.pathname
-
-    let driverObj = mountTour(route)
-
-    driverObj.drive()
-  }
-
   return (
     <>
       <Nav />
@@ -55,10 +46,6 @@ const Functions = () => {
         <div className="mt-3 mb-3">
           <h4>Cadastro de funções</h4>
         </div>
-
-        {/* <button id="help" className="btn btn-warning me-2" onClick={setTour}>
-          <Question />
-        </button> */}
 
         <button id="addFunction" className="btn btn-primary" onClick={handleOnClickAddFunction}>
           <Plus />
@@ -112,6 +99,7 @@ const Functions = () => {
         setEditFunctionModalOpen={setEditFunctionModalOpen}
         selectedFunction={selectedFunction}
         setFunctionsList={setFunctionsList}
+        setSelectedFunction={setSelectedFunction}
       />
 
       <DeleteFunctionsModal

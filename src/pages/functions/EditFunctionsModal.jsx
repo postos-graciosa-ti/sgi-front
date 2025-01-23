@@ -9,7 +9,8 @@ const EditFunctionsModal = (props) => {
     editFunctionModalOpen,
     setEditFunctionModalOpen,
     selectedFunction,
-    setFunctionsList
+    setFunctionsList,
+    setSelectedFunction
   } = props
 
   const [functionName, setFunctionName] = useState()
@@ -17,6 +18,12 @@ const EditFunctionsModal = (props) => {
   const [functionDescription, setFunctionDescription] = useState()
 
   const handleClose = () => {
+    setFunctionName()
+
+    setFunctionDescription()
+
+    setSelectedFunction({})
+
     setEditFunctionModalOpen(false)
   }
 
@@ -24,8 +31,8 @@ const EditFunctionsModal = (props) => {
     e.preventDefault()
 
     let formData = {
-      name: functionName,
-      description: functionDescription
+      name: functionName || selectedFunction?.name,
+      description: functionDescription || selectedFunction?.description
     }
 
     putFunction(selectedFunction.id, formData)

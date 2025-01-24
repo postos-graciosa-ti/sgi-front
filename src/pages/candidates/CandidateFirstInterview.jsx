@@ -94,7 +94,7 @@ const CandidateFirstInterview = () => {
               onChange={(e) => setSelectedJob(e.target.value)}
             />
           </div> */}
-
+tt
           <div className="mb-3">
             <ReactSelect
               placeholder={"Possui experiência na função?"}

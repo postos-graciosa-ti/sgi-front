@@ -16,57 +16,71 @@ const TurnCard = ({ report }) => {
         <div>
           <b>{report.date && `Data: ${report.date}`}</b>
         </div>
+
         <div>
           <i>
             {report.quantidade_frentistas === 0 ? "Quantidade de frentistas: 0" : `Quantidade de frentistas: ${report.quantidade_frentistas}`}
           </i>
         </div>
+
         <div>
           <i>
             {report.quantidade_trocadores === 0 ? "Quantidade de trocadores de óleo: 0" : `Quantidade de trocadores de óleo: ${report.quantidade_trocadores}`}
           </i>
         </div>
+
         <div>
           <i>{report.status && `Status: ${report.status}`}</i>
         </div>
-        {frentistas.length > 0 && (
-          <div>
-            <span>
-              <i>
-                <b>Frentistas:</b>
-              </i>
-            </span>
-            <ul>
-              {frentistas.map((frentista) => (
-                <li key={frentista.dados.name}>{frentista.dados.name}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {trocadores.length > 0 && (
-          <div>
-            <span>
-              <i>
-                <b>Trocadores:</b>
-              </i>
-            </span>
-            <ul>
-              {trocadores.map((trocador) => (
-                <li key={trocador.dados.name}>{trocador.dados.name}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+
+        {
+          frentistas.length > 0 && (
+            <div>
+              <span>
+                <i>
+                  <b>Frentistas:</b>
+                </i>
+              </span>
+              
+              <ul>
+                {frentistas.map((frentista) => (
+                  <li key={frentista.dados.name}>{frentista.dados?.name || 'Nome não disponível'}</li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        {
+          trocadores.length > 0 && (
+            <div>
+              <span>
+                <i>
+                  <b>Trocadores:</b>
+                </i>
+              </span>
+
+              <ul>
+                {trocadores.map((trocador) => (
+                  <li key={trocador.dados.name}>{trocador.dados?.name || 'Nome não disponível'}</li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
       </div>
     </div>
   );
 };
 
 const TurnColumn = ({ turnReport, turnName }) => {
+  // Filtra os itens que não possuem turn_info
+  const filteredReports = turnReport.filter(report => !report.turn_info);
+
   return (
     <div className="col">
       <h5>{turnName}</h5>
-      {turnReport.map((report, index) => (
+      {filteredReports.map((report, index) => (
         <TurnCard key={index} report={report} />
       ))}
     </div>
@@ -119,26 +133,26 @@ const ScaleHistoryModal = (props) => {
       </Modal.Header>
       <Modal.Body>
         <div className="row">
-          {report.primeiro_turno_report && (
-            <TurnColumn turnReport={report.primeiro_turno_report} turnName="06:00 - 14:00" />
+          {report.primeiro_turno_report && report.primeiro_turno_report.length > 0 && report.primeiro_turno_report[0]?.turn_info?.name && (
+            <TurnColumn turnReport={report.primeiro_turno_report} turnName={report.primeiro_turno_report[0].turn_info.name} />
           )}
-          {report.segundo_turno_report && (
-            <TurnColumn turnReport={report.segundo_turno_report} turnName="14:00 - 22:00" />
+          {report.segundo_turno_report && report.segundo_turno_report.length > 0 && report.segundo_turno_report[0]?.turn_info?.name && (
+            <TurnColumn turnReport={report.segundo_turno_report} turnName={report.segundo_turno_report[0].turn_info.name} />
           )}
-          {report.terceiro_turno_report && (
-            <TurnColumn turnReport={report.terceiro_turno_report} turnName="22:00 - 06:00" />
+          {report.terceiro_turno_report && report.terceiro_turno_report.length > 0 && report.terceiro_turno_report[0]?.turn_info?.name && (
+            <TurnColumn turnReport={report.terceiro_turno_report} turnName={report.terceiro_turno_report[0].turn_info.name} />
           )}
-          {report.quarto_turno_report && (
-            <TurnColumn turnReport={report.quarto_turno_report} turnName="08:00 - 18:00" />
+          {report.quarto_turno_report && report.quarto_turno_report.length > 0 && report.quarto_turno_report[0]?.turn_info?.name && (
+            <TurnColumn turnReport={report.quarto_turno_report} turnName={report.quarto_turno_report[0].turn_info.name} />
           )}
-          {report.quinto_turno_report && (
-            <TurnColumn turnReport={report.quinto_turno_report} turnName="14:00 - 22:00" />
+          {report.quinto_turno_report && report.quinto_turno_report.length > 0 && report.quinto_turno_report[0]?.turn_info?.name && (
+            <TurnColumn turnReport={report.quinto_turno_report} turnName={report.quinto_turno_report[0].turn_info.name} />
           )}
-          {report.sexto_turno_report && (
-            <TurnColumn turnReport={report.sexto_turno_report} turnName="18:00 - 02:00" />
+          {report.sexto_turno_report && report.sexto_turno_report.length > 0 && report.sexto_turno_report[0]?.turn_info?.name && (
+            <TurnColumn turnReport={report.sexto_turno_report} turnName={report.sexto_turno_report[0].turn_info.name} />
           )}
-          {report.setimo_turno_report && (
-            <TurnColumn turnReport={report.setimo_turno_report} turnName="06:00 - 15:00" />
+          {report.setimo_turno_report && report.setimo_turno_report.length > 0 && report.setimo_turno_report[0]?.turn_info?.name && (
+            <TurnColumn turnReport={report.setimo_turno_report} turnName={report.setimo_turno_report[0].turn_info.name} />
           )}
         </div>
       </Modal.Body>

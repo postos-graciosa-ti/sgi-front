@@ -1,14 +1,15 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import moment from 'moment';
-import { useEffect, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import useUserSessionStore from '../../data/userSession';
-import api from '../../services/api';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import moment from 'moment'
+import { useEffect, useState } from 'react'
+import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
+import useUserSessionStore from '../../data/userSession'
+import api from '../../services/api'
 
 const TurnCard = ({ report }) => {
-  const frentistas = report.dados_frentistas || [];
-  const trocadores = report.dados_trocadores || [];
+  const frentistas = report.dados_frentistas || []
+
+  const trocadores = report.dados_trocadores || []
 
   return (
     <div className="card mb-3">
@@ -70,12 +71,11 @@ const TurnCard = ({ report }) => {
         }
       </div>
     </div>
-  );
-};
+  )
+}
 
 const TurnColumn = ({ turnReport, turnName }) => {
-  // Filtra os itens que não possuem turn_info
-  const filteredReports = turnReport.filter(report => !report.turn_info);
+  const filteredReports = turnReport.filter(report => !report.turn_info)
 
   return (
     <div className="col">
@@ -84,30 +84,22 @@ const TurnColumn = ({ turnReport, turnName }) => {
         <TurnCard key={index} report={report} />
       ))}
     </div>
-  );
-};
+  )
+}
 
 const ScaleHistoryModal = (props) => {
-  const { scaleHistoryModalOpen, setScaleHistoryModalOpen } = props;
-  const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie);
+  const { scaleHistoryModalOpen, setScaleHistoryModalOpen } = props
+  
+  const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
-  let today = new Date();
-  let monthLastDay = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+  let today = new Date()
+  
+  let monthLastDay = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
 
-  const [validationResults, setValidationResults] = useState([]);
-  const [report, setReport] = useState({});
+  const [report, setReport] = useState({})
 
   useEffect(() => {
     if (scaleHistoryModalOpen) {
-      api
-        .post(`/validate_monthly_scale/${selectedSubsdiarie.value}`, {
-          "first_day": moment(today).format("DD-MM-YYYY"),
-          "last_day": moment(monthLastDay).format("DD-MM-YYYY")
-        })
-        .then((response) => {
-          setValidationResults(response.data.validation_results);
-        });
-
       api
         .post(`/subsidiaries/${selectedSubsdiarie.value}/scales/report`, {
           "initial_date": moment(today).format("DD-MM-YYYY"),
@@ -118,7 +110,7 @@ const ScaleHistoryModal = (props) => {
           setReport(response.data);
         });
     }
-  }, [scaleHistoryModalOpen]);
+  }, [scaleHistoryModalOpen])
 
   return (
     <Modal
@@ -160,7 +152,7 @@ const ScaleHistoryModal = (props) => {
         <Button variant="light" onClick={() => setScaleHistoryModalOpen(false)}>Fechar</Button>
       </Modal.Footer>
     </Modal>
-  );
-};
+  )
+}
 
-export default ScaleHistoryModal;
+export default ScaleHistoryModal

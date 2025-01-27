@@ -1,6 +1,6 @@
 import moment from "moment"
 import { useEffect, useState } from "react"
-import { Check2All, ExclamationOctagon, FileEarmarkBreak, Printer, Trash } from "react-bootstrap-icons"
+import { Check2All, FileEarmarkBreak, Printer, Trash } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
@@ -12,7 +12,6 @@ import CalendarPopup from "../../pages/scale/CalendarPopup"
 import api from "../../services/api"
 import DeleteScaleModal from "./DeleteScaleModal"
 import addDaysOffValidations from "./functions/addDaysOffValidations"
-import iterateScaleTemplate from "./functions/iterateScaleTemplate"
 import printContent from "./printContent"
 import PrintModal from "./PrintModal"
 import ScaleHistoryModal from "./ScaleHistoryModal"
@@ -52,7 +51,41 @@ const Scale = () => {
 
   const [message, setMessage] = useState()
 
+  const [functionsOptions, setFunctionsOptions] = useState([])
+  const [selectedFunction, setSelectedFunction] = useState()
+
+  const [turnsOptions, setTurnsOptions] = useState([])
+  const [selectedTurn, setSelectedTurn] = useState()
+
   useEffect(() => {
+    api
+      .get("/functions")
+      .then((response) => {
+        let functions = response.data
+
+        let functionsOptions = []
+
+        functions && functions.map((func) => {
+          functionsOptions.push({ "label": func.name, "value": func.id })
+        })
+
+        setFunctionsOptions(functionsOptions)
+      })
+
+    api
+      .get("/turns")
+      .then((response) => {
+        let turns = response.data
+
+        let turnsOptions = []
+
+        turns && turns.map((turn) => {
+          turnsOptions.push({ "label": turn.name, "value": turn.id })
+        })
+
+        setTurnsOptions(turnsOptions)
+      })
+
     api
       .get("/scales/day-off/quantity")
       .then((response) => {
@@ -63,22 +96,34 @@ const Scale = () => {
       .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
       .then((response) => setScalesList(response.data))
 
-    api
-      .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
-      .then((response) => {
-        setAllWorkers(response.data)
+  }, [])
 
-        let workers = response.data
-
-        let workersOptions = []
-
-        workers?.map((worker) => {
-          workersOptions.push({ "label": `${worker.worker_name} | ${worker.function_name} | ${worker.turn_start_time} - ${worker.turn_end_time}`, "value": worker.worker_id })
+  useEffect(() => {
+    if (selectedSubsdiarie && selectedFunction && selectedTurn) {
+      api
+        .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
+        .then((response) => {
+          setAllWorkers(response.data)
         })
 
-        setWorkersOptions(workersOptions)
-      })
-  }, [])
+      api
+        .get(`/workers/subsidiaries/${selectedSubsdiarie.value}/functions/${selectedFunction.value}/turns/${selectedTurn.value}`)
+        .then((response) => {
+          // setAllWorkers(response.data)
+
+          let workers = response.data
+
+          let workersOptions = []
+
+          workers?.map((worker) => {
+            workersOptions.push({ "label": worker.name, "value": worker.id })
+          })
+
+          setWorkersOptions(workersOptions)
+        })
+    }
+
+  }, [selectedSubsdiarie, selectedFunction, selectedTurn])
 
   const handleTitleClassname = ({ date, view }) => {
     if (view == "month") {
@@ -219,6 +264,27 @@ const Scale = () => {
       <Nav />
 
       <div className="container">
+
+        <div className="row mb-3">
+          <div className="col">
+            <ReactSelect
+              placeholder="Funções"
+              options={functionsOptions}
+              onChange={(selectedFunction) => setSelectedFunction(selectedFunction)}
+              value={selectedFunction}
+            />
+          </div>
+
+          <div className="col">
+            <ReactSelect
+              placeholder="Turnos"
+              options={turnsOptions}
+              onChange={(selectedTurn) => setSelectedTurn(selectedTurn)}
+              value={selectedTurn}
+            />
+          </div>
+        </div>
+
         <div className="mb-3">
           <ReactSelect
             id="workers-select"
@@ -279,7 +345,7 @@ const Scale = () => {
         </div> */}
 
         <div id="scale-calendar">
-          <Calendar
+          {/* <Calendar
             className="w-100 rounded"
             tileClassName={handleTitleClassname}
             showNeighboringMonth={false}
@@ -295,7 +361,25 @@ const Scale = () => {
                 setCalendarPopupOpen(true)
               }
             }}
+          /> */}
+
+          <Calendar
+            className="calendar-container w-100 rounded"
+            tileClassName={handleTitleClassname}
+            showNeighboringMonth={false}
+            onClickDay={(value) => {
+              setSelectedDate(value)
+
+              let isAlreadyDayOff = daysOff.some((dayOff) => dayOff == moment(value).format("DD-MM-YYYY"))
+
+              if (isAlreadyDayOff) {
+                setDeleteScaleModalOpen(true)
+              } else {
+                setCalendarPopupOpen(true)
+              }
+            }}
           />
+
         </div>
 
         <div>
@@ -464,6 +548,55 @@ const Scale = () => {
         handlePrintScale={handlePrintScale}
         scalesList={scalesList}
       />
+
+      <style>
+        {`
+          .calendar-container {
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+          }
+
+          .calendar-container .day-column {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            margin: 0.2rem;
+            transition: background-color 0.3s, color 0.3s;
+          }
+
+          .calendar-container .day-column:hover {
+            background-color: #f8f9fa;
+            color: #333;
+          }
+
+          .calendar-container .react-calendar__tile--active {
+            background-color: #007bff;
+            color: white;
+          }
+
+          .calendar-container .react-calendar__tile--active:hover {
+            background-color: #0056b3;
+          }
+
+          .calendar-container .react-calendar__navigation button {
+            color: #007bff;
+          }
+
+          .calendar-container .react-calendar__navigation button:hover {
+            background-color: #e9ecef;
+          }
+
+          .calendar-container .react-calendar__tile--now {
+            background-color: #ffc107;
+            color: #333;
+          }
+        `}
+      </style>
     </>
   )
 }

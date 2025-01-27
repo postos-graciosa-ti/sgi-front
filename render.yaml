@@ -1,18 +1,21 @@
 services:
   - type: web
-    name: sgi-front-homologacao
+    name: sgi-front-staging
     plan: free
+    branch: staging
     env: node
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
       - key: VITE_API_URL
+        value: "https://sgi-api-staging.onrender.com"
 
   - type: web
-    name: sgi-front-producao
+    name: sgi-front-production
     plan: free
     env: node
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
       - key: VITE_API_URL
+        value: "https://sgi-api-production.onrender.com"

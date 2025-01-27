@@ -276,6 +276,7 @@ const Scale = () => {
           </div>
 
           <div className="col">
+            aaa
             <ReactSelect
               placeholder="Turnos"
               options={turnsOptions}

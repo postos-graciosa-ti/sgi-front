@@ -18,7 +18,7 @@ const DaysOnReportModal = ({ show, onHide }) => {
 
   useEffect(() => {
     api
-      .post(`/subsidiaries/${selectedSubsdiarie.value}/prints/1/scales`, {
+      .post(`/reports/subsidiaries/${selectedSubsdiarie.value}/scales/days-off`, {
         "first_day": moment(monthFirstDay).format("DD-MM-YYYY"),
         "last_day": moment(monthLastDay).format("DD-MM-YYYY")
       })

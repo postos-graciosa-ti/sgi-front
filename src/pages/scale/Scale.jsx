@@ -1,6 +1,6 @@
 import moment from "moment"
 import { useEffect, useState } from "react"
-import { Check2All, FileEarmarkBreak, Printer, Trash } from "react-bootstrap-icons"
+import { BuildingCheck, BuildingDash, Check2All, Printer, Trash } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
@@ -10,11 +10,12 @@ import useUserSessionStore from "../../data/userSession"
 import mountTour from "../../functions/mountTour"
 import CalendarPopup from "../../pages/scale/CalendarPopup"
 import api from "../../services/api"
+import DaysOffReportModal from "./DaysOffReportModal"
+import DaysOnReportModal from "./DaysOnReportModal"
 import DeleteScaleModal from "./DeleteScaleModal"
 import addDaysOffValidations from "./functions/addDaysOffValidations"
 import printContent from "./printContent"
 import PrintModal from "./PrintModal"
-import ScaleHistoryModal from "./ScaleHistoryModal"
 
 const Scale = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -56,6 +57,8 @@ const Scale = () => {
 
   const [turnsOptions, setTurnsOptions] = useState([])
   const [selectedTurn, setSelectedTurn] = useState()
+
+  const [daysOffModalOpen, setDaysOffModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -320,49 +323,7 @@ const Scale = () => {
           />
         </div>
 
-        {/* <div className="mb-3">
-          <span>Ideia de jerico  adicionar essa possibilidade? (vou apagar esse texto depois, as demais funcionalidades seguem normais também)</span>
-          <ReactSelect
-            id="scaleTemplate"
-            placeholder="Pré-definir escala"
-            options={[
-              { "label": `Pré-definir 6x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 7 },
-              { "label": `Pré-definir 5x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 6 },
-              { "label": `Pré-definir 4x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 5 },
-              { "label": `Pré-definir 3x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 4 },
-              { "label": `Pré-definir 2x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 3 },
-              { "label": `Pré-definir 1x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 2 },
-            ]}
-            value={selectedTemplate}
-            onChange={(scale_template) => {
-              setSelectedTemplate(scale_template)
-
-              let daysOffTemplate = iterateScaleTemplate(scale_template.value)
-
-              setDaysOff(daysOffTemplate)
-            }}
-          />
-        </div> */}
-
         <div id="scale-calendar">
-          {/* <Calendar
-            className="w-100 rounded"
-            tileClassName={handleTitleClassname}
-            showNeighboringMonth={false}
-            // onClickDay={handleOnclickDay}
-            onClickDay={(value) => {
-              setSelectedDate(value)
-
-              let isAlreadyDayOff = daysOff.some((dayOff) => dayOff == moment(value).format("DD-MM-YYYY"))
-
-              if (isAlreadyDayOff) {
-                setDeleteScaleModalOpen(true)
-              } else {
-                setCalendarPopupOpen(true)
-              }
-            }}
-          /> */}
-
           <Calendar
             className="calendar-container w-100 rounded"
             tileClassName={handleTitleClassname}
@@ -392,22 +353,37 @@ const Scale = () => {
           <button
             id="print-days"
             className="btn btn-light mt-3 me-3"
-            onClick={() => {
-              setPrintModalOpen(true)
-            }}
+            // onClick={() => {
+            //   setPrintModalOpen(true)
+            // }}
+            onClick={handlePrintScale}
+            title="Botão para impressão"
           >
             <Printer />
           </button>
 
-          <button className="btn btn-danger mt-3 me-3" onClick={() => setScaleHistoryModalOpen(true)}>
-            <FileEarmarkBreak />
+          <button
+            className="btn btn-danger mt-3 me-3"
+            title="Relatório de dias de folga"
+            onClick={() => setDaysOffModalOpen(true)}
+          >
+            <BuildingDash />
           </button>
 
-          {/* <button id="help" className="btn btn-warning mt-3 me-3" onClick={setTour}>
-            <ExclamationOctagon />
-          </button> */}
+          <button
+            className="btn btn-success mt-3 me-3"
+            onClick={() => setScaleHistoryModalOpen(true)}
+            title="Relatório de dias de trabalho"
+          >
+            <BuildingCheck />
+          </button>
 
-          <button id="save-scale" className="btn btn-success mt-3" onClick={handleSubmitDaysOff}>
+          <button
+            id="save-scale"
+            className="btn btn-primary mt-3"
+            onClick={handleSubmitDaysOff}
+            title="Salvar dias de folga"
+          >
             <Check2All />
           </button>
         </div>
@@ -537,9 +513,19 @@ const Scale = () => {
         selectedWorkerInfo={selectedWorkerInfo}
       />
 
-      <ScaleHistoryModal
+      {/* <ScaleHistoryModal
         scaleHistoryModalOpen={scaleHistoryModalOpen}
         setScaleHistoryModalOpen={setScaleHistoryModalOpen}
+      /> */}
+
+      <DaysOnReportModal
+        show={scaleHistoryModalOpen}
+        onHide={() => setScaleHistoryModalOpen(false)}
+      />
+
+      <DaysOffReportModal
+        show={daysOffModalOpen}
+        onHide={() => setDaysOffModalOpen(false)}
       />
 
       <PrintModal

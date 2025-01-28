@@ -1,4 +1,5 @@
 import moment from "moment"
+import printJS from "print-js"
 import { useEffect, useState } from "react"
 import { BuildingCheck, BuildingDash, Check2All, Printer, Trash } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
@@ -226,16 +227,10 @@ const Scale = () => {
     driverObj.drive()
   }
 
-  const handlePrintScale = () => {
-    const content = ReactDOMServer.renderToString(printContent(scalesList))
-
-    const printWindow = window.open('', '_blank')
-
-    printWindow.document.write(`
+  const handlePrintScale = async () => {
+    const printableContent = `
       <html>
         <head>
-          <meta charset="utf-8" />
-          <title>Escala de Colaboradores</title>
           <style>
             table, th, td {
               border: 1px solid black;
@@ -252,14 +247,15 @@ const Scale = () => {
           </style>
         </head>
         <body>
-          ${content}
+          ${ReactDOMServer.renderToStaticMarkup(printContent(scalesList))}
         </body>
       </html>
-    `)
+    `
 
-    printWindow.document.close()
-
-    printWindow.print()
+    printJS({
+      printable: printableContent,
+      type: 'raw-html',
+    })
   }
 
   return (

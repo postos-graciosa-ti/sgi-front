@@ -63,6 +63,22 @@ const Scale = () => {
 
   useEffect(() => {
     api
+      .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
+      .then((response) => {
+        setAllWorkers(response.data)
+
+        let workers = response.data
+
+        let workersOptions = []
+
+        workers?.map((worker) => {
+          workersOptions.push({ "label": `${worker.worker_name} | ${worker.function_name} | ${worker.turn_start_time} - ${worker.turn_end_time}`, "value": worker.worker_id })
+        })
+
+        setWorkersOptions(workersOptions)
+      })
+
+    api
       .get("/functions")
       .then((response) => {
         let functions = response.data
@@ -263,27 +279,6 @@ const Scale = () => {
       <Nav />
 
       <div className="container">
-
-        <div className="row mb-3">
-          <div className="col">
-            <ReactSelect
-              placeholder="Funções"
-              options={functionsOptions}
-              onChange={(selectedFunction) => setSelectedFunction(selectedFunction)}
-              value={selectedFunction}
-            />
-          </div>
-
-          <div className="col">
-            <ReactSelect
-              placeholder="Turnos"
-              options={turnsOptions}
-              onChange={(selectedTurn) => setSelectedTurn(selectedTurn)}
-              value={selectedTurn}
-            />
-          </div>
-        </div>
-
         <div className="mb-3">
           <ReactSelect
             id="workers-select"
@@ -340,18 +335,9 @@ const Scale = () => {
         </div>
 
         <div>
-          <div className="mt-1 text-danger fw-bold fst-italic text-end">
-            <div>*os dias que aparecem em vemelho no calendário são dias de folga</div>
-
-            <div>{message}</div>
-          </div>
-
           <button
             id="print-days"
             className="btn btn-light mt-3 me-3"
-            // onClick={() => {
-            //   setPrintModalOpen(true)
-            // }}
             onClick={handlePrintScale}
             title="Botão para impressão"
           >

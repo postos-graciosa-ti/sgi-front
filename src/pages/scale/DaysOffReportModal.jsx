@@ -117,14 +117,14 @@ const DaysOnReportModal = ({ show, onHide }) => {
                           </Col>
 
                           {/* Status */}
-                          <Col xs={12} className="mt-3">
+                          {/* <Col xs={12} className="mt-3">
                             <Badge
                               bg={getStatusColor(dayReport.status)}
                               className="w-100 py-2"
                             >
                               {dayReport.status.toUpperCase()}
                             </Badge>
-                          </Col>
+                          </Col> */}
                         </Row>
                       </Card.Body>
                     </Card>

@@ -1,6 +1,7 @@
 import moment from "moment"
+import printJS from "print-js"
 import { useEffect, useState } from "react"
-import { Check2All, ExclamationOctagon, FileEarmarkBreak, Printer, Trash } from "react-bootstrap-icons"
+import { BuildingCheck, BuildingDash, Check2All, PersonAdd, Printer, Trash } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
@@ -10,12 +11,13 @@ import useUserSessionStore from "../../data/userSession"
 import mountTour from "../../functions/mountTour"
 import CalendarPopup from "../../pages/scale/CalendarPopup"
 import api from "../../services/api"
+import AddSomeWorkersModal from "./AddSomeWorkers"
+import DaysOffReportModal from "./DaysOffReportModal"
+import DaysOnReportModal from "./DaysOnReportModal"
 import DeleteScaleModal from "./DeleteScaleModal"
 import addDaysOffValidations from "./functions/addDaysOffValidations"
-import iterateScaleTemplate from "./functions/iterateScaleTemplate"
 import printContent from "./printContent"
 import PrintModal from "./PrintModal"
-import ScaleHistoryModal from "./ScaleHistoryModal"
 
 const Scale = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -52,17 +54,17 @@ const Scale = () => {
 
   const [message, setMessage] = useState()
 
+  const [functionsOptions, setFunctionsOptions] = useState([])
+  const [selectedFunction, setSelectedFunction] = useState()
+
+  const [turnsOptions, setTurnsOptions] = useState([])
+  const [selectedTurn, setSelectedTurn] = useState()
+
+  const [daysOffModalOpen, setDaysOffModalOpen] = useState(false)
+
+  const [addSomeWorkersModalOpen, setAddSomeWorkersModalOpen] = useState(false)
+
   useEffect(() => {
-    api
-      .get("/scales/day-off/quantity")
-      .then((response) => {
-        setMessage(`*Quantidade ideal de dias de folga do mês atual (uma por semana): ${response.data}`)
-      })
-
-    api
-      .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
-      .then((response) => setScalesList(response.data))
-
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => {
@@ -78,7 +80,73 @@ const Scale = () => {
 
         setWorkersOptions(workersOptions)
       })
+
+    api
+      .get("/functions")
+      .then((response) => {
+        let functions = response.data
+
+        let functionsOptions = []
+
+        functions && functions.map((func) => {
+          functionsOptions.push({ "label": func.name, "value": func.id })
+        })
+
+        setFunctionsOptions(functionsOptions)
+      })
+
+    api
+      .get("/turns")
+      .then((response) => {
+        let turns = response.data
+
+        let turnsOptions = []
+
+        turns && turns.map((turn) => {
+          turnsOptions.push({ "label": turn.name, "value": turn.id })
+        })
+
+        setTurnsOptions(turnsOptions)
+      })
+
+    api
+      .get("/scales/day-off/quantity")
+      .then((response) => {
+        setMessage(`*Quantidade ideal de dias de folga do mês atual (uma por semana): ${response.data}`)
+      })
+
+    api
+      .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
+      .then((response) => setScalesList(response.data))
+
   }, [])
+
+  useEffect(() => {
+    if (selectedSubsdiarie && selectedFunction && selectedTurn) {
+      api
+        .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
+        .then((response) => {
+          setAllWorkers(response.data)
+        })
+
+      api
+        .get(`/workers/subsidiaries/${selectedSubsdiarie.value}/functions/${selectedFunction.value}/turns/${selectedTurn.value}`)
+        .then((response) => {
+          // setAllWorkers(response.data)
+
+          let workers = response.data
+
+          let workersOptions = []
+
+          workers?.map((worker) => {
+            workersOptions.push({ "label": worker.name, "value": worker.id })
+          })
+
+          setWorkersOptions(workersOptions)
+        })
+    }
+
+  }, [selectedSubsdiarie, selectedFunction, selectedTurn])
 
   const handleTitleClassname = ({ date, view }) => {
     if (view == "month") {
@@ -178,16 +246,10 @@ const Scale = () => {
     driverObj.drive()
   }
 
-  const handlePrintScale = () => {
-    const content = ReactDOMServer.renderToString(printContent(scalesList))
-
-    const printWindow = window.open('', '_blank')
-
-    printWindow.document.write(`
+  const handlePrintScale = async () => {
+    const printableContent = `
       <html>
         <head>
-          <meta charset="utf-8" />
-          <title>Escala de Colaboradores</title>
           <style>
             table, th, td {
               border: 1px solid black;
@@ -204,14 +266,15 @@ const Scale = () => {
           </style>
         </head>
         <body>
-          ${content}
+          ${ReactDOMServer.renderToStaticMarkup(printContent(scalesList))}
         </body>
       </html>
-    `)
+    `
 
-    printWindow.document.close()
-
-    printWindow.print()
+    printJS({
+      printable: printableContent,
+      type: 'raw-html',
+    })
   }
 
   return (
@@ -254,36 +317,11 @@ const Scale = () => {
           />
         </div>
 
-        {/* <div className="mb-3">
-          <span>Ideia de jerico  adicionar essa possibilidade? (vou apagar esse texto depois, as demais funcionalidades seguem normais também)</span>
-          <ReactSelect
-            id="scaleTemplate"
-            placeholder="Pré-definir escala"
-            options={[
-              { "label": `Pré-definir 6x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 7 },
-              { "label": `Pré-definir 5x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 6 },
-              { "label": `Pré-definir 4x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 5 },
-              { "label": `Pré-definir 3x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 4 },
-              { "label": `Pré-definir 2x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 3 },
-              { "label": `Pré-definir 1x1 ${selectedWorker && `para ${selectedWorker.label}` || ""}`, "value": 2 },
-            ]}
-            value={selectedTemplate}
-            onChange={(scale_template) => {
-              setSelectedTemplate(scale_template)
-
-              let daysOffTemplate = iterateScaleTemplate(scale_template.value)
-
-              setDaysOff(daysOffTemplate)
-            }}
-          />
-        </div> */}
-
         <div id="scale-calendar">
           <Calendar
-            className="w-100 rounded"
+            className="calendar-container w-100 rounded"
             tileClassName={handleTitleClassname}
             showNeighboringMonth={false}
-            // onClickDay={handleOnclickDay}
             onClickDay={(value) => {
               setSelectedDate(value)
 
@@ -296,34 +334,49 @@ const Scale = () => {
               }
             }}
           />
+
         </div>
 
-        <div>
-          <div className="mt-1 text-danger fw-bold fst-italic text-end">
-            <div>*os dias que aparecem em vemelho no calendário são dias de folga</div>
-
-            <div>{message}</div>
-          </div>
-
+        <div className="text-end">
           <button
             id="print-days"
             className="btn btn-light mt-3 me-3"
-            onClick={() => {
-              setPrintModalOpen(true)
-            }}
+            onClick={handlePrintScale}
+            title="Botão para impressão"
           >
             <Printer />
           </button>
 
-          <button className="btn btn-danger mt-3 me-3" onClick={() => setScaleHistoryModalOpen(true)}>
-            <FileEarmarkBreak />
+          <button
+            className="btn btn-danger mt-3 me-3"
+            title="Relatório de dias de folga"
+            onClick={() => setDaysOffModalOpen(true)}
+          >
+            <BuildingDash />
           </button>
 
-          {/* <button id="help" className="btn btn-warning mt-3 me-3" onClick={setTour}>
-            <ExclamationOctagon />
-          </button> */}
+          <button
+            className="btn btn-success mt-3 me-3"
+            onClick={() => setScaleHistoryModalOpen(true)}
+            title="Relatório de dias de trabalho"
+          >
+            <BuildingCheck />
+          </button>
 
-          <button id="save-scale" className="btn btn-success mt-3" onClick={handleSubmitDaysOff}>
+          <button
+            className="btn btn-primary me-3 mt-3"
+            onClick={() => setAddSomeWorkersModalOpen(true)}
+            title="Adicionar escala de trabalho para vários colaboradores"
+          >
+            <PersonAdd />
+          </button>
+
+          <button
+            id="save-scale"
+            className="btn btn-primary mt-3"
+            onClick={handleSubmitDaysOff}
+            title="Salvar dias de folga"
+          >
             <Check2All />
           </button>
         </div>
@@ -453,9 +506,19 @@ const Scale = () => {
         selectedWorkerInfo={selectedWorkerInfo}
       />
 
-      <ScaleHistoryModal
+      {/* <ScaleHistoryModal
         scaleHistoryModalOpen={scaleHistoryModalOpen}
         setScaleHistoryModalOpen={setScaleHistoryModalOpen}
+      /> */}
+
+      <DaysOnReportModal
+        show={scaleHistoryModalOpen}
+        onHide={() => setScaleHistoryModalOpen(false)}
+      />
+
+      <DaysOffReportModal
+        show={daysOffModalOpen}
+        onHide={() => setDaysOffModalOpen(false)}
       />
 
       <PrintModal
@@ -464,6 +527,65 @@ const Scale = () => {
         handlePrintScale={handlePrintScale}
         scalesList={scalesList}
       />
+
+      <AddSomeWorkersModal
+        addSomeWorkersModalOpen={addSomeWorkersModalOpen}
+        setAddSomeWorkersModalOpen={setAddSomeWorkersModalOpen}
+        workersOptions={workersOptions}
+        selectedWorker={selectedWorker}
+        selectedWorkerInfo={selectedWorkerInfo}
+        setScalesList={setScalesList}
+        scalesList={scalesList}
+      />
+
+      <style>
+        {`
+          .calendar-container {
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+          }
+
+          .calendar-container .day-column {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            margin: 0.2rem;
+            transition: background-color 0.3s, color 0.3s;
+          }
+
+          .calendar-container .day-column:hover {
+            background-color: #f8f9fa;
+            color: #333;
+          }
+
+          .calendar-container .react-calendar__tile--active {
+            background-color: #007bff;
+            color: white;
+          }
+
+          .calendar-container .react-calendar__tile--active:hover {
+            background-color: #0056b3;
+          }
+
+          .calendar-container .react-calendar__navigation button {
+            color: #007bff;
+          }
+
+          .calendar-container .react-calendar__navigation button:hover {
+            background-color: #e9ecef;
+          }
+
+          .calendar-container .react-calendar__tile--now {
+            background-color: #ffc107;
+            color: #333;
+          }
+        `}
+      </style>
     </>
   )
 }

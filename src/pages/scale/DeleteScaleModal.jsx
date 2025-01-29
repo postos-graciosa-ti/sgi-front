@@ -56,7 +56,7 @@ const DeleteScaleModal = (props) => {
       if (prevDayOff) {
         let dateDifference = calculateDateDifference(prevDayOff, currentDayOff)
 
-        if (dateDifference >= 7) {
+        if (dateDifference >= 8) {
           result['hasError'] = true
           result['errorMessage'] = "O dia selecionado ultrapassa os 6 dias permitidos por lei xxx"
         }

@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react"
+import { ExclamationTriangle } from "react-bootstrap-icons"
 import PostoBemerIcon from "../../assets/posto-bemer.jpg"
 import PostoFatimaIcon from "../../assets/posto-fatima.jpg"
+import PostoGraciosaVIcon from "../../assets/posto-graciosa-v.jpg"
 import PostoGraciosaIcon from "../../assets/posto-graciosa.jpg"
 import PostoJarivaIcon from "../../assets/posto-jariva.jpg"
-import PostoGraciosaVIcon from "../../assets/posto-graciosa-v.jpg"
 import PostoPiraiIcon from "../../assets/posto-pirai.jpg"
 import Nav from "../../components/Nav.jsx"
 import useUserSessionStore from "../../data/userSession.js"
 import getSubsidiarieById from "../../requests/getSubsidiarieById.js"
+import api from "../../services/api.js"
 
 const Home = () => {
   const userSession = useUserSessionStore(state => state.userSession)
@@ -28,11 +30,32 @@ const Home = () => {
 
   const isPiraiSecondPhone = selectedSubsdiarie.value == "6" && "/(47) 3433-8225"
 
+  const [usersWithoutScale, setUsersWithoutScale] = useState([])
+
+  const [openJobs, setOpenJobs] = useState([])
+
+  const [workersWithLessThanIdealDaysOff, setWorkersWithLessThanIdealDaysOff] = useState([])
+
+  const [idealDaysOffQuantity, setIdealDaysOffQuantity] = useState()
+
   useEffect(() => {
     getSubsidiarieById(selectedSubsdiarie.value)
       .then((response) => {
         setSelectedSubsidiarieInfo(response.data)
       })
+
+    api
+      .get(`/subsidiaries/${selectedSubsdiarie.value}/notifications`)
+      .then((response) => {
+        setUsersWithoutScale(response.data.workers_without_scales)
+
+        setOpenJobs(response.data.open_jobs)
+
+        setWorkersWithLessThanIdealDaysOff(response.data.workers_with_less_than_ideal_days_off)
+
+        setIdealDaysOffQuantity(response.data.ideal_days_off)
+      })
+
   }, [])
 
   return (
@@ -40,10 +63,76 @@ const Home = () => {
       <Nav />
 
       <div className="container mt-4">
-        <div>
+        {/* <div>
           <h4>
             Seja bem-vindo {userSession && userSession.name}, você está visualizando dados de: {selectedSubsidiarieInfo && selectedSubsidiarieInfo.name}
           </h4>
+        </div> */}
+
+        <div className="mt-3">
+          <h4>{userSession && userSession.name}, fique atento às notificações da filial {selectedSubsidiarieInfo && selectedSubsidiarieInfo.name}:</h4>
+
+          <div className="mt-4">
+            <h5>Contratações em aberto:</h5>
+
+            {
+              openJobs && openJobs.map((job) => (
+                <>
+                  {
+                    job.name && (
+                      <div className="mb-2">
+                        <span>
+                          <button className="btn btn-warning"><ExclamationTriangle /></button> É necessária uma contratação para <b>{job.name}</b>
+                        </span>
+                      </div>
+                    )
+                  }
+                </>
+              ))
+            }
+          </div>
+
+          <div className="mt-4">
+            <h5>Colaboradores sem escala:</h5>
+
+            {
+              usersWithoutScale && usersWithoutScale.map((user) => (
+                <>
+                  {
+                    user.name && (
+                      <div className="mb-2">
+                        <span>
+                          <button className="btn btn-warning"><ExclamationTriangle /></button> Colaborador <b>{user.name}</b> não possui escala de trabalho
+                        </span>
+                      </div>
+                    )
+                  }
+                </>
+              ))
+            }
+          </div>
+
+          <div className="mt-4">
+            <h5>Colaboradores com menos dias que o ideal de folga:</h5>
+
+            <div className="mb-2"><i>Lembre-se, o número de dias de folga ideal para esse mês é {idealDaysOffQuantity}</i></div>
+
+            {
+              workersWithLessThanIdealDaysOff && workersWithLessThanIdealDaysOff.map((worker) => (
+                <>
+                  {
+                    worker.name && (
+                      <div className="mb-2">
+                        <span>
+                          <button className="btn btn-warning"><ExclamationTriangle /></button> Colaborador <b>{worker.name}</b> tem menos dias de folga que o ideal
+                        </span>
+                      </div>
+                    )
+                  }
+                </>
+              ))
+            }
+          </div>
         </div>
 
         <div className="text-center mt-5">
@@ -54,10 +143,14 @@ const Home = () => {
           />
         </div>
 
-        <div className="mt-3">
+        <div className="text-center mt-3 mb-5">
           <b>
             {selectedSubsidiarieInfo && selectedSubsidiarieInfo.email} | {selectedSubsidiarieInfo && selectedSubsidiarieInfo.phone}{isPiraiSecondPhone} | {selectedSubsidiarieInfo && selectedSubsidiarieInfo.adress}
           </b>
+        </div>
+
+        <div className="text-center">
+          <p><b>&#169; 2025 Postos Graciosa. Todos os direitos reservados.</b></p>
         </div>
       </div>
     </>

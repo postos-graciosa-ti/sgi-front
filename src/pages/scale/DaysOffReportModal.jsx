@@ -45,7 +45,10 @@ const DaysOnReportModal = ({ show, onHide }) => {
               <Col
                 key={turnIndex}
                 className="h-100 py-3"
-                style={{ minWidth: '350px', maxWidth: '350px' }}
+                style={{
+                  minWidth: '350px',
+                  maxWidth: '350px'
+                }}
               >
                 <div className="bg-white p-3 rounded-3 shadow-sm mb-3 sticky-top">
                   <h5 className="mb-0">

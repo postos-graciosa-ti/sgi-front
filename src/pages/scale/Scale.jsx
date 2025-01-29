@@ -1,7 +1,7 @@
 import moment from "moment"
 import printJS from "print-js"
 import { useEffect, useState } from "react"
-import { BuildingCheck, BuildingDash, Check2All, Printer, Trash } from "react-bootstrap-icons"
+import { BuildingCheck, BuildingDash, Check2All, PersonAdd, Printer, Trash } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
@@ -11,6 +11,7 @@ import useUserSessionStore from "../../data/userSession"
 import mountTour from "../../functions/mountTour"
 import CalendarPopup from "../../pages/scale/CalendarPopup"
 import api from "../../services/api"
+import AddSomeWorkersModal from "./AddSomeWorkers"
 import DaysOffReportModal from "./DaysOffReportModal"
 import DaysOnReportModal from "./DaysOnReportModal"
 import DeleteScaleModal from "./DeleteScaleModal"
@@ -60,6 +61,8 @@ const Scale = () => {
   const [selectedTurn, setSelectedTurn] = useState()
 
   const [daysOffModalOpen, setDaysOffModalOpen] = useState(false)
+
+  const [addSomeWorkersModalOpen, setAddSomeWorkersModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -334,7 +337,7 @@ const Scale = () => {
 
         </div>
 
-        <div>
+        <div className="text-end">
           <button
             id="print-days"
             className="btn btn-light mt-3 me-3"
@@ -358,6 +361,14 @@ const Scale = () => {
             title="Relatório de dias de trabalho"
           >
             <BuildingCheck />
+          </button>
+
+          <button
+            className="btn btn-primary me-3 mt-3"
+            onClick={() => setAddSomeWorkersModalOpen(true)}
+            title="Adicionar escala de trabalho para vários colaboradores"
+          >
+            <PersonAdd />
           </button>
 
           <button
@@ -514,6 +525,16 @@ const Scale = () => {
         printModalOpen={printModalOpen}
         setPrintModalOpen={setPrintModalOpen}
         handlePrintScale={handlePrintScale}
+        scalesList={scalesList}
+      />
+
+      <AddSomeWorkersModal
+        addSomeWorkersModalOpen={addSomeWorkersModalOpen}
+        setAddSomeWorkersModalOpen={setAddSomeWorkersModalOpen}
+        workersOptions={workersOptions}
+        selectedWorker={selectedWorker}
+        selectedWorkerInfo={selectedWorkerInfo}
+        setScalesList={setScalesList}
         scalesList={scalesList}
       />
 

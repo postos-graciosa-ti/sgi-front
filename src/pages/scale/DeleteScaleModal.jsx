@@ -42,6 +42,9 @@ const DeleteScaleModal = (props) => {
   const handleRemoveDayOff = () => {
     let updatedDaysOff = daysOff.filter((dayOff) => dayOff != moment(selectedDate).format("DD-MM-YYYY"))
 
+    console.log(updatedDaysOff)
+    debugger
+
     if (daysOff.length == 1) {
       setDaysOff(updatedDaysOff)
 
@@ -56,7 +59,7 @@ const DeleteScaleModal = (props) => {
       if (prevDayOff) {
         let dateDifference = calculateDateDifference(prevDayOff, currentDayOff)
 
-        if (dateDifference >= 7) {
+        if (dateDifference >= 8) {
           result['hasError'] = true
           result['errorMessage'] = "O dia selecionado ultrapassa os 6 dias permitidos por lei xxx"
         }

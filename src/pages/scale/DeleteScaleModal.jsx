@@ -42,9 +42,6 @@ const DeleteScaleModal = (props) => {
   const handleRemoveDayOff = () => {
     let updatedDaysOff = daysOff.filter((dayOff) => dayOff != moment(selectedDate).format("DD-MM-YYYY"))
 
-    console.log(updatedDaysOff)
-    debugger
-
     if (daysOff.length == 1) {
       setDaysOff(updatedDaysOff)
 

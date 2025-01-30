@@ -38,6 +38,8 @@ const Home = () => {
 
   const [idealDaysOffQuantity, setIdealDaysOffQuantity] = useState()
 
+  const [workersStatus, setWorkersStatus] = useState([])
+
   useEffect(() => {
     getSubsidiarieById(selectedSubsdiarie.value)
       .then((response) => {
@@ -56,6 +58,13 @@ const Home = () => {
         setIdealDaysOffQuantity(response.data.ideal_days_off)
       })
 
+    api
+      .get(`/subsidiaries/${selectedSubsdiarie.value}/workers-status`)
+      .then((response) => {
+        console.log(response.data)
+        setWorkersStatus(response.data)
+      })
+
   }, [])
 
   return (
@@ -71,6 +80,68 @@ const Home = () => {
 
         <div className="mt-3">
           <h4>{userSession && userSession.name}, fique atento às notificações da filial {selectedSubsidiarieInfo && selectedSubsidiarieInfo.name}:</h4>
+
+          <div className="mt-3">
+            <div className="mb-2"><i>Lembre-se, o número de dias de folga ideal para esse mês é {idealDaysOffQuantity}</i></div>
+
+            <div className="row">
+              <div className="col">
+                <h5>Frentistas ({workersStatus.quantidade_frentistas}/ideal: 16):</h5>
+
+                {
+                  workersStatus && workersStatus.dados_frentistas && workersStatus.dados_frentistas.map((worker) => (
+                    <div className="mb-2">
+                      <span>
+                        <b>{worker.name}</b>
+                      </span>
+                    </div>
+                  ))
+                }
+              </div>
+
+              <div className="col">
+                <h5>Frentistas-caixa ({workersStatus.quantidade_frentistas_caixa}):</h5>
+
+                {
+                  workersStatus && workersStatus.dados_frentistas_caixa && workersStatus.dados_frentistas_caixa.map((worker) => (
+                    <div className="mb-2">
+                      <span>
+                        <b>{worker.name}</b>
+                      </span>
+                    </div>
+                  ))
+                }
+              </div>
+
+              <div className="col">
+                <h5>Trocadores ({workersStatus.quantidade_trocadores}/ideal: 6):</h5>
+
+                {
+                  workersStatus && workersStatus.dados_trocadores && workersStatus.dados_trocadores.map((worker) => (
+                    <div className="mb-2">
+                      <span>
+                        <b>{worker.name}</b>
+                      </span>
+                    </div>
+                  ))
+                }
+              </div>
+
+              <div className="col">
+                <h5>Caixas ({workersStatus.quantidade_caixas}):</h5>
+
+                {
+                  workersStatus && workersStatus.dados_caixas && workersStatus.dados_caixas.map((worker) => (
+                    <div className="mb-2">
+                      <span>
+                        <b>{worker.name}</b>
+                      </span>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
 
           <div className="mt-4">
             <h5>Contratações em aberto:</h5>

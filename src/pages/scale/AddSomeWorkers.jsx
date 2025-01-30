@@ -1,5 +1,5 @@
 import moment from "moment"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Calendar from "react-calendar"
@@ -29,6 +29,14 @@ const AddSomeWorkersModal = (props) => {
 
   const [selectedWorkers, setSelectedWorkers] = useState([])
 
+  useEffect(() => {
+    if (addSomeWorkersModalOpen == false) {
+      setSomeWorkersDaysOff([])
+
+      setSelectedWorkers([])
+    }
+  }, [addSomeWorkersModalOpen])
+
   const handleClose = () => {
     setAddSomeWorkersModalOpen(false)
 
@@ -40,11 +48,11 @@ const AddSomeWorkersModal = (props) => {
   const tileClassName = ({ date, view }) => {
     if (view === "month") {
       const dateStr = moment(date).format("DD-MM-YYYY")
-      
+
       const isDayOff = someWorkersDaysOff.some(
         (dayOff) => dayOff === dateStr
       )
-      
+
       return isDayOff ? 'bg-danger text-white' : null;
     }
 
@@ -60,6 +68,32 @@ const AddSomeWorkersModal = (props) => {
       setSomeWorkersDaysOff(updatedDaysOff)
 
     } else {
+      let allDaysOff = [...someWorkersDaysOff, moment(date).format("DD-MM-YYYY")]
+
+      allDaysOff.reduce((prevDayOff, currentDayOff) => {
+        const currentDay = moment(currentDayOff, "DD-MM-YYYY")
+
+        const previousDay = prevDayOff ? moment(prevDayOff, "DD-MM-YYYY") : moment(monthFirstDay, "DD-MM-YYYY")
+
+        const numberToCompare = prevDayOff ? 8 : 7
+
+        const dateDifference = currentDay.diff(previousDay, "days")
+
+        if (dateDifference >= numberToCompare) {
+          handleClose()
+
+          Swal.fire({
+            title: "Erro",
+            text: "O dia selecionado não pode ter mais de 7 dias de diferença do dia anterior",
+            icon: "error"
+          })
+
+          return
+        }
+
+        return currentDayOff
+      }, null)
+
       setSomeWorkersDaysOff((prev) => {
         if (prev) {
           return [...prev, moment(date).format("DD-MM-YYYY")]
@@ -95,37 +129,42 @@ const AddSomeWorkersModal = (props) => {
 
   const handleOnChangeWorker = (workers) => {
     if (workers.length > 1) {
-      workers && workers.reduce((prev, curr) => {
-        api
-          .get(`/workers/${prev.value}`)
-          .then((prevWorker) => {
-            api
-              .get(`/workers/${curr.value}`)
-              .then((currWorker) => {
-                let condition = prevWorker.data.function_id != currWorker.data.function_id && prevWorker.data.turn_id != currWorker.data.turn_id
-                
-                if (condition) {
-                  Swal.fire({
-                    title: "Erro",
-                    text: "Selecione apenas colaboradores do mesmo turno e função",
-                    icon: "error"
-                  })
+      let allWorkersTurnsIds = [];
+      let allWorkersFunctionsIds = [];
 
-                  handleClose()
+      const workerPromises = workers.map((worker) =>
+        api.get(`/workers/${worker.value}`).then((response) => {
+          let workerData = response.data;
+          allWorkersTurnsIds.push(workerData.turn_id);
+          allWorkersFunctionsIds.push(workerData.function_id);
+        })
+      );
 
-                  return
+      Promise.all(workerPromises).then(() => {
+        const hasDuplicateFunctionId = allWorkersFunctionsIds.some(
+          (id, index) => allWorkersFunctionsIds.indexOf(id) !== index
+        );
+        const hasDuplicateTurnId = allWorkersTurnsIds.some(
+          (id, index) => allWorkersTurnsIds.indexOf(id) !== index
+        );
 
-                } else {
-                  setSelectedWorkers(workers)
-                }
-              })
-          })
-        return curr
-      })
+        if (hasDuplicateFunctionId || hasDuplicateTurnId) {
+          Swal.fire({
+            title: "Erro",
+            text: "Selecione apenas colaboradores de turnos e funções diferentes",
+            icon: "error"
+          });
+
+          handleClose();
+          return;
+        }
+
+        setSelectedWorkers(workers);
+      });
+    } else {
+      setSelectedWorkers(workers);
     }
-    
-    setSelectedWorkers(workers)
-  }
+  };
 
   return (
     <Modal

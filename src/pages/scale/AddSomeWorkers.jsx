@@ -16,7 +16,8 @@ const AddSomeWorkersModal = (props) => {
     selectedWorker,
     selectedWorkerInfo,
     setScalesList,
-    scalesList
+    scalesList,
+    allWorkers
   } = props
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -27,7 +28,13 @@ const AddSomeWorkersModal = (props) => {
 
   const [someWorkersDaysOff, setSomeWorkersDaysOff] = useState([])
 
+  const [localWorkersOptions, setLocalWorkersOptions] = useState([])
+
   const [selectedWorkers, setSelectedWorkers] = useState([])
+
+  const [turnsOptions, setTurnsOptions] = useState([])
+
+  const [selectedTurn, setSelectedTurn] = useState()
 
   useEffect(() => {
     if (addSomeWorkersModalOpen == false) {
@@ -37,12 +44,47 @@ const AddSomeWorkersModal = (props) => {
     }
   }, [addSomeWorkersModalOpen])
 
+  useEffect(() => {
+    if (selectedTurn) {
+      let options = []
+
+      {
+        allWorkers && allWorkers.map((worker) => {
+          if (worker.turn_id == selectedTurn.value)
+            options.push({ "label": `${worker.worker_name} | ${worker.function_name}`, "value": worker.worker_id })
+        })
+      }
+
+      setLocalWorkersOptions(options)
+    }
+  }, [selectedTurn])
+
+  useEffect(() => {
+    api
+      .get("/turns")
+      .then((response) => {
+        let turns = response.data
+
+        let turnsOptions = []
+
+        turns && turns.map((turn) => {
+          turnsOptions.push({ "label": turn.name, "value": turn.id })
+        })
+
+        setTurnsOptions(turnsOptions)
+      })
+  }, [])
+
   const handleClose = () => {
     setAddSomeWorkersModalOpen(false)
 
     setSomeWorkersDaysOff([])
 
+    setLocalWorkersOptions([])
+
     setSelectedWorkers([])
+
+    setSelectedTurn()
   }
 
   const tileClassName = ({ date, view }) => {
@@ -129,42 +171,45 @@ const AddSomeWorkersModal = (props) => {
 
   const handleOnChangeWorker = (workers) => {
     if (workers.length > 1) {
-      let allWorkersTurnsIds = [];
-      let allWorkersFunctionsIds = [];
+      let allWorkersTurnsIds = []
+
+      let allWorkersFunctionsIds = []
 
       const workerPromises = workers.map((worker) =>
-        api.get(`/workers/${worker.value}`).then((response) => {
-          let workerData = response.data;
-          allWorkersTurnsIds.push(workerData.turn_id);
-          allWorkersFunctionsIds.push(workerData.function_id);
+        api
+          .get(`/workers/${worker.value}`)
+          .then((response) => {
+            let workerData = response.data
+
+            allWorkersTurnsIds.push(workerData.turn_id)
+
+            allWorkersFunctionsIds.push(workerData.function_id)
+          })
+      )
+
+      Promise
+        .all(workerPromises)
+        .then(() => {
+          const hasDuplicateFunctionId = allWorkersFunctionsIds.some((id, index) => allWorkersFunctionsIds.indexOf(id) !== index)
+
+          if (hasDuplicateFunctionId) {
+            Swal.fire({
+              title: "Erro",
+              text: "Selecione apenas colaboradores de turnos e funções diferentes",
+              icon: "error"
+            })
+
+            handleClose()
+
+            return
+          }
+
+          setSelectedWorkers(workers)
         })
-      );
-
-      Promise.all(workerPromises).then(() => {
-        const hasDuplicateFunctionId = allWorkersFunctionsIds.some(
-          (id, index) => allWorkersFunctionsIds.indexOf(id) !== index
-        );
-        const hasDuplicateTurnId = allWorkersTurnsIds.some(
-          (id, index) => allWorkersTurnsIds.indexOf(id) !== index
-        );
-
-        if (hasDuplicateFunctionId || hasDuplicateTurnId) {
-          Swal.fire({
-            title: "Erro",
-            text: "Selecione apenas colaboradores de turnos e funções diferentes",
-            icon: "error"
-          });
-
-          handleClose();
-          return;
-        }
-
-        setSelectedWorkers(workers);
-      });
     } else {
-      setSelectedWorkers(workers);
+      setSelectedWorkers(workers)
     }
-  };
+  }
 
   return (
     <Modal
@@ -180,7 +225,18 @@ const AddSomeWorkersModal = (props) => {
       <Modal.Body>
         <div className="mb-3">
           <Select
-            options={workersOptions}
+            options={turnsOptions}
+            value={selectedTurn}
+            onChange={(value) => setSelectedTurn(value)}
+            placeholder="Selecione o turno"
+            className="basic-multi-select"
+            classNamePrefix="select"
+          />
+        </div>
+
+        <div className="mb-3">
+          <Select
+            options={localWorkersOptions}
             isMulti
             value={selectedWorkers}
             onChange={handleOnChangeWorker}

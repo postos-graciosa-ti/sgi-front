@@ -55,9 +55,11 @@ const Scale = () => {
   const [message, setMessage] = useState()
 
   const [functionsOptions, setFunctionsOptions] = useState([])
+
   const [selectedFunction, setSelectedFunction] = useState()
 
   const [turnsOptions, setTurnsOptions] = useState([])
+  
   const [selectedTurn, setSelectedTurn] = useState()
 
   const [daysOffModalOpen, setDaysOffModalOpen] = useState(false)
@@ -536,6 +538,7 @@ const Scale = () => {
         selectedWorkerInfo={selectedWorkerInfo}
         setScalesList={setScalesList}
         scalesList={scalesList}
+        allWorkers={allWorkers}
       />
 
       <style>

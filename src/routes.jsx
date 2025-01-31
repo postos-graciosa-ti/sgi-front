@@ -7,20 +7,21 @@ import Candidates from "./pages/candidates/Candidates"
 import FirstInterview from "./pages/candidates/FirstInterview"
 import Jobs from "./pages/candidates/Jobs"
 import RegisterCandidate from "./pages/candidates/RegisterCandidate"
+import CostCenter from "./pages/costCenter/CostCenter"
+import Department from "./pages/department/Department"
 import FirstAcess from "./pages/firstAccess/FirstAcess"
 import Functions from "./pages/functions/Functions"
 import Home from "./pages/home/Home"
+import ScalesLogs from "./pages/logsPages/ScalesLogs"
 import Scale from "./pages/scale/Scale"
 import SeeScale from "./pages/scale/SeeScale"
 import SlaScale from "./pages/scale/SlaScale"
 import Steps from "./pages/steps/Steps"
 import Subsidiaries from "./pages/subsidiaries/Subsidiaries"
+import SubsidiarieStatus from "./pages/subsidiarieStatus/SubsidiarieStatus"
 import Turns from "./pages/turns/Turns"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
-import ScalesLogs from "./pages/logsPages/ScalesLogs"
-import CostCenter from "./pages/costCenter/CostCenter"
-import Department from "./pages/department/Department"
 
 const Routes = createBrowserRouter([
   {
@@ -130,6 +131,11 @@ const Routes = createBrowserRouter([
   {
     path: "/departments",
     element: <Department />,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/subsidiarie-status",
+    element: <SubsidiarieStatus />,
     errorElement: <ErrorBoundary />,
   },
 ])

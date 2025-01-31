@@ -38,6 +38,8 @@ const Functions = () => {
     setDeleteFunctionModalOpen(true)
   }
 
+  console.log(functionsList)
+
   return (
     <>
       <Nav />
@@ -59,6 +61,8 @@ const Functions = () => {
 
                 <th>Descrição</th>
 
+                <th>Quantidade ideal por turno</th>
+
                 <th></th>
               </tr>
             </thead>
@@ -70,6 +74,8 @@ const Functions = () => {
                     <td>{func.name}</td>
 
                     <td>{func.description}</td>
+
+                    <td>{func.ideal_quantity || "indefenido"}</td>
 
                     <td>
                       <button id="editFunction" className="btn btn-warning me-2 mt-1" onClick={() => handleOnClickEditFunction(func)}>

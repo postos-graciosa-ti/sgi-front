@@ -122,7 +122,7 @@ const AddSomeWorkersModal = (props) => {
         const dateDifference = currentDay.diff(previousDay, "days")
 
         if (dateDifference >= numberToCompare) {
-          handleClose()
+          // handleClose()
 
           Swal.fire({
             title: "Erro",
@@ -130,7 +130,7 @@ const AddSomeWorkersModal = (props) => {
             icon: "error"
           })
 
-          return
+          throw new Error("O dia selecionado não pode ter mais de 7 dias de diferença do dia anterior")
         }
 
         return currentDayOff
@@ -170,45 +170,47 @@ const AddSomeWorkersModal = (props) => {
   }
 
   const handleOnChangeWorker = (workers) => {
-    if (workers.length > 1) {
-      let allWorkersTurnsIds = []
+    setSelectedWorkers(workers)
+    
+    // if (workers.length > 1) {
+    //   let allWorkersTurnsIds = []
 
-      let allWorkersFunctionsIds = []
+    //   let allWorkersFunctionsIds = []
 
-      const workerPromises = workers.map((worker) =>
-        api
-          .get(`/workers/${worker.value}`)
-          .then((response) => {
-            let workerData = response.data
+    //   const workerPromises = workers.map((worker) =>
+    //     api
+    //       .get(`/workers/${worker.value}`)
+    //       .then((response) => {
+    //         let workerData = response.data
 
-            allWorkersTurnsIds.push(workerData.turn_id)
+    //         allWorkersTurnsIds.push(workerData.turn_id)
 
-            allWorkersFunctionsIds.push(workerData.function_id)
-          })
-      )
+    //         allWorkersFunctionsIds.push(workerData.function_id)
+    //       })
+    //   )
 
-      Promise
-        .all(workerPromises)
-        .then(() => {
-          const hasDuplicateFunctionId = allWorkersFunctionsIds.some((id, index) => allWorkersFunctionsIds.indexOf(id) !== index)
+    //   Promise
+    //     .all(workerPromises)
+    //     .then(() => {
+    //       const hasDuplicateFunctionId = allWorkersFunctionsIds.some((id, index) => allWorkersFunctionsIds.indexOf(id) !== index)
 
-          if (hasDuplicateFunctionId) {
-            Swal.fire({
-              title: "Erro",
-              text: "Selecione apenas colaboradores de turnos e funções diferentes",
-              icon: "error"
-            })
+    //       if (hasDuplicateFunctionId) {
+    //         Swal.fire({
+    //           title: "Erro",
+    //           text: "Selecione apenas colaboradores de turnos e funções diferentes",
+    //           icon: "error"
+    //         })
 
-            handleClose()
+    //         handleClose()
 
-            return
-          }
+    //         return
+    //       }
 
-          setSelectedWorkers(workers)
-        })
-    } else {
-      setSelectedWorkers(workers)
-    }
+    //       setSelectedWorkers(workers)
+    //     })
+    // } else {
+    //   setSelectedWorkers(workers)
+    // }
   }
 
   return (

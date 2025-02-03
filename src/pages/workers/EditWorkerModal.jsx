@@ -3,102 +3,111 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactSelect from 'react-select'
 import useUserSessionStore from '../../data/userSession'
-import getSubsidiaries from '../../requests/getSubsidiaries'
-import getTurns from '../../requests/getTurns'
-import getWorkersBySubsidiarie from '../../requests/getWorkersBySubsidiarie'
 import api from '../../services/api'
 
 const EditWorkerModal = (props) => {
   const {
     editWorkerModalOpen,
     setEditWorkerModalOpen,
-    selectedWorker,
-    setSelectedWorker,
-    setWorkersList
+    setWorkersList,
+    selectedWorker
   } = props
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
-  const setSelectedSubsidiarie = useUserSessionStore(state => state.setSelectedSubsidiarie)
-
   const [name, setName] = useState()
 
-  const [functionsOptions, setFunctionsOptions] = useState()
-
+  const [functionsOptions, setFunctionsOptions] = useState([])
   const [selectedFunction, setSelectedFunction] = useState()
 
-  const [subsidiariesOptions, setSubsidiariesOptions] = useState()
-
-  const [selectedSubsidiarieOption, setSelectedSubsidiarieOption] = useState()
-
-  const [turnsOptions, setTurnsOptions] = useState()
-
+  const [turnsOptions, setTurnsOptions] = useState([])
   const [selectedTurn, setSelectedTurn] = useState()
 
+  const [costCenterOptions, setCostCenterOptions] = useState([])
+  const [selectedCostCenter, setSelectedCostCenter] = useState()
+
+  const [departmentsOptions, setDepartmentsOptions] = useState([])
+  const [selectedDepartment, setSelectedDepartment] = useState()
+
+  const [admissionDate, setAdmissionDate] = useState()
+
   useEffect(() => {
-    api
-      .get("/functions/for-workers")
+    api.get("/functions")
       .then((response) => {
-        let functionsForWorkers = response.data
-
-        let options = []
-
-        functionsForWorkers && functionsForWorkers.map((func) => {
-          options.push({ "label": func.name, "value": func.id })
-        })
-
+        const functionsData = response.data
+        const options = functionsData?.map((data) => ({
+          value: data.id,
+          label: data.name
+        })) || []
         setFunctionsOptions(options)
       })
 
-    getSubsidiaries()
+    api.get("/turns")
       .then((response) => {
-        setSubsidiariesOptions(response.data.map((subsidiarie) => ({
-          value: subsidiarie.id,
-          label: subsidiarie.name
-        })))
+        const turnsData = response.data
+        const options = turnsData?.map((data) => ({
+          value: data.id,
+          label: data.name
+        })) || []
+        setTurnsOptions(options)
       })
 
-    getTurns()
+    api.get("/cost-center")
       .then((response) => {
-        setTurnsOptions(response.data.map((turn) => ({
-          value: turn.id,
-          label: turn.name
-        })))
+        const costCenterData = response.data
+        const options = costCenterData?.map((data) => ({
+          value: data.id,
+          label: data.name
+        })) || []
+        setCostCenterOptions(options)
+      })
+
+    api.get("/departments")
+      .then((response) => {
+        const departmentsData = response.data
+        const options = departmentsData?.map((data) => ({
+          value: data.id,
+          label: data.name
+        })) || []
+        setDepartmentsOptions(options)
       })
   }, [])
 
   const handleClose = () => {
-    setSelectedWorker({})
+    api.get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
+      .then((response) => setWorkersList(response.data))
 
+    // Resetando os estados
+    setName()
     setSelectedFunction()
-
-    setSelectedSubsidiarieOption()
-
-    // setSelectedSubsidiarie({})
-
-    setSelectedTurn()
+    setSelectedTurn()         // Removida a chamada duplicada de setSelectedTurn()
+    setSelectedCostCenter()
+    setSelectedDepartment()
+    setAdmissionDate()
 
     setEditWorkerModalOpen(false)
   }
 
   const handleSubmit = () => {
-    let formData = {
-      "name": name || selectedWorker?.worker_name,
-      "function_id": selectedFunction?.value || selectedWorker?.function_id,
-      "subsidiarie_id": selectedSubsidiarieOption?.value || selectedSubsdiarie?.value,
-      "is_active": true,
-      "turn_id": selectedTurn?.value || selectedWorker?.turn_id
+    const formData = {
+      name: name || selectedWorker?.worker_name,
+      function_id: selectedFunction?.value || selectedWorker?.function_id,
+      subsidiarie_id: selectedSubsdiarie.value,
+      is_active: true,
+      turn_id: selectedTurn?.value || selectedWorker?.turn_id,
+      cost_center_id: selectedCostCenter?.value || selectedWorker?.cost_center_id,
+      department_id: selectedDepartment?.value || selectedWorker?.department_id,
+      admission_date: admissionDate || selectedWorker?.admission_date,
+      resignation_date: admissionDate || selectedWorker?.admission_date
     }
 
-    api
-      .put(`/workers/${selectedWorker?.worker_id}`, formData)
-      .then(() => {
-        getWorkersBySubsidiarie(selectedSubsdiarie.value)
-          .then((response) => {
-            setWorkersList(response.data)
+    console.log(formData)
+    // debugger pode ser removido se não for necessário para debug
 
-            handleClose()
-          })
+    api.put(`/workers/${selectedWorker?.worker_id}`, formData)
+      .then((response) => {
+        console.log(response)
+        handleClose()
       })
   }
 
@@ -117,39 +126,68 @@ const EditWorkerModal = (props) => {
         <div className="mb-3">
           <input
             type="text"
+            placeholder="Nome"
             className="form-control"
-            id="name"
-            defaultValue={selectedWorker?.worker_name}
-            placeholder='Nome'
-            value={name}
             onChange={(e) => setName(e.target.value)}
+            defaultValue={selectedWorker?.worker_name}
           />
         </div>
 
         <div className="mb-3">
           <ReactSelect
-            defaultValue={functionsOptions?.find((func) => func.value === selectedWorker?.function_id)}
+            placeholder="Função"
             options={functionsOptions}
-            onChange={setSelectedFunction}
-            placeholder="Selecione a função"
+            onChange={(value) => setSelectedFunction(value)}
+            defaultValue={{
+              label: selectedWorker?.function_name,
+              value: selectedWorker?.function_id
+            }}
           />
         </div>
 
         <div className="mb-3">
           <ReactSelect
-            defaultValue={subsidiariesOptions?.find((subsidiarie) => subsidiarie.value === selectedSubsdiarie?.value)}
-            options={subsidiariesOptions}
-            onChange={setSelectedSubsidiarieOption}
-            placeholder="Selecione a subsidiaria"
-          />
-        </div>
-
-        <div className="mb-3">
-          <ReactSelect
-            defaultValue={turnsOptions?.find((turn) => turn.value === selectedWorker?.turn_id)}
+            placeholder="Turnos"
             options={turnsOptions}
-            onChange={setSelectedTurn}
-            placeholder="Selecione o turno"
+            onChange={(value) => setSelectedTurn(value)}
+            defaultValue={{
+              label: selectedWorker?.turn_name,
+              value: selectedWorker?.turn_id
+            }}
+          />
+        </div>
+
+        <div className="mb-3">
+          <ReactSelect
+            placeholder="C. de custos"
+            options={costCenterOptions}
+            onChange={(value) => setSelectedCostCenter(value)}
+            defaultValue={{
+              label: selectedWorker?.cost_center,
+              value: selectedWorker?.cost_center_id
+            }}
+          />
+        </div>
+
+        <div className="mb-3">
+          <ReactSelect
+            placeholder="Setor"
+            options={departmentsOptions}
+            onChange={(value) => setSelectedDepartment(value)}
+            defaultValue={{
+              label: selectedWorker?.department,
+              value: selectedWorker?.department_id
+            }}
+          />
+        </div>
+
+        <div className="mb-3">
+          <input
+            type="text"
+            placeholder="Admissão"
+            className="form-control"
+            onChange={(e) => setAdmissionDate(e.target.value)}
+            defaultValue={selectedWorker?.admission_date}
           />
         </div>
       </Modal.Body>
@@ -158,7 +196,6 @@ const EditWorkerModal = (props) => {
         <Button variant="light" onClick={handleClose}>
           Fechar
         </Button>
-
         <Button variant="success" onClick={handleSubmit}>
           Editar
         </Button>

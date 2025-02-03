@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import useUserSessionStore from '../../data/userSession'
@@ -15,21 +16,28 @@ const DeleteWorkerModal = (props) => {
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
+  const [dateResignation, setDateResignation] = useState('')
+
   const handleClose = () => {
+    getWorkersBySubsidiarie(selectedSubsdiarie.value)
+      .then((response) => {
+        setWorkersList(response.data)
+      })
+
     setSelectedWorker({})
-    
+
     setDeleteWorkerModalOpen(false)
   }
 
   const handleDeleteWorker = () => {
-    api
-      .put(`/workers/deactivate/${selectedWorker.worker_id}`)
-      .then(() => {
-        handleClose()
+    const formData = {
+      is_active: false,
+      resignation_date: dateResignation
+    }
 
-        getWorkersBySubsidiarie(selectedSubsdiarie.value)
-          .then((response) => setWorkersList(response.data))
-      })
+    api
+      .put(`/workers/${selectedWorker?.worker_id}/deactivate`, formData)
+      .then(() => handleClose())
   }
 
   return (
@@ -44,7 +52,19 @@ const DeleteWorkerModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
-        Deseja realmente desativar o funcionário {selectedWorker?.name}?
+        <div className='mb-3'>
+          Deseja realmente desativar o funcionário {selectedWorker?.worker_name}?
+        </div>
+
+        <div>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Data de demissão"
+            value={dateResignation}
+            onChange={(e) => setDateResignation(e.target.value)}
+          />
+        </div>
       </Modal.Body>
 
       <Modal.Footer>

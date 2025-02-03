@@ -48,6 +48,8 @@ const Workers = () => {
     driverObj.drive()
   }
 
+  console.log(workersList)
+
   return (
     <>
       <Nav />
@@ -83,6 +85,8 @@ const Workers = () => {
                 <th>Ativo</th>
                 <th>C. de custo</th>
                 <th>Setor</th>
+                <th>Admissão</th>
+                <th>Demissão</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -95,6 +99,8 @@ const Workers = () => {
                   <td>{worker.worker_is_active ? "Sim" : "Não"}</td>
                   <td>{worker.cost_center}</td>
                   <td>{worker.department}</td>
+                  <td>{worker.admission_date}</td>
+                  <td>{!worker.worker_is_active ? worker.resignation_date : "Ativo"}</td>
                   <td>
                     <button
                       className="btn btn-warning me-2 mt-2"

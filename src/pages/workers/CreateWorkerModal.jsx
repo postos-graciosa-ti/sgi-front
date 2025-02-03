@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import Select from 'react-select'
+import ReactSelect from 'react-select'
 import useUserSessionStore from '../../data/userSession'
-import getTurns from '../../requests/getTurns'
-import getWorkersBySubsidiarie from '../../requests/getWorkersBySubsidiarie'
-import postWorker from '../../requests/postWorker'
 import api from '../../services/api'
 
 const CreateWorkerModal = (props) => {
@@ -17,21 +14,25 @@ const CreateWorkerModal = (props) => {
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
-  const setSelectedSubsidiarie = useUserSessionStore(state => state.setSelectedSubsidiarie)
+  const [name, setName] = useState()
 
-  const [name, setSelectedName] = useState()
-
-  const [functionsList, setFunctionsList] = useState()
-
+  const [functionsOptions, setFunctionsOptions] = useState([])
   const [selectedFunction, setSelectedFunction] = useState()
 
-  const [turnsList, setTurnsList] = useState()
-
+  const [turnsOptions, setTurnsOptions] = useState([])
   const [selectedTurn, setSelectedTurn] = useState()
+
+  const [costCenterOptions, setCostCenterOptions] = useState([])
+  const [selectedCostCenter, setSelectedCostCenter] = useState()
+
+  const [departmentsOptions, setDepartmentsOptions] = useState([])
+  const [selectedDepartment, setSelectedDepartment] = useState()
+
+  const [admissionDate, setAdmissionDate] = useState()
 
   useEffect(() => {
     api
-      .get("/functions/for-workers")
+      .get("/functions")
       .then((response) => {
         let functionsData = response.data
 
@@ -41,10 +42,11 @@ const CreateWorkerModal = (props) => {
           options.push({ "value": data.id, "label": data.name })
         })
 
-        setFunctionsList(options)
+        setFunctionsOptions(options)
       })
 
-    getTurns()
+    api
+      .get("/turns")
       .then((response) => {
         let turnsData = response.data
 
@@ -54,40 +56,80 @@ const CreateWorkerModal = (props) => {
           options.push({ "value": data.id, "label": data.name })
         })
 
-        setTurnsList(options)
+        setTurnsOptions(options)
       })
+
+    api
+      .get("/cost-center")
+      .then((response) => {
+        let costCenterData = response.data
+
+        let options = []
+
+        costCenterData && costCenterData.map((data) => {
+          options.push({ "value": data.id, "label": data.name })
+        })
+
+        setCostCenterOptions(options)
+      })
+
+    api
+      .get("/departments")
+      .then((response) => {
+        let departmentsData = response.data
+
+        let options = []
+
+        departmentsData && departmentsData.map((data) => {
+          options.push({ "value": data.id, "label": data.name })
+        })
+
+        setDepartmentsOptions(options)
+      })
+
   }, [])
 
   const handleClose = () => {
-    setSelectedName()
+    api
+      .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
+      .then((response) => setWorkersList(response.data))
+
+    setName()
 
     setSelectedFunction()
 
-    setSelectedSubsidiarie({})
+    setSelectedTurn()
 
     setSelectedTurn()
+
+    setSelectedCostCenter()
+
+    setSelectedDepartment()
+
+    setAdmissionDate()
 
     setCreateWorkerModalOpen(false)
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-
+  const handleSubmit = () => {
     let formData = {
       "name": name,
-      "function_id": selectedFunction,
+      "function_id": selectedFunction.value,
       "subsidiarie_id": selectedSubsdiarie.value,
-      "turn_id": selectedTurn
+      "is_active": true,
+      "turn_id": selectedTurn.value,
+      "cost_center_id": selectedCostCenter.value,
+      "department_id": selectedDepartment.value,
+      "admission_date": admissionDate,
+      "resignation_date": admissionDate
     }
 
-    postWorker(formData)
-      .then(() => {
-        getWorkersBySubsidiarie(selectedSubsdiarie.value)
-          .then((response) => {
-            setWorkersList(response.data)
+    api
+      .post("/workers", formData)
+      .then((response) => {
+        console.log(response)
 
-            setCreateWorkerModalOpen(false)
-          })
+        handleClose()
       })
   }
 
@@ -103,45 +145,67 @@ const CreateWorkerModal = (props) => {
           <Modal.Title>Adicionar colaborador</Modal.Title>
         </Modal.Header>
 
-        <form onSubmit={(e) => handleSubmit(e)}>
-          <Modal.Body>
-            <div className="mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Nome"
-                onChange={(e) => setSelectedName(e.target.value)}
-                required
-              />
-            </div>
+        <Modal.Body>
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder="Nome"
+              className='form-control'
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
 
-            <div className="mb-3">
-              <Select
-                placeholder="Cargo"
-                options={functionsList}
-                onChange={(e) => setSelectedFunction(e.value)}
-                required
-              />
-            </div>
+          <div className='mb-3'>
+            <ReactSelect
+              placeholder="Função"
+              options={functionsOptions}
+              onChange={(value) => setSelectedFunction(value)}
+            />
+          </div>
 
-            <div className="mb-3">
-              <Select
-                placeholder="Turno"
-                options={turnsList}
-                onChange={(e) => setSelectedTurn(e.value)}
-                required
-              />
-            </div>
-          </Modal.Body>
+          <div className='mb-3'>
+            <ReactSelect
+              placeholder="Turnos"
+              options={turnsOptions}
+              onChange={(value) => setSelectedTurn(value)}
+            />
+          </div>
 
-          <Modal.Footer>
-            <Button variant="light" onClick={handleClose}>
-              Fechar
-            </Button>
+          <div className='mb-3'>
+            <ReactSelect
+              placeholder="C. de custos"
+              options={costCenterOptions}
+              onChange={(value) => setSelectedCostCenter(value)}
+            />
+          </div>
 
-            <Button type="submit" variant="success">Adicionar</Button>
-          </Modal.Footer>
-        </form>
+          <div className='mb-3'>
+            <ReactSelect
+              placeholder="Setor"
+              options={departmentsOptions}
+              onChange={(value) => setSelectedDepartment(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder="Admissão"
+              className='form-control'
+              onChange={(e) => setAdmissionDate(e.target.value)}
+            />
+          </div>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="light" onClick={handleClose}>
+            Fechar
+          </Button>
+
+          <Button variant="success" onClick={handleSubmit}>
+            Adicionar
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   )

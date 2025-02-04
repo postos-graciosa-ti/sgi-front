@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { ClipboardData, PersonAdd, PersonGear, PersonX } from "react-bootstrap-icons"
+import { ClipboardData, PersonAdd, PersonGear, PersonX, SlashCircle } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import mountTour from "../../functions/mountTour"
@@ -56,7 +56,7 @@ const Workers = () => {
 
         <button
           className="btn btn-danger me-2"
-          title="Relatório"
+          title="filtrar demissões"
           onClick={handleOpenResigntaionReasonsReportModal}
         >
           <ClipboardData />
@@ -67,7 +67,7 @@ const Workers = () => {
           className="btn btn-primary"
           onClick={() => setCreateWorkerModalOpen(true)}
           id="add-worker"
-          title="Adicionar"
+          title="adicionar"
         >
           <PersonAdd />
         </button>
@@ -116,9 +116,9 @@ const Workers = () => {
                       onClick={() => handleOpenDeleteWorkerModal(worker)}
                       id="delete-worker"
                       aria-label={`Excluir ${worker.worker_name}`}
-                      title="demissão"
+                      title="demitir"
                     >
-                      <PersonX />
+                      <SlashCircle />
                     </button>
                   </td>
                 </tr>

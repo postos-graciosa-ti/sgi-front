@@ -24,7 +24,7 @@ const ResignationReasonsReportModal = (props) => {
       .then((response) => {
         let resignableReasonsData = response.data
 
-        let options = [{ "value": 0, "label": "todos" }]
+        let options = [{ "value": 0, "label": "Todos" }]
 
         resignableReasonsData && resignableReasonsData.map((data) => {
           options.push({ "value": data.id, "label": data.name })
@@ -69,7 +69,7 @@ const ResignationReasonsReportModal = (props) => {
       keyboard={false}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Filtro de rescisões</Modal.Title>
+        <Modal.Title>Filtro de demissões</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>

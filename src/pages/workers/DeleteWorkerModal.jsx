@@ -5,6 +5,7 @@ import ReactSelect from "react-select"
 import useUserSessionStore from '../../data/userSession'
 import getWorkersBySubsidiarie from '../../requests/getWorkersBySubsidiarie'
 import api from '../../services/api'
+import moment from 'moment'
 
 const DeleteWorkerModal = (props) => {
   const {
@@ -58,7 +59,7 @@ const DeleteWorkerModal = (props) => {
     const formData = {
       is_active: false,
       resignation_reason: selectedResignationReason.value,
-      resignation_date: dateResignation
+      resignation_date: moment(dateResignation).format("DD-MM-YYYY")
     }
 
     api
@@ -114,7 +115,7 @@ const DeleteWorkerModal = (props) => {
                 <label><b>Data de demissão</b></label>
 
                 <input
-                  type="text"
+                  type="date"
                   className="form-control mt-1"
                   placeholder="Data de demissão"
                   value={dateResignation}

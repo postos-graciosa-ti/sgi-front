@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import ReactSelect from "react-select"
 import useUserSessionStore from '../../data/userSession'
 import getWorkersBySubsidiarie from '../../requests/getWorkersBySubsidiarie'
 import api from '../../services/api'
@@ -18,6 +19,26 @@ const DeleteWorkerModal = (props) => {
 
   const [dateResignation, setDateResignation] = useState('')
 
+  const [resignationsReasonsOptions, setResignationsReasonsOptions] = useState([])
+  const [selectedResignationReason, setSelectedResignationReason] = useState()
+
+  useEffect(() => {
+    api
+      .get("/resignable-reasons")
+      .then((response) => {
+        let resignableReasonsData = response.data
+
+        let options = []
+
+        resignableReasonsData && resignableReasonsData.map((data) => {
+          options.push({ "label": data.name, "value": data.id })
+        })
+
+        setResignationsReasonsOptions(options)
+      })
+
+  }, [])
+
   const handleClose = () => {
     getWorkersBySubsidiarie(selectedSubsdiarie.value)
       .then((response) => {
@@ -26,12 +47,17 @@ const DeleteWorkerModal = (props) => {
 
     setSelectedWorker({})
 
+    setDateResignation('')
+
+    setSelectedResignationReason()
+
     setDeleteWorkerModalOpen(false)
   }
 
   const handleDeleteWorker = () => {
     const formData = {
       is_active: false,
+      resignation_reason: selectedResignationReason.value,
       resignation_date: dateResignation
     }
 
@@ -54,6 +80,14 @@ const DeleteWorkerModal = (props) => {
       <Modal.Body>
         <div className='mb-3'>
           Deseja realmente desativar o funcionário {selectedWorker?.worker_name}?
+        </div>
+
+        <div className='mb-3'>
+          <ReactSelect
+            options={resignationsReasonsOptions}
+            placeholder="Razão de demissão"
+            onChange={(value) => setSelectedResignationReason(value)}
+          />
         </div>
 
         <div>

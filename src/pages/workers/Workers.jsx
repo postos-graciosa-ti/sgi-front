@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
+import { ClipboardData, PersonAdd, PersonGear, PersonX } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import mountTour from "../../functions/mountTour"
@@ -7,6 +7,7 @@ import getWorkersBySubsidiarie from "../../requests/getWorkersBySubsidiarie"
 import CreateWorkerModal from "./CreateWorkerModal"
 import DeleteWorkerModal from "./DeleteWorkerModal"
 import EditWorkerModal from "./EditWorkerModal"
+import ResignationReasonsReportModal from "./ResignationReasonsReportModal"
 
 const Workers = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -20,6 +21,8 @@ const Workers = () => {
   const [editWorkerModalOpen, setEditWorkerModalOpen] = useState(false)
 
   const [deleteWorkerModalOpen, setDeleteWorkerModalOpen] = useState(false)
+
+  const [resignationReasonsModal, setResignationReasonsModal] = useState(false)
 
   useEffect(() => {
     getWorkersBySubsidiarie(selectedSubsdiarie.value)
@@ -40,15 +43,9 @@ const Workers = () => {
     setDeleteWorkerModalOpen(true)
   }
 
-  const setTour = () => {
-    let route = location.pathname
-
-    let driverObj = mountTour(route)
-
-    driverObj.drive()
+  const handleOpenResigntaionReasonsReportModal = () => {
+    setResignationReasonsModal(true)
   }
-
-  console.log(workersList)
 
   return (
     <>
@@ -57,22 +54,22 @@ const Workers = () => {
       <div className="container">
         <h4>Cadastro de colaboradores</h4>
 
-        {/* <button
-          type="button"
-          className="btn btn-warning me-2"
-          onClick={setTour}
-          id="help"
+        <button
+          className="btn btn-danger me-2"
+          title="Relatório"
+          onClick={handleOpenResigntaionReasonsReportModal}
         >
-          <Question />
-        </button> */}
+          <ClipboardData />
+        </button>
 
         <button
           type="button"
           className="btn btn-primary"
           onClick={() => setCreateWorkerModalOpen(true)}
           id="add-worker"
+          title="Adicionar"
         >
-          <Plus />
+          <PersonAdd />
         </button>
 
         <div className="table-responsive">
@@ -87,6 +84,7 @@ const Workers = () => {
                 <th>Setor</th>
                 <th>Admissão</th>
                 <th>Demissão</th>
+                <th>Razão</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -101,22 +99,26 @@ const Workers = () => {
                   <td>{worker.department}</td>
                   <td>{worker.admission_date}</td>
                   <td>{!worker.worker_is_active ? worker.resignation_date : "Ativo"}</td>
+                  <td>{!worker.worker_is_active ? worker.resignation_reason_name : "Ativo"}</td>
                   <td>
                     <button
                       className="btn btn-warning me-2 mt-2"
                       onClick={() => handleOpenEditWorkerModal(worker)}
                       id="edit-worker"
                       aria-label={`Editar informações de ${worker.worker_name}`}
+                      title="editar"
                     >
-                      <Pencil />
+                      <PersonGear />
                     </button>
+
                     <button
                       className="btn btn-danger me-2 mt-2"
                       onClick={() => handleOpenDeleteWorkerModal(worker)}
                       id="delete-worker"
                       aria-label={`Excluir ${worker.worker_name}`}
+                      title="demissão"
                     >
-                      <Trash />
+                      <PersonX />
                     </button>
                   </td>
                 </tr>
@@ -146,6 +148,11 @@ const Workers = () => {
         selectedWorker={selectedWorker}
         setSelectedWorker={setSelectedWorker}
         setWorkersList={setWorkersList}
+      />
+
+      <ResignationReasonsReportModal 
+        resignationReasonsModal={resignationReasonsModal}
+        setResignationReasonsModal={setResignationReasonsModal}
       />
 
       <style>

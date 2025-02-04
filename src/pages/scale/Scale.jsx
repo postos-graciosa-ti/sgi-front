@@ -59,7 +59,7 @@ const Scale = () => {
   const [selectedFunction, setSelectedFunction] = useState()
 
   const [turnsOptions, setTurnsOptions] = useState([])
-  
+
   const [selectedTurn, setSelectedTurn] = useState()
 
   const [daysOffModalOpen, setDaysOffModalOpen] = useState(false)
@@ -161,19 +161,19 @@ const Scale = () => {
   }
 
   const handleOnclickDay = (date) => {
-    let validationResult = addDaysOffValidations(scalesList, daysOff, date, selectedWorker, allWorkers)
+    // let validationResult = addDaysOffValidations(scalesList, daysOff, date, selectedWorker, allWorkers)
 
-    if (validationResult.hasError) {
-      Swal.fire({
-        icon: "error",
-        title: "Erro ao selecionar data",
-        text: `${validationResult.errorMessage}`
-      })
+    // if (validationResult.hasError) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     title: "Erro ao selecionar data",
+    //     text: `${validationResult.errorMessage}`
+    //   })
 
-      setCalendarPopupOpen(false)
+    //   setCalendarPopupOpen(false)
 
-      return
-    }
+    //   return
+    // }
 
     setDaysOff((prevState) => {
       if (prevState) {
@@ -187,17 +187,56 @@ const Scale = () => {
   }
 
   const handleSubmitDaysOff = () => {
-    setDaysOff(daysOff.sort())
+    const sortedDaysOff = [...daysOff].sort((a, b) => {
+      const dataA = new Date(a.split("-").reverse().join("-"))
 
-    let formData = {
-      "worker_id": selectedWorker.value,
-      "subsidiarie_id": selectedSubsdiarie.value,
-      "first_day": moment(monthFirstDay).format("DD-MM-YYYY"),
-      "last_day": moment(monthLastDay).format("DD-MM-YYYY"),
-      "days_off": `[${daysOff.map(dayOff => `'${dayOff}'`).join(',')}]`,
-      "ilegal_dates": `[${daysOff.map(dayOff => `'${dayOff}'`).join(',')}]`,
-      "worker_turn_id": selectedWorkerInfo.turn_id,
-      "worker_function_id": selectedWorkerInfo.function_id
+      const dataB = new Date(b.split("-").reverse().join("-"))
+
+      return dataA - dataB
+    })
+
+    const primeiraData = new Date(sortedDaysOff[0].split("-").reverse().join("-"))
+
+    const ultimaData = new Date(sortedDaysOff[sortedDaysOff.length - 1].split("-").reverse().join("-"))
+
+    primeiraData.setDate(1)
+
+    ultimaData.setMonth(ultimaData.getMonth() + 1)
+
+    ultimaData.setDate(0)
+
+    const formatarData = (data) =>
+      String(data.getDate()).padStart(2, "0") + "-" +
+
+      String(data.getMonth() + 1).padStart(2, "0") + "-" +
+
+      data.getFullYear();
+
+    let count = 0
+
+    let ahuashua = []
+
+    for (let currentDate = new Date(primeiraData); currentDate <= ultimaData; currentDate.setDate(currentDate.getDate() + 1)) {
+      count++
+
+      sortedDaysOff.forEach((dayOff) => {
+        if (moment(currentDate).format("DD-MM-YYYY") === dayOff) {
+          ahuashua.push({ date: dayOff, proportion: `${count - 1}x1` })
+
+          count = 0
+        }
+      })
+    }
+
+    const formData = {
+      worker_id: selectedWorker.value,
+      subsidiarie_id: selectedSubsdiarie.value,
+      first_day: formatarData(primeiraData),
+      last_day: formatarData(ultimaData),
+      days_off: `[${sortedDaysOff.map(dayOff => `'${dayOff}'`).join(",")}]`,
+      ilegal_dates: `[${sortedDaysOff.map(dayOff => `'${dayOff}'`).join(",")}]`,
+      worker_turn_id: selectedWorkerInfo.turn_id,
+      worker_function_id: selectedWorkerInfo.function_id
     }
 
     api
@@ -205,25 +244,21 @@ const Scale = () => {
       .then((response) => {
         setCalendarPopupOpen(false)
 
-        api
-          .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
+        api.get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
           .then((response) => setScalesList(response.data))
 
-        api
-          .post("/logs/scales", {
-            user_id: userSession.id,
-            worker_id: selectedWorker.value,
-            inserted_at: new Date().toLocaleDateString('pt-BR'),
-            at_time: new Date().toLocaleTimeString('pt-BR')
-          })
+        api.post("/logs/scales", {
+          user_id: userSession.id,
+          worker_id: selectedWorker.value,
+          inserted_at: new Date().toLocaleDateString("pt-BR"),
+          at_time: new Date().toLocaleTimeString("pt-BR")
+        })
       })
       .catch((error) => {
-        // console.error(error.response.data.detail)
-
         Swal.fire({
           icon: "error",
           title: "Erro",
-          text: `${error.response.data.detail}`
+          text: error.response.data.detail
         })
       })
   }

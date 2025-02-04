@@ -5,22 +5,6 @@ import Swal from 'sweetalert2'
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 
-const calculateDateDifference = (startDate, endDate) => {
-  const [startDay, startMonth, startYear] = startDate.split('-').map(Number)
-
-  const [endDay, endMonth, endYear] = endDate.split('-').map(Number)
-
-  const initialDate = new Date(startYear, startMonth - 1, startDay)
-
-  const finalDate = new Date(endYear, endMonth - 1, endDay)
-
-  const differenceInMilliseconds = finalDate - initialDate
-
-  const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24)
-
-  return differenceInDays
-}
-
 const DeleteScaleModal = (props) => {
   const {
     deleteScaleModalOpen,
@@ -35,10 +19,6 @@ const DeleteScaleModal = (props) => {
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
-  let monthFirstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-
-  let monthLastDay = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
-
   const handleRemoveDayOff = () => {
     let updatedDaysOff = daysOff.filter((dayOff) => dayOff != moment(selectedDate).format("DD-MM-YYYY"))
 
@@ -50,48 +30,38 @@ const DeleteScaleModal = (props) => {
       return
     }
 
-    let result = {}
+    const sortedDaysOff = [...updatedDaysOff].sort((a, b) => {
+      const dataA = new Date(a.split("-").reverse().join("-"))
 
-    updatedDaysOff.reduce((prevDayOff, currentDayOff) => {
-      if (prevDayOff) {
-        let dateDifference = calculateDateDifference(prevDayOff, currentDayOff)
+      const dataB = new Date(b.split("-").reverse().join("-"))
 
-        if (dateDifference >= 8) {
-          result['hasError'] = true
-          result['errorMessage'] = "O dia selecionado ultrapassa os 6 dias permitidos por lei xxx"
-        }
+      return dataA - dataB
+    })
 
-      } else {
-        let dateDifference = calculateDateDifference(moment(monthFirstDay).format("DD-MM-YYYY"), currentDayOff)
+    const primeiraData = new Date(sortedDaysOff[0].split("-").reverse().join("-"))
 
-        if (dateDifference >= 7) {
-          result['hasError'] = true;
-          result['errorMessage'] = "O dia selecionado ultrapassa os 6 dias permitidos por lei xxx"
-        }
-      }
+    const ultimaData = new Date(sortedDaysOff[sortedDaysOff.length - 1].split("-").reverse().join("-"))
 
-      return currentDayOff
-    }, null)
+    primeiraData.setDate(1)
 
-    if (result.hasError) {
-      Swal.fire({
-        icon: "error",
-        title: "Erro ao selecionar data",
-        text: `${result.errorMessage}`
-      })
+    ultimaData.setMonth(ultimaData.getMonth() + 1)
 
-      setDeleteScaleModalOpen(false)
+    ultimaData.setDate(0)
 
-      return
-    }
+    const formatarData = (data) =>
+      String(data.getDate()).padStart(2, "0") + "-" +
+
+      String(data.getMonth() + 1).padStart(2, "0") + "-" +
+
+      data.getFullYear()
 
     let formData = {
       "worker_id": selectedWorker.value,
       "worker_turn_id": selectedWorkerInfo.turn_id,
       "worker_function_id": selectedWorkerInfo.function_id,
       "subsidiarie_id": selectedSubsdiarie.value,
-      "first_day": moment(monthFirstDay).format("DD-MM-YYYY"),
-      "last_day": moment(monthLastDay).format("DD-MM-YYYY"),
+      "first_day": formatarData(primeiraData),
+      "last_day": formatarData(ultimaData),
       "days_off": `[${updatedDaysOff.map(dayOff => `'${dayOff}'`).join(',')}]`,
       "ilegal_dates": `[${updatedDaysOff.map(dayOff => `'${dayOff}'`).join(',')}]`
     }
@@ -110,8 +80,6 @@ const DeleteScaleModal = (props) => {
           })
       })
       .catch((error) => {
-        console.error(error.response.data.detail)
-
         Swal.fire({
           icon: "error",
           title: "Erro",

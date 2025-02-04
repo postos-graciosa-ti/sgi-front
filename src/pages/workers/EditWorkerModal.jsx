@@ -124,17 +124,28 @@ const EditWorkerModal = (props) => {
 
       <Modal.Body>
         <div className="mb-3">
+          <label htmlFor="workerName">
+            <b>Nome do colaborador</b>
+          </label>
+
           <input
+            name="workerName"
             type="text"
             placeholder="Nome"
-            className="form-control"
+            className="form-control mt-1"
             onChange={(e) => setName(e.target.value)}
             defaultValue={selectedWorker?.worker_name}
           />
         </div>
 
         <div className="mb-3">
+          <label htmlFor="workerFunction">
+            <b>Função do colaborador</b>
+          </label>
+
           <ReactSelect
+            name="workerFunction"
+            className="mt-1"
             placeholder="Função"
             options={functionsOptions}
             onChange={(value) => setSelectedFunction(value)}
@@ -146,7 +157,13 @@ const EditWorkerModal = (props) => {
         </div>
 
         <div className="mb-3">
+          <label htmlFor="workerTurn">
+            <b>Turno do colaborador</b>
+          </label>
+
           <ReactSelect
+            name="workerTurn"
+            className="mt-1"
             placeholder="Turnos"
             options={turnsOptions}
             onChange={(value) => setSelectedTurn(value)}
@@ -158,7 +175,13 @@ const EditWorkerModal = (props) => {
         </div>
 
         <div className="mb-3">
+          <label htmlFor="workerCostCenter">
+            <b>Centro de custo do colaborador</b>
+          </label>
+
           <ReactSelect
+            name='workerCostCenter'
+            className='mt-1'
             placeholder="C. de custos"
             options={costCenterOptions}
             onChange={(value) => setSelectedCostCenter(value)}
@@ -170,7 +193,13 @@ const EditWorkerModal = (props) => {
         </div>
 
         <div className="mb-3">
+          <label htmlFor="workerDepartment">
+            <b>Setor do colaborador</b>
+          </label>
+
           <ReactSelect
+            name='workerDepartment'
+            className='mt-1'
             placeholder="Setor"
             options={departmentsOptions}
             onChange={(value) => setSelectedDepartment(value)}
@@ -182,10 +211,15 @@ const EditWorkerModal = (props) => {
         </div>
 
         <div className="mb-3">
+          <label htmlFor="workerAdmissionDate">
+            <b>Data de admissão do colaborador</b>
+          </label>
+
           <input
+            name='workerAdmissionDate'
             type="text"
             placeholder="Admissão"
-            className="form-control"
+            className="form-control mt-1"
             onChange={(e) => setAdmissionDate(e.target.value)}
             defaultValue={selectedWorker?.admission_date}
           />

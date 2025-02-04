@@ -24,7 +24,7 @@ const ResignationReasonsReportModal = (props) => {
       .then((response) => {
         let resignableReasonsData = response.data
 
-        let options = []
+        let options = [{ "value": 0, "label": "todos" }]
 
         resignableReasonsData && resignableReasonsData.map((data) => {
           options.push({ "value": data.id, "label": data.name })
@@ -74,23 +74,35 @@ const ResignationReasonsReportModal = (props) => {
 
       <Modal.Body>
         <div className="row">
-          <div className="col-lg-4">
+          <div className="col-lg-3">
+            <label>
+              <b>Data inicial</b>
+            </label>
+
             <input
               type="date"
-              className="form-control"
+              className="form-control mt-1"
               onChange={(e) => setInitialDate(e.target.value)}
             />
           </div>
 
-          <div className="col-lg-4">
+          <div className="col-lg-3">
+            <label>
+              <b>Data final</b>
+            </label>
+
             <input
               type="date"
-              className="form-control"
+              className="form-control mt-1"
               onChange={(e) => setFinalDate(e.target.value)}
             />
           </div>
 
-          <div className="col-lg-4">
+          <div className="col-lg-6">
+            <label>
+              <b>Motivo de demissão</b>
+            </label>
+
             <ReactSelect
               options={resignableReasonsOptions}
               placeholder="Razões"

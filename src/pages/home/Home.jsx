@@ -26,7 +26,11 @@ const Home = () => {
     "none"
   )
 
+  const isGraciosaSecondPhone = selectedSubsdiarie.value == "1" && "/(47) 3436-2202 (RH)"
+
   const isPiraiSecondPhone = selectedSubsdiarie.value == "6" && "/(47) 3433-8225"
+
+  console.log(selectedSubsidiarieInfo)
 
   useEffect(() => {
     getSubsidiarieById(selectedSubsdiarie.value)
@@ -40,7 +44,11 @@ const Home = () => {
       <Nav />
 
       <div className="container mt-4">
-        <div className="text-center mt-5">
+        <div className="text-center">
+          <h5>{selectedSubsidiarieInfo?.name}</h5>
+        </div>
+
+        <div className="text-center mt-4">
           <img
             src={subsidiarieIcon}
             alt="ícone de posto não disponível"
@@ -50,7 +58,7 @@ const Home = () => {
 
         <div className="text-center mt-3 mb-5">
           <b>
-            {selectedSubsidiarieInfo && selectedSubsidiarieInfo.email} | {selectedSubsidiarieInfo && selectedSubsidiarieInfo.phone}{isPiraiSecondPhone} | {selectedSubsidiarieInfo && selectedSubsidiarieInfo.adress}
+            {selectedSubsidiarieInfo && selectedSubsidiarieInfo.email} | {selectedSubsidiarieInfo && selectedSubsidiarieInfo.phone}{isGraciosaSecondPhone}{isPiraiSecondPhone} | {selectedSubsidiarieInfo && selectedSubsidiarieInfo.adress}
           </b>
         </div>
 

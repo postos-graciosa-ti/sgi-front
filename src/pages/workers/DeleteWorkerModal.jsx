@@ -74,41 +74,78 @@ const DeleteWorkerModal = (props) => {
       keyboard={false}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Confirmar desativação</Modal.Title>
+        <Modal.Title>
+          {
+            selectedWorker?.worker_is_active == false && (
+              <>Funcionário já demitido</>
+            ) || (
+              <>Confirmar demissão</>
+            )
+          }
+        </Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
-        <div className='mb-3'>
-          Deseja realmente desativar o funcionário {selectedWorker?.worker_name}?
-        </div>
+        {
+          selectedWorker?.worker_is_active == false && (
+            <>
+              <div>
+                <b>{selectedWorker?.worker_name}</b> já foi demitido(a) por <b>{selectedWorker?.resignation_reason_name}</b> em <b>{selectedWorker?.resignation_date}</b>
+              </div>
+            </>
+          ) || (
+            <>
+              <div className='mb-3'>
+                Deseja realmente demitir o funcionário {selectedWorker?.worker_name}?
+              </div>
 
-        <div className='mb-3'>
-          <ReactSelect
-            options={resignationsReasonsOptions}
-            placeholder="Razão de demissão"
-            onChange={(value) => setSelectedResignationReason(value)}
-          />
-        </div>
+              <div className='mb-3'>
+                <label><b>Motivo de demissão</b></label>
 
-        <div>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Data de demissão"
-            value={dateResignation}
-            onChange={(e) => setDateResignation(e.target.value)}
-          />
-        </div>
+                <ReactSelect
+                  options={resignationsReasonsOptions}
+                  placeholder="Razão de demissão"
+                  onChange={(value) => setSelectedResignationReason(value)}
+                  className="mt-1"
+                />
+              </div>
+
+              <div>
+                <label><b>Data de demissão</b></label>
+
+                <input
+                  type="text"
+                  className="form-control mt-1"
+                  placeholder="Data de demissão"
+                  value={dateResignation}
+                  onChange={(e) => setDateResignation(e.target.value)}
+                />
+              </div>
+            </>
+          )
+        }
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="light" onClick={handleClose}>
-          Fechar
-        </Button>
+        {
+          selectedWorker?.worker_is_active == false && (
+            <>
+              <Button variant="light" onClick={handleClose}>
+                Fechar
+              </Button>
+            </>
+          ) || (
+            <>
+              <Button variant="light" onClick={handleClose}>
+                Fechar
+              </Button>
 
-        <Button variant="danger" onClick={handleDeleteWorker}>
-          Desativar
-        </Button>
+              <Button variant="danger" onClick={handleDeleteWorker}>
+                Desativar
+              </Button>
+            </>
+          )
+        }
       </Modal.Footer>
     </Modal>
   )

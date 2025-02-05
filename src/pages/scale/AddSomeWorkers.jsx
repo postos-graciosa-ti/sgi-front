@@ -110,31 +110,31 @@ const AddSomeWorkersModal = (props) => {
       setSomeWorkersDaysOff(updatedDaysOff)
 
     } else {
-      let allDaysOff = [...someWorkersDaysOff, moment(date).format("DD-MM-YYYY")]
+      // let allDaysOff = [...someWorkersDaysOff, moment(date).format("DD-MM-YYYY")]
 
-      allDaysOff.reduce((prevDayOff, currentDayOff) => {
-        const currentDay = moment(currentDayOff, "DD-MM-YYYY")
+      // allDaysOff.reduce((prevDayOff, currentDayOff) => {
+      //   const currentDay = moment(currentDayOff, "DD-MM-YYYY")
 
-        const previousDay = prevDayOff ? moment(prevDayOff, "DD-MM-YYYY") : moment(monthFirstDay, "DD-MM-YYYY")
+      //   const previousDay = prevDayOff ? moment(prevDayOff, "DD-MM-YYYY") : moment(monthFirstDay, "DD-MM-YYYY")
 
-        const numberToCompare = prevDayOff ? 8 : 7
+      //   const numberToCompare = prevDayOff ? 8 : 7
 
-        const dateDifference = currentDay.diff(previousDay, "days")
+      //   const dateDifference = currentDay.diff(previousDay, "days")
 
-        if (dateDifference >= numberToCompare) {
-          // handleClose()
+      //   if (dateDifference >= numberToCompare) {
+      //     // handleClose()
 
-          Swal.fire({
-            title: "Erro",
-            text: "O dia selecionado não pode ter mais de 7 dias de diferença do dia anterior",
-            icon: "error"
-          })
+      //     Swal.fire({
+      //       title: "Erro",
+      //       text: "O dia selecionado não pode ter mais de 7 dias de diferença do dia anterior",
+      //       icon: "error"
+      //     })
 
-          throw new Error("O dia selecionado não pode ter mais de 7 dias de diferença do dia anterior")
-        }
+      //     throw new Error("O dia selecionado não pode ter mais de 7 dias de diferença do dia anterior")
+      //   }
 
-        return currentDayOff
-      }, null)
+      //   return currentDayOff
+      // }, null)
 
       setSomeWorkersDaysOff((prev) => {
         if (prev) {
@@ -147,15 +147,56 @@ const AddSomeWorkersModal = (props) => {
   }
 
   const handleSubmit = () => {
+    const sortedDaysOff = [...someWorkersDaysOff].sort((a, b) => {
+      const dataA = new Date(a.split("-").reverse().join("-"))
+
+      const dataB = new Date(b.split("-").reverse().join("-"))
+
+      return dataA - dataB
+    })
+
+    const primeiraData = new Date(sortedDaysOff[0].split("-").reverse().join("-"))
+
+    const ultimaData = new Date(sortedDaysOff[sortedDaysOff.length - 1].split("-").reverse().join("-"))
+
+    primeiraData.setDate(1)
+
+    ultimaData.setMonth(ultimaData.getMonth() + 1)
+
+    ultimaData.setDate(0)
+
+    const formatarData = (data) =>
+      String(data.getDate()).padStart(2, "0") + "-" +
+
+      String(data.getMonth() + 1).padStart(2, "0") + "-" +
+
+      data.getFullYear();
+
+    let count = 0
+
+    let ahuashua = []
+
+    for (let currentDate = new Date(primeiraData); currentDate <= ultimaData; currentDate.setDate(currentDate.getDate() + 1)) {
+      count++
+
+      sortedDaysOff.forEach((dayOff) => {
+        if (moment(currentDate).format("DD-MM-YYYY") === dayOff) {
+          ahuashua.push({ date: dayOff, proportion: `${count - 1}x1` })
+
+          count = 0
+        }
+      })
+    }
+
     let formData = {
       "worker_ids": `[${selectedWorkers.map(dayOff => `'${dayOff.value}'`).join(',')}]`,
       "subsidiarie_id": selectedSubsdiarie.value,
-      "first_day": moment(monthFirstDay).format("DD-MM-YYYY"),
-      "last_day": moment(monthLastDay).format("DD-MM-YYYY"),
+      "first_day": formatarData(primeiraData),
+      "last_day": formatarData(ultimaData),
       "days_off": `[${someWorkersDaysOff.map(dayOff => `'${dayOff}'`).join(',')}]`,
       "ilegal_dates": `[${someWorkersDaysOff.map(dayOff => `'${dayOff}'`).join(',')}]`,
-      // "worker_turn_id": 1,
-      // "worker_function_id": 1
+      // "worker_turn_id": selectedWorkerInfo.turn_id,
+      // "worker_function_id": selectedWorkerInfo.function_id
     }
 
     api
@@ -171,7 +212,7 @@ const AddSomeWorkersModal = (props) => {
 
   const handleOnChangeWorker = (workers) => {
     setSelectedWorkers(workers)
-    
+
     // if (workers.length > 1) {
     //   let allWorkersTurnsIds = []
 

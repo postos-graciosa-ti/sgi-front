@@ -359,6 +359,12 @@ const Scale = () => {
             className="calendar-container w-100 rounded"
             tileClassName={handleTitleClassname}
             showNeighboringMonth={false}
+            tileDisabled={() => {
+              if (selectedWorkerInfo && !selectedWorkerInfo?.is_active)
+                return true
+              else
+                return false
+            }}
             onClickDay={(value) => {
               setSelectedDate(value)
 

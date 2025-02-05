@@ -22,9 +22,6 @@ const DeleteScaleModal = (props) => {
   const handleRemoveDayOff = () => {
     let updatedDaysOff = daysOff.filter((dayOff) => dayOff != moment(selectedDate).format("DD-MM-YYYY"))
 
-    console.log(updatedDaysOff)
-    debugger
-
     if (daysOff.length == 1) {
       setDaysOff(updatedDaysOff)
 
@@ -69,15 +66,9 @@ const DeleteScaleModal = (props) => {
       "ilegal_dates": `[${updatedDaysOff.map(dayOff => `'${dayOff}'`).join(',')}]`
     }
 
-    console.log(formData)
-    debugger
-
     api
       .post("/delete-scale", formData)
       .then((response) => {
-        console.log(response)
-        debugger
-
         setDeleteScaleModalOpen(false)
 
         api

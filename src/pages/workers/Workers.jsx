@@ -90,7 +90,7 @@ const Workers = () => {
             </thead>
             <tbody style={{ display: "block", maxHeight: "400px", overflowY: "scroll" }}>
               {workersList?.map((worker) => (
-                <tr key={worker.id} style={{ display: "table", width: "100%", tableLayout: "fixed" }}>
+                <tr key={worker.id} className={!worker.worker_is_active && "table-danger"} style={{ display: "table", width: "100%", tableLayout: "fixed" }}>
                   <td>{worker.worker_name}</td>
                   <td>{worker.function_name}</td>
                   <td>{worker.turn_start_time.replace(/:\d{2}$/, '')} - {worker.turn_end_time.replace(/:\d{2}$/, '')}</td>

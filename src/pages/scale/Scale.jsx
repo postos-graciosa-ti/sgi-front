@@ -172,6 +172,25 @@ const Scale = () => {
     return
   }
 
+  const parseDate = (dateStr) => {
+    const [day, month, year] = dateStr.split("-").map(Number);
+    return new Date(year, month - 1, day); // Mês no JS é 0-based (Janeiro = 0)
+  };
+
+  const isGreaterThanSevenDays = (datesArray) => {
+    const parsedDates = datesArray.map(parseDate);
+
+    for (let i = 0; i < parsedDates.length - 1; i++) {
+      const diffInMs = Math.abs(parsedDates[i + 1] - parsedDates[i]);
+      const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+      if (diffInDays > 7) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const handleOnclickDay = (date) => {
     // let validationResult = addDaysOffValidations(scalesList, daysOff, date, selectedWorker, allWorkers)
 
@@ -186,6 +205,42 @@ const Scale = () => {
 
     //   return
     // }
+
+    let allDaysOff = [...daysOff, moment(date).format("DD-MM-YYYY")].sort()
+
+    let diffPenalty = isGreaterThanSevenDays(allDaysOff)
+
+    if (diffPenalty) {
+      setCalendarPopupOpen(false)
+
+      Swal.fire({
+        icon: "error",
+        title: "Erro",
+        text: "_O dia selecionado ultrapassa os 6 dias permitidos por lei_",
+      })
+
+      throw new Error("_O dia selecionado ultrapassa os 6 dias permitidos por lei_")
+    }
+
+    let worker = allWorkers.find(worker => worker.worker_id == selectedWorker.value)
+
+    scalesList?.map((scale) => {
+      if (scale.worker.turn.id == worker.turn_id && scale.worker.function.id == worker.function_id) {
+        scale?.days_off.map((dayOff) => {
+          if (dayOff.date == moment(date).format("DD-MM-YYYY")) {
+            setCalendarPopupOpen(false)
+
+            Swal.fire({
+              icon: "error",
+              title: "Erro",
+              text: "_Já existe um colaborador do mesmo turno e função de folga nesse dia_",
+            })
+
+            throw new Error("_Já existe um colaborador do mesmo turno e função de folga nesse dia_")
+          }
+        })
+      }
+    })
 
     setDaysOff((prevState) => {
       if (prevState) {

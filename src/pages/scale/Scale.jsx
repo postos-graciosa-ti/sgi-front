@@ -1,7 +1,7 @@
 import moment from "moment"
 import printJS from "print-js"
 import { useEffect, useState } from "react"
-import { BuildingCheck, BuildingDash, Check2All, PersonAdd, Printer, Trash } from "react-bootstrap-icons"
+import { BuildingCheck, BuildingDash, Check2All, Pen, PersonAdd, Printer, Trash } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
@@ -67,33 +67,33 @@ const Scale = () => {
   const [addSomeWorkersModalOpen, setAddSomeWorkersModalOpen] = useState(false)
 
   useEffect(() => {
-    api
-      .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
-      .then((response) => {
-        setAllWorkers(response.data)
+    // api
+    //   .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
+    //   .then((response) => {
+    //     setAllWorkers(response.data)
 
-        let workers = response.data
+    //     let workers = response.data
 
-        let workersOptions = []
+    //     let workersOptions = []
 
-        workers?.map((worker) => {
-          console.log(worker)
-          if (!worker.worker_is_active) {
-            workersOptions.push({
-              "label": `${worker.worker_name} | ${worker.function_name} | ${worker.turn_start_time} - ${worker.turn_end_time}`,
-              "value": worker.worker_id,
-              "isDisabled": true
-            })
-          } else {
-            workersOptions.push({
-              "label": `${worker.worker_name} | ${worker.function_name} | ${worker.turn_start_time} - ${worker.turn_end_time}`,
-              "value": worker.worker_id,
-            })
-          }
-        })
+    //     workers?.map((worker) => {
+    //       console.log(worker)
+    //       if (!worker.worker_is_active) {
+    //         workersOptions.push({
+    //           "label": `${worker.worker_name} | ${worker.function_name} | ${worker.turn_start_time} - ${worker.turn_end_time}`,
+    //           "value": worker.worker_id,
+    //           "isDisabled": true
+    //         })
+    //       } else {
+    //         workersOptions.push({
+    //           "label": `${worker.worker_name} | ${worker.function_name} | ${worker.turn_start_time} - ${worker.turn_end_time}`,
+    //           "value": worker.worker_id,
+    //         })
+    //       }
+    //     })
 
-        setWorkersOptions(workersOptions)
-      })
+    //     setWorkersOptions(workersOptions)
+    //   })
 
     api
       .get("/functions")
@@ -146,8 +146,6 @@ const Scale = () => {
       api
         .get(`/workers/subsidiaries/${selectedSubsdiarie.value}/functions/${selectedFunction.value}/turns/${selectedTurn.value}`)
         .then((response) => {
-          // setAllWorkers(response.data)
-
           let workers = response.data
 
           let workersOptions = []
@@ -381,6 +379,8 @@ const Scale = () => {
     })
   }
 
+  console.log(scalesList)
+
   return (
     <>
       <Nav />
@@ -388,8 +388,24 @@ const Scale = () => {
       <div className="container">
         <div className="mb-3">
           <ReactSelect
+            placeholder="Selecione um turno"
+            options={turnsOptions}
+            onChange={(value) => setSelectedTurn(value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <ReactSelect
+            placeholder="Selecione uma função"
+            options={functionsOptions}
+            onChange={(value) => setSelectedFunction(value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <ReactSelect
             id="workers-select"
-            placeholder="Colaboradores"
+            placeholder="Selecione um colaborador"
             options={workersOptions}
             onChange={(value) => {
               setDaysOff([])
@@ -491,8 +507,415 @@ const Scale = () => {
           </button>
         </div>
 
+        <div className="row">
+          <div className="col-12">
+            <>
+              <div>
+                <h4>Caixas</h4>
+              </div>
 
-        <div className="table-responsive mt-3">
+              <div className="table-responsive">
+                <table className="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Colaborador</th>
+
+                      <th>Dias de trabalho</th>
+
+                      <th>Dias de folga</th>
+
+                      <th></th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {
+                      scalesList && scalesList.map((scale) => (
+                        <>
+                          {
+                            scale.worker.function.id == 1 && (
+                              <tr>
+                                <td>
+                                  <div>{scale.worker.name} | {scale.worker.function.name} | {scale.worker.turn.start_time} - {scale.worker.turn.end_time}</div>
+                                </td>
+
+                                <td>
+                                  <div className="badge-container">
+                                    {scale.days_on?.map((dayOn, index) => (
+                                      dayOn.date && dayOn.weekday ? (
+                                        <span key={index} className="badge text-bg-success">
+                                          {`${dayOn.date} (${translateWeekday(dayOn.weekday)})`}
+                                        </span>
+                                      ) : null
+                                    ))}
+                                  </div>
+                                </td>
+
+                                <td>
+                                  <div className="badge-container">
+                                    {JSON.parse(scale.proportion).map((item, index) => (
+                                      <span key={index} className="badge text-bg-danger">
+                                        {`${item.data} (${translateWeekday(item.weekday)}): ${item.proporcao}`}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </td>
+
+                                <td>
+                                  <div className="d-inline-flex">
+                                    <button
+                                      id="delete-scale"
+                                      className="btn btn-danger mt-2 me-2"
+                                      onClick={() => {
+                                        api
+                                          .delete(`/scales/${scale.id}/subsidiaries/${selectedSubsdiarie.value}`)
+                                          .then(() => {
+                                            api
+                                              .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
+                                              .then((response) => setScalesList(response.data))
+
+                                            setDaysOff([])
+
+                                            api
+                                              .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${selectedWorker.value}`)
+                                              .then((response) => {
+                                                let scales = response.data
+
+                                                let options = []
+
+                                                scales.days_off?.map((scale) => {
+                                                  options.push(scale.date)
+                                                })
+
+                                                setDaysOff(options)
+                                              })
+                                          })
+                                      }}
+                                      title="Excluir escala"
+                                    >
+                                      <Trash />
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            )
+                          }
+                        </>
+                      ))
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            <>
+              <div>
+                <h4>Frentistas</h4>
+              </div>
+
+              <div className="table-responsive">
+                <table className="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Colaborador</th>
+
+                      <th>Dias de trabalho</th>
+
+                      <th>Dias de folga</th>
+
+                      <th></th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {
+                      scalesList && scalesList.map((scale) => (
+                        <>
+                          {
+                            scale.worker.function.id == 4 && (
+                              <tr>
+                                <td>
+                                  <div>{scale.worker.name} | {scale.worker.function.name} | {scale.worker.turn.start_time} - {scale.worker.turn.end_time}</div>
+                                </td>
+
+                                <td>
+                                  <div className="badge-container">
+                                    {scale.days_on?.map((dayOn, index) => (
+                                      dayOn.date && dayOn.weekday ? (
+                                        <span key={index} className="badge text-bg-success">
+                                          {`${dayOn.date} (${translateWeekday(dayOn.weekday)})`}
+                                        </span>
+                                      ) : null
+                                    ))}
+                                  </div>
+                                </td>
+
+                                <td>
+                                  <div className="badge-container">
+                                    {JSON.parse(scale.proportion).map((item, index) => (
+                                      <span key={index} className="badge text-bg-danger">
+                                        {`${item.data} (${translateWeekday(item.weekday)}): ${item.proporcao}`}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </td>
+
+                                <td>
+                                  <button
+                                    id="delete-scale"
+                                    className="btn btn-danger mt-2 me-2"
+                                    onClick={() => {
+                                      api
+                                        .delete(`/scales/${scale.id}/subsidiaries/${selectedSubsdiarie.value}`)
+                                        .then(() => {
+                                          api
+                                            .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
+                                            .then((response) => setScalesList(response.data))
+
+                                          setDaysOff([])
+
+                                          api
+                                            .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${selectedWorker.value}`)
+                                            .then((response) => {
+                                              let scales = response.data
+
+                                              let options = []
+
+                                              scales.days_off?.map((scale) => {
+                                                options.push(scale.date)
+                                              })
+
+                                              setDaysOff(options)
+                                            })
+                                        })
+                                    }}
+                                    title="Excluir escala"
+                                  >
+                                    <Trash />
+                                  </button>
+                                </td>
+                              </tr>
+                            )
+                          }
+                        </>
+                      ))
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            <>
+              <div>
+                <h4>Frentistas-caixa</h4>
+              </div>
+
+              <div className="table-responsive">
+                <table className="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Colaborador</th>
+
+                      <th>Dias de trabalho</th>
+
+                      <th>Dias de folga</th>
+
+                      <th></th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {
+                      scalesList && scalesList.map((scale) => (
+                        <>
+                          {
+                            scale.worker.function.id == 2 && (
+                              <tr>
+                                <td>
+                                  <div>{scale.worker.name} | {scale.worker.function.name} | {scale.worker.turn.start_time} - {scale.worker.turn.end_time}</div>
+                                </td>
+
+                                <td>
+                                  <div className="badge-container">
+                                    {scale.days_on?.map((dayOn, index) => (
+                                      dayOn.date && dayOn.weekday ? (
+                                        <span key={index} className="badge text-bg-success">
+                                          {`${dayOn.date} (${translateWeekday(dayOn.weekday)})`}
+                                        </span>
+                                      ) : null
+                                    ))}
+                                  </div>
+                                </td>
+
+                                <td>
+                                  <div className="badge-container">
+                                    {JSON.parse(scale.proportion).map((item, index) => (
+                                      <span key={index} className="badge text-bg-danger">
+                                        {`${item.data} (${translateWeekday(item.weekday)}): ${item.proporcao}`}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </td>
+
+                                <td>
+                                  <button
+                                    id="delete-scale"
+                                    className="btn btn-danger mt-2 me-2"
+                                    onClick={() => {
+                                      api
+                                        .delete(`/scales/${scale.id}/subsidiaries/${selectedSubsdiarie.value}`)
+                                        .then(() => {
+                                          api
+                                            .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
+                                            .then((response) => setScalesList(response.data))
+
+                                          setDaysOff([])
+
+                                          api
+                                            .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${selectedWorker.value}`)
+                                            .then((response) => {
+                                              let scales = response.data
+
+                                              let options = []
+
+                                              scales.days_off?.map((scale) => {
+                                                options.push(scale.date)
+                                              })
+
+                                              setDaysOff(options)
+                                            })
+                                        })
+                                    }}
+                                    title="Excluir escala"
+                                  >
+                                    <Trash />
+                                  </button>
+                                </td>
+                              </tr>
+                            )
+                          }
+                        </>
+                      ))
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            <>
+              <div>
+                <h4>Trocadores de óleo</h4>
+              </div>
+
+              <div className="table-responsive">
+                <table className="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Colaborador</th>
+
+                      <th>Dias de trabalho</th>
+
+                      <th>Dias de folga</th>
+
+                      <th></th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {
+                      scalesList && scalesList.map((scale) => (
+                        <>
+                          {
+                            scale.worker.function.id == 9 && (
+                              <tr>
+                                <td>
+                                  <div>{scale.worker.name} | {scale.worker.function.name} | {scale.worker.turn.start_time} - {scale.worker.turn.end_time}</div>
+                                </td>
+
+                                <td>
+                                  <div className="badge-container">
+                                    {scale.days_on?.map((dayOn, index) => (
+                                      dayOn.date && dayOn.weekday ? (
+                                        <span key={index} className="badge text-bg-success">
+                                          {`${dayOn.date} (${translateWeekday(dayOn.weekday)})`}
+                                        </span>
+                                      ) : null
+                                    ))}
+                                  </div>
+                                </td>
+
+                                <td>
+                                  <div className="badge-container">
+                                    {JSON.parse(scale.proportion).map((item, index) => (
+                                      <span key={index} className="badge text-bg-danger">
+                                        {`${item.data} (${translateWeekday(item.weekday)}): ${item.proporcao}`}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </td>
+
+                                <td>
+                                  <div className="d-inline-flex">
+                                    <button
+                                      id="delete-scale"
+                                      className="btn btn-danger mt-2 me-2"
+                                      onClick={() => {
+                                        api
+                                          .delete(`/scales/${scale.id}/subsidiaries/${selectedSubsdiarie.value}`)
+                                          .then(() => {
+                                            api
+                                              .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
+                                              .then((response) => setScalesList(response.data))
+
+                                            setDaysOff([])
+
+                                            api
+                                              .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${selectedWorker.value}`)
+                                              .then((response) => {
+                                                let scales = response.data
+
+                                                let options = []
+
+                                                scales.days_off?.map((scale) => {
+                                                  options.push(scale.date)
+                                                })
+
+                                                setDaysOff(options)
+                                              })
+                                          })
+                                      }}
+                                      title="Excluir escala"
+                                    >
+                                      <Trash />
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            )
+                          }
+                        </>
+                      ))
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </>
+          </div>
+        </div>
+
+        {/* <div className="table-responsive mt-3">
           <table className="table table-hover">
             <thead>
               <tr>
@@ -589,7 +1012,7 @@ const Scale = () => {
               }
             </tbody>
           </table>
-        </div>
+        </div> */}
       </div>
 
       <CalendarPopup

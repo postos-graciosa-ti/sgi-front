@@ -22,7 +22,14 @@ const DaysOnReportModal = ({ show, onHide }) => {
         "first_day": moment(monthFirstDay).format("DD-MM-YYYY"),
         "last_day": moment(monthLastDay).format("DD-MM-YYYY")
       })
-      .then((response) => setReportData(response.data));
+      .then((response) => {
+        const sortedData = response.data.sort((a, b) => {
+          const startA = moment(a[0].turn_info.start_time, "HH:mm");
+          const startB = moment(b[0].turn_info.start_time, "HH:mm");
+          return startA - startB;
+        });
+        setReportData(sortedData);
+      });
   }, [show]);
 
   return (
@@ -49,9 +56,6 @@ const DaysOnReportModal = ({ show, onHide }) => {
               >
                 <div className="bg-white p-3 rounded-3 shadow-sm mb-3 sticky-top">
                   <h5 className="mb-0">
-                    <Badge bg="secondary" className="me-2">
-                      Turno {turnReport[0].turn_info.id}
-                    </Badge>
                     {turnReport[0].turn_info.name}
                   </h5>
                 </div>
@@ -81,7 +85,7 @@ const DaysOnReportModal = ({ show, onHide }) => {
                             </div>
                             {dayReport.dados_caixas?.map((caixa, index) => (
                               <div key={index} className="text-muted small">
-                                {caixa.name} {/* Alterado de nome para name */}
+                                {caixa.name}
                               </div>
                             ))}
                           </Col>
@@ -96,7 +100,7 @@ const DaysOnReportModal = ({ show, onHide }) => {
                             </div>
                             {dayReport.dados_frentistas?.map((frentista, index) => (
                               <div key={index} className="text-muted small">
-                                {frentista.name} {/* Alterado de nome para name */}
+                                {frentista.name}
                               </div>
                             ))}
                           </Col>
@@ -111,7 +115,7 @@ const DaysOnReportModal = ({ show, onHide }) => {
                             </div>
                             {dayReport.dados_trocadores?.map((trocador, index) => (
                               <div key={index} className="text-muted small">
-                                {trocador.name} {/* Alterado de nome para name */}
+                                {trocador.name}
                               </div>
                             ))}
                           </Col>

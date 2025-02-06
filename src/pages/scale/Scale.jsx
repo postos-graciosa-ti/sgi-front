@@ -1,21 +1,19 @@
 import moment from "moment"
 import printJS from "print-js"
 import { useEffect, useState } from "react"
-import { BuildingCheck, BuildingDash, Check2All, Pen, PersonAdd, Printer, Trash } from "react-bootstrap-icons"
+import { BuildingCheck, BuildingDash, Check2All, PersonAdd, Printer, Trash } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
-import mountTour from "../../functions/mountTour"
 import CalendarPopup from "../../pages/scale/CalendarPopup"
 import api from "../../services/api"
 import AddSomeWorkersModal from "./AddSomeWorkers"
 import DaysOffReportModal from "./DaysOffReportModal"
 import DaysOnReportModal from "./DaysOnReportModal"
 import DeleteScaleModal from "./DeleteScaleModal"
-import addDaysOffValidations from "./functions/addDaysOffValidations"
 import printContent from "./printContent"
 import PrintModal from "./PrintModal"
 
@@ -112,15 +110,21 @@ const Scale = () => {
     api
       .get("/turns")
       .then((response) => {
-        let turns = response.data
+        const sortedTurns = response.data.sort((a, b) => {
+          const startA = moment(a.start_time, "HH:mm")
 
-        let turnsOptions = []
+          const startB = moment(b.start_time, "HH:mm")
 
-        turns && turns.map((turn) => {
-          turnsOptions.push({ "label": turn.name, "value": turn.id })
+          return startA.diff(startB)
         })
 
-        setTurnsOptions(turnsOptions)
+        let options = []
+
+        sortedTurns && sortedTurns.map((turn) => {
+          options.push({ "label": `${turn.start_time} - ${turn.end_time}`, "value": turn.id })
+        })
+
+        setTurnsOptions(options)
       })
 
     api
@@ -342,12 +346,6 @@ const Scale = () => {
     return days[weekday] || "";
   }
 
-  const setTour = () => {
-    let driverObj = mountTour('/scale')
-
-    driverObj.drive()
-  }
-
   const handlePrintScale = async () => {
     const printableContent = `
       <html>
@@ -378,8 +376,6 @@ const Scale = () => {
       type: 'raw-html',
     })
   }
-
-  console.log(scalesList)
 
   return (
     <>

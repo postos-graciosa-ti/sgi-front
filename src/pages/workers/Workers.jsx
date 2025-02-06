@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { ArrowClockwise, ClipboardData, PersonAdd, PersonGear, SlashCircle } from "react-bootstrap-icons"
+import { ArrowClockwise, ClipboardData, Pen, PersonAdd, PersonGear, SlashCircle } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import getWorkersBySubsidiarie from "../../requests/getWorkersBySubsidiarie"
@@ -8,6 +8,7 @@ import DeleteWorkerModal from "./DeleteWorkerModal"
 import EditWorkerModal from "./EditWorkerModal"
 import ReactivateWorkerModal from "./ReactivateWorkerModal"
 import ResignationReasonsReportModal from "./ResignationReasonsReportModal"
+import WorkerNotationModal from "./WorkerNotationModal"
 
 const Workers = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -25,6 +26,8 @@ const Workers = () => {
   const [resignationReasonsModal, setResignationReasonsModal] = useState(false)
 
   const [reactivateWorkerModalOpen, setReactivateWorkerModalOpen] = useState(false)
+
+  const [workerNotationModalOpen, setWorkerNotationModalOpen] = useState(false)
 
   useEffect(() => {
     getWorkersBySubsidiarie(selectedSubsdiarie.value)
@@ -53,6 +56,12 @@ const Workers = () => {
     setSelectedWorker(worker)
 
     setReactivateWorkerModalOpen(true)
+  }
+
+  const handleOpenWorkerNotation = (worker) => {
+    setSelectedWorker(worker)
+
+    setWorkerNotationModalOpen(true)
   }
 
   return (
@@ -109,6 +118,13 @@ const Workers = () => {
                   <td>{!worker.worker_is_active ? worker.resignation_date : "Ativo"}</td>
                   <td>{!worker.worker_is_active ? worker.resignation_reason_name : "Ativo"}</td>
                   <td>
+                    <button
+                      className="btn btn-primary me-2 mt-2"
+                      onClick={() => handleOpenWorkerNotation(worker)}
+                    >
+                      <Pen />
+                    </button>
+
                     <button
                       className="btn btn-warning me-2 mt-2"
                       onClick={() => handleOpenEditWorkerModal(worker)}
@@ -181,6 +197,13 @@ const Workers = () => {
         selectedWorker={selectedWorker}
         setSelectedWorker={setSelectedWorker}
         setWorkersList={setWorkersList}
+      />
+
+      <WorkerNotationModal
+        workerNotationModalOpen={workerNotationModalOpen}
+        setWorkerNotationModalOpen={setWorkerNotationModalOpen}
+        selectedWorker={selectedWorker}
+        setSelectedWorker={setSelectedWorker}
       />
 
       <style>

@@ -134,6 +134,7 @@ const Workers = () => {
                         <button
                           className="btn btn-primary me-2 mt-2"
                           onClick={() => handleOpenReactivateWorkerModal(worker)}
+                          title="readimitir"
                         >
                           <ArrowClockwise />
                         </button>

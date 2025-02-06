@@ -32,57 +32,74 @@ const EditWorkerModal = (props) => {
   const [admissionDate, setAdmissionDate] = useState()
 
   useEffect(() => {
-    api.get("/functions")
+    api
+      .get("/functions")
       .then((response) => {
         const functionsData = response.data
+
         const options = functionsData?.map((data) => ({
           value: data.id,
           label: data.name
         })) || []
+
         setFunctionsOptions(options)
       })
 
-    api.get("/turns")
+    api
+      .get("/turns")
       .then((response) => {
         const turnsData = response.data
+
         const options = turnsData?.map((data) => ({
           value: data.id,
           label: data.name
         })) || []
+
         setTurnsOptions(options)
       })
 
-    api.get("/cost-center")
+    api
+      .get("/cost-center")
       .then((response) => {
         const costCenterData = response.data
+
         const options = costCenterData?.map((data) => ({
           value: data.id,
           label: data.name
         })) || []
+
         setCostCenterOptions(options)
       })
 
-    api.get("/departments")
+    api
+      .get("/departments")
       .then((response) => {
         const departmentsData = response.data
+
         const options = departmentsData?.map((data) => ({
           value: data.id,
           label: data.name
         })) || []
+
         setDepartmentsOptions(options)
       })
   }, [])
 
   const handleClose = () => {
-    api.get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
+    api
+      .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => setWorkersList(response.data))
 
-    // Resetando os estados
     setName()
+
     setSelectedFunction()
-    setSelectedTurn()         // Removida a chamada duplicada de setSelectedTurn()
+
+    setSelectedTurn()
+
     setSelectedCostCenter()
+
     setSelectedDepartment()
+
     setAdmissionDate()
 
     setEditWorkerModalOpen(false)
@@ -93,20 +110,17 @@ const EditWorkerModal = (props) => {
       name: name || selectedWorker?.worker_name,
       function_id: selectedFunction?.value || selectedWorker?.function_id,
       subsidiarie_id: selectedSubsdiarie.value,
-      is_active: true,
+      is_active: selectedWorker?.worker_is_active,
       turn_id: selectedTurn?.value || selectedWorker?.turn_id,
       cost_center_id: selectedCostCenter?.value || selectedWorker?.cost_center_id,
       department_id: selectedDepartment?.value || selectedWorker?.department_id,
       admission_date: admissionDate || selectedWorker?.admission_date,
-      resignation_date: admissionDate || selectedWorker?.admission_date
+      resignation_date: selectedWorker?.resignation_date
     }
 
-    console.log(formData)
-    // debugger pode ser removido se não for necessário para debug
-
-    api.put(`/workers/${selectedWorker?.worker_id}`, formData)
-      .then((response) => {
-        console.log(response)
+    api
+      .put(`/workers/${selectedWorker?.worker_id}`, formData)
+      .then(() => {
         handleClose()
       })
   }

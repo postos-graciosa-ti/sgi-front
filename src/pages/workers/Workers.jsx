@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
-import { ClipboardData, PersonAdd, PersonGear, PersonX, SlashCircle } from "react-bootstrap-icons"
+import { ArrowClockwise, ClipboardData, PersonAdd, PersonGear, SlashCircle } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
-import mountTour from "../../functions/mountTour"
 import getWorkersBySubsidiarie from "../../requests/getWorkersBySubsidiarie"
 import CreateWorkerModal from "./CreateWorkerModal"
 import DeleteWorkerModal from "./DeleteWorkerModal"
 import EditWorkerModal from "./EditWorkerModal"
+import ReactivateWorkerModal from "./ReactivateWorkerModal"
 import ResignationReasonsReportModal from "./ResignationReasonsReportModal"
 
 const Workers = () => {
@@ -23,6 +23,8 @@ const Workers = () => {
   const [deleteWorkerModalOpen, setDeleteWorkerModalOpen] = useState(false)
 
   const [resignationReasonsModal, setResignationReasonsModal] = useState(false)
+
+  const [reactivateWorkerModalOpen, setReactivateWorkerModalOpen] = useState(false)
 
   useEffect(() => {
     getWorkersBySubsidiarie(selectedSubsdiarie.value)
@@ -45,6 +47,12 @@ const Workers = () => {
 
   const handleOpenResigntaionReasonsReportModal = () => {
     setResignationReasonsModal(true)
+  }
+
+  const handleOpenReactivateWorkerModal = (worker) => {
+    setSelectedWorker(worker)
+
+    setReactivateWorkerModalOpen(true)
   }
 
   return (
@@ -120,6 +128,17 @@ const Workers = () => {
                     >
                       <SlashCircle />
                     </button>
+
+                    {
+                      !worker.worker_is_active && (
+                        <button
+                          className="btn btn-primary me-2 mt-2"
+                          onClick={() => handleOpenReactivateWorkerModal(worker)}
+                        >
+                          <ArrowClockwise />
+                        </button>
+                      )
+                    }
                   </td>
                 </tr>
               ))}
@@ -150,9 +169,17 @@ const Workers = () => {
         setWorkersList={setWorkersList}
       />
 
-      <ResignationReasonsReportModal 
+      <ResignationReasonsReportModal
         resignationReasonsModal={resignationReasonsModal}
         setResignationReasonsModal={setResignationReasonsModal}
+      />
+
+      <ReactivateWorkerModal
+        reactivateWorkerModalOpen={reactivateWorkerModalOpen}
+        setReactivateWorkerModalOpen={setReactivateWorkerModalOpen}
+        selectedWorker={selectedWorker}
+        setSelectedWorker={setSelectedWorker}
+        setWorkersList={setWorkersList}
       />
 
       <style>

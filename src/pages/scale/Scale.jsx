@@ -508,6 +508,8 @@ const Scale = () => {
           scalesList={scalesList}
           functionId={1}
           selectedWorker={selectedWorker}
+          setScalesList={setScalesList}
+          setDaysOff={setDaysOff}
         />
 
         <ScaleRow
@@ -515,6 +517,8 @@ const Scale = () => {
           scalesList={scalesList}
           functionId={4}
           selectedWorker={selectedWorker}
+          setScalesList={setScalesList}
+          setDaysOff={setDaysOff}
         />
 
         <ScaleRow
@@ -522,6 +526,8 @@ const Scale = () => {
           scalesList={scalesList}
           functionId={2}
           selectedWorker={selectedWorker}
+          setScalesList={setScalesList}
+          setDaysOff={setDaysOff}
         />
 
         <ScaleRow
@@ -529,6 +535,8 @@ const Scale = () => {
           scalesList={scalesList}
           functionId={9}
           selectedWorker={selectedWorker}
+          setScalesList={setScalesList}
+          setDaysOff={setDaysOff}
         />
       </div>
 

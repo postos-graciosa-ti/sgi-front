@@ -8,6 +8,8 @@ const ScaleRow = (props) => {
     scalesList,
     functionId,
     selectedWorker,
+    setScalesList,
+    setDaysOff
   } = props
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)

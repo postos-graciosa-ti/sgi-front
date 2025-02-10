@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal'
 import ReactSelect from 'react-select'
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
+import moment from 'moment'
 
 const EditWorkerModal = (props) => {
   const {
@@ -12,6 +13,8 @@ const EditWorkerModal = (props) => {
     setWorkersList,
     selectedWorker
   } = props
+
+  const userSession = useUserSessionStore(state => state.userSession)
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
@@ -120,8 +123,17 @@ const EditWorkerModal = (props) => {
 
     api
       .put(`/workers/${selectedWorker?.worker_id}`, formData)
-      .then(() => {
-        handleClose()
+      .then((response) => {
+        api
+          .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers/update`, {
+            "updated_at": moment(new Date()).format("DD-MM-YYYY"),
+            "updated_at_time": moment(new Date()).format("HH:mm"),
+            "user_id": userSession.id,
+            "worker_id": response.data.id
+          })
+          .then(() => {
+            handleClose()
+          })
       })
   }
 

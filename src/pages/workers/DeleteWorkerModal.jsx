@@ -16,6 +16,8 @@ const DeleteWorkerModal = (props) => {
     setWorkersList
   } = props
 
+  const userSession = useUserSessionStore(state => state.userSession)
+
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const [dateResignation, setDateResignation] = useState('')
@@ -64,7 +66,18 @@ const DeleteWorkerModal = (props) => {
 
     api
       .put(`/workers/${selectedWorker?.worker_id}/deactivate`, formData)
-      .then(() => handleClose())
+      .then((response) => {
+        api
+          .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers/delete`, {
+            "deleted_at": moment(new Date()).format("DD-MM-YYYY"),
+            "deleted_at_time": moment(new Date()).format("HH:mm"),
+            "user_id": userSession.id,
+            "worker_id": response.data.id
+          })
+          .then(() => {
+            handleClose()
+          })
+      })
   }
 
   return (

@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal'
 import ReactSelect from 'react-select'
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
+import moment from 'moment'
 
 const CreateWorkerModal = (props) => {
   const {
@@ -11,6 +12,8 @@ const CreateWorkerModal = (props) => {
     setCreateWorkerModalOpen,
     setWorkersList
   } = props
+
+  const userSession = useUserSessionStore(state => state.userSession)
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
@@ -29,6 +32,8 @@ const CreateWorkerModal = (props) => {
   const [selectedDepartment, setSelectedDepartment] = useState()
 
   const [admissionDate, setAdmissionDate] = useState()
+
+  console.log(userSession)
 
   useEffect(() => {
     api
@@ -127,9 +132,16 @@ const CreateWorkerModal = (props) => {
     api
       .post("/workers", formData)
       .then((response) => {
-        console.log(response)
-
-        handleClose()
+        api
+          .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers/create`, {
+            "created_at": moment(new Date()).format("DD-MM-YYYY"),
+            "created_at_time": moment(new Date()).format("HH:mm"),
+            "user_id": userSession.id,
+            "worker_id": response.data.id
+          })
+          .then(() => {
+            handleClose()
+          })
       })
   }
 

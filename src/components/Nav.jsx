@@ -152,6 +152,8 @@ const Nav = () => {
 
                     <ul className="dropdown-menu">
                       <li><Link className="dropdown-item" to="/scales-logs">Escalas</Link></li>
+
+                      <li><Link className="dropdown-item" to="/workers-logs">Funcionários</Link></li>
                     </ul>
 
                     {/* <ul className="dropdown-menu">

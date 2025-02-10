@@ -22,6 +22,7 @@ import SubsidiarieStatus from "./pages/subsidiarieStatus/SubsidiarieStatus"
 import Turns from "./pages/turns/Turns"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
+import WorkersLogs from "./pages/logsPages/WorkersLogs"
 
 const Routes = createBrowserRouter([
   {
@@ -136,6 +137,11 @@ const Routes = createBrowserRouter([
   {
     path: "/subsidiarie-status",
     element: <SubsidiarieStatus />,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/workers-logs",
+    element: <WorkersLogs />,
     errorElement: <ErrorBoundary />,
   },
 ])

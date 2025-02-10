@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import getScalesLogs from "../../requests/getScalesLogs"
 import Nav from "../../components/Nav"
+import getScalesLogs from "../../requests/getScalesLogs"
 
 const ScalesLogs = () => {
   const [scalesLogs, setScalesLogs] = useState([])
@@ -15,25 +15,31 @@ const ScalesLogs = () => {
       <Nav />
 
       <div className="container mt-5">
-        <h2 className="mb-4">Logs de Escalas</h2>
+        <h4>Log de escala</h4>
 
-        {
-          Array.isArray(scalesLogs) && scalesLogs.map((scaleLog) => (
-            <div key={scaleLog.id} className="card mb-3">
-              <div className="card-body">
-                <h5 className="card-title">{scaleLog.user_name}</h5>
+        <div className="table-responsive">
+          <table className="table table-hover">
+            <thead>
+              <tr>
+                <th></th>
+              </tr>
+            </thead>
 
-                <p className="card-text">
-                  Atualizou a escala para <strong>{scaleLog.worker_name}</strong> em 
-                  
-                  <span className="text-muted"> {scaleLog.inserted_at}</span> às 
-                  
-                  <span className="font-weight-bold"> {scaleLog.at_time}</span>
-                </p>
-              </div>
-            </div>
-          ))
-        }
+            <tbody>
+              {
+                scalesLogs?.length > 0 && (
+                  scalesLogs?.map((scaleLog) => (
+                    <tr>
+                      <td>
+                        <b>{scaleLog.user_name}</b> Atualizou a escala para <b>{scaleLog.worker_name}</b> em <b>{scaleLog.inserted_at}</b> às <b>{scaleLog.at_time}</b> horas
+                      </td>
+                    </tr>
+                  ))
+                ) || <div>Não há registros de log disponíveis</div>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   )

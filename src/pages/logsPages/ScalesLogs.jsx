@@ -21,7 +21,7 @@ const ScalesLogs = () => {
           <table className="table table-hover">
             <thead>
               <tr>
-                <th></th>
+                <th>Atualizações</th>
               </tr>
             </thead>
 

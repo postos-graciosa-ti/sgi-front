@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom"
 import App from "./App"
 import ErrorBoundary from "./components/ErrorBoundary"
+import NotFound from "./components/NotFound"
 import AllJobs from "./pages/candidates/AllJobs"
 import CandidateFirstInterview from "./pages/candidates/CandidateFirstInterview"
 import Candidates from "./pages/candidates/Candidates"
@@ -13,46 +14,26 @@ import FirstAcess from "./pages/firstAccess/FirstAcess"
 import Functions from "./pages/functions/Functions"
 import Home from "./pages/home/Home"
 import ScalesLogs from "./pages/logsPages/ScalesLogs"
+import WorkersLogs from "./pages/logsPages/WorkersLogs"
 import Scale from "./pages/scale/Scale"
-import SeeScale from "./pages/scale/SeeScale"
-import SlaScale from "./pages/scale/SlaScale"
 import Steps from "./pages/steps/Steps"
 import Subsidiaries from "./pages/subsidiaries/Subsidiaries"
 import SubsidiarieStatus from "./pages/subsidiarieStatus/SubsidiarieStatus"
 import Turns from "./pages/turns/Turns"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
-import WorkersLogs from "./pages/logsPages/WorkersLogs"
+import PrivateRoute from "./PrivateRoute"
 
 const Routes = createBrowserRouter([
+  // public routes
+  {
+    path: "*",
+    element: <NotFound />,
+    errorElement: <ErrorBoundary />
+  },
   {
     path: "/",
     element: <App />,
-    errorElement: <ErrorBoundary />
-  },
-  {
-    path: "/steps",
-    element: <Steps />,
-    errorElement: <ErrorBoundary />
-  },
-  {
-    path: "/home",
-    element: <Home />,
-    errorElement: <ErrorBoundary />
-  },
-  {
-    path: "/users",
-    element: <Users />,
-    errorElement: <ErrorBoundary />
-  },
-  {
-    path: "/candidates",
-    element: <Candidates />,
-    errorElement: <ErrorBoundary />
-  },
-  {
-    path: "/jobs",
-    element: <Jobs />,
     errorElement: <ErrorBoundary />
   },
   {
@@ -60,89 +41,101 @@ const Routes = createBrowserRouter([
     element: <FirstAcess />,
     errorElement: <ErrorBoundary />
   },
+  // private routes
+  {
+    path: "/steps",
+    element: <PrivateRoute><Steps /></PrivateRoute>,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/home",
+    element: <PrivateRoute><Home /></PrivateRoute>,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/users",
+    element: <PrivateRoute><Users /></PrivateRoute>,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/candidates",
+    element: <PrivateRoute><Candidates /></PrivateRoute>,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: "/jobs",
+    element: <PrivateRoute><Jobs /></PrivateRoute>,
+    errorElement: <ErrorBoundary />
+  },
   {
     path: "/all-jobs",
-    element: <AllJobs />,
+    element: <PrivateRoute><AllJobs /></PrivateRoute>,
     errorElement: <ErrorBoundary />
   },
   {
     path: "/register-candidate",
-    element: <RegisterCandidate />,
+    element: <PrivateRoute><RegisterCandidate /></PrivateRoute>,
     errorElement: <ErrorBoundary />
   },
   {
     path: "/first-interview",
-    element: <FirstInterview />,
+    element: <PrivateRoute><FirstInterview /></PrivateRoute>,
     errorElement: <ErrorBoundary />
   },
   {
     path: "/workers",
-    element: <Workers />,
+    element: <PrivateRoute><Workers /></PrivateRoute>,
     errorElement: <ErrorBoundary />
   },
   {
     path: "/scale",
-    element: <Scale />,
-    errorElement: <ErrorBoundary />
-  },
-  {
-    path: "/scale-two",
-    element: <SlaScale />
-  },
-  {
-    path: "/see-scale",
-    element: <SeeScale />,
+    element: <PrivateRoute><Scale /></PrivateRoute>,
     errorElement: <ErrorBoundary />
   },
   {
     path: "/candidate-first-interview",
-    element: <CandidateFirstInterview />,
+    element: <PrivateRoute><CandidateFirstInterview /></PrivateRoute>,
     errorElement: <ErrorBoundary />
   },
-  // {
-  //   path: "/scale-history",
-  //   element: <ScaleHistory />,
-  //   errorElement: <ErrorBoundary />
-  // },
   {
     path: "/subsidiaries",
-    element: <Subsidiaries />,
+    element: <PrivateRoute><Subsidiaries /></PrivateRoute>,
     errorElement: <ErrorBoundary />
   },
   {
     path: "/turns",
-    element: <Turns />,
+    element: <PrivateRoute><Turns /></PrivateRoute>,
     errorElement: <ErrorBoundary />
   },
   {
     path: "/functions",
-    element: <Functions />,
+    element: <PrivateRoute><Functions /></PrivateRoute>,
     errorElement: <ErrorBoundary />
   },
   {
     path: "/scales-logs",
-    element: <ScalesLogs />,
+    element: <PrivateRoute><ScalesLogs /></PrivateRoute>,
     errorElement: <ErrorBoundary />
   },
   {
     path: "/cost-center",
-    element: <CostCenter />,
-    errorElement: <ErrorBoundary />,
+    element: <PrivateRoute><CostCenter /></PrivateRoute>,
+    errorElement: <ErrorBoundary />
   },
   {
     path: "/departments",
-    element: <Department />,
-    errorElement: <ErrorBoundary />,
+    element: <PrivateRoute><Department /></PrivateRoute>,
+    errorElement: <ErrorBoundary />
   },
   {
     path: "/subsidiarie-status",
-    element: <SubsidiarieStatus />,
-    errorElement: <ErrorBoundary />,
+    element: <PrivateRoute><SubsidiarieStatus /></PrivateRoute>,
+    errorElement: <ErrorBoundary />
   },
   {
     path: "/workers-logs",
-    element: <WorkersLogs />,
-    errorElement: <ErrorBoundary />,
+    element: <PrivateRoute><WorkersLogs /></PrivateRoute>,
+    errorElement: <ErrorBoundary />
   },
 ])
 

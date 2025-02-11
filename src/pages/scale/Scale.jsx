@@ -1,7 +1,7 @@
 import moment from "moment"
 import printJS from "print-js"
 import { useEffect, useState } from "react"
-import { BuildingCheck, BuildingDash, Check2All, PersonAdd, Printer, Trash } from "react-bootstrap-icons"
+import { BuildingCheck, BuildingDash, Check2All, Clipboard2Check, Clipboard2X, ClipboardX, PersonAdd, Printer, Trash } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
@@ -474,7 +474,7 @@ const Scale = () => {
             title="Relatório de dias de folga"
             onClick={() => setDaysOffModalOpen(true)}
           >
-            <BuildingDash />
+            <Clipboard2X />
           </button>
 
           <button
@@ -482,7 +482,7 @@ const Scale = () => {
             onClick={() => setScaleHistoryModalOpen(true)}
             title="Relatório de dias de trabalho"
           >
-            <BuildingCheck />
+            <Clipboard2Check />
           </button>
 
           <button

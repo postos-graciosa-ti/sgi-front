@@ -65,7 +65,7 @@ const AddUserModal = (props) => {
       })
 
     api
-      .get("/functions/for-users")
+      .get("/functions")
       .then((response) => {
         let functionsData = response.data
 
@@ -80,6 +80,15 @@ const AddUserModal = (props) => {
   }, [])
 
   const handleClose = () => {
+    getUsers(bearerToken)
+      .then((response) => setUserList(response.data))
+
+    setName()
+
+    setEmail()
+
+    setRole()
+
     setSelectedSubsidiaries([])
 
     setModalOpen(false)
@@ -95,18 +104,11 @@ const AddUserModal = (props) => {
       "email": email,
       "role_id": role,
       "subsidiaries_id": `[${subsidiariesString}]`,
-      "function_id": selectedFunction.value
+      // "function_id": selectedFunction.value
     }
 
     postUser(formData)
-      .then(() => {
-        getUsers(bearerToken)
-          .then((response) => {
-            setUserList(response.data)
-
-            setModalOpen(false)
-          })
-      })
+      .then(() => handleClose())
   }
 
   const handleSelectRole = (role) => {
@@ -165,13 +167,13 @@ const AddUserModal = (props) => {
               />
             </div>
 
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <Select
                 placeholder="Função"
                 options={functionsList}
                 onChange={(e) => setSelectedFunction(e)}
               />
-            </div>
+            </div> */}
           </Modal.Body>
 
           <Modal.Footer>

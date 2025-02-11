@@ -52,78 +52,82 @@ const ScaleRow = (props) => {
 
               <tbody>
                 {
-                  scalesList && scalesList.map((scale) => (
-                    <>
-                      {
-                        scale.worker.function.id == functionId && (
-                          <tr>
-                            <td>
-                              <div>{scale.worker.name} | {scale.worker.function.name} | {scale.worker.turn.start_time} - {scale.worker.turn.end_time}</div>
-                            </td>
 
-                            <td>
-                              <div className="badge-container">
-                                {scale.days_on?.map((dayOn, index) => (
-                                  dayOn.date && dayOn.weekday ? (
-                                    <span key={index} className="badge text-bg-success">
-                                      {`${dayOn.date} (${translateWeekday(dayOn.weekday)})`}
+                  scalesList.length > 0 && (
+                    scalesList && scalesList.map((scale) => (
+                      <>
+                        {
+                          scale.worker.function.id == functionId && (
+                            <tr>
+                              <td>
+                                <div>{scale.worker.name} | {scale.worker.function.name} | {scale.worker.turn.start_time} - {scale.worker.turn.end_time}</div>
+                              </td>
+
+                              <td>
+                                <div className="badge-container">
+                                  {scale.days_on?.map((dayOn, index) => (
+                                    dayOn.date && dayOn.weekday ? (
+                                      <span key={index} className="badge text-bg-success">
+                                        {`${dayOn.date} (${translateWeekday(dayOn.weekday)})`}
+                                      </span>
+                                    ) : null
+                                  ))}
+                                </div>
+                              </td>
+
+                              <td>
+                                <div className="badge-container">
+                                  {JSON.parse(scale.proportion).map((item, index) => (
+                                    <span key={index} className="badge text-bg-danger">
+                                      {`${item.data} (${translateWeekday(item.weekday)}): ${item.proporcao}`}
                                     </span>
-                                  ) : null
-                                ))}
-                              </div>
-                            </td>
+                                  ))}
+                                </div>
+                              </td>
 
-                            <td>
-                              <div className="badge-container">
-                                {JSON.parse(scale.proportion).map((item, index) => (
-                                  <span key={index} className="badge text-bg-danger">
-                                    {`${item.data} (${translateWeekday(item.weekday)}): ${item.proporcao}`}
-                                  </span>
-                                ))}
-                              </div>
-                            </td>
+                              <td>
+                                <div className="d-inline-flex">
+                                  <button
+                                    id="delete-scale"
+                                    className="btn btn-danger mt-2 me-2"
+                                    onClick={() => {
+                                      api
+                                        .delete(`/scales/${scale.id}/subsidiaries/${selectedSubsdiarie.value}`)
+                                        .then(() => {
+                                          api
+                                            .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
+                                            .then((response) => setScalesList(response.data))
 
-                            <td>
-                              <div className="d-inline-flex">
-                                <button
-                                  id="delete-scale"
-                                  className="btn btn-danger mt-2 me-2"
-                                  onClick={() => {
-                                    api
-                                      .delete(`/scales/${scale.id}/subsidiaries/${selectedSubsdiarie.value}`)
-                                      .then(() => {
-                                        api
-                                          .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
-                                          .then((response) => setScalesList(response.data))
+                                          setDaysOff([])
 
-                                        setDaysOff([])
+                                          api
+                                            .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${selectedWorker.value}`)
+                                            .then((response) => {
+                                              let scales = response.data
 
-                                        api
-                                          .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${selectedWorker.value}`)
-                                          .then((response) => {
-                                            let scales = response.data
+                                              let options = []
 
-                                            let options = []
+                                              scales.days_off?.map((scale) => {
+                                                options.push(scale.date)
+                                              })
 
-                                            scales.days_off?.map((scale) => {
-                                              options.push(scale.date)
+                                              setDaysOff(options)
                                             })
+                                        })
+                                    }}
+                                    title="Excluir escala"
+                                  >
+                                    <Trash />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          )
+                        }
+                      </>
+                    ))
+                  ) || <tr><td>Sem registros de escala para {title}</td></tr>
 
-                                            setDaysOff(options)
-                                          })
-                                      })
-                                  }}
-                                  title="Excluir escala"
-                                >
-                                  <Trash />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        )
-                      }
-                    </>
-                  ))
                 }
               </tbody>
             </table>

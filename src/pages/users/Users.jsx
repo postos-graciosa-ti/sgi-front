@@ -56,9 +56,7 @@ const Users = () => {
 
                 <th>Tipo</th>
 
-                <th>Função</th>
-
-                <th>Filias</th>
+                <th>Filiais</th>
 
                 <th></th>
               </tr>
@@ -81,13 +79,8 @@ const Users = () => {
                     </td>
 
                     <td>
-                      {user.function_name}
-                    </td>
-
-                    <td>
                       {
-                        // Agrupar subsidiárias em pares de 2
-                        user.subsidiaries.reduce((acc, curr, index) => {
+                        user.user_subsidiaries?.reduce((acc, curr, index) => {
                           if (index % 2 === 0) {
                             acc.push([curr]);
                           } else {

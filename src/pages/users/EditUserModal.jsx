@@ -93,12 +93,10 @@ const EditUserModal = (props) => {
     setEditUserModalOpen(false)
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-
+  const handleSubmit = () => {
     const subsidiariesString = subsidiaries?.map(subsidiary => subsidiary.value).join(',') || ''
 
-    const selectedUserSubsidiariesString = selectedUser?.subsidiaries ? selectedUser?.subsidiaries.map((subsidiary) => subsidiary.id).join(',') : ''
+    const selectedUserSubsidiariesString = selectedUser?.user_subsidiaries ? selectedUser?.user_subsidiaries.map((subsidiary) => subsidiary.id).join(',') : ''
 
     let subsidiariesId = (
       subsidiariesString.length > 0 && `[${subsidiariesString}]` ||
@@ -136,71 +134,66 @@ const EditUserModal = (props) => {
         <Modal.Title>Editar usuário</Modal.Title>
       </Modal.Header>
 
-      <form onSubmit={handleSubmit}>
-        <Modal.Body>
-          <div className="mb-3">
-            <input
-              type="email"
-              placeholder="E-mail"
-              className="form-control"
-              defaultValue={selectedUser?.user_email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
+      <Modal.Body>
+        <div className="mb-3">
+          <label className="fw-bold mb-1">Email</label>
 
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder="Nome"
-              className="form-control"
-              defaultValue={selectedUser?.user_name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
+          <input
+            type="email"
+            placeholder="E-mail"
+            className="form-control"
+            defaultValue={selectedUser?.user_email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-          <div className="mb-3">
-            <ReactSelect
-              options={rolesList}
-              defaultValue={{
-                "label": selectedUser?.role_name,
-                "value": selectedUser?.role_id
-              }}
-              onChange={(e) => setRole(e)}
-            />
-          </div>
+        <div className="mb-3">
+          <label className="fw-bold mb-1">Nome</label>
 
-          <div className="mb-3">
-            <ReactSelect
-              options={functionsList}
-              defaultValue={{
-                "label": selectedUser?.function_name,
-                "value": selectedUser?.function_id
-              }}
-              onChange={(e) => setFunctions(e)}
-            />
-          </div>
+          <input
+            type="text"
+            placeholder="Nome"
+            className="form-control"
+            defaultValue={selectedUser?.user_name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
 
-          <div className="mb-3">
-            <ReactSelect
-              options={subsidiariesList}
-              isMulti
-              defaultValue={
-                selectedUser?.subsidiaries ? selectedUser?.subsidiaries.map((subsidiary) => ({
-                  "label": subsidiary.name,
-                  "value": subsidiary.id
-                })) : []
-              }
-              onChange={(e) => setSubsidiaries(e)}
-            />
-          </div>
-        </Modal.Body>
+        <div className="mb-3">
+          <label className="fw-bold mb-1">Tipo</label>
 
-        <Modal.Footer>
-          <Button variant="light" onClick={handleClose}>Fechar</Button>
+          <ReactSelect
+            options={rolesList}
+            defaultValue={{
+              "label": selectedUser?.role_name,
+              "value": selectedUser?.role_id
+            }}
+            onChange={(e) => setRole(e)}
+          />
+        </div>
 
-          <Button type="submit" variant="success">Salvar</Button>
-        </Modal.Footer>
-      </form>
+        <div className="mb-3">
+          <label className="fw-bold mb-1">Filiais</label>
+
+          <ReactSelect
+            options={subsidiariesList}
+            isMulti
+            defaultValue={
+              selectedUser?.user_subsidiaries ? selectedUser?.user_subsidiaries.map((subsidiary) => ({
+                "label": subsidiary.name,
+                "value": subsidiary.id
+              })) : []
+            }
+            onChange={(e) => setSubsidiaries(e)}
+          />
+        </div>
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button variant="light" onClick={handleClose}>Fechar</Button>
+
+        <Button variant="success" onClick={handleSubmit}>Salvar</Button>
+      </Modal.Footer>
     </Modal>
   )
 }

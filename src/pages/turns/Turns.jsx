@@ -1,16 +1,12 @@
-import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
-import Nav from "../../components/Nav"
-import AddTurnModal from "./AddTurnModal"
 import { useEffect, useState } from "react"
+import { Pencil, Plus, Trash } from "react-bootstrap-icons"
+import Nav from "../../components/Nav"
 import getTurns from "../../requests/getTurns"
-import EditTurnModal from "./EditTurnModal"
+import AddTurnModal from "./AddTurnModal"
 import DeleteTurnModal from "./DeleteTurnModal"
-import { useLocation } from "react-router-dom"
-import mountTour from "../../functions/mountTour"
+import EditTurnModal from "./EditTurnModal"
 
 const Turns = () => {
-  const location = useLocation()
-
   const [addTurnModalOpen, setAddTurnModalOpen] = useState(false)
 
   const [turnsList, setTurnsList] = useState()
@@ -27,6 +23,13 @@ const Turns = () => {
     GetTurns()
   }, [])
 
+  const GetTurns = () => {
+    getTurns()
+      .then((response) => {
+        setTurnsList(response.data)
+      })
+  }
+
   const handleOpenAddTurnModal = () => {
     setAddTurnModalOpen(true)
   }
@@ -40,24 +43,11 @@ const Turns = () => {
   }
 
   const handleOpenDeleteTurnModal = (turn) => {
+    setTurnToDelete()
+
     setTurnToDelete(turn)
 
     setDeleteTurnModalOpen(true)
-  }
-
-  const GetTurns = () => {
-    getTurns()
-      .then((response) => {
-        setTurnsList(response.data)
-      })
-  }
-
-  const setTour = () => {
-    let route = location.pathname
-
-    let driverObj = mountTour(route)
-
-    driverObj.drive()
   }
 
   return (
@@ -70,15 +60,6 @@ const Turns = () => {
         </div>
 
         <div className="mt-3 mb-3">
-          {/* <button
-            id="help"
-            type="button"
-            className="btn btn-warning me-2"
-            onClick={setTour}
-          >
-            <Question />
-          </button> */}
-
           <button
             id="addTurn"
             type="button"
@@ -156,6 +137,7 @@ const Turns = () => {
         setDeleteTurnModalOpen={setDeleteTurnModalOpen}
         GetTurns={GetTurns}
         turnToDelete={turnToDelete}
+        setTurnToDelete={setTurnToDelete}
       />
     </>
   )

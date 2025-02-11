@@ -1,23 +1,21 @@
-import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
 import deleteTurn from '../../requests/deleteTurn'
 
 const DeleteTurnModal = (props) => {
-  const { deleteTurnModalOpen, setDeleteTurnModalOpen, GetTurns, turnToDelete } = props
+  const { deleteTurnModalOpen, setDeleteTurnModalOpen, GetTurns, turnToDelete, setTurnToDelete } = props
 
   const handleCloseModal = () => {
+    GetTurns()
+
+    setTurnToDelete()
+
     setDeleteTurnModalOpen(false)
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-
+  const handleSubmit = () => {
     deleteTurn(turnToDelete.id)
-      .then(() => {
-        GetTurns()
-
-        handleCloseModal()
-      })
+      .then(() => handleCloseModal())
   }
 
   return (

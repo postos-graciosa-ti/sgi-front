@@ -16,6 +16,8 @@ import Home from "./pages/home/Home"
 import ScalesLogs from "./pages/logsPages/ScalesLogs"
 import WorkersLogs from "./pages/logsPages/WorkersLogs"
 import Scale from "./pages/scale/Scale"
+import SeeScale from "./pages/scale/SeeScale"
+import SlaScale from "./pages/scale/SlaScale"
 import Steps from "./pages/steps/Steps"
 import Subsidiaries from "./pages/subsidiaries/Subsidiaries"
 import SubsidiarieStatus from "./pages/subsidiarieStatus/SubsidiarieStatus"
@@ -25,7 +27,9 @@ import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
 
 const Routes = createBrowserRouter([
+
   // public routes
+
   {
     path: "*",
     element: <NotFound />,
@@ -41,7 +45,18 @@ const Routes = createBrowserRouter([
     element: <FirstAcess />,
     errorElement: <ErrorBoundary />
   },
+  {
+    path: "/scale-two",
+    element: <SlaScale />
+  },
+  {
+    path: "/see-scale",
+    element: <SeeScale />,
+    errorElement: <ErrorBoundary />
+  },
+
   // private routes
+
   {
     path: "/steps",
     element: <PrivateRoute><Steps /></PrivateRoute>,
@@ -97,6 +112,11 @@ const Routes = createBrowserRouter([
     element: <PrivateRoute><CandidateFirstInterview /></PrivateRoute>,
     errorElement: <ErrorBoundary />
   },
+  // {
+  //   path: "/scale-history",
+  //   element: <ScaleHistory />,
+  //   errorElement: <ErrorBoundary />
+  // },
   {
     path: "/subsidiaries",
     element: <PrivateRoute><Subsidiaries /></PrivateRoute>,
@@ -120,22 +140,22 @@ const Routes = createBrowserRouter([
   {
     path: "/cost-center",
     element: <PrivateRoute><CostCenter /></PrivateRoute>,
-    errorElement: <ErrorBoundary />
+    errorElement: <ErrorBoundary />,
   },
   {
     path: "/departments",
     element: <PrivateRoute><Department /></PrivateRoute>,
-    errorElement: <ErrorBoundary />
+    errorElement: <ErrorBoundary />,
   },
   {
     path: "/subsidiarie-status",
     element: <PrivateRoute><SubsidiarieStatus /></PrivateRoute>,
-    errorElement: <ErrorBoundary />
+    errorElement: <ErrorBoundary />,
   },
   {
     path: "/workers-logs",
     element: <PrivateRoute><WorkersLogs /></PrivateRoute>,
-    errorElement: <ErrorBoundary />
+    errorElement: <ErrorBoundary />,
   },
 ])
 

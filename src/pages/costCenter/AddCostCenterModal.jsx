@@ -2,9 +2,15 @@ import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import api from '../../services/api'
+import moment from 'moment'
+import useUserSessionStore from '../../data/userSession'
 
 const AddCostCenterModal = (props) => {
   const { addCostCenterModalOpen, setAddCostCenterModalOpen, setCostCenterList } = props
+
+  const userSession = useUserSessionStore((state) => state.userSession)
+
+  const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const [name, setName] = useState()
 
@@ -30,10 +36,22 @@ const AddCostCenterModal = (props) => {
 
     api
       .post("/cost-center", formData)
-      .then(() => {
-        handleClose()
+      .then((response) => {
+        let logFormData = {
+          "log_str": `${userSession.name} adicionou ${response.data.name}`,
+          "happened_at": moment(new Date).format("DD-MM-YYYY"),
+          "happened_at_time": moment(new Date).format("HH:mm"),
+          "subsidiarie_id": selectedSubsidiarie.value,
+          "user_id": userSession.id
+        }
 
-        setAddCostCenterModalOpen(false)
+        api
+          .post(`/subsidiaries/${selectedSubsidiarie.value}/logs/costs-centers`, logFormData)
+          .then(() => handleClose())
+
+        // handleClose()
+
+        // setAddCostCenterModalOpen(false)
       })
   }
 

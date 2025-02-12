@@ -26,6 +26,7 @@ import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
 import TurnsLogs from "./pages/logsPages/TurnsLogs"
+import CostCenterLogs from "./pages/logsPages/CostCentersLogs"
 
 const Routes = createBrowserRouter([
 
@@ -161,6 +162,11 @@ const Routes = createBrowserRouter([
   {
     path: "/turns-logs",
     element: <PrivateRoute><TurnsLogs /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/cost-center-logs",
+    element: <PrivateRoute><CostCenterLogs /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

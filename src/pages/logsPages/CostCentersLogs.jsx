@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import Nav from "../../components/Nav"
 import api from "../../services/api"
+import useUserSessionStore from "../../data/userSession"
 
 export const LogsRowTable = (props) => {
   const { title, logs } = props
@@ -39,11 +40,13 @@ export const LogsRowTable = (props) => {
 }
 
 const CostCentersLogs = () => {
+  const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
   const [costCentersLogs, setCostCenterLogs] = useState([])
 
   useEffect(() => {
     api
-      .get("/logs/cost-centers")
+      .get(`/subsidiaries/${selectedSubsidiarie.value}/logs/costs-centers`)
       .then((response) => setCostCenterLogs(response.data))
       .catch((error) => console.error(error))
   }, [])

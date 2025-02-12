@@ -1,6 +1,8 @@
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import api from '../../services/api'
+import useUserSessionStore from '../../data/userSession'
+import moment from 'moment'
 
 const DeleteCostCenterModal = (props) => {
   const {
@@ -10,6 +12,10 @@ const DeleteCostCenterModal = (props) => {
     setCostCenterList,
     setSelectedCostCenter
   } = props
+
+  const userSession = useUserSessionStore((state) => state.userSession)
+
+  const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const handleClose = () => {
     api
@@ -25,7 +31,19 @@ const DeleteCostCenterModal = (props) => {
   const handleSubmit = () => {
     api
       .delete(`/cost-center/${selectedCostCenter.id}`)
-      .then(() => handleClose())
+      .then(() => {
+        let logFormData = {
+          "log_str": `${userSession.name} apagou ${selectedCostCenter.name}`,
+          "happened_at": moment(new Date).format("DD-MM-YYYY"),
+          "happened_at_time": moment(new Date).format("HH:mm"),
+          "subsidiarie_id": selectedSubsidiarie.value,
+          "user_id": userSession.id
+        }
+
+        api
+          .post(`/subsidiaries/${selectedSubsidiarie.value}/logs/costs-centers`, logFormData)
+          .then(() => handleClose())
+      })
       .catch((error) => console.error(error))
   }
 

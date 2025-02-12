@@ -3,9 +3,16 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import 'react-datetime/css/react-datetime.css'
 import postTurn from '../../requests/postTurn'
+import api from "../../services/api"
+import useUserSessionStore from '../../data/userSession'
+import moment from 'moment'
 
 const AddTurnModal = (props) => {
   const { addTurnModalOpen, setAddTurnModalOpen, GetTurns } = props
+
+  const userSession = useUserSessionStore((state) => state.userSession)
+
+  const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const [name, setName] = useState('')
 
@@ -43,7 +50,23 @@ const AddTurnModal = (props) => {
     }
 
     postTurn(formData)
-      .then(() => handleClose())
+      .then((response) => {
+        let logFormData = {
+          "happened_at": moment(new Date()).format("DD-MM-YYYY"),
+          "happened_at_time": moment(new Date()).format("HH:mm"),
+          "http_method": 1,
+          "subsidiarie_id": selectedSubsidiarie.value,
+          "user_id": userSession.id,
+          "turn_id": response.data.id
+        }
+
+        api
+          .post(`/logs/turns`, logFormData)
+          .then(() => {
+            handleClose()
+          })
+          .catch((error) => console.error(error))
+      })
   }
 
   return (

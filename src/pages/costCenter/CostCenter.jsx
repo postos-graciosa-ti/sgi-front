@@ -106,6 +106,7 @@ const CostCenter = () => {
         setEditCostCenterModalOpen={setEditCostCenterModalOpen}
         selectedCostCenter={selectedCostCenter}
         setCostCenterList={setCostCenterList}
+        setSelectedCostCenter={setSelectedCostCenter}
       />
 
       <DeleteCostCenterModal
@@ -113,6 +114,7 @@ const CostCenter = () => {
         setDeleteCostCenterModalOpen={setDeleteCostCenterModalOpen}
         selectedCostCenter={selectedCostCenter}
         setCostCenterList={setCostCenterList}
+        setSelectedCostCenter={setSelectedCostCenter}
       />
     </>
   )

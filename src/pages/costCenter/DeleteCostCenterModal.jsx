@@ -1,29 +1,38 @@
-import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import api from '../../services/api'
 
 const DeleteCostCenterModal = (props) => {
-  const { deleteCostCenterModalOpen, setDeleteCostCenterModalOpen, selectedCostCenter, setCostCenterList } = props
+  const {
+    deleteCostCenterModalOpen,
+    setDeleteCostCenterModalOpen,
+    selectedCostCenter,
+    setCostCenterList,
+    setSelectedCostCenter
+  } = props
 
-  const handleSubmit = async () => {
-    await api
+  const handleClose = () => {
+    api
+      .get("/cost-center")
+      .then((response) => setCostCenterList(response.data))
+      .catch((error) => console.error(error))
+
+    setSelectedCostCenter()
+
+    setDeleteCostCenterModalOpen(false)
+  }
+
+  const handleSubmit = () => {
+    api
       .delete(`/cost-center/${selectedCostCenter.id}`)
-      .then(async () => {
-        await api
-          .get("/cost-center")
-          .then((response) => {
-            setCostCenterList(response.data)
-
-            setDeleteCostCenterModalOpen(false)
-          })
-      })
+      .then(() => handleClose())
+      .catch((error) => console.error(error))
   }
 
   return (
     <Modal
       show={deleteCostCenterModalOpen}
-      onHide={() => setDeleteCostCenterModalOpen(false)}
+      onHide={handleClose}
       backdrop="static"
       keyboard={false}
     >
@@ -36,7 +45,7 @@ const DeleteCostCenterModal = (props) => {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="light" onClick={() => setDeleteCostCenterModalOpen(false)}>Fechar</Button>
+        <Button variant="light" onClick={handleClose}>Fechar</Button>
 
         <Button variant="danger" onClick={handleSubmit}>Apagar</Button>
       </Modal.Footer>

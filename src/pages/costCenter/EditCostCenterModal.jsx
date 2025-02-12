@@ -4,35 +4,47 @@ import Modal from 'react-bootstrap/Modal'
 import api from '../../services/api'
 
 const EditCostCenterModal = (props) => {
-  const { editCostCenterModalOpen, setEditCostCenterModalOpen, selectedCostCenter, setCostCenterList } = props
+  const {
+    editCostCenterModalOpen,
+    setEditCostCenterModalOpen,
+    selectedCostCenter,
+    setCostCenterList,
+    setSelectedCostCenter
+  } = props
 
   const [name, setName] = useState()
 
   const [description, setDescription] = useState()
 
-  const handleSubmit = async () => {
+  const handleClose = () => {
+    api
+      .get("/cost-center")
+      .then((response) => setCostCenterList(response.data))
+
+    setName()
+
+    setDescription()
+
+    setSelectedCostCenter()
+
+    setEditCostCenterModalOpen(false)
+  }
+
+  const handleSubmit = () => {
     let formData = {
       name: name,
       description: description
     }
 
-    await api
+    api
       .put(`/cost-center/${selectedCostCenter.id}`, formData)
-      .then(async () => {
-        await api
-          .get("/cost-center")
-          .then((response) => {
-            setCostCenterList(response.data)
-
-            setEditCostCenterModalOpen(false)
-          })
-      })
+      .then(() => handleClose())
   }
 
   return (
     <Modal
       show={editCostCenterModalOpen}
-      onHide={() => setEditCostCenterModalOpen(false)}
+      onHide={handleClose}
       backdrop="static"
       keyboard={false}
     >
@@ -63,7 +75,7 @@ const EditCostCenterModal = (props) => {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="light" onClick={() => setEditCostCenterModalOpen(false)}>Fechar</Button>
+        <Button variant="light" onClick={handleClose}>Fechar</Button>
 
         <Button variant="success" onClick={handleSubmit}>Editar</Button>
       </Modal.Footer>

@@ -10,29 +10,37 @@ const AddCostCenterModal = (props) => {
 
   const [description, setDescription] = useState()
 
-  const handleSubmit = async () => {
+  const handleClose = () => {
+    api
+      .get("/cost-center")
+      .then((response) => setCostCenterList(response.data))
+
+    setName()
+
+    setDescription()
+
+    setAddCostCenterModalOpen(false)
+  }
+
+  const handleSubmit = () => {
     let formData = {
       name: name,
       description: description
     }
 
-    await api
+    api
       .post("/cost-center", formData)
-      .then(async () => {
-        await api
-          .get("/cost-center")
-          .then((response) => {
-            setCostCenterList(response.data)
+      .then(() => {
+        handleClose()
 
-            setAddCostCenterModalOpen(false)
-          })
+        setAddCostCenterModalOpen(false)
       })
   }
 
   return (
     <Modal
       show={addCostCenterModalOpen}
-      onHide={() => setAddCostCenterModalOpen(false)}
+      onHide={handleClose}
       backdrop="static"
       keyboard={false}
     >
@@ -51,7 +59,7 @@ const AddCostCenterModal = (props) => {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="light" onClick={() => setAddCostCenterModalOpen(false)}>Fechar</Button>
+        <Button variant="light" onClick={handleClose}>Fechar</Button>
 
         <Button variant="success" onClick={handleSubmit}>Adicionar</Button>
       </Modal.Footer>

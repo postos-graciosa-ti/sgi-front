@@ -83,6 +83,8 @@ const EditTurnModal = (props) => {
 
       <Modal.Body>
         <div className="mb-3">
+          <label className='fw-bold mb-2'>Nome</label>
+          
           <input
             type="text"
             className="form-control"
@@ -93,7 +95,7 @@ const EditTurnModal = (props) => {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="start-time" className="form-label">
+          <label htmlFor="start-time" className="form-label fw-bold mb-2">
             Hora de início do turno
           </label>
 
@@ -107,7 +109,7 @@ const EditTurnModal = (props) => {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="start-interval-time" className="form-label">
+          <label htmlFor="start-interval-time" className="form-label fw-bold mb-2">
             Hora de início do intervalo
           </label>
 
@@ -121,7 +123,7 @@ const EditTurnModal = (props) => {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="end-interval-time" className="form-label">
+          <label htmlFor="end-interval-time" className="form-label fw-bold mb-2">
             Hora de término do intervalo
           </label>
 
@@ -135,7 +137,7 @@ const EditTurnModal = (props) => {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="end-time" className="form-label">
+          <label htmlFor="end-time" className="form-label fw-bold mb-2">
             Hora de término do turno
           </label>
 

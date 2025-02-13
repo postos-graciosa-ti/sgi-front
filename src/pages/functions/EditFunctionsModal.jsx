@@ -67,14 +67,20 @@ const EditFunctionsModal = (props) => {
       <form onSubmit={handleOnSubmit}>
         <Modal.Body>
           <div className="mb-3">
+            <label className='fw-bold mb-2'>Nome</label>
+
             <input type="text" className="form-control" defaultValue={selectedFunction?.name} onChange={(e) => setFunctionName(e.target.value)} />
           </div>
 
           <div className="mb-3">
+            <label className='fw-bold mb-2'>Descrição</label>
+
             <input type="text" className="form-control" defaultValue={selectedFunction?.description} onChange={(e) => setFunctionDescription(e.target.value)} />
           </div>
 
           <div className="mb-3">
+            <label className='fw-bold mb-2'>Quantidade ideal por turno</label>
+
             <input type="number" className="form-control" defaultValue={selectedFunction?.ideal_quantity} placeholder="Quantidade ideal por turno" required onChange={(e) => setFunctionQuantity(e.target.value)} />
           </div>
         </Modal.Body>

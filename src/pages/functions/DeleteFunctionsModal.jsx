@@ -1,17 +1,30 @@
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import useUserSessionStore from '../../data/userSession'
 import deleteFunction from '../../requests/deleteFunction'
 import getFunctions from '../../requests/getFunctions'
+import api from '../../services/api'
+import moment from 'moment'
 
 const DeleteFunctionsModal = (props) => {
   const {
     deleteFunctionModalOpen,
     setDeleteFunctionModalOpen,
     selectedFunction,
-    setFunctionsList
+    setFunctionsList,
+    setSelectedFunction
   } = props
 
+  const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
+  const userSession = useUserSessionStore(state => state.userSession)
+
   const handleClose = () => {
+    getFunctions()
+      .then((response) => setFunctionsList(response.data))
+
+    setSelectedFunction()
+
     setDeleteFunctionModalOpen(false)
   }
 
@@ -20,10 +33,19 @@ const DeleteFunctionsModal = (props) => {
 
     deleteFunction(selectedFunction.id)
       .then(() => {
-        getFunctions()
-          .then((response) => setFunctionsList(response.data))
+        let logStr = `${userSession.name} deletou ${selectedFunction.name} (nome=${selectedFunction.name}, endereço=${selectedFunction.description}, quantidade ideal=${selectedFunction.ideal_quantity || `indefenido`})`
 
-        handleClose()
+        let logFormData = {
+          "log_str": logStr,
+          "happened_at": moment(new Date()).format("DD-MM-YYYY"),
+          "happened_at_time": moment(new Date()).format("HH:mm"),
+          "subsidiarie_id": selectedSubsidiarie.value,
+          "user_id": userSession.id
+        }
+
+        api
+          .post(`/subsidiaries/${selectedSubsidiarie.value}/functions/logs`, logFormData)
+          .then(() => handleClose())
       })
   }
 

@@ -4,6 +4,8 @@ import Modal from 'react-bootstrap/Modal'
 import getFunctions from '../../requests/getFunctions'
 import postFunction from '../../requests/postFunction'
 import useUserSessionStore from '../../data/userSession'
+import api from '../../services/api'
+import moment from 'moment'
 
 const AddFunctionsModal = (props) => {
   const {
@@ -14,6 +16,8 @@ const AddFunctionsModal = (props) => {
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
+  const userSession = useUserSessionStore(state => state.userSession)
+
   const [functionName, setFunctionName] = useState()
 
   const [functionDescription, setFunctionDescription] = useState()
@@ -21,6 +25,9 @@ const AddFunctionsModal = (props) => {
   const [functionQuantity, setFunctionQuantity] = useState()
 
   const handleCloseModal = () => {
+    getFunctions()
+      .then((response) => setFunctionsList(response.data))
+
     setFunctionName()
 
     setFunctionDescription()
@@ -41,11 +48,20 @@ const AddFunctionsModal = (props) => {
     }
 
     postFunction(formData)
-      .then(() => {
-        getFunctions()
-          .then((response) => setFunctionsList(response.data))
+      .then((response) => {
+        let logStr = `${userSession.name} criou ${response.data.name} (nome=${response.data.name}, endereço=${response.data.description}, quantidade ideal=${response.data.ideal_quantity || `indefenido`})`
 
-        handleCloseModal()
+        let logFormData = {
+          "log_str": logStr,
+          "happened_at": moment(new Date()).format("DD-MM-YYYY"),
+          "happened_at_time": moment(new Date()).format("HH:mm"),
+          "subsidiarie_id": selectedSubsdiarie.value,
+          "user_id": userSession.id
+        }
+
+        api
+          .post(`/subsidiaries/${selectedSubsdiarie.value}/functions/logs`, logFormData)
+          .then(() => handleCloseModal())
       })
   }
 

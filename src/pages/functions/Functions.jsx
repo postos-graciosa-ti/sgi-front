@@ -113,6 +113,7 @@ const Functions = () => {
         setDeleteFunctionModalOpen={setDeleteFunctionModalOpen}
         selectedFunction={selectedFunction}
         setFunctionsList={setFunctionsList}
+        setSelectedFunction={setSelectedFunction}
       />
     </>
   )

@@ -29,6 +29,7 @@ import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
 import SubsidiariesLogs from "./pages/logsPages/SubsidiariesLogs"
+import FunctionsLogs from "./pages/logsPages/FunctionsLogs"
 
 const Routes = createBrowserRouter([
 
@@ -179,6 +180,11 @@ const Routes = createBrowserRouter([
   {
     path: "/subsidiaries-logs",
     element: <PrivateRoute><SubsidiariesLogs /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/functions-logs",
+    element: <PrivateRoute><FunctionsLogs /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

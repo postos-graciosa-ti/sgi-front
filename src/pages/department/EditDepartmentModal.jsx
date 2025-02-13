@@ -81,6 +81,8 @@ const EditDepartmentModal = (props) => {
         <form onSubmit={(e) => handleSubmit(e)}>
           <Modal.Body>
             <div className="mb-3">
+              <label className='fw-bold mb-2'>Nome</label>
+
               <input
                 className="form-control"
                 placeholder="Nome"
@@ -91,6 +93,8 @@ const EditDepartmentModal = (props) => {
             </div>
 
             <div className="mb-3">
+              <label className='fw-bold mb-2'>Descrição</label>
+
               <input
                 className="form-control"
                 placeholder="Descrição"

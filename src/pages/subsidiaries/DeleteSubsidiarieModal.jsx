@@ -1,30 +1,48 @@
+import moment from 'moment'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import useUserSessionStore from '../../data/userSession'
 import deleteSubsidiarie from "../../requests/deleteSubsidiarie"
 import getSubsidiaries from "../../requests/getSubsidiaries"
+import api from '../../services/api'
 
 const DeleteSubsidiarieModal = (props) => {
   const {
     selectedSubsidiarie,
     deleteSubsidiarieModalOpen,
     setDeleteSubsidiarieModalOpen,
-    setSubsidiaries
+    setSubsidiaries,
+    setSelectedSubsidiarie
   } = props
 
+  const userSession = useUserSessionStore(state => state.userSession)
+
   const handleCloseModal = () => {
+    getSubsidiaries()
+      .then((response) => setSubsidiaries(response.data))
+
+    setSelectedSubsidiarie()
+
     setDeleteSubsidiarieModalOpen(false)
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    
+
     deleteSubsidiarie(selectedSubsidiarie.id)
       .then(() => {
-        getSubsidiaries()
-          .then((response) => {
-            setSubsidiaries(response.data)
-            handleCloseModal()
-          })
+        let logStr = `${userSession.name} removeu ${selectedSubsidiarie.name} (nome=${selectedSubsidiarie.name}, endereço=${selectedSubsidiarie.adress}, telefone=${selectedSubsidiarie.phone}, email=${selectedSubsidiarie.email})`
+
+        let logFormData = {
+          "log_str": logStr,
+          "happened_at": moment(new Date()).format("DD-MM-YYYY"),
+          "happened_at_time": moment(new Date()).format("HH:mm"),
+          "user_id": userSession.id
+        }
+
+        api
+          .post(`/subsidiaries/logs`, logFormData)
+          .then(() => handleCloseModal())
       })
   }
 

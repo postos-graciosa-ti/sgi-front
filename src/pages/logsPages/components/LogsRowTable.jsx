@@ -18,7 +18,7 @@ const LogsRowTable = (props) => {
           {
             logs.length > 0 && (
               logs && logs.map((log) => (
-                <tr>
+                <tr key={log.id}>
                   <td className="w-50">{log.log_str}</td>
 
                   <td className="w-25">{log.happened_at}</td>

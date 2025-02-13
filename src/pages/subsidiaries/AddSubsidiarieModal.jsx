@@ -1,8 +1,11 @@
+import moment from 'moment'
 import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import postSubsidiarie from '../../requests/postSubsidiarie'
 import getSubsidiaries from '../../requests/getSubsidiaries'
+import postSubsidiarie from '../../requests/postSubsidiarie'
+import api from '../../services/api'
+import useUserSessionStore from '../../data/userSession'
 
 const AddSubsidiarieModal = (props) => {
   const {
@@ -10,6 +13,8 @@ const AddSubsidiarieModal = (props) => {
     setAddSubsidiarieModalOpen,
     setSubsidiaries
   } = props
+
+  const userSession = useUserSessionStore(state => state.userSession)
 
   const [name, setName] = useState()
 
@@ -20,6 +25,17 @@ const AddSubsidiarieModal = (props) => {
   const [email, setEmail] = useState()
 
   const handleCloseModal = () => {
+    getSubsidiaries()
+      .then((response) => setSubsidiaries(response.data))
+
+    setName()
+
+    setAdress()
+
+    setPhone()
+
+    setEmail()
+
     setAddSubsidiarieModalOpen(false)
   }
 
@@ -34,12 +50,19 @@ const AddSubsidiarieModal = (props) => {
     }
 
     postSubsidiarie(formData)
-      .then(() => {
-        getSubsidiaries()
-          .then((response) => {
-            setSubsidiaries(response.data)
-            handleCloseModal()
-          })
+      .then((response) => {
+        let logStr = `${userSession.name} adicionou ${response.data.name} (nome=${response.data.name}, endereço=${response.data.adress}, telefone=${response.data.phone}, email=${response.data.email})`
+
+        let logFormData = {
+          "log_str": logStr,
+          "happened_at": moment(new Date()).format("DD-MM-YYYY"),
+          "happened_at_time": moment(new Date()).format("HH:mm"),
+          "user_id": userSession.id
+        }
+
+        api
+          .post(`/subsidiaries/logs`, logFormData)
+          .then(() => handleCloseModal())
       })
   }
 

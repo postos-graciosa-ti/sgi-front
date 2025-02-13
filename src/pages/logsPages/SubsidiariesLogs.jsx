@@ -1,11 +1,27 @@
+import { useEffect, useState } from "react"
 import Nav from "../../components/Nav"
+import api from "../../services/api"
+import LogsRowTable from "./components/LogsRowTable"
 
 const SubsidiariesLogs = () => {
+  const [subsidiariesLogs, setSubsidiariesLogs] = useState([])
+
+  useEffect(() => {
+    api
+      .get(`/subsidiaries-logs`)
+      .then((response) => setSubsidiariesLogs(response.data))
+  }, [])
+
   return (
     <>
       <Nav />
 
-      <div className="container"></div>
+      <div className="container">
+        <LogsRowTable
+          title={`logs`}
+          logs={subsidiariesLogs}
+        />
+      </div>
     </>
   )
 }

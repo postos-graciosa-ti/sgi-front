@@ -1,9 +1,9 @@
+import moment from 'moment'
 import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import api from '../../services/api'
 import useUserSessionStore from '../../data/userSession'
-import moment from 'moment'
+import api from '../../services/api'
 
 const EditCostCenterModal = (props) => {
   const {
@@ -77,6 +77,8 @@ const EditCostCenterModal = (props) => {
 
       <Modal.Body>
         <div className="mb-3">
+          <label className='fw-bold mb-2'>Nome</label>
+
           <input
             type="text"
             className="form-control"
@@ -87,6 +89,8 @@ const EditCostCenterModal = (props) => {
         </div>
 
         <div className="mb-3">
+          <label className='fw-bold mb-2'>Descrição</label>
+
           <input
             type="text"
             className="form-control"

@@ -23,21 +23,26 @@ const DeleteTurnModal = (props) => {
   const handleSubmit = () => {
     deleteTurn(turnToDelete.id)
       .then(() => {
+        let logStr = `
+          ${userSession.name} deletou ${turnToDelete.name} (
+            nome=${turnToDelete.name}, 
+            horário de inicio de turno=${turnToDelete.start_time},
+            horário de inicio de intervalo=${turnToDelete.start_interval_time},
+            horário de fim de intervalo=${turnToDelete.end_interval_time},
+            horário de fim de turn=${turnToDelete.end_time}
+          )`
+
         let logFormData = {
-          "happened_at": moment(new Date()).format("DD-MM-YYYY"),
-          "happened_at_time": moment(new Date()).format("HH:mm"),
-          "http_method": 3,
-          "subsidiarie_id": selectedSubsidiarie.value,
-          "user_id": userSession.id,
-          "turn_id": turnToDelete.id
+          log_str: logStr,
+          happened_at: moment(new Date()).format("DD-MM-YYYY"),
+          happened_at_time: moment(new Date()).format("HH:mm"),
+          subsidiarie_id: selectedSubsidiarie.value,
+          user_id: userSession.id
         }
 
         api
-          .post(`/logs/turns`, logFormData)
-          .then(() => {
-            handleCloseModal()
-          })
-          .catch((error) => console.error(error))
+          .post(`/subsidiaries/${selectedSubsidiarie.value}/logs/turns`, logFormData)
+          .then(() => handleCloseModal())
       })
   }
 

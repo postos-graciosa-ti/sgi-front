@@ -51,21 +51,29 @@ const AddTurnModal = (props) => {
 
     postTurn(formData)
       .then((response) => {
+        console.log(response)
+        debugger
+
+        let logStr = `
+        ${userSession.name} adicionou ${response.data.name} (
+        nome=${response.data.name}, 
+        horário de inicio de turno=${response.data.start_time},
+        horário de inicio de intervalo=${response.data.start_interval_time}
+        horário de fim de intervalo=${response.data.end_interval_time}
+        horário de fim de turn=${response.data.end_time}
+        )`
+
         let logFormData = {
+          "log_str": logStr,
           "happened_at": moment(new Date()).format("DD-MM-YYYY"),
           "happened_at_time": moment(new Date()).format("HH:mm"),
-          "http_method": 1,
           "subsidiarie_id": selectedSubsidiarie.value,
-          "user_id": userSession.id,
-          "turn_id": response.data.id
+          "user_id": userSession.id
         }
 
         api
-          .post(`/logs/turns`, logFormData)
-          .then(() => {
-            handleClose()
-          })
-          .catch((error) => console.error(error))
+          .post(`/subsidiaries/${selectedSubsidiarie.value}/logs/turns`, logFormData)
+          .then(() => handleClose())
       })
   }
 

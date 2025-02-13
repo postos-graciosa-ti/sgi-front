@@ -170,6 +170,8 @@ const Nav = () => {
 
                     <ul className="dropdown-menu">
                       <li><Link className="dropdown-item" to="/workers-logs">Colaboradores</Link></li>
+                    
+                      <li><Link className="dropdown-item" to="/turns-logs">Turnos</Link></li>
 
                       <li><Link className="dropdown-item" to="/cost-center-logs">Centros de custos</Link></li>
 

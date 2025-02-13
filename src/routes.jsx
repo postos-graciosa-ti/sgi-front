@@ -13,7 +13,10 @@ import Department from "./pages/department/Department"
 import FirstAcess from "./pages/firstAccess/FirstAcess"
 import Functions from "./pages/functions/Functions"
 import Home from "./pages/home/Home"
+import CostCenterLogs from "./pages/logsPages/CostCentersLogs"
+import DepartmentLogs from "./pages/logsPages/DepartmentsLogs"
 import ScalesLogs from "./pages/logsPages/ScalesLogs"
+import TurnsLogs from "./pages/logsPages/TurnsLogs"
 import WorkersLogs from "./pages/logsPages/WorkersLogs"
 import Scale from "./pages/scale/Scale"
 import SeeScale from "./pages/scale/SeeScale"
@@ -25,8 +28,6 @@ import Turns from "./pages/turns/Turns"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
-import TurnsLogs from "./pages/logsPages/TurnsLogs"
-import CostCenterLogs from "./pages/logsPages/CostCentersLogs"
 
 const Routes = createBrowserRouter([
 
@@ -167,6 +168,11 @@ const Routes = createBrowserRouter([
   {
     path: "/cost-center-logs",
     element: <PrivateRoute><CostCenterLogs /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/department-logs",
+    element: <PrivateRoute><DepartmentLogs /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

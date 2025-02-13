@@ -105,6 +105,7 @@ const Department = () => {
         setEditDepartmentModalOpen={setEditDepartmentModalOpen}
         selectedDepartment={selectedDepartment}
         setDepartmentsList={setDepartmentsList}
+        setSelectedDepartment={setSelectedDepartment}
       />
 
       <DeleteDepartmentModal
@@ -112,6 +113,7 @@ const Department = () => {
         setDeleteDepartmentModalOpen={setDeleteDepartmentModalOpen}
         selectedDepartment={selectedDepartment}
         setDepartmentsList={setDepartmentsList}
+        setSelectedDepartment={setSelectedDepartment}
       />
     </>
   )

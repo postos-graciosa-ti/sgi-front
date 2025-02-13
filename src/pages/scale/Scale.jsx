@@ -17,6 +17,7 @@ import DaysOnReportModal from "./DaysOnReportModal"
 import DeleteScaleModal from "./DeleteScaleModal"
 import printContent from "./printContent"
 import PrintModal from "./PrintModal"
+import { Link } from "react-router-dom"
 
 const Scale = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -468,6 +469,8 @@ const Scale = () => {
           >
             <Printer />
           </button>
+
+          <Link to="/scales-logs" className="btn btn-warning me-3 mt-3">Logs</Link>
 
           <button
             className="btn btn-danger mt-3 me-3"

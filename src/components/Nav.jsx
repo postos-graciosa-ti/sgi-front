@@ -6,7 +6,7 @@ import useUserSessionStore from "../data/userSession"
 import api from "../services/api"
 
 export const ChangePasswordModal = (props) => {
-  const { changePasswordModalOpen, setChangePasswordModalOpen } = props;
+  const { changePasswordModalOpen, setChangePasswordModalOpen } = props
 
   const navigate = useNavigate()
 
@@ -21,7 +21,7 @@ export const ChangePasswordModal = (props) => {
   const [newPasswordConfirm, setNewPasswordConfirm] = useState()
 
   const handleClose = () => {
-    setChangePasswordModalOpen(false);
+    setChangePasswordModalOpen(false)
   }
 
   const handleSubmit = () => {
@@ -99,7 +99,7 @@ export const ChangePasswordModal = (props) => {
         <Button variant="success" onClick={handleSubmit}>Confirmar</Button>
       </Modal.Footer>
     </Modal>
-  );
+  )
 }
 
 const Nav = () => {
@@ -110,8 +110,6 @@ const Nav = () => {
   const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false)
-
-  console.log(userSession)
 
   return (
     <>
@@ -140,10 +138,6 @@ const Nav = () => {
               <li className="nav-item">
                 <Link className="nav-link" to="/scale">Escalas</Link>
               </li>
-
-              {/* <li className="nav-item">
-                <Link className="nav-link" to="/scale-two">Escalas II</Link>
-              </li> */}
 
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -175,11 +169,11 @@ const Nav = () => {
                     </a>
 
                     <ul className="dropdown-menu">
-                      <li><Link className="dropdown-item" to="/scales-logs">Escalas</Link></li>
-
                       <li><Link className="dropdown-item" to="/workers-logs">Colaboradores</Link></li>
 
                       <li><Link className="dropdown-item" to="/cost-center-logs">Centros de custos</Link></li>
+
+                      <li><Link className="dropdown-item" to="/department-logs">Setores</Link></li>
                     </ul>
                   </li>
                 )
@@ -205,4 +199,4 @@ const Nav = () => {
   )
 }
 
-export default Nav;
+export default Nav

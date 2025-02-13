@@ -37,8 +37,10 @@ const AddCostCenterModal = (props) => {
     api
       .post("/cost-center", formData)
       .then((response) => {
+        let logStr = `${userSession.name} adicionou ${response.data.name} (nome=${response.data.name}, descrição=${response.data.description})`
+
         let logFormData = {
-          "log_str": `${userSession.name} adicionou ${response.data.name}`,
+          "log_str": logStr,
           "happened_at": moment(new Date).format("DD-MM-YYYY"),
           "happened_at_time": moment(new Date).format("HH:mm"),
           "subsidiarie_id": selectedSubsidiarie.value,

@@ -45,8 +45,13 @@ const EditCostCenterModal = (props) => {
     api
       .put(`/cost-center/${selectedCostCenter.id}`, formData)
       .then((response) => {
+        let logStr = `
+          ${userSession.name} atualizou ${selectedCostCenter?.name} de (nome=${selectedCostCenter?.name}, descrição=${selectedCostCenter?.description})  
+          para ${response.data.name} (nome=${response.data.name}, descrição=${response.data.description})
+        `
+
         let logFormData = {
-          "log_str": `${userSession.name} atualizou ${response.data.name}`,
+          "log_str": logStr,
           "happened_at": moment(new Date).format("DD-MM-YYYY"),
           "happened_at_time": moment(new Date).format("HH:mm"),
           "subsidiarie_id": selectedSubsidiarie.value,

@@ -32,8 +32,10 @@ const DeleteCostCenterModal = (props) => {
     api
       .delete(`/cost-center/${selectedCostCenter.id}`)
       .then(() => {
+        let logStr = `${userSession.name} apagou ${selectedCostCenter.name}`
+
         let logFormData = {
-          "log_str": `${userSession.name} apagou ${selectedCostCenter.name}`,
+          "log_str": logStr,
           "happened_at": moment(new Date).format("DD-MM-YYYY"),
           "happened_at_time": moment(new Date).format("HH:mm"),
           "subsidiarie_id": selectedSubsidiarie.value,

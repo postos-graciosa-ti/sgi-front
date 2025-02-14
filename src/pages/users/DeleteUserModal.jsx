@@ -1,13 +1,16 @@
+import moment from 'moment'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import useUserSessionStore from "../../data/userSession"
 import deleteUser from '../../requests/deleteUser'
 import getUsers from '../../requests/getUsers'
+import api from '../../services/api'
 
 const DeleteUserModal = (props) => {
   const {
     openDeleteUserModal,
     setOpenDeleteUserModal,
+    setSelectedUser,
   } = props
 
   const bearerToken = useUserSessionStore(state => state.bearerToken)
@@ -16,21 +19,39 @@ const DeleteUserModal = (props) => {
 
   const selectedUser = useUserSessionStore(state => state.selectedUser)
 
+  const userSession = useUserSessionStore(state => state.userSession)
+
+  const handleClose = () => {
+    getUsers(bearerToken)
+      .then((response) => setUserList(response.data))
+
+    setSelectedUser()
+
+    setOpenDeleteUserModal(false)
+  }
+
   const handleDeleteUser = () => {
     deleteUser(selectedUser.user_id)
       .then(() => {
-        getUsers(bearerToken)
-          .then((response) => {
-            setUserList(response.data)
-            setOpenDeleteUserModal(false)
-          })
+        let logStr = `${userSession.name} excluiu ${selectedUser?.user_name} (nome=${selectedUser?.user_name}, email=${selectedUser?.user_email})`
+
+        let logsFormData = {
+          "log_str": logStr,
+          "happened_at": moment(new Date()).format("DD-MM-YYYY"),
+          "happened_at_time": moment(new Date()).format("HH:mm"),
+          "user_id": userSession.id
+        }
+
+        api
+          .post(`/logs/users`, logsFormData)
+          .then(() => handleClose())
       })
   }
 
   return (
     <Modal
       show={openDeleteUserModal}
-      // onHide={handleClose}
+      onHide={handleClose}
       backdrop="static"
       keyboard={false}
     >
@@ -45,11 +66,9 @@ const DeleteUserModal = (props) => {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="light" onClick={() => setOpenDeleteUserModal(false)}>
-          Fechar
-        </Button>
+        <Button variant="light" onClick={handleClose}>Fechar</Button>
 
-        <Button variant="danger" onClick={() => handleDeleteUser()}>Excluir</Button>
+        <Button variant="danger" onClick={handleDeleteUser}>Excluir</Button>
       </Modal.Footer>
     </Modal>
   )

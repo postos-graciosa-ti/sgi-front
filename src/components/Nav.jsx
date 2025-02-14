@@ -179,7 +179,7 @@ const Nav = () => {
 
                       <li><Link className="dropdown-item" to="/subsidiaries-logs">Filiais</Link></li>
 
-                      <li><Link className="dropdown-item" to="/">Usuários</Link></li>
+                      <li><Link className="dropdown-item" to="/users-logs">Usuários</Link></li>
 
                       <li><Link className="dropdown-item" to="/functions-logs">Funções</Link></li>
                     </ul>

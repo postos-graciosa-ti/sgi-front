@@ -30,6 +30,7 @@ import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
 import SubsidiariesLogs from "./pages/logsPages/SubsidiariesLogs"
 import FunctionsLogs from "./pages/logsPages/FunctionsLogs"
+import UsersLogs from "./pages/logsPages/UsersLogs"
 
 const Routes = createBrowserRouter([
 
@@ -117,11 +118,6 @@ const Routes = createBrowserRouter([
     element: <PrivateRoute><CandidateFirstInterview /></PrivateRoute>,
     errorElement: <ErrorBoundary />
   },
-  // {
-  //   path: "/scale-history",
-  //   element: <ScaleHistory />,
-  //   errorElement: <ErrorBoundary />
-  // },
   {
     path: "/subsidiaries",
     element: <PrivateRoute><Subsidiaries /></PrivateRoute>,
@@ -185,6 +181,11 @@ const Routes = createBrowserRouter([
   {
     path: "/functions-logs",
     element: <PrivateRoute><FunctionsLogs /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/users-logs",
+    element: <PrivateRoute><UsersLogs /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

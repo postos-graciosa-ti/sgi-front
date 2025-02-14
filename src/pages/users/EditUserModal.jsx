@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactSelect from 'react-select'
-import getFunctions from '../../requests/getFunctions'
+import useUserSessionStore from '../../data/userSession'
 import getRoles from '../../requests/getRoles'
 import getSubsidiaries from '../../requests/getSubsidiaries'
-import putUser from '../../requests/putUser'
-import useUserSessionStore from '../../data/userSession'
 import getUsers from '../../requests/getUsers'
+import putUser from '../../requests/putUser'
 import api from '../../services/api'
+import moment from 'moment'
 
 const EditUserModal = (props) => {
   const { editUserModalOpen, setEditUserModalOpen } = props
@@ -20,6 +20,8 @@ const EditUserModal = (props) => {
   const setSelectedUser = useUserSessionStore(state => state.setSelectedUser)
 
   const setUserList = useUserSessionStore(state => state.setUserList)
+
+  const userSession = useUserSessionStore(state => state.userSession)
 
   const [rolesList, setRolesList] = useState()
 
@@ -80,6 +82,9 @@ const EditUserModal = (props) => {
   }, [])
 
   const handleClose = () => {
+    getUsers(bearerToken)
+      .then((response) => setUserList(response.data))
+
     setSelectedUser({})
 
     setEmail()
@@ -113,13 +118,19 @@ const EditUserModal = (props) => {
     }
 
     putUser(selectedUser?.user_id, formData)
-      .then(() => {
-        getUsers(bearerToken)
-          .then(response => {
-            setUserList(response.data)
+      .then((response) => {
+        let logStr = `${userSession.name} atualizou ${selectedUser?.user_name} de (nome=${selectedUser?.user_name}, email=${selectedUser?.user_email}) para ${response.data.name} (nome=${response.data.name}, email=${response.data.email})`
 
-            handleClose()
-          })
+        let logsFormData = {
+          "log_str": logStr,
+          "happened_at": moment(new Date()).format("DD-MM-YYYY"),
+          "happened_at_time": moment(new Date()).format("HH:mm"),
+          "user_id": userSession.id
+        }
+
+        api
+          .post(`/logs/users`, logsFormData)
+          .then(() => handleClose())
       })
   }
 

@@ -145,6 +145,7 @@ const Users = () => {
       <DeleteUserModal
         openDeleteUserModal={openDeleteUserModal}
         setOpenDeleteUserModal={setOpenDeleteUserModal}
+        setSelectedUser={setSelectedUser}
       />
     </>
   )

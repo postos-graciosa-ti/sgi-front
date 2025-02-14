@@ -46,7 +46,7 @@ const FirstAcess = () => {
       </div>
 
       <div className="mt-3 mb-3">
-        <h4>Primeiro acesso</h4>
+        <h3>Primeiro acesso</h3>
       </div>
 
       <div className="mb-3">

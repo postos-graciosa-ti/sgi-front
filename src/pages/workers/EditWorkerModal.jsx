@@ -124,16 +124,22 @@ const EditWorkerModal = (props) => {
     api
       .put(`/workers/${selectedWorker?.worker_id}`, formData)
       .then((response) => {
+
+        let logsFormData =
+
         api
-          .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers/update`, {
-            "updated_at": moment(new Date()).format("DD-MM-YYYY"),
-            "updated_at_time": moment(new Date()).format("HH:mm"),
-            "user_id": userSession.id,
-            "worker_id": response.data.id
-          })
-          .then(() => {
-            handleClose()
-          })
+          .post(`/subsidiaries/1/workers/logs`)
+
+        // api
+        //   .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers/update`, {
+        //     "updated_at": moment(new Date()).format("DD-MM-YYYY"),
+        //     "updated_at_time": moment(new Date()).format("HH:mm"),
+        //     "user_id": userSession.id,
+        //     "worker_id": response.data.id
+        //   })
+        //   .then(() => {
+        //     handleClose()
+        //   })
       })
   }
 

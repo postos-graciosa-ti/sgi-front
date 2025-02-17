@@ -133,15 +133,32 @@ const CreateWorkerModal = (props) => {
       .post("/workers", formData)
       .then((response) => {
         api
-          .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers/create`, {
-            "created_at": moment(new Date()).format("DD-MM-YYYY"),
-            "created_at_time": moment(new Date()).format("HH:mm"),
-            "user_id": userSession.id,
-            "worker_id": response.data.id
+          .get(`/subsidiaries/${selectedSubsdiarie.value}/workers/${response.data.id}`)
+          .then((response) => {
+            let worker = response.data
+
+            let logsFormData = {
+              "log_str": `${userSession.name} adicionou ${worker.name} ()`,
+              "happened_at": moment(new Date()).format("DD-MM-YYYY"),
+              "happened_at_time": moment(new Date()).format("HH:mm"),
+              "user_id": userSession.id
+            }
+
+            api
+              .post(`/subsidiaries/${selectedSubsdiarie.value}/workers/logs`, logsFormData)
+              .then(() => handleClose())
           })
-          .then(() => {
-            handleClose()
-          })
+
+        // api
+        //   .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers/create`, {
+        //     "created_at": moment(new Date()).format("DD-MM-YYYY"),
+        //     "created_at_time": moment(new Date()).format("HH:mm"),
+        //     "user_id": userSession.id,
+        //     "worker_id": response.data.id
+        //   })
+        //   .then(() => {
+        //     handleClose()
+        //   })
       })
   }
 

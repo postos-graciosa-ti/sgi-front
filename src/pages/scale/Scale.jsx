@@ -77,7 +77,6 @@ const Scale = () => {
     //     let workersOptions = []
 
     //     workers?.map((worker) => {
-    //       console.log(worker)
     //       if (!worker.worker_is_active) {
     //         workersOptions.push({
     //           "label": `${worker.worker_name} | ${worker.function_name} | ${worker.turn_start_time} - ${worker.turn_end_time}`,

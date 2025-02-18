@@ -1,8 +1,6 @@
 import moment from "moment"
 
 const printContent = (scalesList) => {
-  console.log(scalesList)
-  
   return (
     <div className="container">
       <h3>Escala de folgas de Colaboradores — {moment().format('MM/YYYY')}</h3>

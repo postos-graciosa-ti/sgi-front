@@ -30,8 +30,6 @@ const Home = () => {
 
   const isPiraiSecondPhone = selectedSubsdiarie.value == "6" && "/(47) 3433-8225"
 
-  console.log(selectedSubsidiarieInfo)
-
   useEffect(() => {
     getSubsidiarieById(selectedSubsdiarie.value)
       .then((response) => {

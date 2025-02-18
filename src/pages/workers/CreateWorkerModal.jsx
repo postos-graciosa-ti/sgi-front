@@ -33,8 +33,6 @@ const CreateWorkerModal = (props) => {
 
   const [admissionDate, setAdmissionDate] = useState()
 
-  console.log(userSession)
-
   useEffect(() => {
     api
       .get("/functions")

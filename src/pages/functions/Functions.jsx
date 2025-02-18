@@ -24,8 +24,6 @@ const Functions = () => {
     api
       .get(`/subsidiaries/${selectedSubsidiarie.value}/functions`)
       .then((response) => {
-        console.log(response)
-
         setFunctionsList(response.data)
       })
   }, [])

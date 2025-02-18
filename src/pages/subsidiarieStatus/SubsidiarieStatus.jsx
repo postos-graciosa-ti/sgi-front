@@ -43,8 +43,6 @@ const SubsidiarieStatus = () => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/workers-status`)
       .then((response) => {
-        console.log(response)
-
         setWorkersStatus(response.data)
       })
   }, [])

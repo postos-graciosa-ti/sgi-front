@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react"
 import { Pencil, Plus, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
-import getFunctions from "../../requests/getFunctions"
+import useUserSessionStore from "../../data/userSession"
+import api from "../../services/api"
 import AddFunctionsModal from "./AddFunctionsModal"
 import DeleteFunctionsModal from "./DeleteFunctionsModal"
 import EditFunctionsModal from "./EditFunctionsModal"
 
 const Functions = () => {
+  const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
   const [functionsList, setFunctionsList] = useState()
 
   const [selectedFunction, setSelectedFunction] = useState()
@@ -18,8 +21,13 @@ const Functions = () => {
   const [deleteFunctionModalOpen, setDeleteFunctionModalOpen] = useState(false)
 
   useEffect(() => {
-    getFunctions()
-      .then(response => setFunctionsList(response.data))
+    api
+      .get(`/subsidiaries/${selectedSubsidiarie.value}/functions`)
+      .then((response) => {
+        console.log(response)
+
+        setFunctionsList(response.data)
+      })
   }, [])
 
   const handleOnClickAddFunction = () => {
@@ -37,8 +45,6 @@ const Functions = () => {
 
     setDeleteFunctionModalOpen(true)
   }
-
-  console.log(functionsList)
 
   return (
     <>

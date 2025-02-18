@@ -1,9 +1,10 @@
 import moment from "moment"
 import printJS from "print-js"
 import { useEffect, useState } from "react"
-import { BuildingCheck, BuildingDash, Check2All, Clipboard2Check, Clipboard2X, ClipboardX, PersonAdd, Printer, Trash } from "react-bootstrap-icons"
+import { Check2All, Clipboard2Check, Clipboard2X, PersonAdd, Printer } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
 import ReactDOMServer from 'react-dom/server'
+import { Link } from "react-router-dom"
 import ReactSelect from "react-select"
 import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
@@ -17,7 +18,6 @@ import DaysOnReportModal from "./DaysOnReportModal"
 import DeleteScaleModal from "./DeleteScaleModal"
 import printContent from "./printContent"
 import PrintModal from "./PrintModal"
-import { Link } from "react-router-dom"
 
 const Scale = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -95,7 +95,7 @@ const Scale = () => {
     //   })
 
     api
-      .get("/functions")
+      .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
       .then((response) => {
         let functions = response.data
 
@@ -109,7 +109,7 @@ const Scale = () => {
       })
 
     api
-      .get("/turns")
+      .get(`/subsidiaries/${selectedSubsdiarie.value}/turns`)
       .then((response) => {
         const sortedTurns = response.data.sort((a, b) => {
           const startA = moment(a.start_time, "HH:mm")

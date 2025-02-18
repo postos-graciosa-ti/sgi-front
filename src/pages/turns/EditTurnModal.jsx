@@ -1,13 +1,20 @@
+import moment from 'moment'
 import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import putTurn from '../../requests/putTurn'
-import api from '../../services/api'
-import moment from 'moment'
 import useUserSessionStore from '../../data/userSession'
+import getSubsidiarieTurns from '../../requests/turns/getSubsidiarieTurns'
+import putSubsidiarieTurns from '../../requests/turns/putSubsidiarieTurns'
+import postTurnsLogs from '../../requests/turns/turnsLogs/postTurnsLogs'
 
 const EditTurnModal = (props) => {
-  const { editTurnModalOpen, setEditTurnModalOpen, GetTurns, turnToEdit, setTurnToEdit } = props
+  const {
+    editTurnModalOpen,
+    setEditTurnModalOpen,
+    turnToEdit,
+    setTurnToEdit,
+    setTurnsList
+  } = props
 
   const userSession = useUserSessionStore((state) => state.userSession)
 
@@ -24,7 +31,8 @@ const EditTurnModal = (props) => {
   const [endTime, setEndTime] = useState('')
 
   const handleClose = () => {
-    GetTurns()
+    getSubsidiarieTurns(selectedSubsidiarie.value)
+      .then((response) => setTurnsList(response.data))
 
     setTurnToEdit({})
 
@@ -50,23 +58,27 @@ const EditTurnModal = (props) => {
       "end_time": endTime || turnToEdit.end_time.replace(/:\d{2}$/, '')
     }
 
-    putTurn(turnToEdit.id, formData)
+    putSubsidiarieTurns(turnToEdit.id, formData)
       .then((response) => {
+        let logStr = `
+        ${userSession.name} atualizou de ${turnToEdit.name} () para ${response.data.name} (
+            nome = ${response.data.name} (anterior: ${turnToEdit.name}), 
+            horário de inicio de turno = ${response.data.start_time} (anterior: ${turnToEdit.start_time}),
+            horário de inicio de intervalo = ${response.data.start_interval_time} (anterior: ${turnToEdit.start_interval_time}),
+            horário de fim de intervalo = ${response.data.end_interval_time} (anterior: ${turnToEdit.end_interval_time}),
+            horário de fim de turno = ${response.data.end_time} (anterior: ${turnToEdit.end_time})
+        )`
+
         let logFormData = {
+          "log_str": logStr,
           "happened_at": moment(new Date()).format("DD-MM-YYYY"),
           "happened_at_time": moment(new Date()).format("HH:mm"),
-          "http_method": 2,
           "subsidiarie_id": selectedSubsidiarie.value,
-          "user_id": userSession.id,
-          "turn_id": response.data.id
+          "user_id": userSession.id
         }
 
-        api
-          .post(`/logs/turns`, logFormData)
-          .then(() => {
-            handleClose()
-          })
-          .catch((error) => console.error(error))
+        postTurnsLogs(selectedSubsidiarie.value, logFormData)
+          .then(() => handleClose())
       })
   }
 
@@ -84,7 +96,7 @@ const EditTurnModal = (props) => {
       <Modal.Body>
         <div className="mb-3">
           <label className='fw-bold mb-2'>Nome</label>
-          
+
           <input
             type="text"
             className="form-control"

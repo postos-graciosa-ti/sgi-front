@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react"
 import { Pencil, Plus, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
-import getTurns from "../../requests/getTurns"
+import useUserSessionStore from "../../data/userSession"
+import getSubsidiarieTurns from "../../requests/turns/getSubsidiarieTurns"
 import AddTurnModal from "./AddTurnModal"
 import DeleteTurnModal from "./DeleteTurnModal"
 import EditTurnModal from "./EditTurnModal"
 
 const Turns = () => {
+  const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
   const [addTurnModalOpen, setAddTurnModalOpen] = useState(false)
 
   const [turnsList, setTurnsList] = useState()
@@ -20,15 +23,9 @@ const Turns = () => {
   const [deleteTurnModalOpen, setDeleteTurnModalOpen] = useState(false)
 
   useEffect(() => {
-    GetTurns()
+    getSubsidiarieTurns(selectedSubsidiarie.value)
+      .then((response) => setTurnsList(response.data))
   }, [])
-
-  const GetTurns = () => {
-    getTurns()
-      .then((response) => {
-        setTurnsList(response.data)
-      })
-  }
 
   const handleOpenAddTurnModal = () => {
     setAddTurnModalOpen(true)
@@ -121,23 +118,23 @@ const Turns = () => {
       <AddTurnModal
         addTurnModalOpen={addTurnModalOpen}
         setAddTurnModalOpen={setAddTurnModalOpen}
-        GetTurns={GetTurns}
+        setTurnsList={setTurnsList}
       />
 
       <EditTurnModal
         editTurnModalOpen={editTurnModalOpen}
         setEditTurnModalOpen={setEditTurnModalOpen}
-        GetTurns={GetTurns}
         turnToEdit={turnToEdit}
         setTurnToEdit={setTurnToEdit}
+        setTurnsList={setTurnsList}
       />
 
       <DeleteTurnModal
         deleteTurnModalOpen={deleteTurnModalOpen}
         setDeleteTurnModalOpen={setDeleteTurnModalOpen}
-        GetTurns={GetTurns}
         turnToDelete={turnToDelete}
         setTurnToDelete={setTurnToDelete}
+        setTurnsList={setTurnsList}
       />
     </>
   )

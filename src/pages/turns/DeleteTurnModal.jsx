@@ -1,19 +1,27 @@
+import moment from 'moment'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import deleteTurn from '../../requests/deleteTurn'
-import api from '../../services/api'
 import useUserSessionStore from '../../data/userSession'
-import moment from 'moment'
+import deleteSubsidiarieTurns from "../../requests/turns/deleteSubsidiarieTurns"
+import getSubsidiarieTurns from '../../requests/turns/getSubsidiarieTurns'
+import postTurnsLogs from '../../requests/turns/turnsLogs/postTurnsLogs'
 
 const DeleteTurnModal = (props) => {
-  const { deleteTurnModalOpen, setDeleteTurnModalOpen, GetTurns, turnToDelete, setTurnToDelete } = props
+  const {
+    deleteTurnModalOpen,
+    setDeleteTurnModalOpen,
+    turnToDelete,
+    setTurnToDelete,
+    setTurnsList
+  } = props
 
   const userSession = useUserSessionStore((state) => state.userSession)
 
   const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
-  const handleCloseModal = () => {
-    GetTurns()
+  const handleClose = () => {
+    getSubsidiarieTurns(selectedSubsidiarie.value)
+      .then((response) => setTurnsList(response.data))
 
     setTurnToDelete()
 
@@ -21,7 +29,7 @@ const DeleteTurnModal = (props) => {
   }
 
   const handleSubmit = () => {
-    deleteTurn(turnToDelete.id)
+    deleteSubsidiarieTurns(turnToDelete.id)
       .then(() => {
         let logStr = `
           ${userSession.name} deletou ${turnToDelete.name} (
@@ -40,9 +48,8 @@ const DeleteTurnModal = (props) => {
           user_id: userSession.id
         }
 
-        api
-          .post(`/subsidiaries/${selectedSubsidiarie.value}/logs/turns`, logFormData)
-          .then(() => handleCloseModal())
+        postTurnsLogs(selectedSubsidiarie.value, logFormData)
+          .then(() => handleClose())
       })
   }
 
@@ -50,7 +57,7 @@ const DeleteTurnModal = (props) => {
     <>
       <Modal
         show={deleteTurnModalOpen}
-        onHide={handleCloseModal}
+        onHide={handleClose}
         backdrop="static"
         keyboard={false}
       >
@@ -67,7 +74,7 @@ const DeleteTurnModal = (props) => {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="light" onClick={handleCloseModal}>
+          <Button variant="light" onClick={handleClose}>
             Fechar
           </Button>
 

@@ -1,14 +1,19 @@
+import moment from 'moment'
 import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import 'react-datetime/css/react-datetime.css'
-import postTurn from '../../requests/postTurn'
-import api from "../../services/api"
 import useUserSessionStore from '../../data/userSession'
-import moment from 'moment'
+import getSubsidiarieTurns from '../../requests/turns/getSubsidiarieTurns'
+import postSubsidiarieTurns from "../../requests/turns/postSubsidiarieTurns"
+import postTurnsLogs from "../../requests/turns/turnsLogs/postTurnsLogs"
 
 const AddTurnModal = (props) => {
-  const { addTurnModalOpen, setAddTurnModalOpen, GetTurns } = props
+  const {
+    addTurnModalOpen,
+    setAddTurnModalOpen,
+    setTurnsList
+  } = props
 
   const userSession = useUserSessionStore((state) => state.userSession)
 
@@ -25,7 +30,8 @@ const AddTurnModal = (props) => {
   const [endTime, setEndTime] = useState('')
 
   const handleClose = () => {
-    GetTurns()
+    getSubsidiarieTurns(selectedSubsidiarie.value)
+      .then((response) => setTurnsList(response.data))
 
     setName('')
 
@@ -46,21 +52,19 @@ const AddTurnModal = (props) => {
       "start_time": startTime,
       "start_interval_time": startIntervalTime,
       "end_interval_time": endIntervalTime,
-      "end_time": endTime
+      "end_time": endTime,
+      "subsidiarie_id": selectedSubsidiarie.value
     }
 
-    postTurn(formData)
+    postSubsidiarieTurns(formData)
       .then((response) => {
-        console.log(response)
-        debugger
-
         let logStr = `
         ${userSession.name} adicionou ${response.data.name} (
-        nome=${response.data.name}, 
-        horário de inicio de turno=${response.data.start_time},
-        horário de inicio de intervalo=${response.data.start_interval_time}
-        horário de fim de intervalo=${response.data.end_interval_time}
-        horário de fim de turn=${response.data.end_time}
+            nome = ${response.data.name}, 
+            horário de inicio de turno = ${response.data.start_time},
+            horário de inicio de intervalo = ${response.data.start_interval_time},
+            horário de fim de intervalo = ${response.data.end_interval_time},
+            horário de fim de turno = ${response.data.end_time}
         )`
 
         let logFormData = {
@@ -71,8 +75,7 @@ const AddTurnModal = (props) => {
           "user_id": userSession.id
         }
 
-        api
-          .post(`/subsidiaries/${selectedSubsidiarie.value}/logs/turns`, logFormData)
+        postTurnsLogs(selectedSubsidiarie.value, logFormData)
           .then(() => handleClose())
       })
   }

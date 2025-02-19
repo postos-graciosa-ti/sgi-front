@@ -111,14 +111,22 @@ const Scale = () => {
 
         setFrentistasId(functions.find((func) => func.name == "Frentista I"))
 
-        setFrentistasCaixaId(functions.find((func) => func.name == "Frentistas-caixa"))
+        setFrentistasCaixaId(functions.find((func) => func.name == "Frentista / Caixa II"))
 
         setTrocadoresId(functions.find((func) => func.name == "Trocador de Óleo / Frentista II"))
 
         let functionsOptions = []
 
         functions && functions.map((func) => {
-          functionsOptions.push({ "label": func.name, "value": func.id })
+          let inScaleFunctions = (
+            func.name == "Operador(a) de Caixa I" ||
+            func.name == "Frentista I" ||
+            func.name == "Frentista / Caixa II" ||
+            func.name == "Trocador de Óleo / Frentista II"
+          )
+
+          if (inScaleFunctions)
+            functionsOptions.push({ "label": func.name, "value": func.id })
         })
 
         setFunctionsOptions(functionsOptions)

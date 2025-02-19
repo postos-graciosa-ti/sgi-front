@@ -522,7 +522,7 @@ const Scale = () => {
         </div>
 
         <ScaleRow
-          title="Caixas"
+          title="Escala de caixas"
           scalesList={scalesList}
           functionId={caixasId?.id}
           selectedWorker={selectedWorker}
@@ -531,7 +531,7 @@ const Scale = () => {
         />
 
         <ScaleRow
-          title={"Frentistas"}
+          title={"Escala de frentistas"}
           scalesList={scalesList}
           functionId={frentistasId?.id}
           selectedWorker={selectedWorker}
@@ -540,7 +540,7 @@ const Scale = () => {
         />
 
         <ScaleRow
-          title={"Frentistas-caixa"}
+          title={"Escala de frentistas-caixas"}
           scalesList={scalesList}
           functionId={frentistasCaixaId?.id}
           selectedWorker={selectedWorker}
@@ -549,7 +549,7 @@ const Scale = () => {
         />
 
         <ScaleRow
-          title={"Trocadores de óleo"}
+          title={"Escala de trocadores de óleo"}
           scalesList={scalesList}
           functionId={trocadoresId?.id}
           selectedWorker={selectedWorker}

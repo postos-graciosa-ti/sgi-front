@@ -4,7 +4,6 @@ import { useEffect, useState } from "react"
 import { Check2All, Clipboard2Check, Clipboard2X, PersonAdd, Printer } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
 import ReactDOMServer from 'react-dom/server'
-import { Link } from "react-router-dom"
 import ReactSelect from "react-select"
 import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
@@ -18,6 +17,7 @@ import DaysOnReportModal from "./DaysOnReportModal"
 import DeleteScaleModal from "./DeleteScaleModal"
 import printContent from "./printContent"
 import PrintModal from "./PrintModal"
+import ScaleLogsModal from "./ScaleLogsModal"
 
 const Scale = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -74,34 +74,9 @@ const Scale = () => {
 
   const [trocadoresId, setTrocadoresId] = useState()
 
+  const [scaleLogsModalOpen, setScaleLogsModalOpen] = useState()
+
   useEffect(() => {
-    // api
-    //   .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
-    //   .then((response) => {
-    //     setAllWorkers(response.data)
-
-    //     let workers = response.data
-
-    //     let workersOptions = []
-
-    //     workers?.map((worker) => {
-    //       if (!worker.worker_is_active) {
-    //         workersOptions.push({
-    //           "label": `${worker.worker_name} | ${worker.function_name} | ${worker.turn_start_time} - ${worker.turn_end_time}`,
-    //           "value": worker.worker_id,
-    //           "isDisabled": true
-    //         })
-    //       } else {
-    //         workersOptions.push({
-    //           "label": `${worker.worker_name} | ${worker.function_name} | ${worker.turn_start_time} - ${worker.turn_end_time}`,
-    //           "value": worker.worker_id,
-    //         })
-    //       }
-    //     })
-
-    //     setWorkersOptions(workersOptions)
-    //   })
-
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
       .then((response) => {
@@ -345,7 +320,8 @@ const Scale = () => {
           user_id: userSession.id,
           worker_id: selectedWorker.value,
           inserted_at: new Date().toLocaleDateString("pt-BR"),
-          at_time: new Date().toLocaleTimeString("pt-BR")
+          at_time: new Date().toLocaleTimeString("pt-BR"),
+          subsidiarie_id: selectedSubsdiarie.value,
         })
       })
       .catch((error) => {
@@ -493,7 +469,14 @@ const Scale = () => {
             <Printer />
           </button>
 
-          <Link to="/scales-logs" className="btn btn-warning me-3 mt-3">Logs</Link>
+          {/* <Link to="/scales-logs" className="btn btn-warning me-3 mt-3">Logs</Link> */}
+
+          <button
+            onClick={() => setScaleLogsModalOpen(true)}
+            className="btn btn-warning me-3 mt-3"
+          >
+            Logs
+          </button>
 
           <button
             className="btn btn-danger mt-3 me-3"
@@ -614,6 +597,11 @@ const Scale = () => {
         setScalesList={setScalesList}
         scalesList={scalesList}
         allWorkers={allWorkers}
+      />
+
+      <ScaleLogsModal
+        scaleLogsModalOpen={scaleLogsModalOpen}
+        setScaleLogsModalOpen={setScaleLogsModalOpen}
       />
 
       <style>

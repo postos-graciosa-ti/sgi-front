@@ -66,6 +66,14 @@ const Scale = () => {
 
   const [addSomeWorkersModalOpen, setAddSomeWorkersModalOpen] = useState(false)
 
+  const [caixasId, setCaixasId] = useState()
+
+  const [frentistasId, setFrentistasId] = useState()
+
+  const [frentistasCaixaId, setFrentistasCaixaId] = useState()
+
+  const [trocadoresId, setTrocadoresId] = useState()
+
   useEffect(() => {
     // api
     //   .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
@@ -98,6 +106,14 @@ const Scale = () => {
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
       .then((response) => {
         let functions = response.data
+
+        setCaixasId(functions.find((func) => func.name == "Operador(a) de Caixa I"))
+
+        setFrentistasId(functions.find((func) => func.name == "Frentista I"))
+
+        setFrentistasCaixaId(functions.find((func) => func.name == "Frentistas-caixa"))
+
+        setTrocadoresId(functions.find((func) => func.name == "Trocador de Óleo / Frentista II"))
 
         let functionsOptions = []
 
@@ -506,9 +522,9 @@ const Scale = () => {
         </div>
 
         <ScaleRow
-          title={"Caixas"}
+          title="Caixas"
           scalesList={scalesList}
-          functionId={1}
+          functionId={caixasId?.id}
           selectedWorker={selectedWorker}
           setScalesList={setScalesList}
           setDaysOff={setDaysOff}
@@ -517,7 +533,7 @@ const Scale = () => {
         <ScaleRow
           title={"Frentistas"}
           scalesList={scalesList}
-          functionId={4}
+          functionId={frentistasId?.id}
           selectedWorker={selectedWorker}
           setScalesList={setScalesList}
           setDaysOff={setDaysOff}
@@ -526,7 +542,7 @@ const Scale = () => {
         <ScaleRow
           title={"Frentistas-caixa"}
           scalesList={scalesList}
-          functionId={2}
+          functionId={frentistasCaixaId?.id}
           selectedWorker={selectedWorker}
           setScalesList={setScalesList}
           setDaysOff={setDaysOff}
@@ -535,7 +551,7 @@ const Scale = () => {
         <ScaleRow
           title={"Trocadores de óleo"}
           scalesList={scalesList}
-          functionId={9}
+          functionId={trocadoresId?.id}
           selectedWorker={selectedWorker}
           setScalesList={setScalesList}
           setDaysOff={setDaysOff}

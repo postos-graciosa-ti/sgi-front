@@ -1,46 +1,54 @@
 import moment from "moment"
 
 const printContent = (scalesList) => {
+  const translateWeekday = (weekday) => {
+    const days = {
+      Monday: "Segunda-Feira",
+      Tuesday: "Terça-Feira",
+      Wednesday: "Quarta-Feira",
+      Thursday: "Quinta-Feira",
+      Friday: "Sexta-Feira",
+      Saturday: "Sábado",
+      Sunday: "Domingo",
+    }
+
+    return days[weekday] || ""
+  }
+
   return (
     <div className="container">
-      <h3>Escala de folgas de Colaboradores — {moment().format('MM/YYYY')}</h3>
+      <h3>
+        Escala de folgas de Colaboradores — {moment().format("MM/YYYY")}
+      </h3>
 
       <div className="table-responsive">
         <table>
           <thead>
             <tr>
               <th>Colaborador</th>
-
               <th>Folga</th>
             </tr>
           </thead>
 
           <tbody>
             {
-              scalesList && scalesList.map((scale) => (
+              scalesList?.map((scale) => (
                 <tr key={scale.worker.id}>
-                  <td>
-                    {scale.worker.name} ({scale.worker.function.name}/{`${scale.worker.turn.start_time} - ${scale.worker.turn.end_time}`})
-                  </td>
+                  <td>{scale.worker.name}</td>
 
                   <td>
                     <div className="badge-container">
-                      {scale.days_off?.map((dayOff, index) => (
+                      {
+                        scale.dates?.map((dateItem, index) => {
+                          const weekdayInEnglish = moment(dateItem, "YYYY-MM-DD").format("dddd")
 
-                        <div key={index} className="badge text-bg-success">
-                          {dayOff.date} (
-                          {
-                            dayOff.weekday === "Monday" ? "Segunda-Feira" :
-                              dayOff.weekday === "Tuesday" ? "Terça-Feira" :
-                                dayOff.weekday === "Wednesday" ? "Quarta-Feira" :
-                                  dayOff.weekday === "Thursday" ? "Quinta-Feira" :
-                                    dayOff.weekday === "Friday" ? "Sexta-Feira" :
-                                      dayOff.weekday === "Saturday" ? "Sábado" :
-                                        dayOff.weekday === "Sunday" ? "Domingo" :
-                                          ""
-                          })
-                        </div>
-                      ))}
+                          return (
+                            <div key={index} className="badge text-bg-success">
+                              {`${moment(dateItem).format("DD-MM-YYYY")} (${translateWeekday(weekdayInEnglish)})`}
+                            </div>
+                          )
+                        })
+                      }
                     </div>
                   </td>
                 </tr>
@@ -52,9 +60,10 @@ const printContent = (scalesList) => {
 
       <div>
         <h3>Assinaturas:</h3>
+
         {
           scalesList?.map((scale) => (
-            <div>
+            <div key={scale.worker.id}>
               {scale.worker.name} __________________________________________________
             </div>
           ))

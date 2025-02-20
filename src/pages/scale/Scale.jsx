@@ -348,34 +348,38 @@ const Scale = () => {
   }
 
   const handlePrintScale = async () => {
-    const printableContent = `
-      <html>
-        <head>
-          <style>
-            table, th, td {
-              border: 1px solid black;
-              border-collapse: collapse;
-            }
-            th, td {
-              padding: 5px;
-              text-align: left;
-              vertical-align: top;
-            }
-            td div {
-              margin-bottom: 10px; /* Espaçamento entre os dias de folga */
-            }
-          </style>
-        </head>
-        <body>
-          ${ReactDOMServer.renderToStaticMarkup(printContent(scalesList))}
-        </body>
-      </html>
-    `
+    await api
+      .get(`/subsidiaries/${selectedSubsdiarie.value}/scales/print`)
+      .then((response) => {
+        const printableContent = `
+          <html>
+            <head>
+              <style>
+                table, th, td {
+                  border: 1px solid black;
+                  border-collapse: collapse;
+                }
+                th, td {
+                  padding: 5px;
+                  text-align: left;
+                  vertical-align: top;
+                }
+                td div {
+                  margin-bottom: 10px; /* Espaçamento entre os dias de folga */
+                }
+              </style>
+            </head>
+            <body>
+              ${ReactDOMServer.renderToStaticMarkup(printContent(response.data))}
+            </body>
+          </html> 
+        `
 
-    printJS({
-      printable: printableContent,
-      type: 'raw-html',
-    })
+        printJS({
+          printable: printableContent,
+          type: 'raw-html',
+        })
+      })
   }
 
   return (

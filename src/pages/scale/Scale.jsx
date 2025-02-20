@@ -208,21 +208,53 @@ const Scale = () => {
     //   return
     // }
 
-    let allDaysOff = [...daysOff, moment(date).format("DD-MM-YYYY")].sort()
+    let allDaysOff = [...daysOff, moment(date).format("DD-MM-YYYY")].map(d => moment(d, "DD-MM-YYYY")).sort((a, b) => a - b)
 
-    let diffPenalty = isGreaterThanSevenDays(allDaysOff)
+    allDaysOff.reduce((prevDay, currDay) => {
+      const daysDiff = currDay.diff(prevDay, "days")
 
-    if (diffPenalty) {
-      setCalendarPopupOpen(false)
+      if (daysDiff >= 8) {
+        setCalendarPopupOpen(false)
 
-      Swal.fire({
-        icon: "error",
-        title: "Erro",
-        text: "_O dia selecionado ultrapassa os 6 dias permitidos por lei_",
-      })
+        Swal.fire({
+          icon: "error",
+          title: "Erro",
+          text: "_O dia selecionado ultrapassa os 6 dias permitidos por lei_",
+        })
 
-      throw new Error("_O dia selecionado ultrapassa os 6 dias permitidos por lei_")
-    }
+        throw new Error("_O dia selecionado ultrapassa os 6 dias permitidos por lei_")
+      }
+
+      return currDay
+    })
+
+
+    // let allDaysOff = [...daysOff, moment(date).format("DD-MM-YYYY")].sort()
+
+    // allDaysOff.reduce((prevDay, currDay) => {
+    //   prevDay = moment(prevDay, "DD-MM-YYYY").toDate()
+
+    //   currDay = moment(currDay, "DD-MM-YYYY").toDate()
+
+    //   const daysDiff = currDay.diff(prevDay, "days");
+
+    //   console.log(prevDay, currDay, daysDiff)
+    //   debugger
+    // })
+
+    // let diffPenalty = isGreaterThanSevenDays(allDaysOff)
+
+    // if (diffPenalty) {
+    //   setCalendarPopupOpen(false)
+
+    //   Swal.fire({
+    //     icon: "error",
+    //     title: "Erro",
+    //     text: "_O dia selecionado ultrapassa os 6 dias permitidos por lei_",
+    //   })
+
+    //   throw new Error("_O dia selecionado ultrapassa os 6 dias permitidos por lei_")
+    // }
 
     let worker = allWorkers.find(worker => worker.worker_id == selectedWorker.value)
 

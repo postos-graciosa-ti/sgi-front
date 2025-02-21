@@ -62,6 +62,7 @@ const Turns = () => {
             type="button"
             className="btn btn-primary"
             onClick={handleOpenAddTurnModal}
+            title="Adicionar turno"
           >
             <Plus />
           </button>
@@ -94,6 +95,7 @@ const Turns = () => {
                         type="button"
                         className="btn btn-warning mt-2 me-2"
                         onClick={() => handleOpenEditTurnModal(turn)}
+                        title="Editar turno"
                       >
                         <Pencil />
                       </button>
@@ -103,6 +105,7 @@ const Turns = () => {
                         type="button"
                         className="btn btn-danger mt-2"
                         onClick={() => handleOpenDeleteTurnModal(turn)}
+                        title="Apagar turno"
                       >
                         <Trash />
                       </button>

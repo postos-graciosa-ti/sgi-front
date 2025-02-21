@@ -50,6 +50,7 @@ const CostCenter = () => {
             type="button"
             className="btn btn-primary"
             onClick={() => setAddCostCenterModalOpen(true)}
+            title="Adicionar centro de custo"
           >
             <Plus />
           </button>
@@ -76,6 +77,7 @@ const CostCenter = () => {
                         type="button"
                         className="btn btn-warning mt-2 me-2"
                         onClick={() => handleOpenEditCostCenterModal(costCenter)}
+                        title="Editar centro de custo"
                       >
                         <Pencil />
                       </button>
@@ -84,6 +86,7 @@ const CostCenter = () => {
                         type="button"
                         className="btn btn-danger mt-2"
                         onClick={() => handleOpenDeleteCostCenterModal(costCenter)}
+                        title="Apagar centro de custo"
                       >
                         <Trash />
                       </button>

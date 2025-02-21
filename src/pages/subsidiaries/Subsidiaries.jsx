@@ -65,6 +65,7 @@ const Subsidiaries = () => {
             className="btn btn-primary"
             onClick={handleOpenAddModal}
             id="add-subsidiarie"
+            title="Adicionar filial"
           >
             <Plus />
           </button>
@@ -120,6 +121,7 @@ const Subsidiaries = () => {
                         className="btn btn-warning mt-1 ms-1"
                         onClick={() => handleOpenEditModal(subsidiarie)}
                         id="edit-subsidiarie"
+                        title="Editar filial"
                       >
                         <Pencil />
                       </button>
@@ -129,6 +131,7 @@ const Subsidiaries = () => {
                         className="btn btn-danger mt-1 ms-1"
                         onClick={() => handleOpenDeleteModal(subsidiarie)}
                         id="delete-subsidiarie"
+                        title="Apagar filial"
                       >
                         <Trash />
                       </button>

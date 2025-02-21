@@ -53,7 +53,12 @@ const Functions = () => {
           <h4>Cadastro de funções</h4>
         </div>
 
-        <button id="addFunction" className="btn btn-primary" onClick={handleOnClickAddFunction}>
+        <button
+          id="addFunction"
+          className="btn btn-primary"
+          onClick={handleOnClickAddFunction}
+          title="Adicionar função"
+        >
           <Plus />
         </button>
 
@@ -82,11 +87,21 @@ const Functions = () => {
                     <td>{func.ideal_quantity || "indefenido"}</td>
 
                     <td>
-                      <button id="editFunction" className="btn btn-warning me-2 mt-1" onClick={() => handleOnClickEditFunction(func)}>
+                      <button
+                        id="editFunction"
+                        className="btn btn-warning me-2 mt-1"
+                        onClick={() => handleOnClickEditFunction(func)}
+                        title="Editar função"
+                      >
                         <Pencil />
                       </button>
 
-                      <button id="deleteFunction" className="btn btn-danger me-2 mt-1" onClick={() => handleOnClickDeleteFunction(func)}>
+                      <button
+                        id="deleteFunction"
+                        className="btn btn-danger me-2 mt-1"
+                        onClick={() => handleOnClickDeleteFunction(func)}
+                        title="Apagar função"
+                      >
                         <Trash />
                       </button>
                     </td>

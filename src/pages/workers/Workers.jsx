@@ -73,8 +73,8 @@ const Workers = () => {
 
         <button
           className="btn btn-danger me-2"
-          title="filtrar demissões"
           onClick={handleOpenResigntaionReasonsReportModal}
+          title="Filtrar demissões"
         >
           <ClipboardData />
         </button>
@@ -84,7 +84,7 @@ const Workers = () => {
           className="btn btn-primary"
           onClick={() => setCreateWorkerModalOpen(true)}
           id="add-worker"
-          title="adicionar"
+          title="Adicionar colaborador"
         >
           <PersonAdd />
         </button>
@@ -121,6 +121,7 @@ const Workers = () => {
                     <button
                       className="btn btn-primary me-2 mt-2"
                       onClick={() => handleOpenWorkerNotation(worker)}
+                      title="Adicionar observação"
                     >
                       <Pen />
                     </button>
@@ -130,7 +131,7 @@ const Workers = () => {
                       onClick={() => handleOpenEditWorkerModal(worker)}
                       id="edit-worker"
                       aria-label={`Editar informações de ${worker.worker_name}`}
-                      title="editar"
+                      title="Editar colaborador"
                     >
                       <PersonGear />
                     </button>
@@ -140,7 +141,7 @@ const Workers = () => {
                       onClick={() => handleOpenDeleteWorkerModal(worker)}
                       id="delete-worker"
                       aria-label={`Excluir ${worker.worker_name}`}
-                      title="demitir"
+                      title="Demitir colaborador"
                     >
                       <SlashCircle />
                     </button>

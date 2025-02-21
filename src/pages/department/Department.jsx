@@ -50,6 +50,7 @@ const Department = () => {
             type="button"
             className="btn btn-primary"
             onClick={() => setAddDepartmentModalOpen(true)}
+            title="Adicionar setor"
           >
             <Plus />
           </button>
@@ -75,14 +76,17 @@ const Department = () => {
                       type="button"
                       className="btn btn-warning mt-2 me-2"
                       onClick={() => handleOpenEditDepartmentModal(department)}
+                      title="Editar setor"
                     >
                       <Pencil />
                     </button>
+
                     <button
                       id="deleteTurn"
                       type="button"
                       className="btn btn-danger mt-2"
                       onClick={() => handleOpenDeleteDepartmentModal(department)}
+                      title="Apagar setor"
                     >
                       <Trash />
                     </button>

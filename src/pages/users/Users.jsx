@@ -41,6 +41,7 @@ const Users = () => {
             id="addUser"
             className="btn btn-primary"
             onClick={() => setModalOpen(true)}
+            title="Adicionar usuário"
           >
             <Plus />
           </button>
@@ -107,6 +108,7 @@ const Users = () => {
                           setEditUserModalOpen(true);
                           setSelectedUser(user)
                         }}
+                        title="Editar usuário"
                       >
                         <Pen />
                       </button>
@@ -118,6 +120,7 @@ const Users = () => {
                           setOpenDeleteUserModal(true);
                           setSelectedUser(user);
                         }}
+                        title="Apagar usuário"
                       >
                         <Trash />
                       </button>

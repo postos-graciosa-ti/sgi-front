@@ -2,9 +2,12 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import useUserSessionStore from './data/userSession'
 import login from './requests/login'
+import { useTranslation } from 'react-i18next'
 
 function App() {
   const navigate = useNavigate()
+
+  const { i18n } = useTranslation()
 
   const [email, setEmail] = useState()
 
@@ -13,6 +16,11 @@ function App() {
   const setUserSession = useUserSessionStore(state => state.setUserSession)
 
   const setBearerToken = useUserSessionStore(state => state.setBearerToken)
+
+  useEffect(() => {
+    document.documentElement.lang = i18n.language
+
+  }, [i18n.language])
 
   const handleLogin = (e) => {
     e.preventDefault()

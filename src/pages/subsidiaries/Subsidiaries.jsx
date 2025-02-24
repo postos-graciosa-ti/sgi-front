@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react"
-import getSubsidiaries from "../../requests/getSubsidiaries"
+import { Pencil, Plus, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
-import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
-import mountTour from "../../functions/mountTour"
+import getSubsidiaries from "../../requests/getSubsidiaries"
 import AddSubsidiarieModal from "./AddSubsidiarieModal"
-import EditSubsidiarieModal from "./EditSubsidiarieModal"
 import DeleteSubsidiarieModal from "./DeleteSubsidiarieModal"
+import EditSubsidiarieModal from "./EditSubsidiarieModal"
 
 const Subsidiaries = () => {
   const [subsidiaries, setSubsidiaries] = useState()
@@ -39,12 +38,6 @@ const Subsidiaries = () => {
     setDeleteSubsidiarieModalOpen(true)
   }
 
-  const setTour = () => {
-    let driverObj = mountTour('/subsidiaries')
-
-    driverObj.drive()
-  }
-
   return (
     <>
       <Nav />
@@ -53,14 +46,6 @@ const Subsidiaries = () => {
         <h4>Cadastro de filiais</h4>
 
         <div className="mt-3 mb-3">
-          {/* <button
-            className="btn btn-warning me-2"
-            onClick={setTour}
-            id="help"
-          >
-            <Question />
-          </button> */}
-
           <button
             className="btn btn-primary"
             onClick={handleOpenAddModal}

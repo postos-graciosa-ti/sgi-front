@@ -1,6 +1,10 @@
 import moment from "moment"
 
 const printContent = (scalesList) => {
+  const startOfWeek = moment().startOf('week')
+
+  const endOfWeek = moment().endOf('week')
+
   const translateWeekday = (weekday) => {
     const days = {
       Monday: "Segunda-Feira",
@@ -21,11 +25,16 @@ const printContent = (scalesList) => {
         Escala de folgas de Colaboradores — {moment().format("MM/YYYY")}
       </h3>
 
+      <p>
+        Semana de {startOfWeek.format("DD/MM/YYYY")} até {endOfWeek.format("DD/MM/YYYY")}
+      </p>
+
       <div className="table-responsive">
         <table>
           <thead>
             <tr>
               <th>Colaborador</th>
+              <th>Dias de Trabalho</th>
               <th>Folga</th>
             </tr>
           </thead>
@@ -39,8 +48,24 @@ const printContent = (scalesList) => {
                   <td>
                     <div className="badge-container">
                       {
-                        scale.dates?.map((dateItem, index) => {
+                        scale.days_on?.map((dateItem, index) => {
                           const weekdayInEnglish = moment(dateItem, "YYYY-MM-DD").format("dddd")
+
+                          return (
+                            <div key={index} className="badge text-bg-primary">
+                              {`${moment(dateItem).format("DD-MM-YYYY")} (${translateWeekday(weekdayInEnglish)})`}
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
+                  </td>
+
+                  <td>
+                    <div className="badge-container">
+                      {
+                        scale.days_off?.map((dateItem, index) => {
+                          const weekdayInEnglish = moment(dateItem, "YYYY-MM-DD").format("dddd");
 
                           return (
                             <div key={index} className="badge text-bg-success">

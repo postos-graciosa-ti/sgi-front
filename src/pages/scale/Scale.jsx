@@ -383,6 +383,9 @@ const Scale = () => {
     await api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/scales/print`)
       .then((response) => {
+        console.log(response)
+        debugger
+        
         const printableContent = `
           <html>
             <head>

@@ -186,7 +186,9 @@ const Scale = () => {
 
     api
       .get(`https://brasilapi.com.br/api/feriados/v1/${currentYear}`)
-      .then((response) => setHollidays(response.data))
+      .then((response) => {
+        setHollidays([{ "date": "2025-03-09", "name": "Aniversário de Joinville", "type": "municipal" }, ...response.data])
+      })
 
   }, [])
 

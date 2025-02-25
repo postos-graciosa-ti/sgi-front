@@ -485,7 +485,8 @@ const Scale = () => {
           <button
             id="print-days"
             className="btn btn-light mt-3 me-3"
-            onClick={handlePrintScale}
+            // onClick={handlePrintScale}
+            onClick={() => setPrintModalOpen(true)}
             title="Botão para impressão"
           >
             <Printer />

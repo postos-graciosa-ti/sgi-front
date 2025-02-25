@@ -186,7 +186,18 @@ const Scale = () => {
 
     api
       .get(`https://brasilapi.com.br/api/feriados/v1/${currentYear}`)
-      .then((response) => setHollidays(response.data))
+      .then((response) => {
+        let datesArr = [
+          {
+            "date": `${currentYear}-09-03`,
+            "name": "Aniversário de Joinville",
+            "type": "municipal"
+          },
+          ...response.data
+        ].sort((a, b) => new Date(a.date) - new Date(b.date))
+
+        setHollidays(datesArr)
+      })
 
   }, [])
 

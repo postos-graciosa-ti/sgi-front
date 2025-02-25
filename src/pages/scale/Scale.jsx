@@ -1,3 +1,4 @@
+import axios from "axios"
 import moment from "moment"
 import printJS from "print-js"
 import { useEffect, useState } from "react"
@@ -15,6 +16,7 @@ import ScaleRow from "./components/ScaleRow"
 import DaysOffReportModal from "./DaysOffReportModal"
 import DaysOnReportModal from "./DaysOnReportModal"
 import DeleteScaleModal from "./DeleteScaleModal"
+import HollidaysModal from "./HollidaysModal"
 import printContent from "./printContent"
 import PrintModal from "./PrintModal"
 import ScaleLogsModal from "./ScaleLogsModal"
@@ -75,6 +77,51 @@ const Scale = () => {
   const [trocadoresId, setTrocadoresId] = useState()
 
   const [scaleLogsModalOpen, setScaleLogsModalOpen] = useState()
+
+  const [hollidaysModalOpen, setHollidaysModalOpen] = useState(false)
+
+  const [hollidays, setHollidays] = useState()
+
+  const currentYear = new Date().getFullYear()
+
+  const [holidayMessage, setHolidayMessage] = useState('');
+
+  useEffect(() => {
+    const checkHoliday = () => {
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth() + 1; // Months are from 0 to 11, so we add 1
+      const currentYear = currentDate.getFullYear();
+
+      // Making a GET request to the brasilapi API
+      axios.get(`https://brasilapi.com.br/api/feriados/v1/${currentYear}`)
+        .then(response => {
+          // Filtering holidays of the current month
+          const holidaysInMonth = response.data.filter(holiday => {
+            const holidayMonth = new Date(holiday.date).getMonth() + 1;
+            return holidayMonth === currentMonth;
+          });
+
+          // Check if there are holidays in the current month
+          if (holidaysInMonth.length > 0) {
+            const holidayList = holidaysInMonth
+              .map(holiday => `${holiday.date} - ${holiday.name}`)
+              .join('\n');
+            setHolidayMessage(`Feriados em ${currentDate.toLocaleString('default', { month: 'long' })} de ${currentYear}:\n${holidayList}`);
+          } else {
+            setHolidayMessage(`Não há feriados em ${currentDate.toLocaleString('default', { month: 'long' })} de ${currentYear}.`);
+          }
+        })
+        .catch(error => {
+          setHolidayMessage('Erro ao buscar feriados.')
+
+          console.error('Error fetching holidays:', error)
+
+        })
+    }
+
+    checkHoliday()
+
+  }, [])
 
   useEffect(() => {
     api
@@ -137,6 +184,10 @@ const Scale = () => {
       .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
       .then((response) => setScalesList(response.data))
 
+    api
+      .get(`https://brasilapi.com.br/api/feriados/v1/${currentYear}`)
+      .then((response) => setHollidays(response.data))
+
   }, [])
 
   useEffect(() => {
@@ -194,68 +245,6 @@ const Scale = () => {
   };
 
   const handleOnclickDay = (date) => {
-    // let validationResult = addDaysOffValidations(scalesList, daysOff, date, selectedWorker, allWorkers)
-
-    // if (validationResult.hasError) {
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "Erro ao selecionar data",
-    //     text: `${validationResult.errorMessage}`
-    //   })
-
-    //   setCalendarPopupOpen(false)
-
-    //   return
-    // }
-
-    let allDaysOff = [...daysOff, moment(date).format("DD-MM-YYYY")].map(d => moment(d, "DD-MM-YYYY")).sort((a, b) => a - b)
-
-    allDaysOff.reduce((prevDay, currDay) => {
-      const daysDiff = currDay.diff(prevDay, "days")
-
-      if (daysDiff >= 8) {
-        setCalendarPopupOpen(false)
-
-        Swal.fire({
-          icon: "error",
-          title: "Erro",
-          text: "_O dia selecionado ultrapassa os 6 dias permitidos por lei_",
-        })
-
-        throw new Error("_O dia selecionado ultrapassa os 6 dias permitidos por lei_")
-      }
-
-      return currDay
-    })
-
-
-    // let allDaysOff = [...daysOff, moment(date).format("DD-MM-YYYY")].sort()
-
-    // allDaysOff.reduce((prevDay, currDay) => {
-    //   prevDay = moment(prevDay, "DD-MM-YYYY").toDate()
-
-    //   currDay = moment(currDay, "DD-MM-YYYY").toDate()
-
-    //   const daysDiff = currDay.diff(prevDay, "days");
-
-    //   console.log(prevDay, currDay, daysDiff)
-    //   debugger
-    // })
-
-    // let diffPenalty = isGreaterThanSevenDays(allDaysOff)
-
-    // if (diffPenalty) {
-    //   setCalendarPopupOpen(false)
-
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "Erro",
-    //     text: "_O dia selecionado ultrapassa os 6 dias permitidos por lei_",
-    //   })
-
-    //   throw new Error("_O dia selecionado ultrapassa os 6 dias permitidos por lei_")
-    // }
-
     let worker = allWorkers.find(worker => worker.worker_id == selectedWorker.value)
 
     scalesList?.map((scale) => {
@@ -365,20 +354,6 @@ const Scale = () => {
       })
   }
 
-  const translateWeekday = (weekday) => {
-    const days = {
-      Monday: "Segunda-Feira",
-      Tuesday: "Terça-Feira",
-      Wednesday: "Quarta-Feira",
-      Thursday: "Quinta-Feira",
-      Friday: "Sexta-Feira",
-      Saturday: "Sábado",
-      Sunday: "Domingo",
-    }
-
-    return days[weekday] || "";
-  }
-
   const handlePrintScale = async () => {
     await api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/scales/print`)
@@ -469,6 +444,17 @@ const Scale = () => {
             }}
           />
         </div>
+
+        <div className="d-flex justify-content-between align-items-center mb-2">
+          <div>
+            <button className="btn btn-primary" onClick={() => setHollidaysModalOpen(true)}>Feriados</button>
+          </div>
+
+          <div className="text-end mt-2 mb-2 text-danger">
+            *{holidayMessage}
+          </div>
+        </div>
+
 
         <div id="scale-calendar">
           <Calendar
@@ -638,6 +624,12 @@ const Scale = () => {
       <ScaleLogsModal
         scaleLogsModalOpen={scaleLogsModalOpen}
         setScaleLogsModalOpen={setScaleLogsModalOpen}
+      />
+
+      <HollidaysModal
+        hollidaysModalOpen={hollidaysModalOpen}
+        setHollidaysModalOpen={setHollidaysModalOpen}
+        hollidays={hollidays}
       />
 
       <style>

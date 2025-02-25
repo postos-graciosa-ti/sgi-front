@@ -581,6 +581,7 @@ const Scale = () => {
         selectedWorker={selectedWorker}
         setScalesList={setScalesList}
         setDaysOff={setDaysOff}
+        hollidays={hollidays}
       />
 
       <DeleteScaleModal

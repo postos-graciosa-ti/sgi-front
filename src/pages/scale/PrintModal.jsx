@@ -17,6 +17,10 @@ const PrintModal = (props) => {
   const [finalDate, setFinalDate] = useState()
 
   const handleClose = () => {
+    setInitialDate()
+
+    setFinalDate()
+
     setPrintModalOpen(false)
   }
 
@@ -57,6 +61,8 @@ const PrintModal = (props) => {
           printable: printableContent,
           type: 'raw-html',
         })
+
+        handleClose()
       })
   }
 

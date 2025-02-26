@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
@@ -8,7 +9,6 @@ import getSubsidiaries from '../../requests/getSubsidiaries'
 import getUsers from '../../requests/getUsers'
 import putUser from '../../requests/putUser'
 import api from '../../services/api'
-import moment from 'moment'
 
 const EditUserModal = (props) => {
   const { editUserModalOpen, setEditUserModalOpen } = props
@@ -38,6 +38,8 @@ const EditUserModal = (props) => {
   const [functions, setFunctions] = useState()
 
   const [subsidiaries, setSubsidiaries] = useState()
+
+  const [phone, setPhone] = useState()
 
   useEffect(() => {
     getRoles()
@@ -95,6 +97,8 @@ const EditUserModal = (props) => {
 
     setSubsidiaries()
 
+    setPhone()
+
     setEditUserModalOpen(false)
   }
 
@@ -114,7 +118,8 @@ const EditUserModal = (props) => {
       "role_id": role?.value || selectedUser?.role_id,
       "subsidiaries_id": subsidiariesId,
       "function_id": functions?.value || selectedUser?.function_id,
-      "is_active": true
+      "is_active": true,
+      "phone": phone
     }
 
     putUser(selectedUser?.user_id, formData)
@@ -196,6 +201,17 @@ const EditUserModal = (props) => {
               })) : []
             }
             onChange={(e) => setSubsidiaries(e)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="fw-bold mb-1">Telefone</label>
+
+          <input
+            className="form-control"
+            placeholder="Telefone"
+            defaultValue={selectedUser?.user_phone}
+            onChange={(e) => setPhone(e.target.value)}
           />
         </div>
       </Modal.Body>

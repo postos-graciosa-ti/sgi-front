@@ -40,6 +40,8 @@ const AddUserModal = (props) => {
 
   const [hideSubsidiaries, setHideSubsidiaries] = useState(false)
 
+  const [phone, setPhone] = useState()
+
   useEffect(() => {
     getRoles()
       .then((response) => {
@@ -94,6 +96,8 @@ const AddUserModal = (props) => {
 
     setSelectedSubsidiaries([])
 
+    setPhone()
+
     setModalOpen(false)
   }
 
@@ -107,7 +111,7 @@ const AddUserModal = (props) => {
       "email": email,
       "role_id": role,
       "subsidiaries_id": `[${subsidiariesString}]`,
-      // "function_id": selectedFunction.value
+      "phone": phone
     }
 
     postUser(formData)
@@ -180,6 +184,15 @@ const AddUserModal = (props) => {
                 isMulti
                 value={selectedSubsidiaries && selectedSubsidiaries}
                 onChange={(e) => setSelectedSubsidiaries(e)}
+              />
+            </div>
+
+            <div className="mb-3">
+              <input
+                type="text"
+                placeholder="Telefone"
+                className="form-control"
+                onChange={(e) => setPhone(e.target.value)}
               />
             </div>
 

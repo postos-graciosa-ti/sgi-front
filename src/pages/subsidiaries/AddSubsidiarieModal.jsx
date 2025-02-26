@@ -1,11 +1,12 @@
 import moment from 'moment'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import ReactSelect from "react-select"
+import useUserSessionStore from '../../data/userSession'
 import getSubsidiaries from '../../requests/getSubsidiaries'
 import postSubsidiarie from '../../requests/postSubsidiarie'
 import api from '../../services/api'
-import useUserSessionStore from '../../data/userSession'
 
 const AddSubsidiarieModal = (props) => {
   const {
@@ -16,6 +17,10 @@ const AddSubsidiarieModal = (props) => {
 
   const userSession = useUserSessionStore(state => state.userSession)
 
+  const [usersOptions, setUsersOptions] = useState([])
+
+  const [selectedUser, setSelectedUser] = useState()
+
   const [name, setName] = useState()
 
   const [adress, setAdress] = useState()
@@ -24,9 +29,27 @@ const AddSubsidiarieModal = (props) => {
 
   const [email, setEmail] = useState()
 
+  useEffect(() => {
+    api
+      .get("/users")
+      .then((response) => {
+        if (response?.data) {
+          const options = response.data.map((user) => ({
+            label: user.user_name,
+            value: user.user_id,
+          }))
+
+          setUsersOptions(options)
+        }
+      })
+
+  }, [])
+
   const handleCloseModal = () => {
     getSubsidiaries()
       .then((response) => setSubsidiaries(response.data))
+
+    setSelectedUser()
 
     setName()
 
@@ -46,7 +69,8 @@ const AddSubsidiarieModal = (props) => {
       "name": name,
       "adress": adress,
       "phone": phone,
-      "email": email
+      "email": email,
+      "coordinator": selectedUser.value
     }
 
     postSubsidiarie(formData)
@@ -82,6 +106,14 @@ const AddSubsidiarieModal = (props) => {
 
         <form onSubmit={handleSubmit}>
           <Modal.Body>
+            <div className="mb-3">
+              <ReactSelect
+                placeholder={"Coordenador"}
+                options={usersOptions}
+                onChange={(value) => setSelectedUser(value)}
+              />
+            </div>
+
             <div className="mb-3">
               <input
                 type="text"

@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import moment from 'moment'
+import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import ReactSelect from "react-select"
+import useUserSessionStore from '../../data/userSession'
 import getSubsidiaries from "../../requests/getSubsidiaries"
 import putSubsidiarie from '../../requests/putSubsidiarie'
-import useUserSessionStore from '../../data/userSession'
-import moment from 'moment'
 import api from '../../services/api'
 
 const EditSubsidiarieModal = (props) => {
@@ -18,6 +19,10 @@ const EditSubsidiarieModal = (props) => {
 
   const userSession = useUserSessionStore(state => state.userSession)
 
+  const [usersOptions, setUsersOptions] = useState([])
+
+  const [selectedUser, setSelectedUser] = useState()
+
   const [name, setName] = useState()
 
   const [adress, setAdress] = useState()
@@ -26,9 +31,27 @@ const EditSubsidiarieModal = (props) => {
 
   const [email, setEmail] = useState()
 
+  useEffect(() => {
+    api
+      .get("/users")
+      .then((response) => {
+        if (response?.data) {
+          const options = response.data.map((user) => ({
+            label: user.user_name,
+            value: user.user_id,
+          }))
+
+          setUsersOptions(options)
+        }
+      })
+
+  }, [])
+
   const handleCloseModal = () => {
     getSubsidiaries()
       .then((response) => setSubsidiaries(response.data))
+
+    setSelectedUser()
 
     setSelectedSubsidiarie({})
 
@@ -50,8 +73,12 @@ const EditSubsidiarieModal = (props) => {
       "name": name || selectedSubsidiarie.name,
       "adress": adress || selectedSubsidiarie.adress,
       "phone": phone || selectedSubsidiarie.phone,
-      "email": email || selectedSubsidiarie.email
+      "email": email || selectedSubsidiarie.email,
+      "coordinator": selectedUser.value || selectedSubsidiarie.coordinator
     }
+
+    console.log(formData)
+    debugger
 
     putSubsidiarie(selectedSubsidiarie.id, formData)
       .then((response) => {
@@ -86,6 +113,17 @@ const EditSubsidiarieModal = (props) => {
 
         <form onSubmit={handleSubmit}>
           <Modal.Body>
+            <label className='mb-2'><b>Coordenador</b></label>
+
+            <div className="mb-3">
+              <ReactSelect
+                options={usersOptions}
+                placeholder="Coordenador"
+                defaultValue={usersOptions.find((user) => user.value === selectedSubsidiarie?.coordinator)}
+                onChange={(value) => setSelectedUser(value)}
+              />
+            </div>
+
             <div className="mb-3">
               <label className='mb-2'><b>Nome</b></label>
 

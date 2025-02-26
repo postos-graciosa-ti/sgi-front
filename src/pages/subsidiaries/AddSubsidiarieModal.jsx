@@ -17,6 +17,8 @@ const AddSubsidiarieModal = (props) => {
 
   const userSession = useUserSessionStore(state => state.userSession)
 
+  const [manager, setManager] = useState()
+
   const [usersOptions, setUsersOptions] = useState([])
 
   const [selectedUser, setSelectedUser] = useState()
@@ -49,6 +51,8 @@ const AddSubsidiarieModal = (props) => {
     getSubsidiaries()
       .then((response) => setSubsidiaries(response.data))
 
+    setManager()
+
     setSelectedUser()
 
     setName()
@@ -70,7 +74,8 @@ const AddSubsidiarieModal = (props) => {
       "adress": adress,
       "phone": phone,
       "email": email,
-      "coordinator": selectedUser.value
+      "coordinator": selectedUser.value,
+      "manager": manager.value || null
     }
 
     postSubsidiarie(formData)
@@ -106,6 +111,14 @@ const AddSubsidiarieModal = (props) => {
 
         <form onSubmit={handleSubmit}>
           <Modal.Body>
+            <div className="mb-3">
+              <ReactSelect
+                placeholder={"Gerente"}
+                options={usersOptions}
+                onChange={(value) => setManager(value)}
+              />
+            </div>
+
             <div className="mb-3">
               <ReactSelect
                 placeholder={"Coordenador"}

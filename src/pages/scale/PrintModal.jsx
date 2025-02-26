@@ -38,48 +38,96 @@ const PrintModal = (props) => {
         api
           .get(`/subsidiaries/${selectedSubsdiarie.value}`, formData)
           .then((response) => {
+            let subsidiarieData = response.data
+
             api
-              .get(`/users/${response?.data.coordinator}`)
+              .get(`/users/${subsidiarieData?.coordinator}`)
               .then((response) => {
-                let onDuty = (
-                  selectedSubsdiarie.value == 1 && `Graciosa: Michel (Gerente - Telefone) / ${response?.data.name} (Coordenador - ${response?.data.phone})`
-                  || selectedSubsdiarie.value == 2 && `Fatima: ${response?.data.name} (Coordenador - ${response?.data.phone})`
-                  || selectedSubsdiarie.value == 3 && `Bemer: ${response?.data.name} (Coordenador - ${response?.data.phone})`
-                  || selectedSubsdiarie.value == 4 && `Jariva: Michel (Gerente - Telefone) / ${response?.data.name} (Coordenadora - ${response?.data.phone})`
-                  || selectedSubsdiarie.value == 5 && `Graciosa V: Michel (Gerente - Telefone) / ${response?.data.name} (Coordenador - ${response?.data.phone})`
-                  || selectedSubsdiarie.value == 6 && `Piraí: Michel (Gerente - Telefone) / ${response?.data.name} (Coordenador - ${response?.data.phone})`
-                )
+                let coordinatorData = response.data
 
-                const printableContent = `
-                  <html>
-                    <head>
-                      <style>
-                        table, th, td {
-                          border: 1px solid black;
-                          border-collapse: collapse;
-                        }
-                        th, td {
-                          padding: 5px;
-                          text-align: left;
-                          vertical-align: top;
-                        }
-                        td div {
-                          margin-bottom: 10px; /* Espaçamento entre os dias de folga */
-                        }
-                      </style>
-                    </head>
-                    <body>
-                      ${ReactDOMServer.renderToStaticMarkup(printContent(scalesToPrint, onDuty))}
-                    </body>
-                  </html> 
-                `
+                if (subsidiarieData?.manager) {
+                  api
+                    .get(`/users/${subsidiarieData?.manager}`)
+                    .then((response) => {
+                      let managerData = response.data
 
-                printJS({
-                  printable: printableContent,
-                  type: 'raw-html',
-                })
+                      let onDuty = (
+                        selectedSubsdiarie.value == 1 && `Graciosa: ${managerData?.name} (Gerente - ${managerData?.phone}) / ${coordinatorData?.name} (Coordenador - ${coordinatorData?.phone})`
+                        || selectedSubsdiarie.value == 2 && `Fatima: ${coordinatorData?.name} (Coordenador - ${coordinatorData?.phone})`
+                        || selectedSubsdiarie.value == 3 && `Bemer: ${coordinatorData?.name} (Coordenador - ${coordinatorData?.phone})`
+                        || selectedSubsdiarie.value == 4 && `Jariva: ${managerData?.name} (Gerente - ${managerData.phone}) / ${coordinatorData?.name} (Coordenadora - ${coordinatorData?.phone})`
+                        || selectedSubsdiarie.value == 5 && `Graciosa V: ${managerData?.name} (Gerente - ${managerData?.phone}) / ${coordinatorData?.name} (Coordenador - ${coordinatorData?.phone})`
+                        || selectedSubsdiarie.value == 6 && `Piraí: ${managerData?.name} (Gerente - ${managerData?.phone}) / ${coordinatorData?.name} (Coordenador - ${coordinatorData?.phone})`
+                      )
 
-                handleClose()
+                      const printableContent = `
+                        <html>
+                          <head>
+                            <style>
+                              table, th, td {
+                                border: 1px solid black;
+                                border-collapse: collapse;
+                              }
+                              th, td {
+                                padding: 5px;
+                                text-align: left;
+                                vertical-align: top;
+                              }
+                              td div {
+                                margin-bottom: 10px; /* Espaçamento entre os dias de folga */
+                              }
+                            </style>
+                          </head>
+                          <body>
+                            ${ReactDOMServer.renderToStaticMarkup(printContent(scalesToPrint, onDuty))}
+                          </body>
+                        </html> 
+                      `
+
+                      printJS({
+                        printable: printableContent,
+                        type: 'raw-html',
+                      })
+
+                      handleClose()
+                    })
+                } else {
+                  let onDuty = (
+                    selectedSubsdiarie.value == 2 && `Fatima: ${coordinatorData?.name} (Coordenador - ${coordinatorData?.phone})`
+                    || selectedSubsdiarie.value == 3 && `Bemer: ${coordinatorData?.name} (Coordenador - ${coordinatorData?.phone})`
+                  )
+
+                  const printableContent = `
+                    <html>
+                      <head>
+                        <style>
+                          table, th, td {
+                            border: 1px solid black;
+                            border-collapse: collapse;
+                          }
+                          th, td {
+                            padding: 5px;
+                            text-align: left;
+                            vertical-align: top;
+                          }
+                          td div {
+                            margin-bottom: 10px; /* Espaçamento entre os dias de folga */
+                          }
+                        </style>
+                      </head>
+                      <body>
+                        ${ReactDOMServer.renderToStaticMarkup(printContent(scalesToPrint, onDuty))}
+                      </body>
+                    </html> 
+                  `
+
+                  printJS({
+                    printable: printableContent,
+                    type: 'raw-html',
+                  })
+
+                  handleClose()
+                }
               })
           })
       })

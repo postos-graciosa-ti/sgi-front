@@ -33,45 +33,55 @@ const PrintModal = (props) => {
     api
       .post(`/subsidiaries/${selectedSubsdiarie.value}/scales/print`, formData)
       .then((response) => {
-        let onDuty = (
-          selectedSubsdiarie.value == 1 && "Graciosa: Michel (Gerente - Telefone) / Nilson (Coordenador - Telefone)"
-          || selectedSubsdiarie.value == 2 && "Fatima: Daniel (Coordenador - Telefone)"
-          || selectedSubsdiarie.value == 3 && "Bemer: Rudnick (Coordenador - Telefone)"
-          || selectedSubsdiarie.value == 4 && "Jariva: Michel (Gerente - Telefone) / Marcia (Coordenadora - Telefone)"
-          || selectedSubsdiarie.value == 5 && "Graciosa V: Michel (Gerente - Telefone) / Thiago (Coordenador - Telefone)"
-          || selectedSubsdiarie.value == 6 && "Piraí: Michel (Gerente - Telefone) / Gisele (Coordenador - Telefone)"
-        )
+        let scalesToPrint = response.data
 
-        const printableContent = `
-          <html>
-            <head>
-              <style>
-                table, th, td {
-                  border: 1px solid black;
-                  border-collapse: collapse;
-                }
-                th, td {
-                  padding: 5px;
-                  text-align: left;
-                  vertical-align: top;
-                }
-                td div {
-                  margin-bottom: 10px; /* Espaçamento entre os dias de folga */
-                }
-              </style>
-            </head>
-            <body>
-              ${ReactDOMServer.renderToStaticMarkup(printContent(response.data, onDuty))}
-            </body>
-          </html> 
-        `
+        api
+          .get(`/subsidiaries/${selectedSubsdiarie.value}`, formData)
+          .then((response) => {
+            api
+              .get(`/users/${response?.data.coordinator}`)
+              .then((response) => {
+                let onDuty = (
+                  selectedSubsdiarie.value == 1 && `Graciosa: Michel (Gerente - Telefone) / ${response?.data.name} (Coordenador - Telefone)`
+                  || selectedSubsdiarie.value == 2 && `Fatima: ${response?.data.name} (Coordenador - Telefone)`
+                  || selectedSubsdiarie.value == 3 && `Bemer: ${response?.data.name} (Coordenador - Telefone)`
+                  || selectedSubsdiarie.value == 4 && `Jariva: Michel (Gerente - Telefone) / ${response?.data.name} (Coordenadora - Telefone)`
+                  || selectedSubsdiarie.value == 5 && `Graciosa V: Michel (Gerente - Telefone) / ${response?.data.name} (Coordenador - Telefone)`
+                  || selectedSubsdiarie.value == 6 && `Piraí: Michel (Gerente - Telefone) / ${response?.data.name} (Coordenador - Telefone)`
+                )
 
-        printJS({
-          printable: printableContent,
-          type: 'raw-html',
-        })
+                const printableContent = `
+                  <html>
+                    <head>
+                      <style>
+                        table, th, td {
+                          border: 1px solid black;
+                          border-collapse: collapse;
+                        }
+                        th, td {
+                          padding: 5px;
+                          text-align: left;
+                          vertical-align: top;
+                        }
+                        td div {
+                          margin-bottom: 10px; /* Espaçamento entre os dias de folga */
+                        }
+                      </style>
+                    </head>
+                    <body>
+                      ${ReactDOMServer.renderToStaticMarkup(printContent(scalesToPrint, onDuty))}
+                    </body>
+                  </html> 
+                `
 
-        handleClose()
+                printJS({
+                  printable: printableContent,
+                  type: 'raw-html',
+                })
+
+                handleClose()
+              })
+          })
       })
   }
 

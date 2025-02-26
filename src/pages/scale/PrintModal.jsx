@@ -42,12 +42,12 @@ const PrintModal = (props) => {
               .get(`/users/${response?.data.coordinator}`)
               .then((response) => {
                 let onDuty = (
-                  selectedSubsdiarie.value == 1 && `Graciosa: Michel (Gerente - Telefone) / ${response?.data.name} (Coordenador - Telefone)`
-                  || selectedSubsdiarie.value == 2 && `Fatima: ${response?.data.name} (Coordenador - Telefone)`
-                  || selectedSubsdiarie.value == 3 && `Bemer: ${response?.data.name} (Coordenador - Telefone)`
-                  || selectedSubsdiarie.value == 4 && `Jariva: Michel (Gerente - Telefone) / ${response?.data.name} (Coordenadora - Telefone)`
-                  || selectedSubsdiarie.value == 5 && `Graciosa V: Michel (Gerente - Telefone) / ${response?.data.name} (Coordenador - Telefone)`
-                  || selectedSubsdiarie.value == 6 && `Piraí: Michel (Gerente - Telefone) / ${response?.data.name} (Coordenador - Telefone)`
+                  selectedSubsdiarie.value == 1 && `Graciosa: Michel (Gerente - Telefone) / ${response?.data.name} (Coordenador - ${response?.data.phone})`
+                  || selectedSubsdiarie.value == 2 && `Fatima: ${response?.data.name} (Coordenador - ${response?.data.phone})`
+                  || selectedSubsdiarie.value == 3 && `Bemer: ${response?.data.name} (Coordenador - ${response?.data.phone})`
+                  || selectedSubsdiarie.value == 4 && `Jariva: Michel (Gerente - Telefone) / ${response?.data.name} (Coordenadora - ${response?.data.phone})`
+                  || selectedSubsdiarie.value == 5 && `Graciosa V: Michel (Gerente - Telefone) / ${response?.data.name} (Coordenador - ${response?.data.phone})`
+                  || selectedSubsdiarie.value == 6 && `Piraí: Michel (Gerente - Telefone) / ${response?.data.name} (Coordenador - ${response?.data.phone})`
                 )
 
                 const printableContent = `

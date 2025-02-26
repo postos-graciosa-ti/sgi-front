@@ -33,6 +33,15 @@ const PrintModal = (props) => {
     api
       .post(`/subsidiaries/${selectedSubsdiarie.value}/scales/print`, formData)
       .then((response) => {
+        let onDuty = (
+          selectedSubsdiarie.value == 1 && "Graciosa: Michel (Gerente - Telefone) / Nilson (Coordenador - Telefone)"
+          || selectedSubsdiarie.value == 2 && "Fatima: Daniel (Coordenador - Telefone)"
+          || selectedSubsdiarie.value == 3 && "Bemer: Rudnick (Coordenador - Telefone)"
+          || selectedSubsdiarie.value == 4 && "Jariva: Michel (Gerente - Telefone) / Marcia (Coordenadora - Telefone)"
+          || selectedSubsdiarie.value == 5 && "Graciosa V: Michel (Gerente - Telefone) / Thiago (Coordenador - Telefone)"
+          || selectedSubsdiarie.value == 6 && "Piraí: Michel (Gerente - Telefone) / Gisele (Coordenador - Telefone)"
+        )
+
         const printableContent = `
           <html>
             <head>
@@ -52,7 +61,7 @@ const PrintModal = (props) => {
               </style>
             </head>
             <body>
-              ${ReactDOMServer.renderToStaticMarkup(printContent(response.data))}
+              ${ReactDOMServer.renderToStaticMarkup(printContent(response.data, onDuty))}
             </body>
           </html> 
         `

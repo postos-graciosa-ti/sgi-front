@@ -1,6 +1,6 @@
 import moment from "moment"
 
-const printContent = (scalesList) => {
+const printContent = (scalesList, onDuty) => {
   const startOfWeek = moment().startOf('week')
 
   const endOfWeek = moment().endOf('week')
@@ -93,6 +93,14 @@ const printContent = (scalesList) => {
             </div>
           ))
         }
+      </div>
+
+      <div>
+        <h3>Plantão</h3>
+
+        <div>
+          {onDuty}
+        </div>
       </div>
     </div>
   )

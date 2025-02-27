@@ -59,10 +59,6 @@ const Home = () => {
             {selectedSubsidiarieInfo && selectedSubsidiarieInfo.email} | {selectedSubsidiarieInfo && selectedSubsidiarieInfo.phone}{isGraciosaSecondPhone}{isPiraiSecondPhone} | {selectedSubsidiarieInfo && selectedSubsidiarieInfo.adress}
           </b>
         </div>
-
-        <div className="text-center">
-          <p><b>&#169; 2025 Postos Graciosa. Todos os direitos reservados.</b></p>
-        </div>
       </div>
     </>
   )

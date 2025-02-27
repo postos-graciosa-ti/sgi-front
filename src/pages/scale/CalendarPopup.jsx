@@ -56,9 +56,15 @@ const CalendarPopup = (props) => {
           )
         }
 
-        <Button variant="light" onClick={() => setCalendarPopupOpen(false)}>Fechar</Button>
+        {
+          !isHolliday && (
+            <>
+              <Button variant="light" onClick={() => setCalendarPopupOpen(false)}>Fechar</Button>
 
-        <Button variant="success" onClick={() => handleOnclickDay(selectedDate)}>Adicionar</Button>
+              <Button variant="success" onClick={() => handleOnclickDay(selectedDate)}>Adicionar</Button>
+            </>
+          ) || <></>
+        }
       </Modal.Footer>
     </Modal>
   )

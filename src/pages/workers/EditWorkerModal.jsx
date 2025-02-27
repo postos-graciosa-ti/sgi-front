@@ -124,22 +124,62 @@ const EditWorkerModal = (props) => {
     api
       .put(`/workers/${selectedWorker?.worker_id}`, formData)
       .then((response) => {
+        let oldWorkerData = selectedWorker
 
-        let logsFormData =
+        let oldWorkerFunc = functionsOptions.find((func) => func.value == oldWorkerData.function_id)
+
+        let oldWorkerTurn = turnsOptions.find((turn) => turn.value == oldWorkerData.turn_id)
+
+        let oldWorkerCostCenter = costCenterOptions.find((costCenter) => costCenter.value == oldWorkerData.cost_center_id)
+
+        let oldWorkerDepartment = departmentsOptions.find((department) => department.value == oldWorkerData.department_id)
+
+        let updatedWorkerData = response.data
+
+        let updatedWorkerFunc = functionsOptions.find((func) => func.value == updatedWorkerData.function_id)
+
+        let updatedWorkerTurn = turnsOptions.find((turn) => turn.value == updatedWorkerData.turn_id)
+
+        let updatedWorkerCostCenter = costCenterOptions.find((costCenter) => costCenter.value == updatedWorkerData.cost_center_id)
+
+        let updatedWorkerDepartment = departmentsOptions.find((department) => department.value == updatedWorkerData.department_id)
+
+        let logStr = `
+          ${userSession.name} atualizou ${selectedWorker?.worker_name} de 
+          (
+            nome=${oldWorkerData.worker_name},
+            função=${oldWorkerFunc.label},
+            filial=${selectedSubsdiarie.label},
+            ativo=sim,
+            turno=${oldWorkerTurn.label},
+            centro de custo=${oldWorkerCostCenter.label},
+            setor=${oldWorkerDepartment.label},
+            data de admissão=${oldWorkerData.admission_date}
+          )
+          para ${updatedWorkerData.name}
+          (
+            nome=${updatedWorkerData.name},
+            função=${updatedWorkerFunc.label},
+            filial=${selectedSubsdiarie.label},
+            ativo=sim,
+            turno=${updatedWorkerTurn.label},
+            centro de custo=${updatedWorkerCostCenter.label},
+            setor=${updatedWorkerDepartment.label},
+            data de admissão=${updatedWorkerData.admission_date}
+          )
+        `
+
+        let logFormData = {
+          "log_str": logStr,
+          "happened_at": moment(new Date()).format("HH:mm"),
+          "happened_at_time": moment(new Date()).format("DD-MM-YYYY"),
+          "user_id": userSession.id,
+          "subsidiarie_id": selectedSubsdiarie.value
+        }
 
         api
-          .post(`/subsidiaries/1/workers/logs`)
-
-        // api
-        //   .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers/update`, {
-        //     "updated_at": moment(new Date()).format("DD-MM-YYYY"),
-        //     "updated_at_time": moment(new Date()).format("HH:mm"),
-        //     "user_id": userSession.id,
-        //     "worker_id": response.data.id
-        //   })
-        //   .then(() => {
-        //     handleClose()
-        //   })
+          .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers`, logFormData)
+          .then(() => handleClose())
       })
   }
 

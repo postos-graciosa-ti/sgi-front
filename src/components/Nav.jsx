@@ -196,7 +196,7 @@ const Nav = () => {
       </nav>
 
       <div className="m-3 text-end">
-        <span id="subsidiarie" className="btn btn-link m-0 p-0">{selectedSubsidiarie.label}</span> - <span className="btn btn-link m-0 p-0">{userSession.name}</span> - <Link id="changeSubsidiarie" to="/steps" className="btn btn-link  m-0 p-0">Alterar filial</Link> - <button id="changePassword" onClick={(e) => { e.stopPropagation(); setChangePasswordModalOpen(true) }} className="btn btn-link m-0 p-0">Alterar minha senha</button>
+        <span id="subsidiarie" className="btn btn-link m-0 p-0">{selectedSubsidiarie.label}</span> - <span className="btn btn-link m-0 p-0">{userSession.name}</span> - <Link id="changeSubsidiarie" to="/steps" className="btn btn-link  m-0 p-0">Alterar filial</Link> - <button id="changePassword" onClick={(e) => { e.stopPropagation(); setChangePasswordModalOpen(true) }} className="btn btn-link m-0 p-0">Alterar minha senha</button> - <span id="subsidiarie" className="btn btn-link m-0 p-0">Suporte: postosgraciosati@gmail.com</span>
       </div>
 
       <ChangePasswordModal

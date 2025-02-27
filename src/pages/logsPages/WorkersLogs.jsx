@@ -11,7 +11,7 @@ const WorkersLogs = () => {
 
   useEffect(() => {
     api
-      .get(`/subsidiaries/${selectedSubsdiarie.value}/workers/logs`)
+      .get(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers`)
       .then((response) => setWorkersLogs(response.data))
   }, [])
 

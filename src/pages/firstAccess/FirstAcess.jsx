@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react"
-import api from "../../services/api"
+import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
 import sweetAlert from "../../components/sweetAlert"
+import api from "../../services/api"
 
 const FirstAcess = () => {
   const navigate = useNavigate()

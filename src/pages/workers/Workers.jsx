@@ -105,9 +105,9 @@ const Workers = () => {
                 <th>Ações</th>
               </tr>
             </thead>
-            <tbody style={{ display: "block", maxHeight: "400px", overflowY: "scroll" }}>
+            <tbody>
               {workersList?.map((worker) => (
-                <tr key={worker.id} className={!worker.worker_is_active && "table-danger"} style={{ display: "table", width: "100%", tableLayout: "fixed" }}>
+                <tr key={worker.id} className={!worker.worker_is_active && "table-danger"}>
                   <td>{worker.worker_name}</td>
                   <td>{worker.function_name}</td>
                   <td>{worker.turn_start_time.replace(/:\d{2}$/, '')} - {worker.turn_end_time.replace(/:\d{2}$/, '')}</td>
@@ -119,14 +119,6 @@ const Workers = () => {
                   <td>{!worker.worker_is_active ? worker.resignation_reason_name : "Ativo"}</td>
                   <td>
                     <button
-                      className="btn btn-primary me-2 mt-2"
-                      onClick={() => handleOpenWorkerNotation(worker)}
-                      title="Adicionar observação"
-                    >
-                      <Pen />
-                    </button>
-
-                    <button
                       className="btn btn-warning me-2 mt-2"
                       onClick={() => handleOpenEditWorkerModal(worker)}
                       id="edit-worker"
@@ -134,6 +126,14 @@ const Workers = () => {
                       title="Editar colaborador"
                     >
                       <PersonGear />
+                    </button>
+
+                    <button
+                      className="btn btn-primary me-2 mt-2"
+                      onClick={() => handleOpenWorkerNotation(worker)}
+                      title="Adicionar observação"
+                    >
+                      <Pen />
                     </button>
 
                     <button
@@ -206,22 +206,6 @@ const Workers = () => {
         selectedWorker={selectedWorker}
         setSelectedWorker={setSelectedWorker}
       />
-
-      <style>
-        {`
-          .table thead, .table tbody tr {
-            display: table;
-            width: 100%;
-            table-layout: fixed;
-          }
-
-          .table tbody {
-            display: block;
-            max-height: 400px;
-            overflow-y: scroll;
-          }
-        `}
-      </style>
     </>
   )
 }

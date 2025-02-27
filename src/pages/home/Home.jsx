@@ -62,9 +62,7 @@ const Home = () => {
 
         <div className="text-center">
           <p><b>&#169; 2025 Postos Graciosa. Todos os direitos reservados.</b></p>
-          <p><b>Projeto desenvolvido por Thiago Volpi Rabethge | Criado em Fevereiro de 2025</b></p>
         </div>
-
       </div>
     </>
   )

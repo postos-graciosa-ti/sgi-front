@@ -66,7 +66,35 @@ const DeleteWorkerModal = (props) => {
 
     api
       .put(`/workers/${selectedWorker?.worker_id}/deactivate`, formData)
-      .then(() => handleClose())
+      .then(() => {
+        let logStr = `
+          ${userSession.name} demitiu ${selectedWorker.worker_name}
+          (
+            nome=${selectedWorker.worker_name},
+            função=${selectedWorker.function_name},
+            filial=${selectedSubsdiarie.label}),
+            ativo=não,
+            turno=${selectedWorker.turn_name},
+            centro de custo=${selectedWorker.cost_center},
+            setor=${selectedWorker.department},
+            data de admissão=${selectedWorker.admission_date},
+            data de demissão=${moment(dateResignation).format("DD-MM-YYYY")},
+            razão de demissão=${selectedResignationReason.label}
+          )
+        `
+
+        let logFormData = {
+          "log_str": logStr,
+          "happened_at": moment(new Date()).format("HH:mm"),
+          "happened_at_time": moment(new Date()).format("DD-MM-YYYY"),
+          "user_id": userSession.id,
+          "subsidiarie_id": selectedSubsdiarie.value
+        }
+
+        api
+          .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers`, logFormData)
+          .then(() => handleClose())
+      })
   }
 
   return (

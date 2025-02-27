@@ -1,10 +1,6 @@
 import moment from "moment"
 
-const printContent = (scalesList, onDuty) => {
-  const startOfWeek = moment().startOf('week')
-
-  const endOfWeek = moment().endOf('week')
-
+const printContent = (scalesList, onDuty, startDate, endDate) => {
   const translateWeekday = (weekday) => {
     const days = {
       Monday: "Segunda-Feira",
@@ -26,7 +22,7 @@ const printContent = (scalesList, onDuty) => {
       </h3>
 
       <p>
-        Semana de {startOfWeek.format("DD/MM/YYYY")} até {endOfWeek.format("DD/MM/YYYY")}
+        Semana de {startDate} até {endDate}
       </p>
 
       <div className="table-responsive">

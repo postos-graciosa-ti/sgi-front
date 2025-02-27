@@ -57,7 +57,7 @@ const PrintModal = (props) => {
                         || selectedSubsdiarie.value == 3 && `Bemer: ${coordinatorData?.name} (Coordenador - ${coordinatorData?.phone})`
                         || selectedSubsdiarie.value == 4 && `Jariva: ${managerData?.name} (Gerente - ${managerData.phone}) / ${coordinatorData?.name} (Coordenadora - ${coordinatorData?.phone})`
                         || selectedSubsdiarie.value == 5 && `Graciosa V: ${managerData?.name} (Gerente - ${managerData?.phone}) / ${coordinatorData?.name} (Coordenador - ${coordinatorData?.phone})`
-                        || selectedSubsdiarie.value == 6 && `Piraí: ${managerData?.name} (Gerente - ${managerData?.phone}) / ${coordinatorData?.name} (Coordenador - ${coordinatorData?.phone})`
+                        || selectedSubsdiarie.value == 6 && `Piraí: ${managerData?.name} (Gerente - ${managerData?.phone}) / ${coordinatorData?.name} (Coordenadora - ${coordinatorData?.phone})`
                       )
 
                       const printableContent = `
@@ -79,7 +79,7 @@ const PrintModal = (props) => {
                             </style>
                           </head>
                           <body>
-                            ${ReactDOMServer.renderToStaticMarkup(printContent(scalesToPrint, onDuty))}
+                            ${ReactDOMServer.renderToStaticMarkup(printContent(scalesToPrint, onDuty, formData.start_date, formData.end_date))}
                           </body>
                         </html> 
                       `

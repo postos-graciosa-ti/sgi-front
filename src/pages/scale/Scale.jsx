@@ -400,6 +400,25 @@ const Scale = () => {
       })
   }
 
+  function getTuesdays(year, month) {
+    let tuesdays = [];
+    let date = new Date(year, month, 1);
+
+    while (date.getMonth() === month) {
+      if (date.getDay() === 2) { // 2 represents Tuesday
+        tuesdays.push(new Date(date)); // Store a copy of the date
+      }
+      date.setDate(date.getDate() + 1);
+    }
+
+    return tuesdays;
+  }
+
+  let tuesdays = [getTuesdays(2025, 2)]
+
+  // Example: Get all Tuesdays in March 2025
+  console.log(getTuesdays(2025, 2)); // Month is 0-based (2 = March)
+
   return (
     <>
       <Nav />
@@ -466,27 +485,33 @@ const Scale = () => {
           </div>
         </div>
 
-
         <div id="scale-calendar">
           <Calendar
             className="calendar-container w-100 rounded"
             tileClassName={handleTitleClassname}
             showNeighboringMonth={false}
-            tileDisabled={() => {
-              if (selectedWorkerInfo && !selectedWorkerInfo?.is_active)
-                return true
-              else
-                return false
+            tileDisabled={({ date }) => {
+              const isCaixaFunction = selectedFunction?.value == caixasId?.id
+              
+              const dayOfWeek = moment(date).format("dddd")
+
+              if (isCaixaFunction) {
+                return !(dayOfWeek === "Tuesday" || dayOfWeek === "Wednesday")
+              }
+
+              return false
             }}
             onClickDay={(value) => {
-              setSelectedDate(value)
+              setSelectedDate(value);
 
-              let isAlreadyDayOff = daysOff.some((dayOff) => dayOff == moment(value).format("DD-MM-YYYY"))
+              let isAlreadyDayOff = daysOff.some(
+                (dayOff) => dayOff === moment(value).format("DD-MM-YYYY")
+              );
 
               if (isAlreadyDayOff) {
-                setDeleteScaleModalOpen(true)
+                setDeleteScaleModalOpen(true);
               } else {
-                setCalendarPopupOpen(true)
+                setCalendarPopupOpen(true);
               }
             }}
           />

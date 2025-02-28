@@ -21,8 +21,6 @@ import TurnsLogs from "./pages/logsPages/TurnsLogs"
 import UsersLogs from "./pages/logsPages/UsersLogs"
 import WorkersLogs from "./pages/logsPages/WorkersLogs"
 import Scale from "./pages/scale/Scale"
-import SeeScale from "./pages/scale/SeeScale"
-import SlaScale from "./pages/scale/SlaScale"
 import Steps from "./pages/steps/Steps"
 import Subsidiaries from "./pages/subsidiaries/Subsidiaries"
 import SubsidiarieStatus from "./pages/subsidiarieStatus/SubsidiarieStatus"
@@ -32,9 +30,7 @@ import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
 
 const Routes = createBrowserRouter([
-
   // public routes
-
   {
     path: "*",
     element: <NotFound />,
@@ -45,18 +41,8 @@ const Routes = createBrowserRouter([
     element: <App />,
     errorElement: <ErrorBoundary />
   },
-  {
-    path: "/scale-two",
-    element: <SlaScale />
-  },
-  {
-    path: "/see-scale",
-    element: <SeeScale />,
-    errorElement: <ErrorBoundary />
-  },
 
   // private routes
-
   {
     path: "/steps",
     element: <PrivateRoute><Steps /></PrivateRoute>,

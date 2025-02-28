@@ -10,13 +10,15 @@ import Jobs from "./pages/candidates/Jobs"
 import RegisterCandidate from "./pages/candidates/RegisterCandidate"
 import CostCenter from "./pages/costCenter/CostCenter"
 import Department from "./pages/department/Department"
-import FirstAcess from "./pages/firstAccess/FirstAcess"
 import Functions from "./pages/functions/Functions"
 import Home from "./pages/home/Home"
 import CostCenterLogs from "./pages/logsPages/CostCentersLogs"
 import DepartmentLogs from "./pages/logsPages/DepartmentsLogs"
+import FunctionsLogs from "./pages/logsPages/FunctionsLogs"
 import ScalesLogs from "./pages/logsPages/ScalesLogs"
+import SubsidiariesLogs from "./pages/logsPages/SubsidiariesLogs"
 import TurnsLogs from "./pages/logsPages/TurnsLogs"
+import UsersLogs from "./pages/logsPages/UsersLogs"
 import WorkersLogs from "./pages/logsPages/WorkersLogs"
 import Scale from "./pages/scale/Scale"
 import SeeScale from "./pages/scale/SeeScale"
@@ -28,9 +30,6 @@ import Turns from "./pages/turns/Turns"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
-import SubsidiariesLogs from "./pages/logsPages/SubsidiariesLogs"
-import FunctionsLogs from "./pages/logsPages/FunctionsLogs"
-import UsersLogs from "./pages/logsPages/UsersLogs"
 
 const Routes = createBrowserRouter([
 
@@ -44,11 +43,6 @@ const Routes = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    errorElement: <ErrorBoundary />
-  },
-  {
-    path: "/first-access",
-    element: <FirstAcess />,
     errorElement: <ErrorBoundary />
   },
   {

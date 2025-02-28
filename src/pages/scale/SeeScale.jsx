@@ -1,13 +1,12 @@
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
-import { Printer, Question } from 'react-bootstrap-icons'
+import { Printer } from 'react-bootstrap-icons'
 import 'react-calendar/dist/Calendar.css'
 import { Link } from 'react-router-dom'
 import ReactSelect from "react-select"
 import Swal from 'sweetalert2'
 import Nav from "../../components/Nav"
 import useUserSessionStore from '../../data/userSession'
-import driverObj from "../../functions/driverObj"
 import api from '../../services/api'
 
 const SeeScale = () => {
@@ -128,24 +127,12 @@ const SeeScale = () => {
     window.print()
   }
 
-  const handleDriveObj = () => {
-    driverObj.drive()
-  }
-
   return (
     <>
       <Nav />
 
       <div className="container">
         <div>
-          <button 
-          id="help"
-          className="btn btn-warning me-2"
-          onClick={handleDriveObj}
-          >
-            <Question />
-          </button>
-          
           <button id="printer" onClick={handlePrint} className="btn btn-light">
             <Printer />
           </button>

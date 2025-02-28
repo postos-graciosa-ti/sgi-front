@@ -1,23 +1,23 @@
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import useUserSessionStore from '../../data/userSession'
-import deleteJob from "../../requests/deleteJob"
-import getJobs from '../../requests/getJobs'
+import api from '../../services/api'
 
 const DeleteJobModal = (props) => {
   const { openDeleteJobModal, setOpenDeleteJobModal, selectedJob } = props
 
   const setJobsList = useUserSessionStore(state => state.setJobsList)
 
-  // const selectedJob = useUserSessionStore(state => state.selectedJob)
-
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const handleSubmit = async () => {
-    await deleteJob(selectedJob.id)
+    await api
+      .delete(`/jobs/${selectedJob.id}`)
       .then(() => {
         setOpenDeleteJobModal(false)
-        getJobs(selectedSubsdiarie.value)
+
+        api
+          .get(`/jobs/subsidiarie/${selectedSubsdiarie.value}`)
           .then((response) => {
             setJobsList(response.data)
           })

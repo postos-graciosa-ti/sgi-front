@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { ExclamationTriangle } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
-import getSubsidiarieById from "../../requests/getSubsidiarieById"
 import api from "../../services/api"
 
 const SubsidiarieStatus = () => {
@@ -23,7 +22,8 @@ const SubsidiarieStatus = () => {
   const [workersStatus, setWorkersStatus] = useState([])
 
   useEffect(() => {
-    getSubsidiarieById(selectedSubsdiarie.value)
+    api
+      .get(`/subsidiaries/${selectedSubsdiarie.value}`)
       .then((response) => {
         setSelectedSubsidiarieInfo(response.data)
       })

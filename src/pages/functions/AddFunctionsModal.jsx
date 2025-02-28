@@ -1,11 +1,9 @@
+import moment from 'moment'
 import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import getFunctions from '../../requests/getFunctions'
-import postFunction from '../../requests/postFunction'
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
-import moment from 'moment'
 
 const AddFunctionsModal = (props) => {
   const {
@@ -25,7 +23,8 @@ const AddFunctionsModal = (props) => {
   const [functionQuantity, setFunctionQuantity] = useState()
 
   const handleCloseModal = () => {
-    getFunctions()
+    api
+      .get("/functions")
       .then((response) => setFunctionsList(response.data))
 
     setFunctionName()
@@ -47,7 +46,8 @@ const AddFunctionsModal = (props) => {
       subsidiarie_id: selectedSubsdiarie.value
     }
 
-    postFunction(formData)
+    api
+      .post('/functions', formData)
       .then((response) => {
         let logStr = `${userSession.name} criou ${response.data.name} (nome=${response.data.name}, endereço=${response.data.description}, quantidade ideal=${response.data.ideal_quantity || `indefenido`})`
 

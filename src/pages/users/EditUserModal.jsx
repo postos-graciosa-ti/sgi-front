@@ -4,10 +4,6 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactSelect from 'react-select'
 import useUserSessionStore from '../../data/userSession'
-import getRoles from '../../requests/getRoles'
-import getSubsidiaries from '../../requests/getSubsidiaries'
-import getUsers from '../../requests/getUsers'
-import putUser from '../../requests/putUser'
 import api from '../../services/api'
 
 const EditUserModal = (props) => {
@@ -42,7 +38,8 @@ const EditUserModal = (props) => {
   const [phone, setPhone] = useState()
 
   useEffect(() => {
-    getRoles()
+    api
+      .get("/roles")
       .then((response) => {
         let rolesData = response.data
 
@@ -69,7 +66,8 @@ const EditUserModal = (props) => {
         setFunctionsList(options)
       })
 
-    getSubsidiaries()
+    api
+      .get("/subsidiaries")
       .then((response) => {
         const subsidiariesData = response.data;
 
@@ -84,7 +82,8 @@ const EditUserModal = (props) => {
   }, [])
 
   const handleClose = () => {
-    getUsers(bearerToken)
+    api
+      .get("/users")
       .then((response) => setUserList(response.data))
 
     setSelectedUser({})
@@ -122,7 +121,8 @@ const EditUserModal = (props) => {
       "phone": phone
     }
 
-    putUser(selectedUser?.user_id, formData)
+    api
+      .put(`/users/${selectedUser?.user_id}`, formData)
       .then((response) => {
         let logStr = `${userSession.name} atualizou ${selectedUser?.user_name} de (nome=${selectedUser?.user_name}, email=${selectedUser?.user_email}) para ${response.data.name} (nome=${response.data.name}, email=${response.data.email})`
 

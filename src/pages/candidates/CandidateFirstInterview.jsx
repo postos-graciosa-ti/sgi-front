@@ -1,9 +1,7 @@
+import { useState } from "react"
 import ReactSelect from "react-select"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
-import { useEffect, useState } from "react"
-import api from "../../services/api"
-import getJobs from "../../requests/getJobs"
 
 const CandidateFirstInterview = () => {
   const selectedCandidate = useUserSessionStore(state => state.selectedCandidate)

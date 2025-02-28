@@ -10,17 +10,16 @@ import Jobs from "./pages/candidates/Jobs"
 import RegisterCandidate from "./pages/candidates/RegisterCandidate"
 import CostCenter from "./pages/costCenter/CostCenter"
 import Department from "./pages/department/Department"
-import FirstAcess from "./pages/firstAccess/FirstAcess"
 import Functions from "./pages/functions/Functions"
 import Home from "./pages/home/Home"
 import CostCenterLogs from "./pages/logsPages/CostCentersLogs"
 import DepartmentLogs from "./pages/logsPages/DepartmentsLogs"
-import ScalesLogs from "./pages/logsPages/ScalesLogs"
+import FunctionsLogs from "./pages/logsPages/FunctionsLogs"
+import SubsidiariesLogs from "./pages/logsPages/SubsidiariesLogs"
 import TurnsLogs from "./pages/logsPages/TurnsLogs"
+import UsersLogs from "./pages/logsPages/UsersLogs"
 import WorkersLogs from "./pages/logsPages/WorkersLogs"
 import Scale from "./pages/scale/Scale"
-import SeeScale from "./pages/scale/SeeScale"
-import SlaScale from "./pages/scale/SlaScale"
 import Steps from "./pages/steps/Steps"
 import Subsidiaries from "./pages/subsidiaries/Subsidiaries"
 import SubsidiarieStatus from "./pages/subsidiarieStatus/SubsidiarieStatus"
@@ -28,14 +27,9 @@ import Turns from "./pages/turns/Turns"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
-import SubsidiariesLogs from "./pages/logsPages/SubsidiariesLogs"
-import FunctionsLogs from "./pages/logsPages/FunctionsLogs"
-import UsersLogs from "./pages/logsPages/UsersLogs"
 
 const Routes = createBrowserRouter([
-
   // public routes
-
   {
     path: "*",
     element: <NotFound />,
@@ -46,23 +40,8 @@ const Routes = createBrowserRouter([
     element: <App />,
     errorElement: <ErrorBoundary />
   },
-  {
-    path: "/first-access",
-    element: <FirstAcess />,
-    errorElement: <ErrorBoundary />
-  },
-  {
-    path: "/scale-two",
-    element: <SlaScale />
-  },
-  {
-    path: "/see-scale",
-    element: <SeeScale />,
-    errorElement: <ErrorBoundary />
-  },
 
   // private routes
-
   {
     path: "/steps",
     element: <PrivateRoute><Steps /></PrivateRoute>,
@@ -131,11 +110,6 @@ const Routes = createBrowserRouter([
   {
     path: "/functions",
     element: <PrivateRoute><Functions /></PrivateRoute>,
-    errorElement: <ErrorBoundary />
-  },
-  {
-    path: "/scales-logs",
-    element: <PrivateRoute><ScalesLogs /></PrivateRoute>,
     errorElement: <ErrorBoundary />
   },
   {

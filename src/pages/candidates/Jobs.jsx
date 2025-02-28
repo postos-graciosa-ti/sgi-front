@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
-import getJobs from "../../requests/getJobs"
+import api from "../../services/api"
 import CreateJobModal from "./CreateJobModal"
 import DeleteJobModal from "./DeleteJobModal"
 
@@ -21,7 +21,8 @@ const Jobs = () => {
   const [selectedJob, setSelectedJob] = useState()
 
   useEffect(() => {
-    getJobs(selectedSubsidiarie.value)
+    api
+      .get(`/jobs/subsidiarie/${selectedSubsidiarie.value}`)
       .then((response) => {
         setJobsList(response.data)
       })

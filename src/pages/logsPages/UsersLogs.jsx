@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import api from "../../services/api"
-import LogsRowTable from "./components/LogsRowTable"
 import Nav from "../../components/Nav"
+import api from "../../services/api"
+import LogsRowTable from "./LogsRowTable"
 
 const UsersLogs = () => {
   const [usersLogs, setUsersLogs] = useState([])

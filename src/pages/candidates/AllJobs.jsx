@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
-import getAllJobs from "../../requests/getAllJobs"
 import Nav from "../../components/Nav"
+import api from "../../services/api"
 
 const AllJobs = () => {
   const [allJobs, setAllJobs] = useState()
 
   useEffect(() => {
-    getAllJobs()
+    api
+      .get("/jobs")
       .then((response) => setAllJobs(response.data))
   }, [])
 

@@ -4,10 +4,6 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
 import useUserSessionStore from '../../data/userSession'
-import getRoles from '../../requests/getRoles'
-import getSubsidiaries from '../../requests/getSubsidiaries'
-import getUsers from '../../requests/getUsers'
-import postUser from '../../requests/postUser'
 import api from '../../services/api'
 
 const AddUserModal = (props) => {
@@ -43,7 +39,8 @@ const AddUserModal = (props) => {
   const [phone, setPhone] = useState()
 
   useEffect(() => {
-    getRoles()
+    api
+      .get("/roles")
       .then((response) => {
         let rolesData = response.data
 
@@ -56,7 +53,8 @@ const AddUserModal = (props) => {
         setRolesOptions(options)
       })
 
-    getSubsidiaries()
+    api
+      .get("/subsidiaries")
       .then((response) => {
         let subsidiariesData = response.data
 
@@ -85,7 +83,8 @@ const AddUserModal = (props) => {
   }, [])
 
   const handleClose = () => {
-    getUsers(bearerToken)
+    api
+      .get("/users")
       .then((response) => setUserList(response.data))
 
     setName()
@@ -114,7 +113,8 @@ const AddUserModal = (props) => {
       "phone": phone
     }
 
-    postUser(formData)
+    api
+      .post("/users", formData)
       .then((response) => {
         let logStr = `${userSession.name} adicionou ${response.data.name} (nome=${response.data.name}, email=${response.data.email})`
 

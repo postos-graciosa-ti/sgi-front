@@ -1,6 +1,6 @@
 import { Trash } from "react-bootstrap-icons";
-import useUserSessionStore from "../../../data/userSession";
-import api from "../../../services/api";
+import useUserSessionStore from "../../data/userSession";
+import api from "../../services/api";
 
 const ScaleRow = ({ 
   title, 

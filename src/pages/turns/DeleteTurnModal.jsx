@@ -2,9 +2,7 @@ import moment from 'moment'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import useUserSessionStore from '../../data/userSession'
-import deleteSubsidiarieTurns from "../../requests/turns/deleteSubsidiarieTurns"
-import getSubsidiarieTurns from '../../requests/turns/getSubsidiarieTurns'
-import postTurnsLogs from '../../requests/turns/turnsLogs/postTurnsLogs'
+import api from '../../services/api'
 
 const DeleteTurnModal = (props) => {
   const {
@@ -20,7 +18,8 @@ const DeleteTurnModal = (props) => {
   const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const handleClose = () => {
-    getSubsidiarieTurns(selectedSubsidiarie.value)
+    api
+      .get(`/subsidiaries/${selectedSubsidiarie.value}/turns`)
       .then((response) => setTurnsList(response.data))
 
     setTurnToDelete()
@@ -29,7 +28,8 @@ const DeleteTurnModal = (props) => {
   }
 
   const handleSubmit = () => {
-    deleteSubsidiarieTurns(turnToDelete.id)
+    api
+      .delete(`/turns/${turnToDelete.id}`)
       .then(() => {
         let logStr = `
           ${userSession.name} deletou ${turnToDelete.name} (
@@ -48,7 +48,8 @@ const DeleteTurnModal = (props) => {
           user_id: userSession.id
         }
 
-        postTurnsLogs(selectedSubsidiarie.value, logFormData)
+        api
+          .post(`/subsidiaries/${selectedSubsidiarie.value}/logs/turns`, logFormData)
           .then(() => handleClose())
       })
   }

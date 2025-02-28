@@ -4,6 +4,7 @@ import printJS from "print-js"
 import { useEffect, useState } from "react"
 import { Check2All, Clipboard2Check, Clipboard2X, PersonAdd, Printer } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
+import 'react-calendar/dist/Calendar.css'
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import Swal from "sweetalert2"
@@ -12,7 +13,6 @@ import useUserSessionStore from "../../data/userSession"
 import CalendarPopup from "../../pages/scale/CalendarPopup"
 import api from "../../services/api"
 import AddSomeWorkersModal from "./AddSomeWorkers"
-import ScaleRow from "./components/ScaleRow"
 import DaysOffReportModal from "./DaysOffReportModal"
 import DaysOnReportModal from "./DaysOnReportModal"
 import DeleteScaleModal from "./DeleteScaleModal"
@@ -20,13 +20,10 @@ import HollidaysModal from "./HollidaysModal"
 import printContent from "./printContent"
 import PrintModal from "./PrintModal"
 import ScaleLogsModal from "./ScaleLogsModal"
+import ScaleRow from "./ScaleRow"
 
 const Scale = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
-
-  let monthFirstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-
-  let monthLastDay = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
 
   const [selectedDate, setSelectedDate] = useState()
 
@@ -44,8 +41,6 @@ const Scale = () => {
 
   const [deleteScaleModalOpen, setDeleteScaleModalOpen] = useState(false)
 
-  const [selectedTemplate, setSelectedTemplate] = useState()
-
   const [allWorkers, setAllWorkers] = useState([])
 
   const [scaleHistoryModalOpen, setScaleHistoryModalOpen] = useState(false)
@@ -53,8 +48,6 @@ const Scale = () => {
   const [printModalOpen, setPrintModalOpen] = useState(false)
 
   const userSession = useUserSessionStore((state) => state.userSession)
-
-  const [message, setMessage] = useState()
 
   const [functionsOptions, setFunctionsOptions] = useState([])
 
@@ -89,38 +82,36 @@ const Scale = () => {
   useEffect(() => {
     const checkHoliday = () => {
       const currentDate = new Date();
-      const currentMonth = currentDate.getMonth() + 1; // Months are from 0 to 11, so we add 1
-      const currentYear = currentDate.getFullYear();
 
-      // Making a GET request to the brasilapi API
-      axios.get(`https://brasilapi.com.br/api/feriados/v1/${currentYear}`)
+      const currentMonth = currentDate.getMonth() + 1
+
+      const currentYear = currentDate.getFullYear()
+
+      axios
+        .get(`https://brasilapi.com.br/api/feriados/v1/${currentYear}`)
         .then(response => {
-          // Filtering holidays of the current month
           const holidaysInMonth = response.data.filter(holiday => {
-            const holidayMonth = new Date(holiday.date).getMonth() + 1;
-            return holidayMonth === currentMonth;
-          });
+            const holidayMonth = new Date(holiday.date).getMonth() + 1
 
-          // Check if there are holidays in the current month
+            return holidayMonth === currentMonth
+          })
+
           if (holidaysInMonth.length > 0) {
-            const holidayList = holidaysInMonth
-              .map(holiday => `${holiday.date} - ${holiday.name}`)
-              .join('\n');
-            setHolidayMessage(`Feriados em ${currentDate.toLocaleString('default', { month: 'long' })} de ${currentYear}:\n${holidayList}`);
+            const holidayList = holidaysInMonth.map(holiday => `${holiday.date} - ${holiday.name}`).join('\n')
+
+            setHolidayMessage(`Feriados em ${currentDate.toLocaleString('default', { month: 'long' })} de ${currentYear}:\n${holidayList}`)
           } else {
-            setHolidayMessage(`Não há feriados em ${currentDate.toLocaleString('default', { month: 'long' })} de ${currentYear}.`);
+            setHolidayMessage(`Não há feriados em ${currentDate.toLocaleString('default', { month: 'long' })} de ${currentYear}.`)
           }
         })
         .catch(error => {
           setHolidayMessage('Erro ao buscar feriados.')
 
           console.error('Error fetching holidays:', error)
-
         })
     }
 
     checkHoliday()
-
   }, [])
 
   useEffect(() => {
@@ -172,12 +163,6 @@ const Scale = () => {
         })
 
         setTurnsOptions(options)
-      })
-
-    api
-      .get("/scales/day-off/quantity")
-      .then((response) => {
-        setMessage(`*Quantidade ideal de dias de folga do mês atual (uma por semana): ${response.data}`)
       })
 
     api
@@ -235,25 +220,6 @@ const Scale = () => {
 
     return
   }
-
-  const parseDate = (dateStr) => {
-    const [day, month, year] = dateStr.split("-").map(Number);
-    return new Date(year, month - 1, day); // Mês no JS é 0-based (Janeiro = 0)
-  };
-
-  const isGreaterThanSevenDays = (datesArray) => {
-    const parsedDates = datesArray.map(parseDate);
-
-    for (let i = 0; i < parsedDates.length - 1; i++) {
-      const diffInMs = Math.abs(parsedDates[i + 1] - parsedDates[i]);
-      const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-
-      if (diffInDays > 7) {
-        return true;
-      }
-    }
-    return false;
-  };
 
   const handleOnclickDay = (date) => {
     let worker = allWorkers.find(worker => worker.worker_id == selectedWorker.value)
@@ -342,7 +308,7 @@ const Scale = () => {
 
     api
       .post(`/scales`, formData)
-      .then((response) => {
+      .then(() => {
         setCalendarPopupOpen(false)
 
         api.get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
@@ -400,25 +366,6 @@ const Scale = () => {
       })
   }
 
-  function getTuesdays(year, month) {
-    let tuesdays = [];
-    let date = new Date(year, month, 1);
-
-    while (date.getMonth() === month) {
-      if (date.getDay() === 2) { // 2 represents Tuesday
-        tuesdays.push(new Date(date)); // Store a copy of the date
-      }
-      date.setDate(date.getDate() + 1);
-    }
-
-    return tuesdays;
-  }
-
-  let tuesdays = [getTuesdays(2025, 2)]
-
-  // Example: Get all Tuesdays in March 2025
-  console.log(getTuesdays(2025, 2)); // Month is 0-based (2 = March)
-
   return (
     <>
       <Nav />
@@ -447,8 +394,6 @@ const Scale = () => {
             options={workersOptions}
             onChange={(value) => {
               setDaysOff([])
-
-              setSelectedTemplate([])
 
               setSelectedWorker(value)
 
@@ -487,12 +432,12 @@ const Scale = () => {
 
         <div id="scale-calendar">
           <Calendar
-            className="calendar-container w-100 rounded"
+            className="w-100 rounded"
             tileClassName={handleTitleClassname}
             showNeighboringMonth={false}
             tileDisabled={({ date }) => {
               const isCaixaFunction = selectedFunction?.value == caixasId?.id
-              
+
               const dayOfWeek = moment(date).format("dddd")
 
               if (isCaixaFunction) {
@@ -521,14 +466,11 @@ const Scale = () => {
           <button
             id="print-days"
             className="btn btn-light mt-3 me-3"
-            // onClick={handlePrintScale}
             onClick={() => setPrintModalOpen(true)}
             title="Botão para impressão"
           >
             <Printer />
           </button>
-
-          {/* <Link to="/scales-logs" className="btn btn-warning me-3 mt-3">Logs</Link> */}
 
           <button
             onClick={() => setScaleLogsModalOpen(true)}
@@ -671,52 +613,77 @@ const Scale = () => {
       />
 
       <style>
-        {`
-          .calendar-container {
-            background-color: #fff;
-            border: 1px solid #dee2e6;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            padding: 10px;
-          }
+        {
+          `
+            .calendar-container {
+              width: 100%;
+              max-width: 600px;
+              background: #fff;
+              border-radius: 12px;
+              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+              padding: 20px;
+            }
 
-          .calendar-container .day-column {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 0.25rem;
-            padding: 0.5rem;
-            margin: 0.2rem;
-            transition: background-color 0.3s, color 0.3s;
-          }
+            .react-calendar {
+              border: none;
+              font-family: "Arial", sans-serif;
+            }
 
-          .calendar-container .day-column:hover {
-            background-color: #f8f9fa;
-            color: #333;
-          }
+            .react-calendar__navigation {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 10px;
+            }
 
-          .calendar-container .react-calendar__tile--active {
-            background-color: #007bff;
-            color: white;
-          }
+            .react-calendar__navigation button {
+              background: transparent;
+              border: none;
+              font-size: 16px;
+              font-weight: bold;
+              color: #333;
+              cursor: pointer;
+              padding: 8px;
+              border-radius: 8px;
+              transition: background 0.2s ease-in-out;
+            }
 
-          .calendar-container .react-calendar__tile--active:hover {
-            background-color: #0056b3;
-          }
+            .react-calendar__navigation button:hover {
+              background: rgba(0, 0, 0, 0.1);
+            }
 
-          .calendar-container .react-calendar__navigation button {
-            color: #007bff;
-          }
+            .react-calendar__tile {
+              border-radius: 8px;
+              padding: 10px;
+              text-align: center;
+              transition: background 0.3s, transform 0.2s ease-in-out;
+            }
 
-          .calendar-container .react-calendar__navigation button:hover {
-            background-color: #e9ecef;
-          }
+            .react-calendar__tile--active {
+              background: #007bff;
+              color: white;
+              font-weight: bold;
+              transform: scale(1.05);
+            }
 
-          .calendar-container .react-calendar__tile--now {
-            background-color: #ffc107;
-            color: #333;
-          }
-        `}
+            .react-calendar__tile:hover {
+              background: rgba(0, 123, 255, 0.2);
+              transform: scale(1.05);
+            }
+
+            .react-calendar__tile--now {
+              background: #ffeb3b;
+              color: #333;
+              font-weight: bold;
+            }
+
+            .bg-danger.text-white {
+              background: #dc3545 !important;
+              color: white !important;
+              font-weight: bold;
+            }
+          `
+        }
       </style>
     </>
   )

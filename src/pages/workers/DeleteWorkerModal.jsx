@@ -1,11 +1,10 @@
+import moment from 'moment'
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactSelect from "react-select"
 import useUserSessionStore from '../../data/userSession'
-import getWorkersBySubsidiarie from '../../requests/getWorkersBySubsidiarie'
 import api from '../../services/api'
-import moment from 'moment'
 
 const DeleteWorkerModal = (props) => {
   const {
@@ -43,7 +42,8 @@ const DeleteWorkerModal = (props) => {
   }, [])
 
   const handleClose = () => {
-    getWorkersBySubsidiarie(selectedSubsdiarie.value)
+    api
+      .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => {
         setWorkersList(response.data)
       })

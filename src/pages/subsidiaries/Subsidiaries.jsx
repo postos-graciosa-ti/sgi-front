@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Pencil, Plus, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
-import getSubsidiaries from "../../requests/getSubsidiaries"
+import api from "../../services/api"
 import AddSubsidiarieModal from "./AddSubsidiarieModal"
 import DeleteSubsidiarieModal from "./DeleteSubsidiarieModal"
 import EditSubsidiarieModal from "./EditSubsidiarieModal"
@@ -18,7 +18,8 @@ const Subsidiaries = () => {
   const [deleteSubsidiarieModalOpen, setDeleteSubsidiarieModalOpen] = useState(false)
 
   useEffect(() => {
-    getSubsidiaries()
+    api
+      .get("/subsidiaries")
       .then((response) => setSubsidiaries(response.data))
   }, [])
 

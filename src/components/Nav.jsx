@@ -195,14 +195,67 @@ const Nav = () => {
         </div>
       </nav>
 
-      <div className="m-3 text-end">
-        <span id="subsidiarie" className="btn btn-link m-0 p-0">{selectedSubsidiarie.label}</span> - <span className="btn btn-link m-0 p-0">{userSession.name}</span> - <Link id="changeSubsidiarie" to="/steps" className="btn btn-link  m-0 p-0">Alterar filial</Link> - <button id="changePassword" onClick={(e) => { e.stopPropagation(); setChangePasswordModalOpen(true) }} className="btn btn-link m-0 p-0">Alterar minha senha</button> - <span id="subsidiarie" className="btn btn-link m-0 p-0">Suporte: postosgraciosati@gmail.com</span>
+      <div className="user-info-container">
+        <span id="subsidiarie" className="user-info">{selectedSubsidiarie.label}</span>
+        <span className="separator"> - </span>
+        <span className="user-info">{userSession.name}</span>
+        <span className="separator"> - </span>
+        <Link id="changeSubsidiarie" to="/steps" className="user-info">Alterar filial</Link>
+        <span className="separator"> - </span>
+        <button
+          id="changePassword"
+          onClick={(e) => { e.stopPropagation(); setChangePasswordModalOpen(true); }}
+          className="user-info"
+        >
+          Alterar minha senha
+        </button>
+        <span className="separator"> - </span>
+        <span id="support" className="user-info">Suporte: postosgraciosati@gmail.com</span>
       </div>
 
       <ChangePasswordModal
         changePasswordModalOpen={changePasswordModalOpen}
         setChangePasswordModalOpen={setChangePasswordModalOpen}
       />
+
+      <style>
+        {
+          `
+            .user-info-container {
+              margin: 1rem;
+              text-align: end;
+            }
+
+            .user-info {
+              font-size: 1rem;
+              color: #007bff;  /* Ou cor personalizada */
+              text-decoration: none;
+              padding: 0;
+              margin: 0;
+              cursor: pointer;  /* Todos os itens interativos agora têm cursor pointer */
+            }
+
+            .user-info:hover {
+              text-decoration: underline; /* Hover effect */
+            }
+
+            .separator {
+              color: #6c757d;  /* Cor mais suave para a separação */
+            }
+
+            button.user-info {
+              background: none;
+              border: none;
+              padding: 0;
+              cursor: pointer;  /* Garante que o botão também tenha cursor pointer */
+            }
+
+            button.user-info:hover {
+              text-decoration: underline; /* Hover effect */
+            }
+          `
+        }
+      </style>
     </>
   )
 }

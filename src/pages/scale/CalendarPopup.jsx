@@ -19,8 +19,6 @@ const CalendarPopup = (props) => {
 
   let isHolliday = hollidays?.find((holiday) => holiday.date == moment(selectedDate).format("YYYY-MM-DD"))
 
-  console.log(isHolliday)
-
   return (
     <Modal
       show={calendarPopupOpen}
@@ -29,11 +27,33 @@ const CalendarPopup = (props) => {
       keyboard={false}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Adicionar {moment(selectedDate).format("DD-MM-YYYY")} como folga?</Modal.Title>
+        <Modal.Title>
+          {
+            isHolliday && (
+              <>
+                {moment(selectedDate).format("DD-MM-YYYY")} ({isHolliday?.name})
+              </>
+            ) || (
+              <>
+                Adicionar {moment(selectedDate).format("DD-MM-YYYY")} como folga?
+              </>
+            )
+          }
+        </Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
-        Adicionar {moment(selectedDate).format("DD-MM-YYYY")} como folga?
+        {
+          isHolliday && (
+            <>
+              Não é possível adicionar {moment(selectedDate).format("DD-MM-YYYY")} como folga
+            </>
+          ) || (
+            <>
+              Adicionar {moment(selectedDate).format("DD-MM-YYYY")} como folga?
+            </>
+          )
+        }
       </Modal.Body>
 
       <Modal.Footer>

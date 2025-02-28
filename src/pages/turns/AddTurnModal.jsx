@@ -4,9 +4,7 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import 'react-datetime/css/react-datetime.css'
 import useUserSessionStore from '../../data/userSession'
-import getSubsidiarieTurns from '../../requests/turns/getSubsidiarieTurns'
-import postSubsidiarieTurns from "../../requests/turns/postSubsidiarieTurns"
-import postTurnsLogs from "../../requests/turns/turnsLogs/postTurnsLogs"
+import api from '../../services/api'
 
 const AddTurnModal = (props) => {
   const {
@@ -30,7 +28,8 @@ const AddTurnModal = (props) => {
   const [endTime, setEndTime] = useState('')
 
   const handleClose = () => {
-    getSubsidiarieTurns(selectedSubsidiarie.value)
+    api
+      .get(`/subsidiaries/${selectedSubsidiarie.value}/turns`)
       .then((response) => setTurnsList(response.data))
 
     setName('')
@@ -56,7 +55,8 @@ const AddTurnModal = (props) => {
       "subsidiarie_id": selectedSubsidiarie.value
     }
 
-    postSubsidiarieTurns(formData)
+    api
+      .post('/turns', formData)
       .then((response) => {
         let logStr = `
         ${userSession.name} adicionou ${response.data.name} (
@@ -75,7 +75,8 @@ const AddTurnModal = (props) => {
           "user_id": userSession.id
         }
 
-        postTurnsLogs(selectedSubsidiarie.value, logFormData)
+        api
+          .post(`/subsidiaries/${selectedSubsidiarie.value}/logs/turns`, logFormData)
           .then(() => handleClose())
       })
   }

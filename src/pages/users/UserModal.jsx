@@ -3,11 +3,7 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
 import useUserSessionStore from '../../data/userSession'
-import getFunctions from '../../requests/getFunctions'
-import getRoles from '../../requests/getRoles'
-import getSubsidiaries from '../../requests/getSubsidiaries'
-import postUser from '../../requests/postUser'
-import getUsers from '../../requests/getUsers'
+import api from '../../services/api'
 
 const AddUserModal = (props) => {
   const {
@@ -37,7 +33,8 @@ const AddUserModal = (props) => {
   const [selectedFunction, setSelectedFunction] = useState()
 
   useEffect(() => {
-    getRoles()
+    api
+      .get("/roles")
       .then((response) => {
         let rolesData = response.data
 
@@ -50,7 +47,8 @@ const AddUserModal = (props) => {
         setRolesOptions(options)
       })
 
-    getSubsidiaries()
+    api
+      .get("/subsidiaries")
       .then((response) => {
         let subsidiariesData = response.data
 
@@ -63,7 +61,8 @@ const AddUserModal = (props) => {
         setSubsidiariesList(options)
       })
 
-    getFunctions()
+    api
+      .get("/functions")
       .then((response) => {
         let functionsData = response.data
 
@@ -92,18 +91,11 @@ const AddUserModal = (props) => {
       "function_id": selectedFunction.value
     }
 
-    // {
-    //   "email": "aaaaaaaaaa@gmail.com",
-    //   "name": "teste",
-    //   "role_id": 1,
-    //   "subsidiaries_id": "[1,2,3]",
-    //   "function_id": 1,
-    //   "is_active": true
-    // }
-
-    postUser(formData)
+    api
+      .post("/users", formData)
       .then(() => {
-        getUsers()
+        api
+          .get("/users")
           .then((response) => {
             setUserList(response.data)
 

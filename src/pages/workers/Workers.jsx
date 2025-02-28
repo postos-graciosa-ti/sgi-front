@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { ArrowClockwise, ClipboardData, Pen, PersonAdd, PersonGear, SlashCircle } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
-import getWorkersBySubsidiarie from "../../requests/getWorkersBySubsidiarie"
+import api from "../../services/api"
 import CreateWorkerModal from "./CreateWorkerModal"
 import DeleteWorkerModal from "./DeleteWorkerModal"
 import EditWorkerModal from "./EditWorkerModal"
@@ -30,7 +30,8 @@ const Workers = () => {
   const [workerNotationModalOpen, setWorkerNotationModalOpen] = useState(false)
 
   useEffect(() => {
-    getWorkersBySubsidiarie(selectedSubsdiarie.value)
+    api
+      .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => {
         setWorkersList(response.data)
       })

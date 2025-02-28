@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
-import getTurnsLogs from "../../requests/turns/turnsLogs/getTurnsLogs"
+import api from "../../services/api"
 import LogsRowTable from "./components/LogsRowTable"
 
 const TurnsLogs = () => {
@@ -10,7 +10,8 @@ const TurnsLogs = () => {
   const [turnsLogs, setTurnsLogs] = useState([])
 
   useEffect(() => {
-    getTurnsLogs(selectedSubsidiarie.value)
+    api
+      .get(`/subsidiaries/${selectedSubsidiarie.value}/logs/turns`)
       .then((response) => setTurnsLogs(response.data))
   }, [])
 

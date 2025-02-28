@@ -1,7 +1,6 @@
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import useUserSessionStore from '../../data/userSession'
-import getWorkersBySubsidiarie from '../../requests/getWorkersBySubsidiarie'
 import api from '../../services/api'
 
 const ReactivateWorkerModal = (props) => {
@@ -16,7 +15,8 @@ const ReactivateWorkerModal = (props) => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const handleClose = () => {
-    getWorkersBySubsidiarie(selectedSubsdiarie.value)
+    api
+      .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => {
         setWorkersList(response.data)
       })

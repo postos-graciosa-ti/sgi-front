@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 import Nav from "../../components/Nav"
-import getScalesLogs from "../../requests/getScalesLogs"
+import api from "../../services/api"
 
 const ScalesLogs = () => {
   const [scalesLogs, setScalesLogs] = useState([])
 
   useEffect(() => {
-    getScalesLogs()
+    api
+      .get("/logs/scales")
       .then((response) => setScalesLogs(response.data))
   }, [])
 

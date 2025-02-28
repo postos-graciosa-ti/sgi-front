@@ -7,7 +7,7 @@ import PostoJarivaIcon from "../../assets/posto-jariva.jpg"
 import PostoPiraiIcon from "../../assets/posto-pirai.jpg"
 import Nav from "../../components/Nav.jsx"
 import useUserSessionStore from "../../data/userSession.js"
-import getSubsidiarieById from "../../requests/getSubsidiarieById.js"
+import api from "../../services/api.js"
 
 const Home = () => {
   const userSession = useUserSessionStore(state => state.userSession)
@@ -31,7 +31,8 @@ const Home = () => {
   const isPiraiSecondPhone = selectedSubsdiarie.value == "6" && "/(47) 3433-8225"
 
   useEffect(() => {
-    getSubsidiarieById(selectedSubsdiarie.value)
+    api
+      .get(`/subsidiaries/${selectedSubsdiarie.value}`)
       .then((response) => {
         setSelectedSubsidiarieInfo(response.data)
       })

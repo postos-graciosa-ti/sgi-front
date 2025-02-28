@@ -2,10 +2,9 @@ import { useEffect, useState } from "react"
 import Select from "react-select"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
-import getJobs from "../../requests/getJobs"
 import api from "../../services/api"
-import TeoryModal from "./TeoryModal"
 import MathCorrection from "./MathCorrection"
+import TeoryModal from "./TeoryModal"
 
 const RegisterCandidate = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -27,7 +26,8 @@ const RegisterCandidate = () => {
   const [teoryModalOpen, setTeoryModalOpen] = useState(false)
 
   useEffect(() => {
-    getJobs(selectedSubsdiarie.value)
+    api
+      .get(`/jobs/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => {
         let jobsData = response.data
 
@@ -175,7 +175,7 @@ const RegisterCandidate = () => {
         setMathModalOpen={setMathModalOpen}
       />
 
-      <TeoryModal 
+      <TeoryModal
         teoryModalOpen={teoryModalOpen}
         setTeoryModalOpen={setTeoryModalOpen}
       />

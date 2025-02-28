@@ -3,9 +3,7 @@ import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import useUserSessionStore from '../../data/userSession'
-import getSubsidiarieTurns from '../../requests/turns/getSubsidiarieTurns'
-import putSubsidiarieTurns from '../../requests/turns/putSubsidiarieTurns'
-import postTurnsLogs from '../../requests/turns/turnsLogs/postTurnsLogs'
+import api from '../../services/api'
 
 const EditTurnModal = (props) => {
   const {
@@ -31,7 +29,8 @@ const EditTurnModal = (props) => {
   const [endTime, setEndTime] = useState('')
 
   const handleClose = () => {
-    getSubsidiarieTurns(selectedSubsidiarie.value)
+    api
+      .get(`/subsidiaries/${selectedSubsidiarie.value}/turns`)
       .then((response) => setTurnsList(response.data))
 
     setTurnToEdit({})
@@ -58,7 +57,8 @@ const EditTurnModal = (props) => {
       "end_time": endTime || turnToEdit.end_time.replace(/:\d{2}$/, '')
     }
 
-    putSubsidiarieTurns(turnToEdit.id, formData)
+    api
+      .put(`/turns/${turnToEdit.id}`, formData)
       .then((response) => {
         let logStr = `
         ${userSession.name} atualizou de ${turnToEdit.name} () para ${response.data.name} (
@@ -77,7 +77,8 @@ const EditTurnModal = (props) => {
           "user_id": userSession.id
         }
 
-        postTurnsLogs(selectedSubsidiarie.value, logFormData)
+        api
+          .post(`/subsidiaries/${selectedSubsidiarie.value}/logs/turns`, logFormData)
           .then(() => handleClose())
       })
   }

@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import postJob from '../../requests/postJob';
 import useUserSessionStore from '../../data/userSession';
-import getJobs from '../../requests/getJobs';
+import api from '../../services/api';
 
 const CreateJobModal = (props) => {
   const { openCreateJobModal, setOpenCreateJobModal } = props
@@ -25,10 +24,12 @@ const CreateJobModal = (props) => {
       "subsidiarie_id": selectedSubsidiarie.value
     }
 
-    postJob(jobsFormData)
+    api
+      .post("/jobs", jobsFormData)
       .then((response) => {
         if (response.status == 200) {
-          getJobs(selectedSubsidiarie.value)
+          api
+            .get(`/jobs/subsidiarie/${selectedSubsidiarie.value}`)
             .then((response) => {
               setJobsList(response.data)
               setOpenCreateJobModal(false)

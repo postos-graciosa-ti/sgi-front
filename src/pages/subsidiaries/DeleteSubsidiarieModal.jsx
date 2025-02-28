@@ -2,8 +2,6 @@ import moment from 'moment'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import useUserSessionStore from '../../data/userSession'
-import deleteSubsidiarie from "../../requests/deleteSubsidiarie"
-import getSubsidiaries from "../../requests/getSubsidiaries"
 import api from '../../services/api'
 
 const DeleteSubsidiarieModal = (props) => {
@@ -18,7 +16,8 @@ const DeleteSubsidiarieModal = (props) => {
   const userSession = useUserSessionStore(state => state.userSession)
 
   const handleCloseModal = () => {
-    getSubsidiaries()
+    api
+      .get("/subsidiaries")
       .then((response) => setSubsidiaries(response.data))
 
     setSelectedSubsidiarie()
@@ -29,7 +28,8 @@ const DeleteSubsidiarieModal = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    deleteSubsidiarie(selectedSubsidiarie.id)
+    api
+      .delete(`/subsidiaries/${selectedSubsidiarie.id}`)
       .then(() => {
         let logStr = `${userSession.name} removeu ${selectedSubsidiarie.name} (nome=${selectedSubsidiarie.name}, endereço=${selectedSubsidiarie.adress}, telefone=${selectedSubsidiarie.phone}, email=${selectedSubsidiarie.email})`
 

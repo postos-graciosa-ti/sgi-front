@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Pencil, Plus, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
-import getSubsidiarieTurns from "../../requests/turns/getSubsidiarieTurns"
+import api from "../../services/api"
 import AddTurnModal from "./AddTurnModal"
 import DeleteTurnModal from "./DeleteTurnModal"
 import EditTurnModal from "./EditTurnModal"
@@ -23,7 +23,8 @@ const Turns = () => {
   const [deleteTurnModalOpen, setDeleteTurnModalOpen] = useState(false)
 
   useEffect(() => {
-    getSubsidiarieTurns(selectedSubsidiarie.value)
+    api
+      .get(`/subsidiaries/${selectedSubsidiarie.value}/turns`)
       .then((response) => setTurnsList(response.data))
   }, [])
 

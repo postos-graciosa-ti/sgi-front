@@ -2,8 +2,6 @@ import moment from 'moment'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import useUserSessionStore from "../../data/userSession"
-import deleteUser from '../../requests/deleteUser'
-import getUsers from '../../requests/getUsers'
 import api from '../../services/api'
 
 const DeleteUserModal = (props) => {
@@ -22,7 +20,8 @@ const DeleteUserModal = (props) => {
   const userSession = useUserSessionStore(state => state.userSession)
 
   const handleClose = () => {
-    getUsers(bearerToken)
+    api
+      .get("/users")
       .then((response) => setUserList(response.data))
 
     setSelectedUser()
@@ -31,7 +30,8 @@ const DeleteUserModal = (props) => {
   }
 
   const handleDeleteUser = () => {
-    deleteUser(selectedUser.user_id)
+    api
+      .delete(`/users/${selectedUser.user_id}`)
       .then(() => {
         let logStr = `${userSession.name} excluiu ${selectedUser?.user_name} (nome=${selectedUser?.user_name}, email=${selectedUser?.user_email})`
 

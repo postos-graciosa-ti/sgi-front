@@ -1,10 +1,8 @@
+import moment from 'moment'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import useUserSessionStore from '../../data/userSession'
-import deleteFunction from '../../requests/deleteFunction'
-import getFunctions from '../../requests/getFunctions'
 import api from '../../services/api'
-import moment from 'moment'
 
 const DeleteFunctionsModal = (props) => {
   const {
@@ -20,7 +18,8 @@ const DeleteFunctionsModal = (props) => {
   const userSession = useUserSessionStore(state => state.userSession)
 
   const handleClose = () => {
-    getFunctions()
+    api
+      .get("/functions")
       .then((response) => setFunctionsList(response.data))
 
     setSelectedFunction()
@@ -31,7 +30,8 @@ const DeleteFunctionsModal = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    deleteFunction(selectedFunction.id)
+    api
+      .delete(`/functions/${selectedFunction.id}`)
       .then(() => {
         let logStr = `${userSession.name} deletou ${selectedFunction.name} (nome=${selectedFunction.name}, endereço=${selectedFunction.description}, quantidade ideal=${selectedFunction.ideal_quantity || `indefenido`})`
 

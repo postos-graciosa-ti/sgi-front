@@ -4,8 +4,6 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactSelect from "react-select"
 import useUserSessionStore from '../../data/userSession'
-import getSubsidiaries from '../../requests/getSubsidiaries'
-import postSubsidiarie from '../../requests/postSubsidiarie'
 import api from '../../services/api'
 
 const AddSubsidiarieModal = (props) => {
@@ -48,7 +46,8 @@ const AddSubsidiarieModal = (props) => {
   }, [])
 
   const handleCloseModal = () => {
-    getSubsidiaries()
+    api
+      .get("/subsidiaries")
       .then((response) => setSubsidiaries(response.data))
 
     setManager()
@@ -78,7 +77,8 @@ const AddSubsidiarieModal = (props) => {
       "manager": manager.value || null
     }
 
-    postSubsidiarie(formData)
+    api
+      .post("/subsidiaries", formData)
       .then((response) => {
         let logStr = `${userSession.name} adicionou ${response.data.name} (nome=${response.data.name}, endereço=${response.data.adress}, telefone=${response.data.phone}, email=${response.data.email})`
 

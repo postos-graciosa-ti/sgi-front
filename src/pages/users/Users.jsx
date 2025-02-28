@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Pen, Plus, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
-import getUsers from "../../requests/getUsers"
+import api from "../../services/api"
 import AddUserModal from "./AddUserModal"
 import DeleteUserModal from "./DeleteUserModal"
 import EditUserModal from "./EditUserModal"
@@ -23,7 +23,8 @@ const Users = () => {
   const [editUserModalOpen, setEditUserModalOpen] = useState(false)
 
   useEffect(() => {
-    getUsers(bearerToken)
+    api
+      .get("/users")
       .then((response) => {
         setUserList(response.data)
       })

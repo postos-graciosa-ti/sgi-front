@@ -4,8 +4,6 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import ReactSelect from 'react-select';
 import useUserSessionStore from '../../data/userSession';
-import getSubsidiaries from '../../requests/getSubsidiaries';
-import putSubsidiarie from '../../requests/putSubsidiarie';
 import api from '../../services/api';
 
 const EditSubsidiarieModal = ({
@@ -37,14 +35,24 @@ const EditSubsidiarieModal = ({
   }, []);
 
   const handleCloseModal = () => {
-    getSubsidiaries().then((response) => setSubsidiaries(response.data));
+    api
+      .get("/subsidiaries")
+      .then((response) => setSubsidiaries(response.data));
+
     setManager(null);
+
     setSelectedUser(null);
+
     setSelectedSubsidiarie({});
+
     setName('');
+
     setAddress('');
+
     setPhone('');
+
     setEmail('');
+
     setEditSubsidiarieModalOpen(false);
   };
 
@@ -59,18 +67,20 @@ const EditSubsidiarieModal = ({
       manager: manager?.value || selectedSubsidiarie?.manager,
     };
 
-    putSubsidiarie(selectedSubsidiarie.id, formData).then((response) => {
-      const logStr = `${userSession.name} alterou ${selectedSubsidiarie.name} de (nome=${selectedSubsidiarie.name}, endereço=${selectedSubsidiarie.address}, telefone=${selectedSubsidiarie.phone}, email=${selectedSubsidiarie.email}) para ${response.data.name} (nome=${response.data.name}, endereço=${response.data.address}, telefone=${response.data.phone}, email=${response.data.email})`;
+    api
+      .put(`/subsidiaries/${selectedSubsidiarie.id}`, formData)
+      .then((response) => {
+        const logStr = `${userSession.name} alterou ${selectedSubsidiarie.name} de (nome=${selectedSubsidiarie.name}, endereço=${selectedSubsidiarie.address}, telefone=${selectedSubsidiarie.phone}, email=${selectedSubsidiarie.email}) para ${response.data.name} (nome=${response.data.name}, endereço=${response.data.address}, telefone=${response.data.phone}, email=${response.data.email})`;
 
-      const logFormData = {
-        log_str: logStr,
-        happened_at: moment().format('DD-MM-YYYY'),
-        happened_at_time: moment().format('HH:mm'),
-        user_id: userSession.id,
-      };
+        const logFormData = {
+          log_str: logStr,
+          happened_at: moment().format('DD-MM-YYYY'),
+          happened_at_time: moment().format('HH:mm'),
+          user_id: userSession.id,
+        };
 
-      api.post('/subsidiaries/logs', logFormData).then(() => handleCloseModal());
-    });
+        api.post('/subsidiaries/logs', logFormData).then(() => handleCloseModal());
+      });
   };
 
   return (

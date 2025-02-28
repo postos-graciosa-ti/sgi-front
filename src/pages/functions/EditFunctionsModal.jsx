@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import getFunctions from '../../requests/getFunctions'
-import putFunction from '../../requests/putFunction'
 import useUserSessionStore from '../../data/userSession'
+import api from '../../services/api'
 
 const EditFunctionsModal = (props) => {
   const {
@@ -44,9 +43,11 @@ const EditFunctionsModal = (props) => {
       subsidiarie_id: selectedSubsdiarie.value
     }
 
-    putFunction(selectedFunction.id, formData)
+    api
+      .put(`/functions/${selectedFunction.id}`, formData)
       .then(() => {
-        getFunctions()
+        api
+          .get("/functions")
           .then((response) => setFunctionsList(response.data))
 
         handleClose()

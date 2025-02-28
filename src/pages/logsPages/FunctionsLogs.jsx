@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import Nav from "../../components/Nav"
 import api from "../../services/api"
-import LogsRowTable from "./components/LogsRowTable"
+import LogsRowTable from "./LogsRowTable"
 import useUserSessionStore from "../../data/userSession"
 
 const FunctionsLogs = () => {

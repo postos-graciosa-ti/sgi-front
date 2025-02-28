@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
-import LogsRowTable from "./components/LogsRowTable"
+import LogsRowTable from "./LogsRowTable"
 
 const CostCentersLogs = () => {
   const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)

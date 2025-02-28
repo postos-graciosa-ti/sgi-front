@@ -4,7 +4,6 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Calendar from "react-calendar"
 import Select from "react-select"
-import Swal from "sweetalert2"
 import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
 

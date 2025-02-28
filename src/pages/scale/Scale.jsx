@@ -4,6 +4,7 @@ import printJS from "print-js"
 import { useEffect, useState } from "react"
 import { Check2All, Clipboard2Check, Clipboard2X, PersonAdd, Printer } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
+import 'react-calendar/dist/Calendar.css'
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import Swal from "sweetalert2"
@@ -12,7 +13,6 @@ import useUserSessionStore from "../../data/userSession"
 import CalendarPopup from "../../pages/scale/CalendarPopup"
 import api from "../../services/api"
 import AddSomeWorkersModal from "./AddSomeWorkers"
-import ScaleRow from "./components/ScaleRow"
 import DaysOffReportModal from "./DaysOffReportModal"
 import DaysOnReportModal from "./DaysOnReportModal"
 import DeleteScaleModal from "./DeleteScaleModal"
@@ -20,7 +20,7 @@ import HollidaysModal from "./HollidaysModal"
 import printContent from "./printContent"
 import PrintModal from "./PrintModal"
 import ScaleLogsModal from "./ScaleLogsModal"
-import 'react-calendar/dist/Calendar.css';
+import ScaleRow from "./ScaleRow"
 
 const Scale = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)

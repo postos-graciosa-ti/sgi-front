@@ -15,7 +15,6 @@ import Home from "./pages/home/Home"
 import CostCenterLogs from "./pages/logsPages/CostCentersLogs"
 import DepartmentLogs from "./pages/logsPages/DepartmentsLogs"
 import FunctionsLogs from "./pages/logsPages/FunctionsLogs"
-import ScalesLogs from "./pages/logsPages/ScalesLogs"
 import SubsidiariesLogs from "./pages/logsPages/SubsidiariesLogs"
 import TurnsLogs from "./pages/logsPages/TurnsLogs"
 import UsersLogs from "./pages/logsPages/UsersLogs"
@@ -111,11 +110,6 @@ const Routes = createBrowserRouter([
   {
     path: "/functions",
     element: <PrivateRoute><Functions /></PrivateRoute>,
-    errorElement: <ErrorBoundary />
-  },
-  {
-    path: "/scales-logs",
-    element: <PrivateRoute><ScalesLogs /></PrivateRoute>,
     errorElement: <ErrorBoundary />
   },
   {

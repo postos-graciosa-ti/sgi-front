@@ -1,6 +1,6 @@
 import moment from "moment"
 
-const printContent = (scalesList, onDuty, startDate, endDate) => {
+const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn) => {
   const translateWeekday = (weekday) => {
     const days = {
       Monday: "Segunda-Feira",
@@ -28,7 +28,7 @@ const printContent = (scalesList, onDuty, startDate, endDate) => {
       </h3>
 
       <p>
-        Semana de {startDate} até {endDate}
+        Turno {selectedTurn.label}: Semana de {startDate} até {endDate}
       </p>
 
       <div className="table-responsive">

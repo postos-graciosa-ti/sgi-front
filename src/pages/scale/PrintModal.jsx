@@ -1,8 +1,9 @@
 import moment from 'moment'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactDOMServer from 'react-dom/server'
+import ReactSelect from "react-select"
 import useUserSessionStore from "../../data/userSession"
 import api from '../../services/api'
 import printContent from './printContent'
@@ -16,6 +17,27 @@ const PrintModal = (props) => {
 
   const [finalDate, setFinalDate] = useState()
 
+  const [turnsOptions, setTurnsOptions] = useState([])
+
+  const [selectedTurn, setSelectedTurn] = useState()
+
+  useEffect(() => {
+    api
+      .get(`subsidiaries/${selectedSubsdiarie.value}/turns`)
+      .then((response) => {
+        let turns = response.data
+
+        let options = []
+
+        turns && turns.map((turn) => {
+          options.push({ "value": turn.id, "label": turn.name })
+        })
+
+        setTurnsOptions(options)
+      })
+
+  }, [])
+
   const handleClose = () => {
     setInitialDate()
 
@@ -27,7 +49,8 @@ const PrintModal = (props) => {
   const handleSubmit = () => {
     let formData = {
       start_date: moment(initialDate).format("DD-MM-YYYY"),
-      end_date: moment(finalDate).format("DD-MM-YYYY")
+      end_date: moment(finalDate).format("DD-MM-YYYY"),
+      turn_id: selectedTurn.value
     }
 
     api
@@ -79,7 +102,7 @@ const PrintModal = (props) => {
                             </style>
                           </head>
                           <body>
-                            ${ReactDOMServer.renderToStaticMarkup(printContent(scalesToPrint, onDuty, formData.start_date, formData.end_date))}
+                            ${ReactDOMServer.renderToStaticMarkup(printContent(scalesToPrint, onDuty, formData.start_date, formData.end_date, selectedTurn))}
                           </body>
                         </html> 
                       `
@@ -116,7 +139,7 @@ const PrintModal = (props) => {
                         </style>
                       </head>
                       <body>
-                        ${ReactDOMServer.renderToStaticMarkup(printContent(scalesToPrint, onDuty))}
+                        ${ReactDOMServer.renderToStaticMarkup(printContent(scalesToPrint, onDuty, formData.start_date, formData.end_date, selectedTurn))}
                       </body>
                     </html> 
                   `
@@ -145,6 +168,16 @@ const PrintModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
+        <div className="row mb-3">
+          <div className="col">
+            <ReactSelect
+              options={turnsOptions}
+              placeholder={"Selecione o turno para impressão"}
+              onChange={(value) => setSelectedTurn(value)}
+            />
+          </div>
+        </div>
+
         <div className="row">
           <div className="col">
             <input
@@ -170,7 +203,7 @@ const PrintModal = (props) => {
         <Button variant="success" onClick={handleSubmit}>Imprimir</Button>
       </Modal.Footer>
     </Modal>
-  );
-};
+  )
+}
 
-export default PrintModal;
+export default PrintModal

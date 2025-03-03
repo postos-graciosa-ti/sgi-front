@@ -77,7 +77,9 @@ const Scale = () => {
 
   const currentYear = new Date().getFullYear()
 
-  const [holidayMessage, setHolidayMessage] = useState('');
+  const [holidayMessage, setHolidayMessage] = useState('')
+
+  const firstDayOfMonth = moment().startOf('month')
 
   useEffect(() => {
     const checkHoliday = () => {
@@ -222,6 +224,44 @@ const Scale = () => {
   }
 
   const handleOnclickDay = (date) => {
+    let allDaysOff = [...daysOff, moment(date).format("DD-MM-YYYY")]
+
+    if (allDaysOff.length > 1) {
+      allDaysOff.reduce((prev, curr) => {
+        let prevDate = moment(prev, "DD-MM-YYYY")
+
+        let currDate = moment(curr, "DD-MM-YYYY")
+
+        let dateDiff = currDate.diff(prevDate, "days")
+
+        if (dateDiff - 1 >= 7) {
+          Swal.fire({
+            icon: "warning",
+            title: "Aviso",
+            text: "_Esse dia ultrapassa os 6 dias permitidos por lei_",
+          })
+        }
+
+        return currDate
+      })
+    } else {
+      let curr = moment(date).format("DD-MM-YYYY")
+
+      let prevDate = moment(firstDayOfMonth, "DD-MM-YYYY")
+
+      let currDate = moment(curr, "DD-MM-YYYY")
+
+      let dateDiff = currDate.diff(prevDate, "days")
+
+      if (dateDiff - 1 >= 7) {
+        Swal.fire({
+          icon: "warning",
+          title: "Aviso",
+          text: "_Esse dia ultrapassa os 6 dias permitidos por lei_",
+        })
+      }
+    }
+
     let worker = allWorkers.find(worker => worker.worker_id == selectedWorker.value)
 
     scalesList?.map((scale) => {
@@ -480,7 +520,7 @@ const Scale = () => {
             <FileEarmarkText />
           </button>
 
-          <button
+          {/* <button
             className="btn btn-danger mt-3 me-3"
             title="Relatório de dias de folga"
             onClick={() => setDaysOffModalOpen(true)}
@@ -494,7 +534,7 @@ const Scale = () => {
             title="Relatório de dias de trabalho"
           >
             <CalendarCheck />
-          </button>
+          </button> */}
 
           <button
             className="btn btn-primary me-3 mt-3"

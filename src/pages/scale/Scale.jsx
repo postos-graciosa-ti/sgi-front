@@ -2,7 +2,7 @@ import axios from "axios"
 import moment from "moment"
 import printJS from "print-js"
 import { useEffect, useState } from "react"
-import { Check2All, Clipboard2Check, Clipboard2X, PersonAdd, Printer } from "react-bootstrap-icons"
+import { BarChartLine, BarChartSteps, CalendarCheck, CalendarX, CaretUp, Check2All, CheckAll, Clipboard2Check, Clipboard2X, ClipboardCheck, FileEarmarkText, PersonAdd, PersonPlus, Printer } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
 import 'react-calendar/dist/Calendar.css'
 import ReactDOMServer from 'react-dom/server'
@@ -467,7 +467,7 @@ const Scale = () => {
             id="print-days"
             className="btn btn-light mt-3 me-3"
             onClick={() => setPrintModalOpen(true)}
-            title="Botão para impressão"
+            title="Impressão de escala"
           >
             <Printer />
           </button>
@@ -475,8 +475,9 @@ const Scale = () => {
           <button
             onClick={() => setScaleLogsModalOpen(true)}
             className="btn btn-warning me-3 mt-3"
+            title="Logs de escala"
           >
-            Logs
+            <FileEarmarkText />
           </button>
 
           <button
@@ -484,7 +485,7 @@ const Scale = () => {
             title="Relatório de dias de folga"
             onClick={() => setDaysOffModalOpen(true)}
           >
-            <Clipboard2X />
+            <CalendarX />
           </button>
 
           <button
@@ -492,24 +493,24 @@ const Scale = () => {
             onClick={() => setScaleHistoryModalOpen(true)}
             title="Relatório de dias de trabalho"
           >
-            <Clipboard2Check />
+            <CalendarCheck />
           </button>
 
           <button
             className="btn btn-primary me-3 mt-3"
             onClick={() => setAddSomeWorkersModalOpen(true)}
-            title="Adicionar escala de trabalho para vários colaboradores"
+            title="Adicionar colaboradores à escala"
           >
-            <PersonAdd />
+            <PersonPlus />
           </button>
 
           <button
             id="save-scale"
-            className="btn btn-primary mt-3"
+            className="btn btn-success mt-3"
             onClick={handleSubmitDaysOff}
             title="Salvar dias de folga"
           >
-            <Check2All />
+            <CheckAll />
           </button>
         </div>
 

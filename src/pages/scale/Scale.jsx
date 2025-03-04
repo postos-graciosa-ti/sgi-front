@@ -226,8 +226,6 @@ const Scale = () => {
   const handleOnclickDay = (date) => {
     let allDaysOff = [...daysOff, moment(date).format("DD-MM-YYYY")].sort()
 
-    let warnings = []
-
     let sundays = []
 
     for (let i = moment().startOf("month"); i <= moment(date); i.add(1, 'day')) {
@@ -243,7 +241,11 @@ const Scale = () => {
     }
 
     if (sundays.length >= 2) {
-      warnings.push("_Esse colaborador trabalhou nos últimos dois domingos_")
+      Swal.fire({
+        icon: "warning",
+        title: "Aviso",
+        text: "_Colaborador trabalhou nos últimos dois domingos_",
+      })
     }
 
     if (allDaysOff.length > 1) {
@@ -255,7 +257,11 @@ const Scale = () => {
         let dateDiff = currDate.diff(prevDate, "days")
 
         if (dateDiff - 1 >= 7) {
-          warnings.push("_Esse dia ultrapassa os 6 dias permitidos por lei_")
+          Swal.fire({
+            icon: "warning",
+            title: "Aviso",
+            text: "_Esse dia ultrapassa os 6 dias permitidos por lei_",
+          })
         }
 
         return currDate
@@ -270,7 +276,11 @@ const Scale = () => {
       let dateDiff = currDate.diff(prevDate, "days")
 
       if (dateDiff - 1 >= 7) {
-        warnings.push("_Esse dia ultrapassa os 6 dias permitidos por lei_")
+        Swal.fire({
+          icon: "warning",
+          title: "Aviso",
+          text: "_Esse dia ultrapassa os 6 dias permitidos por lei_",
+        })
       }
     }
 
@@ -282,21 +292,17 @@ const Scale = () => {
           if (dayOff.date == moment(date).format("DD-MM-YYYY")) {
             setCalendarPopupOpen(false)
 
-            warnings.push("_Já existe um colaborador do mesmo turno e função de folga nesse dia_")
+            Swal.fire({
+              icon: "error",
+              title: "Aviso",
+              text: "_Já existe um colaborador do mesmo turno e função de folga nesse dia_",
+            })
+
+            throw new Error("_Já existe um colaborador do mesmo turno e função de folga nesse dia_")
           }
         })
       }
     })
-
-    let strWarning = warnings && warnings.map((warn) => `${warn}`).join(', ')
-
-    if (strWarning) {
-      Swal.fire({
-        icon: "warning",
-        title: "Avisos",
-        text: strWarning,
-      })
-    }
 
     setDaysOff((prevState) => {
       if (prevState) {

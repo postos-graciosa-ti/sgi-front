@@ -226,27 +226,27 @@ const Scale = () => {
   const handleOnclickDay = (date) => {
     let allDaysOff = [...daysOff, moment(date).format("DD-MM-YYYY")].sort()
 
-    let sundays = []
+    // let sundays = []
 
-    for (let i = moment().startOf("month"); i <= moment(date); i.add(1, 'day')) {
-      let currDay = moment(i, "DD-MM-YYYY")
+    // for (let i = moment().startOf("month"); i <= moment(date); i.add(1, 'day')) {
+    //   let currDay = moment(i, "DD-MM-YYYY")
 
-      let isDayOff = allDaysOff.find((dayOff) => dayOff == moment(i).format("DD-MM-YYYY"))
+    //   let isDayOff = allDaysOff.find((dayOff) => dayOff == moment(i).format("DD-MM-YYYY"))
 
-      let isSunday = currDay.day() == 0
+    //   let isSunday = currDay.day() == 0
 
-      if (!isDayOff && isSunday) {
-        sundays.push(moment(i).format("DD-MM-YYYY"))
-      }
-    }
+    //   if (!isDayOff && isSunday) {
+    //     sundays.push(moment(i).format("DD-MM-YYYY"))
+    //   }
+    // }
 
-    if (sundays.length >= 2) {
-      Swal.fire({
-        icon: "warning",
-        title: "Aviso",
-        text: "_Colaborador trabalhou nos últimos dois domingos_",
-      })
-    }
+    // if (sundays.length >= 2) {
+    //   Swal.fire({
+    //     icon: "warning",
+    //     title: "Aviso",
+    //     text: "_Colaborador trabalhou nos últimos dois domingos_",
+    //   })
+    // }
 
     if (allDaysOff.length > 1) {
       allDaysOff.reduce((prev, curr) => {
@@ -542,7 +542,7 @@ const Scale = () => {
             <FileEarmarkText />
           </button>
 
-          {/* <button
+          <button
             className="btn btn-danger mt-3 me-3"
             title="Relatório de dias de folga"
             onClick={() => setDaysOffModalOpen(true)}
@@ -556,7 +556,7 @@ const Scale = () => {
             title="Relatório de dias de trabalho"
           >
             <CalendarCheck />
-          </button> */}
+          </button>
 
           <button
             className="btn btn-primary me-3 mt-3"

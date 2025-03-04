@@ -1,13 +1,29 @@
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Badge, Button, Card, Col, Container, Modal, Row } from 'react-bootstrap';
 import useUserSessionStore from '../../data/userSession';
 import api from '../../services/api';
 
-export const TurnsRows = ({ turnReport, turnIndex }) => {
+// Componente memoizado para evitar re-renderizações desnecessárias
+const TurnsRows = React.memo(({ turnReport, turnIndex }) => {
+  const renderRoleBadge = useCallback((role, key, quantity, data) => (
+    <Col xs={12} key={key}>
+      <div className="d-flex justify-content-between align-items-center mb-2">
+        <Badge bg={key === 'caixas' ? 'info' : key === 'frentistas' ? 'warning' : 'secondary'}>
+          {role}
+        </Badge>
+        <span className="fw-bold">{quantity}</span>
+      </div>
+      {data?.map((item, index) => (
+        <div key={index} className="text-muted small">
+          {item.name}
+        </div>
+      ))}
+    </Col>
+  ), []);
+
   return (
     <Col
-      key={turnIndex}
       className="h-100 py-3"
       style={{ minWidth: '350px', maxWidth: '350px' }}
     >
@@ -29,20 +45,11 @@ export const TurnsRows = ({ turnReport, turnIndex }) => {
               <Row className="g-2">
                 {['Caixas', 'Frentistas', 'Trocadores'].map((role, i) => {
                   const key = role.toLowerCase();
-                  return (
-                    <Col xs={12} key={i}>
-                      <div className="d-flex justify-content-between align-items-center mb-2">
-                        <Badge bg={key === 'caixas' ? 'info' : key === 'frentistas' ? 'warning' : 'secondary'}>
-                          {role}
-                        </Badge>
-                        <span className="fw-bold">{dayReport[`quantidade_${key}`]}</span>
-                      </div>
-                      {dayReport[`dados_${key}`]?.map((item, index) => (
-                        <div key={index} className="text-muted small">
-                          {item.name}
-                        </div>
-                      ))}
-                    </Col>
+                  return renderRoleBadge(
+                    role,
+                    key,
+                    dayReport[`quantidade_${key}`],
+                    dayReport[`dados_${key}`]
                   );
                 })}
               </Row>
@@ -52,14 +59,25 @@ export const TurnsRows = ({ turnReport, turnIndex }) => {
       </div>
     </Col>
   );
-};
+});
 
 const DaysOnReportModal = ({ show, onHide }) => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie);
   const [reportData, setReportData] = useState([]);
 
+  // Função memoizada para ordenar os dados
+  const sortReportData = useCallback((data) => {
+    return data.sort((a, b) => {
+      const startA = moment(a[0].turn_info.start_time, 'HH:mm');
+      const startB = moment(b[0].turn_info.start_time, 'HH:mm');
+      const endA = moment(a[0].turn_info.end_time, 'HH:mm');
+      const endB = moment(b[0].turn_info.end_time, 'HH:mm');
+      return startA.isBefore(startB) ? -1 : startA.isAfter(startB) ? 1 : endA.isBefore(endB) ? -1 : 1;
+    });
+  }, []);
+
   useEffect(() => {
-    if (!selectedSubsdiarie) return;
+    if (!selectedSubsdiarie || !show) return;
 
     let isMounted = true;
     const fetchData = async () => {
@@ -70,15 +88,7 @@ const DaysOnReportModal = ({ show, onHide }) => {
         };
         const response = await api.post(`/reports/subsidiaries/${selectedSubsdiarie.value}/scales/days-off`, formData);
         if (isMounted) {
-          setReportData(
-            response.data.sort((a, b) => {
-              const startA = moment(a[0].turn_info.start_time, 'HH:mm');
-              const startB = moment(b[0].turn_info.start_time, 'HH:mm');
-              const endA = moment(a[0].turn_info.end_time, 'HH:mm');
-              const endB = moment(b[0].turn_info.end_time, 'HH:mm');
-              return startA.isBefore(startB) ? -1 : startA.isAfter(startB) ? 1 : endA.isBefore(endB) ? -1 : 1;
-            })
-          );
+          setReportData(sortReportData(response.data));
         }
       } catch (error) {
         console.error("Erro ao buscar relatório", error);
@@ -86,7 +96,14 @@ const DaysOnReportModal = ({ show, onHide }) => {
     };
     fetchData();
     return () => { isMounted = false; };
-  }, [show, selectedSubsdiarie]);
+  }, [show, selectedSubsdiarie, sortReportData]);
+
+  // Memoização dos dados renderizados
+  const renderedTurns = useMemo(() => (
+    reportData.map((turnReport, turnIndex) => (
+      <TurnsRows key={turnIndex} turnReport={turnReport} turnIndex={turnIndex} />
+    ))
+  ), [reportData]);
 
   return (
     <Modal show={show} onHide={onHide} fullscreen centered scrollable className="modal-fullscreen">
@@ -96,9 +113,7 @@ const DaysOnReportModal = ({ show, onHide }) => {
       <Modal.Body className="p-0 bg-light">
         <Container fluid className="h-100">
           <Row className="h-100 flex-nowrap overflow-x-auto gx-3">
-            {reportData.map((turnReport, turnIndex) => (
-              <TurnsRows key={turnIndex} turnReport={turnReport} turnIndex={turnIndex} />
-            ))}
+            {renderedTurns}
           </Row>
         </Container>
       </Modal.Body>

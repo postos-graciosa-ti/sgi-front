@@ -504,14 +504,40 @@ const Scale = () => {
           />
         </div>
 
-        <div className="d-flex justify-content-between align-items-center mb-2">
-          <div>
-            <button className="btn btn-primary" onClick={() => setHollidaysModalOpen(true)}>Feriados</button>
-          </div>
+        <div className="mt-3">
+          <button
+            id="print-days"
+            className="btn btn-light mt-3 me-3"
+            onClick={() => setPrintModalOpen(true)}
+            title="Impressão de escala"
+          >
+            <Printer />
+          </button>
 
-          <div className="text-end mt-2 mb-2 text-danger">
-            *{holidayMessage}
-          </div>
+          <button
+            onClick={() => setScaleLogsModalOpen(true)}
+            className="btn btn-warning me-3 mt-3"
+            title="Logs de escala"
+          >
+            <FileEarmarkText />
+          </button>
+
+          <button
+            className="btn btn-primary me-3 mt-3"
+            onClick={() => setAddSomeWorkersModalOpen(true)}
+            title="Adicionar colaboradores à escala"
+          >
+            <PersonPlus />
+          </button>
+
+          <button
+            id="save-scale"
+            className="btn btn-success mt-3"
+            onClick={handleSubmitDaysOff}
+            title="Salvar dias de folga"
+          >
+            <CheckAll />
+          </button>
         </div>
 
         <div id="scale-calendar">
@@ -546,55 +572,26 @@ const Scale = () => {
           />
         </div>
 
-        <div className="text-end">
+        <div className="mb-2 text-end">
           <button
-            id="print-days"
-            className="btn btn-light mt-3 me-3"
-            onClick={() => setPrintModalOpen(true)}
-            title="Impressão de escala"
+            className="btn btn-primary me-2"
+            onClick={() => setScaleHistoryModalOpen(true)}
           >
-            <Printer />
+            Relatório de dias de trabalho
           </button>
 
           <button
-            onClick={() => setScaleLogsModalOpen(true)}
-            className="btn btn-warning me-3 mt-3"
-            title="Logs de escala"
-          >
-            <FileEarmarkText />
-          </button>
-
-          <button
-            className="btn btn-danger mt-3 me-3"
-            title="Relatório de dias de folga"
+            className="btn btn-primary me-2"
             onClick={() => setDaysOffModalOpen(true)}
           >
-            <CalendarX />
+            Relatório de dias de folga
           </button>
 
           <button
-            className="btn btn-success mt-3 me-3"
-            onClick={() => setScaleHistoryModalOpen(true)}
-            title="Relatório de dias de trabalho"
+            className="btn btn-primary"
+            onClick={() => setHollidaysModalOpen(true)}
           >
-            <CalendarCheck />
-          </button>
-
-          <button
-            className="btn btn-primary me-3 mt-3"
-            onClick={() => setAddSomeWorkersModalOpen(true)}
-            title="Adicionar colaboradores à escala"
-          >
-            <PersonPlus />
-          </button>
-
-          <button
-            id="save-scale"
-            className="btn btn-success mt-3"
-            onClick={handleSubmitDaysOff}
-            title="Salvar dias de folga"
-          >
-            <CheckAll />
+            Feriados
           </button>
         </div>
 

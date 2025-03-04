@@ -370,19 +370,41 @@ const Scale = () => {
 
     api
       .post(`/scales`, formData)
-      .then(() => {
+      .then((response) => {
+        let data = response.data
+
         setCalendarPopupOpen(false)
 
-        api.get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
+        api
+          .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
           .then((response) => setScalesList(response.data))
 
-        api.post("/logs/scales", {
-          user_id: userSession.id,
-          worker_id: selectedWorker.value,
-          inserted_at: new Date().toLocaleDateString("pt-BR"),
-          at_time: new Date().toLocaleTimeString("pt-BR"),
-          subsidiarie_id: selectedSubsdiarie.value,
+        api
+          .post("/logs/scales", {
+            user_id: userSession.id,
+            worker_id: selectedWorker.value,
+            inserted_at: new Date().toLocaleDateString("pt-BR"),
+            at_time: new Date().toLocaleTimeString("pt-BR"),
+            subsidiarie_id: selectedSubsdiarie.value,
+          })
+
+        let sundaysCountPlusPlus = []
+
+        data && data.days_off.map((dayOff) => {
+          let dayOffWeekday = moment(dayOff, "DD-MM-YYYY")
+
+          if (dayOffWeekday.day() == 0) {
+            sundaysCountPlusPlus.push(dayOff)
+          }
         })
+
+        if (sundaysCountPlusPlus.length == 0) {
+          Swal.fire({
+            icon: "warning",
+            title: "Aviso",
+            text: "_O colaborador não possui ao menos um domingo na escala_",
+          })
+        }
       })
       .catch((error) => {
         Swal.fire({

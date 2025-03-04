@@ -7,8 +7,9 @@ import moment from 'moment';
 const DaysOnReportModal = React.memo(({ show, onHide }) => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie);
 
-  const monthFirstDay = useMemo(() => new Date(new Date().getFullYear(), new Date().getMonth(), 1), []);
-  const monthLastDay = useMemo(() => new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0), []);
+  const weekStartDay = useMemo(() => moment().startOf("week").clone(), []);
+
+  const weekEndDay = useMemo(() => moment().endOf("week").clone(), []);
 
   const [reportData, setReportData] = useState();
 
@@ -20,8 +21,8 @@ const DaysOnReportModal = React.memo(({ show, onHide }) => {
     if (show) {
       api
         .post(`/reports/subsidiaries/${selectedSubsdiarie.value}/scales/days-on`, {
-          "first_day": moment(monthFirstDay).format("DD-MM-YYYY"),
-          "last_day": moment(monthLastDay).format("DD-MM-YYYY")
+          "first_day": moment(weekStartDay).format("DD-MM-YYYY"),
+          "last_day": moment(weekEndDay).format("DD-MM-YYYY")
         })
         .then((response) => {
           const sortedData = response.data.sort((a, b) => {
@@ -32,7 +33,7 @@ const DaysOnReportModal = React.memo(({ show, onHide }) => {
           setReportData(sortedData);
         });
     }
-  }, [show, selectedSubsdiarie, monthFirstDay, monthLastDay]);
+  }, [show, selectedSubsdiarie]);
 
   const renderTurnReport = useCallback((turnReport, turnIndex) => (
     <Col

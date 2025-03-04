@@ -83,8 +83,8 @@ const DaysOnReportModal = ({ show, onHide }) => {
     const fetchData = async () => {
       try {
         const formData = {
-          first_day: moment().startOf('month').format('DD-MM-YYYY'),
-          last_day: moment().endOf('month').format('DD-MM-YYYY')
+          first_day: moment().startOf('week').format('DD-MM-YYYY'),
+          last_day: moment().endOf('week').format('DD-MM-YYYY')
         };
         const response = await api.post(`/reports/subsidiaries/${selectedSubsdiarie.value}/scales/days-off`, formData);
         if (isMounted) {

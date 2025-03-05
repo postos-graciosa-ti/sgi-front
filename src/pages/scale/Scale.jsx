@@ -462,7 +462,7 @@ const Scale = () => {
 
         printJS({
           printable: printableContent,
-          type: 'raw-html',
+          type: 'pdf',
         })
       })
   }

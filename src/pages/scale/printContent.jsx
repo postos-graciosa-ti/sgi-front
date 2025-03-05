@@ -38,7 +38,8 @@ const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn) => {
               <th>Colaborador</th>
               <th>Domingos de Folga</th>
               <th>Dias de Trabalho</th>
-              <th>Folga</th>
+              {/* <th>Folga</th> */}
+              <th>Folgas</th> {/* Adicionando a coluna para 'Proporção' */}
             </tr>
           </thead>
 
@@ -62,7 +63,7 @@ const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn) => {
                   </div>
                 </td>
 
-                <td>
+                {/* <td>
                   <div className="badge-container">
                     {scale.days_off?.map((dateItem, index) => {
                       const weekdayInEnglish = moment(dateItem, "YYYY-MM-DD").format("dddd");
@@ -71,6 +72,24 @@ const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn) => {
                           {`${moment(dateItem).format("DD-MM-YYYY")} (${translateWeekday(weekdayInEnglish)})`}
                         </div>
                       )
+                    })}
+                  </div>
+                </td> */}
+
+                <td>
+                  {/* Verificando se a proporção está presente e convertendo de string para objeto */}
+                  <div className="proportions-container">
+                    {scale.proportion && JSON.parse(scale.proportion)?.map((item, index) => {
+                      const formattedDate = moment(item.data, "DD-MM-YYYY").format("DD-MM-YYYY");
+                      const formattedWeekday = translateWeekday(item.weekday);
+                      const proportion = item.proporcao;
+
+                      return (
+                        <div key={index} className="proportion-item">
+                          {/* Exibindo no formato 'data (dia da semana - proporção)' */}
+                          <div>{formattedDate} ({formattedWeekday} - {proportion})</div>
+                        </div>
+                      );
                     })}
                   </div>
                 </td>
@@ -88,9 +107,12 @@ const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn) => {
       <div>
         <h3>Assinaturas:</h3>
         {scalesList?.map((scale) => (
-          <div key={scale.worker.id}>
-            {scale.worker.name} __________________________________________________
-          </div>
+          <>
+            <div key={scale.worker.id}>
+              {scale.worker.name} __________________________________________________
+            </div>
+            <br></br>
+          </>
         ))}
       </div>
     </div>

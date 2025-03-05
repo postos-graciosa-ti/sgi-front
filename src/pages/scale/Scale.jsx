@@ -2,7 +2,7 @@ import axios from "axios"
 import moment from "moment"
 import printJS from "print-js"
 import { useEffect, useState } from "react"
-import { BarChartLine, BarChartSteps, CalendarCheck, CalendarX, CaretUp, Check2All, CheckAll, Clipboard2Check, Clipboard2X, ClipboardCheck, FileEarmarkText, PersonAdd, PersonPlus, Printer } from "react-bootstrap-icons"
+import { CheckAll, FileEarmarkText, PersonPlus, Printer } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
 import 'react-calendar/dist/Calendar.css'
 import ReactDOMServer from 'react-dom/server'
@@ -224,29 +224,27 @@ const Scale = () => {
   }
 
   const handleOnclickDay = (date) => {
+    const validations = [
+      { condition: !selectedTurn, message: "Não é possível selecionar sem turno" },
+      { condition: !selectedFunction, message: "Não é possível selecionar sem função" },
+      { condition: !selectedWorker, message: "Não é possível selecionar sem colaborador" },
+    ]
+
+    for (const { condition, message } of validations) {
+      if (condition) {
+        setCalendarPopupOpen(false)
+        
+        Swal.fire({
+          icon: "warning",
+          title: "Aviso",
+          text: `_${message}_`,
+        })
+
+        throw new Error(`_${message}_`)
+      }
+    }
+
     let allDaysOff = [...daysOff, moment(date).format("DD-MM-YYYY")].sort()
-
-    // let sundays = []
-
-    // for (let i = moment().startOf("month"); i <= moment(date); i.add(1, 'day')) {
-    //   let currDay = moment(i, "DD-MM-YYYY")
-
-    //   let isDayOff = allDaysOff.find((dayOff) => dayOff == moment(i).format("DD-MM-YYYY"))
-
-    //   let isSunday = currDay.day() == 0
-
-    //   if (!isDayOff && isSunday) {
-    //     sundays.push(moment(i).format("DD-MM-YYYY"))
-    //   }
-    // }
-
-    // if (sundays.length >= 2) {
-    //   Swal.fire({
-    //     icon: "warning",
-    //     title: "Aviso",
-    //     text: "_Colaborador trabalhou nos últimos dois domingos_",
-    //   })
-    // }
 
     if (allDaysOff.length > 1) {
       allDaysOff.reduce((prev, curr) => {
@@ -275,7 +273,7 @@ const Scale = () => {
 
       let dateDiff = currDate.diff(prevDate, "days")
 
-      if (dateDiff - 1 >= 7) {
+      if (dateDiff >= 7) {
         Swal.fire({
           icon: "warning",
           title: "Aviso",
@@ -316,6 +314,25 @@ const Scale = () => {
   }
 
   const handleSubmitDaysOff = () => {
+    const validations = [
+      { condition: !selectedTurn, message: "Não é possível salvar sem turno selecionado" },
+      { condition: !selectedFunction, message: "Não é possível salvar sem função selecionada" },
+      { condition: !selectedWorker, message: "Não é possível salvar sem colaborador selecionado" },
+      { condition: daysOff.length === 0, message: "Não é possível salvar sem dias de folga selecionados" }
+    ]
+
+    for (const { condition, message } of validations) {
+      if (condition) {
+        Swal.fire({
+          icon: "warning",
+          title: "Aviso",
+          text: `_${message}_`,
+        })
+
+        throw new Error(`_${message}_`)
+      }
+    }
+
     const sortedDaysOff = [...daysOff].sort((a, b) => {
       const dataA = new Date(a.split("-").reverse().join("-"))
 

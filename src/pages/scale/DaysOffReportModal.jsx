@@ -1,10 +1,9 @@
 import moment from 'moment';
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { Badge, Button, Card, Col, Container, Modal, Row } from 'react-bootstrap';
+import { Badge, Button, Card, Col, Container, Modal, Row, Spinner } from 'react-bootstrap';
 import useUserSessionStore from '../../data/userSession';
 import api from '../../services/api';
 
-// Componente memoizado para evitar re-renderizações desnecessárias
 const TurnsRows = React.memo(({ turnReport, turnIndex }) => {
   const renderRoleBadge = useCallback((role, key, quantity, data) => (
     <Col xs={12} key={key}>
@@ -23,19 +22,11 @@ const TurnsRows = React.memo(({ turnReport, turnIndex }) => {
   ), []);
 
   return (
-    <Col
-      className="h-100 py-3"
-      style={{ minWidth: '350px', maxWidth: '350px' }}
-    >
+    <Col className="h-100 py-3" style={{ minWidth: '350px', maxWidth: '350px' }}>
       <div className="bg-white p-3 rounded-3 shadow-sm mb-3 sticky-top">
-        <h5 className="mb-0">
-          {turnReport[0].turn_info.name}
-        </h5>
+        <h5 className="mb-0">{turnReport[0].turn_info.name}</h5>
       </div>
-      <div
-        className="d-flex flex-column gap-3 pe-2"
-        style={{ height: 'calc(100vh - 160px)', overflowY: 'auto' }}
-      >
+      <div className="d-flex flex-column gap-3 pe-2" style={{ height: 'calc(100vh - 160px)', overflowY: 'auto' }}>
         {turnReport.slice(1).map((dayReport, dayIndex) => (
           <Card key={`${turnIndex}-${dayIndex}`} className="shadow-sm">
             <Card.Header className="py-2 bg-primary text-white">
@@ -64,8 +55,8 @@ const TurnsRows = React.memo(({ turnReport, turnIndex }) => {
 const DaysOnReportModal = ({ show, onHide }) => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie);
   const [reportData, setReportData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // Função memoizada para ordenar os dados
   const sortReportData = useCallback((data) => {
     return data.sort((a, b) => {
       const startA = moment(a[0].turn_info.start_time, 'HH:mm');
@@ -80,6 +71,7 @@ const DaysOnReportModal = ({ show, onHide }) => {
     if (!selectedSubsdiarie || !show) return;
 
     let isMounted = true;
+    setLoading(true);
     const fetchData = async () => {
       try {
         const formData = {
@@ -92,13 +84,14 @@ const DaysOnReportModal = ({ show, onHide }) => {
         }
       } catch (error) {
         console.error("Erro ao buscar relatório", error);
+      } finally {
+        if (isMounted) setLoading(false);
       }
     };
     fetchData();
     return () => { isMounted = false; };
   }, [show, selectedSubsdiarie, sortReportData]);
 
-  // Memoização dos dados renderizados
   const renderedTurns = useMemo(() => (
     reportData.map((turnReport, turnIndex) => (
       <TurnsRows key={turnIndex} turnReport={turnReport} turnIndex={turnIndex} />
@@ -113,7 +106,13 @@ const DaysOnReportModal = ({ show, onHide }) => {
       <Modal.Body className="p-0 bg-light">
         <Container fluid className="h-100">
           <Row className="h-100 flex-nowrap overflow-x-auto gx-3">
-            {renderedTurns}
+            {loading ? (
+              <div className="d-flex justify-content-center align-items-center w-100" style={{ height: '80vh' }}>
+                <Spinner animation="border" variant="primary" />
+              </div>
+            ) : (
+              renderedTurns
+            )}
           </Row>
         </Container>
       </Modal.Body>

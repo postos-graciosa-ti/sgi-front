@@ -120,25 +120,16 @@ const PrintModal = (props) => {
     await api
       .post(`/subsidiaries/${selectedSubsdiarie?.value}/scales/print`, formData)
       .then((response) => {
-        const printableContent = `
-          <html>
-            <head>
-              <style>
-                table, th, td {
-                  border: 1px solid black;
-                  border-collapse: collapse;
-                }
-                th, td {
-                  text-align: left;
-                  vertical-align: top;
-                }
-              </style>
-            </head>
-            <body>
-              ${ReactDOMServer.renderToStaticMarkup(printContent(response.data, onDuty, formData.start_date, formData.end_date, selectedTurn, selectedFunction))}
-            </body>
-          </html>
-        `
+        const printableContent = ReactDOMServer.renderToString(
+          printContent(
+            response.data,
+            onDuty,
+            formData.start_date,
+            formData.end_date,
+            selectedTurn,
+            selectedFunction
+          )
+        )
 
         printJS({
           printable: printableContent,

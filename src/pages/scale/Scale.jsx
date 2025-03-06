@@ -1,11 +1,8 @@
-import axios from "axios"
 import moment from "moment"
-import printJS from "print-js"
 import { useEffect, useState } from "react"
 import { CheckAll, FileEarmarkText, PersonPlus, Printer } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
 import 'react-calendar/dist/Calendar.css'
-import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
@@ -17,7 +14,6 @@ import DaysOffReportModal from "./DaysOffReportModal"
 import DaysOnReportModal from "./DaysOnReportModal"
 import DeleteScaleModal from "./DeleteScaleModal"
 import HollidaysModal from "./HollidaysModal"
-import printContent from "./printContent"
 import PrintModal from "./PrintModal"
 import ScaleLogsModal from "./ScaleLogsModal"
 import ScaleRow from "./ScaleRow"
@@ -77,44 +73,7 @@ const Scale = () => {
 
   const currentYear = new Date().getFullYear()
 
-  const [holidayMessage, setHolidayMessage] = useState('')
-
   const firstDayOfMonth = moment().startOf('month')
-
-  useEffect(() => {
-    const checkHoliday = () => {
-      const currentDate = new Date();
-
-      const currentMonth = currentDate.getMonth() + 1
-
-      const currentYear = currentDate.getFullYear()
-
-      axios
-        .get(`https://brasilapi.com.br/api/feriados/v1/${currentYear}`)
-        .then(response => {
-          const holidaysInMonth = response.data.filter(holiday => {
-            const holidayMonth = new Date(holiday.date).getMonth() + 1
-
-            return holidayMonth === currentMonth
-          })
-
-          if (holidaysInMonth.length > 0) {
-            const holidayList = holidaysInMonth.map(holiday => `${holiday.date} - ${holiday.name}`).join('\n')
-
-            setHolidayMessage(`Feriados em ${currentDate.toLocaleString('default', { month: 'long' })} de ${currentYear}:\n${holidayList}`)
-          } else {
-            setHolidayMessage(`Não há feriados em ${currentDate.toLocaleString('default', { month: 'long' })} de ${currentYear}.`)
-          }
-        })
-        .catch(error => {
-          setHolidayMessage('Erro ao buscar feriados.')
-
-          console.error('Error fetching holidays:', error)
-        })
-    }
-
-    checkHoliday()
-  }, [])
 
   useEffect(() => {
     api
@@ -233,7 +192,7 @@ const Scale = () => {
     for (const { condition, message } of validations) {
       if (condition) {
         setCalendarPopupOpen(false)
-        
+
         Swal.fire({
           icon: "warning",
           title: "Aviso",
@@ -650,8 +609,8 @@ const Scale = () => {
       <PrintModal
         printModalOpen={printModalOpen}
         setPrintModalOpen={setPrintModalOpen}
-        // handlePrintScale={handlePrintScale}
-        // scalesList={scalesList}
+      // handlePrintScale={handlePrintScale}
+      // scalesList={scalesList}
       />
 
       <AddSomeWorkersModal

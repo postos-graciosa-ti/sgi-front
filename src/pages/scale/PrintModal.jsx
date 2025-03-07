@@ -84,6 +84,8 @@ const PrintModal = (props) => {
         .then((response) => {
           let options = []
 
+          options.push({ value: 0, label: "Todos" })
+
           response?.data.map((worker) => {
             options.push({ value: worker.id, label: worker.name })
           })
@@ -194,11 +196,17 @@ const PrintModal = (props) => {
 
           <div className="mb-3">
             <ReactSelect
-              placeholder={"Selecionar colaborador"}
+              placeholder="Selecionar colaborador"
               options={workersOptions}
-              onChange={(value) => setSelectedWorker(value)}
+              onChange={(selected) => {
+                if (selected.some(worker => worker.value === 0)) {
+                  setSelectedWorker(workersOptions?.filter(worker => worker.value !== 0));
+                } else {
+                  setSelectedWorker(selected);
+                }
+              }}
               isMulti={true}
-              value={selectedWorker?.value == 0 && workersOptions || selectedWorker}
+              value={selectedWorker}
             />
           </div>
 

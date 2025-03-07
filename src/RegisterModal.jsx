@@ -55,7 +55,7 @@ const RegisterModal = (props) => {
       keyboard={false}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Cadastrar</Modal.Title>
+        <Modal.Title>Cadastrar senha</Modal.Title>
       </Modal.Header>
 
       <form onSubmit={handleSubmit}>

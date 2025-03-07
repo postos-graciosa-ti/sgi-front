@@ -34,10 +34,18 @@ const PrintModal = (props) => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie?.value}/turns`)
       .then((response) => {
+        const sortedTurns = response.data.sort((a, b) => {
+          const startA = moment(a.start_time, "HH:mm")
+
+          const startB = moment(b.start_time, "HH:mm")
+
+          return startA.diff(startB)
+        })
+
         let options = []
 
-        response?.data.map((turn) => {
-          options.push({ value: turn.id, label: turn.name })
+        sortedTurns && sortedTurns.map((turn) => {
+          options.push({ "label": `${turn.start_time} - ${turn.end_time}`, "value": turn.id })
         })
 
         setTurnsOptions(options)
@@ -46,13 +54,23 @@ const PrintModal = (props) => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie?.value}/functions`)
       .then((response) => {
-        let options = []
+        let functions = response.data
 
-        response?.data.map((func) => {
-          options.push({ value: func.id, label: func.name })
+        let functionsOptions = []
+
+        functions && functions.map((func) => {
+          let inScaleFunctions = (
+            func.name == "Operador(a) de Caixa I" ||
+            func.name == "Frentista I" ||
+            func.name == "Frentista / Caixa II" ||
+            func.name == "Trocador de Óleo / Frentista II"
+          )
+
+          if (inScaleFunctions)
+            functionsOptions.push({ "label": func.name, "value": func.id })
         })
 
-        setFunctionsOptions(options)
+        setFunctionsOptions(functionsOptions)
       })
 
   }, [])
@@ -120,6 +138,15 @@ const PrintModal = (props) => {
     await api
       .post(`/subsidiaries/${selectedSubsdiarie?.value}/scales/print`, formData)
       .then((response) => {
+        // @media print {
+        //   header, footer {
+        //       display: none !important;
+        //   }
+        // }
+
+        console.log(subsidiarieData)
+        debugger
+
         const printableContent = ReactDOMServer.renderToString(
           printContent(
             response.data,
@@ -127,13 +154,16 @@ const PrintModal = (props) => {
             formData.start_date,
             formData.end_date,
             selectedTurn,
-            selectedFunction
+            selectedFunction,
+            selectedSubsdiarie,
+            subsidiarieData.cnpj
           )
         )
 
         printJS({
           printable: printableContent,
           type: 'raw-html',
+          header: null
         })
 
         handleClose()

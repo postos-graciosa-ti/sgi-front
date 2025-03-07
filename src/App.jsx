@@ -45,7 +45,7 @@ function App() {
         </div>
 
         <div className="fixed-bottom text-center fw-bold">
-          <p>&copy; 2025 Postos Graciosa. Todos os direitos reservados.</p>
+          <p>&copy; <b>Copyright</b> 2025. Posto Graciosa Ltda. <b>CNPJ: 76.608.660/0001-11</b>.</p>
         </div>
 
         <LoginModal

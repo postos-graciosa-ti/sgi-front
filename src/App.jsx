@@ -7,14 +7,6 @@ function App() {
 
   const [registerModalOpen, setRegisterModalOpen] = useState(false)
 
-  const handleOpenLoginModal = () => {
-    setLoginModalOpen(true)
-  }
-
-  const handleOpenRegisterModal = () => {
-    setRegisterModalOpen(true)
-  }
-
   const handleDownload = () => {
     const pdfUrl = "src/assets/sgi-manual-do-usuario.pdf"
 
@@ -22,13 +14,21 @@ function App() {
 
     link.href = pdfUrl
 
-    link.download = "document.pdf"
+    link.download = "sgi-manual-do-usuario.pdf"
 
     document.body.appendChild(link)
 
     link.click()
 
     document.body.removeChild(link)
+  }
+
+  const handleOpenLoginModal = () => {
+    setLoginModalOpen(true)
+  }
+
+  const handleOpenRegisterModal = () => {
+    setRegisterModalOpen(true)
   }
 
   return (

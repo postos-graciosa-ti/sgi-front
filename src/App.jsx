@@ -8,7 +8,7 @@ function App() {
   const [registerModalOpen, setRegisterModalOpen] = useState(false)
 
   const handleDownload = () => {
-    const pdfUrl = "/assets/sgi-manual-do-usuario.pdf"
+    const pdfUrl = "/sgi-manual-do-usuario.pdf"
 
     const link = document.createElement("a")
 

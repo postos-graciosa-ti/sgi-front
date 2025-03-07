@@ -224,9 +224,8 @@ const CreateWorkerModal = (props) => {
 
           <div className="mb-3">
             <input
-              type="text"
-              placeholder="Admissão"
-              className='form-control'
+              type="date"
+              className="form-control"
               onChange={(e) => setAdmissionDate(e.target.value)}
             />
           </div>

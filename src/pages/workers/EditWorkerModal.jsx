@@ -288,11 +288,10 @@ const EditWorkerModal = (props) => {
           </label>
 
           <input
-            name='workerAdmissionDate'
-            type="text"
-            placeholder="Admissão"
-            className="form-control mt-1"
+            type="date"
+            name="workerAdmissionDate"
             onChange={(e) => setAdmissionDate(e.target.value)}
+            className="form-control"
             defaultValue={selectedWorker?.admission_date}
           />
         </div>

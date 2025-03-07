@@ -1,7 +1,7 @@
 import moment from "moment"
 import "moment/locale/pt-br"
 import { useEffect, useState } from "react"
-import { CheckAll, FileEarmarkText, PersonPlus, Printer } from "react-bootstrap-icons"
+import { CheckAll, FileEarmarkText, PersonPlus, Printer, Question } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
 import 'react-calendar/dist/Calendar.css'
 import ReactSelect from "react-select"
@@ -18,6 +18,8 @@ import HollidaysModal from "./HollidaysModal"
 import PrintModal from "./PrintModal"
 import ScaleLogsModal from "./ScaleLogsModal"
 import ScaleRow from "./ScaleRow"
+import { driver } from "driver.js"
+import "driver.js/dist/driver.css"
 
 const Scale = () => {
   moment.locale("pt-br")
@@ -407,12 +409,109 @@ const Scale = () => {
       })
   }
 
+  const initTour = () => {
+    const driverObj = driver({
+      showProgress: true,
+      steps: [
+        {
+          element: '#turn-select',
+          popover: {
+            title: 'Selecionar turno',
+            description: 'Selecione um dos turnos disponíveis nessa filial'
+          }
+        },
+        {
+          element: '#function-select',
+          popover: {
+            title: 'Selecionar função',
+            description: 'Selecione uma das funções disponíveis nessa filial'
+          }
+        },
+        {
+          element: '#workers-select',
+          popover: {
+            title: 'Selecionar colaborador',
+            description: 'Selecione um dos colaboradores da função e turno selecionados disponíveis nessa filial'
+          }
+        },
+        {
+          element: '#calendar',
+          popover: {
+            title: 'Calendário',
+            description: 'Selecione os dias de folga para o colaborador selecionado'
+          }
+        },
+        {
+          element: '#save',
+          popover: {
+            title: 'Salvar',
+            description: 'Salve a escala para o colaborador selecionado'
+          }
+        },
+        {
+          element: '#collective-scale',
+          popover: {
+            title: 'Escala coletiva',
+            description: 'Adicionar dias de folga para diversos colaboradores ao mesmo tempo'
+          }
+        },
+        {
+          element: '#scale-logs',
+          popover: {
+            title: 'Logs de escala',
+            description: 'Registra todas as alterações realizadas na escala'
+          }
+        },
+        {
+          element: '#print-scale',
+          popover: {
+            title: 'Impressão de escala',
+            description: 'Imprimir documento de escala para colaboradores'
+          }
+        },
+        {
+          element: '#days-on-report',
+          popover: {
+            title: 'Relatório de dias de trabalho',
+            description: 'Mostra todos os colaboradores escalados para essa semana'
+          }
+        },
+        {
+          element: '#days-off-report',
+          popover: {
+            title: 'Relatório de dias de folga',
+            description: 'Mostra todos os colaboradores folgando nessa semana'
+          }
+        },
+        {
+          element: '#hollidays-button',
+          popover: {
+            title: 'Feriados',
+            description: 'Lista de feriados'
+          }
+        },
+        {
+          element: '#scale-row',
+          popover: {
+            title: 'Escala de colaborador',
+            description: 'Informações de colaborador, dias de trabalho, dias de folga e exclusão de escala'
+          }
+        },
+      ],
+      prevBtnText: "Anterior",
+      nextBtnText: "Próximo",
+      doneBtnText: "Concluído"
+    })
+
+    driverObj.drive()
+  }
+
   return (
     <>
       <Nav />
 
       <div className="container">
-        <div className="mb-3">
+        <div id="turn-select" className="mb-3">
           <ReactSelect
             placeholder="Selecione um turno"
             options={turnsOptions}
@@ -420,7 +519,7 @@ const Scale = () => {
           />
         </div>
 
-        <div className="mb-3">
+        <div id="function-select" className="mb-3">
           <ReactSelect
             placeholder="Selecione uma função"
             options={functionsOptions}
@@ -428,9 +527,8 @@ const Scale = () => {
           />
         </div>
 
-        <div className="mb-3">
+        <div id="workers-select" className="mb-3">
           <ReactSelect
-            id="workers-select"
             placeholder="Selecione um colaborador"
             options={workersOptions}
             onChange={(value) => {
@@ -463,7 +561,7 @@ const Scale = () => {
 
         <div className="mt-3">
           <button
-            id="print-days"
+            id="print-scale"
             className="btn btn-light mt-3 me-3"
             onClick={() => setPrintModalOpen(true)}
             title="Impressão de escala"
@@ -472,6 +570,7 @@ const Scale = () => {
           </button>
 
           <button
+            id="scale-logs"
             onClick={() => setScaleLogsModalOpen(true)}
             className="btn btn-warning me-3 mt-3"
             title="Logs de escala"
@@ -480,6 +579,7 @@ const Scale = () => {
           </button>
 
           <button
+            id="collective-scale"
             className="btn btn-primary me-3 mt-3"
             onClick={() => setAddSomeWorkersModalOpen(true)}
             title="Adicionar colaboradores à escala"
@@ -488,7 +588,7 @@ const Scale = () => {
           </button>
 
           <button
-            id="save-scale"
+            id="save"
             className="btn btn-success mt-3"
             onClick={handleSubmitDaysOff}
             title="Salvar dias de folga"
@@ -497,7 +597,7 @@ const Scale = () => {
           </button>
         </div>
 
-        <div id="scale-calendar">
+        <div id="calendar">
           <Calendar
             className="w-100 rounded"
             tileClassName={handleTitleClassname}
@@ -531,6 +631,14 @@ const Scale = () => {
 
         <div className="mb-2 text-end">
           <button
+            className="btn btn-warning me-2"
+            onClick={initTour}
+          >
+            <Question />
+          </button>
+
+          <button
+            id="days-on-report"
             className="btn btn-primary me-2"
             onClick={() => setScaleHistoryModalOpen(true)}
           >
@@ -538,6 +646,7 @@ const Scale = () => {
           </button>
 
           <button
+            id="days-off-report"
             className="btn btn-primary me-2"
             onClick={() => setDaysOffModalOpen(true)}
           >
@@ -545,6 +654,7 @@ const Scale = () => {
           </button>
 
           <button
+            id="hollidays-button"
             className="btn btn-primary"
             onClick={() => setHollidaysModalOpen(true)}
           >

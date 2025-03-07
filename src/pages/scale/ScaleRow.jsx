@@ -61,7 +61,7 @@ const ScaleRow = ({
     }
 
     return filteredScales.map((scale) => (
-      <tr key={scale.id}>
+      <tr key={scale.id} id="scale-row">
         <td>
           <div>
             {scale.worker.name} | {scale.worker.function.name} | {scale.worker.turn.start_time} - {scale.worker.turn.end_time}

@@ -50,7 +50,7 @@ const ScaleLogsModal = (props) => {
                   scalesLogs?.map((scaleLog) => (
                     <tr>
                       <td>
-                        <b>{scaleLog.user_name}</b> Atualizou a escala para <b>{scaleLog.worker_name}</b> em <b>{scaleLog.inserted_at}</b> às <b>{scaleLog.at_time}</b> horas
+                        {scaleLog.log_str}
                       </td>
                     </tr>
                   ))

@@ -28,7 +28,20 @@ function App() {
           <p>Os Postos Graciosa acreditam que o crescimento começa pelas pessoas. Por isso, investimos em ferramentas que aprimoram a gestão e proporcionam um ambiente de trabalho mais organizado e produtivo. Se precisar de suporte, nossa equipe de RH está sempre à disposição para ajudar.</p>
         </div>
 
-        <div className="text-center mt-5">
+        <div className="row text-center mt-5">
+          <div className="col">
+            {/* <button className="btn btn-primary">
+              Baixar manual do usuário
+            </button> */}
+
+            <a className="btn btn-danger" href="./assets/Manual do usuário SGI.pdf" download="Manual do usuário SGI.pdf">
+              Baixar manual do usuário em PDF
+            </a>
+
+          </div>
+        </div>
+
+        <div className="text-center mt-3">
           <button
             className="btn btn-primary me-2"
             onClick={handleOpenLoginModal}

@@ -1,4 +1,5 @@
 import moment from "moment"
+import "moment/locale/pt-br"
 import { useEffect, useState } from "react"
 import { CheckAll, FileEarmarkText, PersonPlus, Printer } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
@@ -19,6 +20,8 @@ import ScaleLogsModal from "./ScaleLogsModal"
 import ScaleRow from "./ScaleRow"
 
 const Scale = () => {
+  moment.locale("pt-br")
+
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const [selectedDate, setSelectedDate] = useState()
@@ -272,6 +275,17 @@ const Scale = () => {
     setCalendarPopupOpen(false)
   }
 
+  const translateWeekday = (weekday) => ({
+    Monday: "Segunda-Feira",
+    Tuesday: "Terça-Feira",
+    Wednesday: "Quarta-Feira",
+    Thursday: "Quinta-Feira",
+    Friday: "Sexta-Feira",
+    Saturday: "Sábado",
+    Sunday: "Domingo",
+
+  })[weekday] || ""
+
   const handleSubmitDaysOff = () => {
     const validations = [
       { condition: !selectedTurn, message: "Não é possível salvar sem turno selecionado" },
@@ -352,17 +366,19 @@ const Scale = () => {
         setCalendarPopupOpen(false)
 
         api
-          .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
+          .get(`/scales/subsidiaries/${selectedSubsdiarie?.value}`)
           .then((response) => setScalesList(response.data))
 
+        let ScalesLogs = {
+          "log_str": `${userSession?.name ?? "Usuário desconhecido"} atualizou a escala para ${selectedWorker?.label ?? "Trabalhador não definido"} com dias (${sortedDaysOff?.map(dayOff => `'${dayOff} (${translateWeekday(moment(dayOff, 'DD-MM-YYYY').format('dddd'))})'`).join(", ")})`,
+          "happened_at": moment().format("DD-MM-YYYY"),
+          "happened_at_time": moment().format("HH:mm"),
+          "subsidiarie_id": selectedSubsdiarie?.value,
+          "user_id": userSession?.id
+        }
+
         api
-          .post("/logs/scales", {
-            user_id: userSession.id,
-            worker_id: selectedWorker.value,
-            inserted_at: new Date().toLocaleDateString("pt-BR"),
-            at_time: new Date().toLocaleTimeString("pt-BR"),
-            subsidiarie_id: selectedSubsdiarie.value,
-          })
+          .post(`/subsidiaries/${selectedSubsdiarie.value}/scales/logs`, ScalesLogs)
 
         let sundaysCountPlusPlus = []
 

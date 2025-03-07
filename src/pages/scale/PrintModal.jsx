@@ -30,6 +30,8 @@ const PrintModal = (props) => {
 
   const [endDate, setEndDate] = useState()
 
+  const [selectAllWorkers, setSelectAllWorkers] = useState()
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie?.value}/turns`)
@@ -138,15 +140,6 @@ const PrintModal = (props) => {
     await api
       .post(`/subsidiaries/${selectedSubsdiarie?.value}/scales/print`, formData)
       .then((response) => {
-        // @media print {
-        //   header, footer {
-        //       display: none !important;
-        //   }
-        // }
-
-        console.log(subsidiarieData)
-        debugger
-
         const printableContent = ReactDOMServer.renderToString(
           printContent(
             response.data,
@@ -205,6 +198,7 @@ const PrintModal = (props) => {
               options={workersOptions}
               onChange={(value) => setSelectedWorker(value)}
               isMulti={true}
+              value={selectedWorker?.value == 0 && workersOptions || selectedWorker}
             />
           </div>
 

@@ -1,7 +1,9 @@
 import axios from 'axios'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
+import { Alert } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
+import ListGroup from 'react-bootstrap/ListGroup'
 import Modal from 'react-bootstrap/Modal'
 
 const HollidaysModal = (props) => {
@@ -10,7 +12,7 @@ const HollidaysModal = (props) => {
   const [holidayMessage, setHolidayMessage] = useState('')
 
   useEffect(() => {
-    const currentDate = new Date();
+    const currentDate = new Date()
 
     const currentMonth = currentDate.getMonth() + 1
 
@@ -57,17 +59,17 @@ const HollidaysModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
-        <div className="text-danger">
-          *{holidayMessage}
-        </div>
+        <Alert variant={"warning"}>
+          <b>{holidayMessage}</b>
+        </Alert>
 
-        {
-          hollidays?.map((holliday) => (
-            <div className="card mb-2 p-2">
-              <span><b>{moment(holliday.date).format("DD-MM-YYYY")}</b>: {holliday.name}</span>
-            </div>
-          ))
-        }
+        <ListGroup>
+          {
+            hollidays?.map((holliday) => (
+              <ListGroup.Item>{moment(holliday.date).format("DD-MM-YYYY")}: {holliday.name}</ListGroup.Item>
+            ))
+          }
+        </ListGroup>
       </Modal.Body>
 
       <Modal.Footer>

@@ -124,7 +124,32 @@ const EditUserModal = (props) => {
     api
       .put(`/users/${selectedUser?.user_id}`, formData)
       .then((response) => {
-        let logStr = `${userSession.name} atualizou ${selectedUser?.user_name} de (nome=${selectedUser?.user_name}, email=${selectedUser?.user_email}) para ${response.data.name} (nome=${response.data.name}, email=${response.data.email})`
+        let oldUserRole = rolesList?.find((role) => role.value == selectedUser?.role_id)
+
+        let newUserRole = rolesList?.find((role) => role.value == response?.data.role_id)
+
+        let newSubsidiariesIds = JSON.parse(response?.data.subsidiaries_id) || eval(response?.data.subsidiaries_id)
+
+        let newUserSubsidiaries = subsidiariesList?.filter(({ value }) => newSubsidiariesIds.includes(value)) || []
+
+        let logStr = `
+          ${userSession?.name} atualizou ${selectedUser?.user_name} de 
+          (
+            nome=${selectedUser?.user_name}, 
+            email=${selectedUser?.user_email},
+            tipo=${oldUserRole?.label},
+            filiais=${selectedUser?.user_subsidiaries.map((subsidiarie) => subsidiarie.name).join(", ")},
+            telefone=${selectedUser?.user_phone}
+          ) 
+          para ${response?.data.name} 
+          (
+            nome=${response?.data.name}, 
+            email=${response?.data.email},
+            tipo=${newUserRole?.label},
+            filiais=(${newUserSubsidiaries.map(subsidiarie => subsidiarie.label).join(", ")}), 
+            telefone=${response?.data.phone}
+          )
+        `
 
         let logsFormData = {
           "log_str": logStr,

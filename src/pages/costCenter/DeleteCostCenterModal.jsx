@@ -32,7 +32,7 @@ const DeleteCostCenterModal = (props) => {
     api
       .delete(`/cost-center/${selectedCostCenter.id}`)
       .then(() => {
-        let logStr = `${userSession.name} apagou ${selectedCostCenter.name}`
+        let logStr = `${userSession.name} apagou ${selectedCostCenter.name} (nome=${selectedCostCenter.name}, descrição=${selectedCostCenter.description})`
 
         let logFormData = {
           "log_str": logStr,

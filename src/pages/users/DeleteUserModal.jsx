@@ -33,7 +33,16 @@ const DeleteUserModal = (props) => {
     api
       .delete(`/users/${selectedUser.user_id}`)
       .then(() => {
-        let logStr = `${userSession.name} excluiu ${selectedUser?.user_name} (nome=${selectedUser?.user_name}, email=${selectedUser?.user_email})`
+        let logStr = `
+          ${userSession.name} excluiu ${selectedUser?.user_name} 
+          (
+            nome=${selectedUser?.user_name}, 
+            email=${selectedUser?.user_email},
+            tipo=${selectedUser?.role_name},
+            filiais=${selectedUser?.user_subsidiaries.map((subsidiarie) => subsidiarie.name).join(", ")},
+            telefone=${selectedUser?.user_phone}
+          )
+        `
 
         let logsFormData = {
           "log_str": logStr,

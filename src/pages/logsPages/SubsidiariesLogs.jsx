@@ -17,6 +17,8 @@ const SubsidiariesLogs = () => {
       <Nav />
 
       <div className="container">
+        <h4>Histórico de alterações de filiais</h4>
+
         <LogsRowTable
           title={`logs`}
           logs={subsidiariesLogs}

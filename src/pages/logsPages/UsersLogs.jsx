@@ -17,6 +17,8 @@ const UsersLogs = () => {
       <Nav />
 
       <div className="container">
+        <h4>Histórico de alterações de usuários</h4>
+
         <LogsRowTable
           title={`logs`}
           logs={usersLogs}

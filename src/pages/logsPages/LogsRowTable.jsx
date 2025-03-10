@@ -6,11 +6,11 @@ const LogsRowTable = (props) => {
       <table className="table table-hover">
         <thead>
           <tr>
-            <th>{title}</th>
+            <th>Alteração</th>
 
-            <th></th>
+            <th>Horário</th>
 
-            <th></th>
+            <th>Data</th>
           </tr>
         </thead>
 

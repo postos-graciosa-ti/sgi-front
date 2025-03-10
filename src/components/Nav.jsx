@@ -196,12 +196,18 @@ const Nav = () => {
       </nav>
 
       <div className="user-info-container">
-        <span id="subsidiarie" className="user-info">{selectedSubsidiarie.label}</span>
-        <span className="separator"> - </span>
-        <span className="user-info">{userSession.name}</span>
-        <span className="separator"> - </span>
+        <span id="subsidiarie" className="user-info">Filial: {selectedSubsidiarie.label}</span>
+
+        <span className="separator"> | </span>
+
         <Link id="changeSubsidiarie" to="/steps" className="user-info">Alterar filial</Link>
-        <span className="separator"> - </span>
+
+        <span className="separator"> | </span>
+
+        <span className="user-info">Usuário: {userSession.name}</span>
+
+        <span className="separator"> | </span>
+
         <button
           id="changePassword"
           onClick={(e) => { e.stopPropagation(); setChangePasswordModalOpen(true); }}
@@ -209,7 +215,9 @@ const Nav = () => {
         >
           Alterar minha senha
         </button>
-        <span className="separator"> - </span>
+
+        <span className="separator"> | </span>
+
         <span id="support" className="user-info">Suporte: postosgraciosati@gmail.com</span>
       </div>
 

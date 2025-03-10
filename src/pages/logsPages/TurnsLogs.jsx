@@ -20,6 +20,8 @@ const TurnsLogs = () => {
       <Nav />
 
       <div className="container">
+        <h4>Histórico de alterações de turnos</h4>
+
         <LogsRowTable
           title={`Logs`}
           logs={turnsLogs}

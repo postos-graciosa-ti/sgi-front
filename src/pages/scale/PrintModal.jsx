@@ -12,6 +12,8 @@ import printContent from './printContent'
 const PrintModal = (props) => {
   const { printModalOpen, setPrintModalOpen } = props
 
+  const userSession = useUserSessionStore((state) => state.userSession)
+
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const [turnsOptions, setTurnsOptions] = useState()
@@ -31,6 +33,8 @@ const PrintModal = (props) => {
   const [endDate, setEndDate] = useState()
 
   const [selectAllWorkers, setSelectAllWorkers] = useState()
+
+  const webAdress = window.location.origin + location.pathname
 
   useEffect(() => {
     api
@@ -151,7 +155,9 @@ const PrintModal = (props) => {
             selectedTurn,
             selectedFunction,
             selectedSubsdiarie,
-            subsidiarieData.cnpj
+            subsidiarieData.cnpj,
+            userSession,
+            webAdress
           )
         )
 

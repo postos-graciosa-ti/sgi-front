@@ -1,6 +1,6 @@
 import moment from "moment";
 
-const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn, selectedFunction, selectedSubsdiarie, subsidiarieCnpj) => {
+const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn, selectedFunction, selectedSubsdiarie, subsidiarieCnpj, userSession, webAdress) => {
   const translateWeekday = (weekday) => ({
     Monday: "Segunda-Feira",
     Tuesday: "Terça-Feira",
@@ -79,10 +79,10 @@ const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn, sele
       </div>
 
       <div style={{ fontSize: '11px', marginTop: '10px', bottom: "0", position: "fixed", left: "0" }}>
-        Emitido em {moment().format("DD-MM-YYYY")} {moment().format("HH:mm")}
+        Documento gerado por <strong>{userSession?.name}</strong> em {moment().format('DD-MM-YYYY')} às {moment().format('HH:mm')} via <strong>{webAdress}</strong>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default printContent;
+export default printContent

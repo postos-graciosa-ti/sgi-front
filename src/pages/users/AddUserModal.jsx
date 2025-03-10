@@ -116,7 +116,22 @@ const AddUserModal = (props) => {
     api
       .post("/users", formData)
       .then((response) => {
-        let logStr = `${userSession.name} adicionou ${response.data.name} (nome=${response.data.name}, email=${response.data.email})`
+        const userRole = rolesOptions?.find(role => role.value === response?.data.role_id)
+
+        let subsidiariesIds = (Array.isArray(JSON.parse(response?.data.subsidiaries_id)) && JSON.parse(response?.data.subsidiaries_id)) || eval(response?.data.subsidiaries_id)
+
+        const userSubsidiaries = subsidiariesList?.filter(({ value }) => subsidiariesIds.includes(value)) || []
+
+        const logStr = `
+          ${userSession.name} adicionou ${response.data.name} 
+          (
+            nome=${response?.data.name}, 
+            email=${response?.data.email}, 
+            tipo=${userRole?.label}, 
+            filiais=(${userSubsidiaries.map(subsidiarie => subsidiarie.label).join(", ")}), 
+            telefone=${response?.data.phone}
+          )
+        `
 
         let logsFormData = {
           "log_str": logStr,

@@ -61,13 +61,23 @@ const EditTurnModal = (props) => {
       .put(`/turns/${turnToEdit.id}`, formData)
       .then((response) => {
         let logStr = `
-        ${userSession.name} atualizou de ${turnToEdit.name} () para ${response.data.name} (
-            nome = ${response.data.name} (anterior: ${turnToEdit.name}), 
-            horário de inicio de turno = ${response.data.start_time} (anterior: ${turnToEdit.start_time}),
-            horário de inicio de intervalo = ${response.data.start_interval_time} (anterior: ${turnToEdit.start_interval_time}),
-            horário de fim de intervalo = ${response.data.end_interval_time} (anterior: ${turnToEdit.end_interval_time}),
-            horário de fim de turno = ${response.data.end_time} (anterior: ${turnToEdit.end_time})
-        )`
+          ${userSession.name} atualizou ${turnToEdit.name} de 
+          (
+            nome=${turnToEdit.name},
+            horário de inicio de turno=${turnToEdit.start_time},
+            horário de inicio de intervalo=${turnToEdit.start_interval_time},
+            horário de fim de intervalo=${turnToEdit.end_interval_time},
+            horário de fim de turno=${turnToEdit.end_time}
+          ) 
+          para ${response.data.name} 
+          (
+              nome=${response.data.name}, 
+              horário de inicio de turno=${response.data.start_time},
+              horário de inicio de intervalo=${response.data.start_interval_time},
+              horário de fim de intervalo=${response.data.end_interval_time},
+              horário de fim de turno=${response.data.end_time}
+          )
+        `
 
         let logFormData = {
           "log_str": logStr,

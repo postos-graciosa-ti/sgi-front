@@ -21,7 +21,12 @@ const CostCentersLogs = () => {
       <Nav />
 
       <div className="container">
-        <LogsRowTable title={`Logs de centro de custo`} logs={costCentersLogs} />
+        <h4>Histórico de alterações de centros de custos</h4>
+
+        <LogsRowTable
+          title={`Logs de centro de custo`}
+          logs={costCentersLogs}
+        />
       </div>
     </>
   )

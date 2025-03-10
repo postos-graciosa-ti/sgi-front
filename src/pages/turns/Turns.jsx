@@ -1,5 +1,7 @@
+import { driver } from "driver.js"
+import "driver.js/dist/driver.css"
 import { useEffect, useState } from "react"
-import { Pencil, Plus, Trash } from "react-bootstrap-icons"
+import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
@@ -48,6 +50,47 @@ const Turns = () => {
     setDeleteTurnModalOpen(true)
   }
 
+  const initTour = () => {
+    const driverObj = driver({
+      showProgress: true,
+      steps: [
+        {
+          element: '#addTurn',
+          popover: {
+            title: 'Adicionar turno',
+            description: 'Adicionar um novo turno para essa filial'
+          }
+        },
+        {
+          element: '#turnRow',
+          popover: {
+            title: 'Dados de turno',
+            description: 'Exibe dados de turno'
+          }
+        },
+        {
+          element: '#editTurn',
+          popover: {
+            title: 'Editar turno',
+            description: 'Editar turno'
+          }
+        },
+        {
+          element: '#deleteTurn',
+          popover: {
+            title: 'Deletar turno',
+            description: 'Deletar turno'
+          }
+        },
+      ],
+      prevBtnText: "Anterior",
+      nextBtnText: "Próximo",
+      doneBtnText: "Concluído"
+    })
+
+    driverObj.drive()
+  }
+
   return (
     <>
       <Nav />
@@ -58,6 +101,13 @@ const Turns = () => {
         </div>
 
         <div className="mt-3 mb-3">
+          <button
+            className="btn btn-warning me-2"
+            onClick={initTour}
+          >
+            <Question />
+          </button>
+
           <button
             id="addTurn"
             type="button"
@@ -84,7 +134,7 @@ const Turns = () => {
             <tbody id="turnsTable">
               {
                 turnsList && turnsList.map((turn) => (
-                  <tr key={turn.id}>
+                  <tr id="turnRow" key={turn.id}>
                     <td>{turn.name}</td>
                     <td>{turn.start_time.replace(/:\d{2}$/, '')}</td>
                     <td>{turn.start_interval_time.replace(/:\d{2}$/, '')}</td>

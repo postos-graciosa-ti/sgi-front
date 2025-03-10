@@ -66,7 +66,7 @@ const HollidaysModal = (props) => {
         <ListGroup>
           {
             hollidays?.map((holliday) => (
-              <ListGroup.Item>{moment(holliday.date).format("DD-MM-YYYY")}: {holliday.name}</ListGroup.Item>
+              <ListGroup.Item><b>{moment(holliday.date).format("DD-MM-YYYY")}</b>: <i>{holliday.name}</i></ListGroup.Item>
             ))
           }
         </ListGroup>

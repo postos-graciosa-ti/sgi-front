@@ -17,11 +17,14 @@ const WorkerNotationModal = (props) => {
   const [newNotation, setNewNotation] = useState()
 
   useEffect(() => {
-    api
-      .get(`/workers/${selectedWorker?.worker_id}/notations`)
-      .then((response) => {
-        setWorkerNotations(response.data)
-      })
+    if (selectedWorker) {
+      api
+        .get(`/workers/${selectedWorker?.worker_id}/notations`)
+        .then((response) => {
+          setWorkerNotations(response.data)
+        })
+    }
+
   }, [workerNotationModalOpen])
 
   const handleClose = () => {

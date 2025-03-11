@@ -124,7 +124,11 @@ const Workers = () => {
             </thead>
             <tbody>
               {workersList?.map((worker) => (
-                <tr id="workerRow" key={worker.id} className={!worker.worker_is_active && "table-danger"}>
+                <tr
+                  id="workerRow"
+                  key={worker.worker_id}
+                  className={!worker.worker_is_active ? "table-danger" : undefined}
+                >
                   <td>{worker.worker_name}</td>
                   <td>{worker.function_name}</td>
                   <td>{worker.turn_start_time.replace(/:\d{2}$/, '')} - {worker.turn_end_time.replace(/:\d{2}$/, '')}</td>

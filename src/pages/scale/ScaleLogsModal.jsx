@@ -48,7 +48,7 @@ const ScaleLogsModal = (props) => {
               {
                 scalesLogs?.length > 0 && (
                   scalesLogs?.map((scaleLog) => (
-                    <tr>
+                    <tr key={scaleLog.id}>
                       <td>
                         {scaleLog.log_str}
                       </td>

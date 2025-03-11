@@ -11,6 +11,7 @@ import EditWorkerModal from "./EditWorkerModal"
 import ReactivateWorkerModal from "./ReactivateWorkerModal"
 import ResignationReasonsReportModal from "./ResignationReasonsReportModal"
 import WorkerNotationModal from "./WorkerNotationModal"
+import moment from "moment"
 
 const Workers = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -122,66 +123,69 @@ const Workers = () => {
                 <th>Ações</th>
               </tr>
             </thead>
+
             <tbody>
-              {workersList?.map((worker) => (
-                <tr
-                  id="workerRow"
-                  key={worker.worker_id}
-                  className={!worker.worker_is_active ? "table-danger" : undefined}
-                >
-                  <td>{worker.worker_name}</td>
-                  <td>{worker.function_name}</td>
-                  <td>{worker.turn_start_time.replace(/:\d{2}$/, '')} - {worker.turn_end_time.replace(/:\d{2}$/, '')}</td>
-                  <td>{worker.worker_is_active ? "Sim" : "Não"}</td>
-                  <td>{worker.cost_center}</td>
-                  <td>{worker.department}</td>
-                  <td>{worker.admission_date}</td>
-                  <td>{!worker.worker_is_active ? worker.resignation_date : "Ativo"}</td>
-                  <td>{!worker.worker_is_active ? worker.resignation_reason_name : "Ativo"}</td>
-                  <td>
-                    <button
-                      className="btn btn-warning me-2 mt-2"
-                      onClick={() => handleOpenEditWorkerModal(worker)}
-                      id="editWorker"
-                      aria-label={`Editar informações de ${worker.worker_name}`}
-                      title="Editar colaborador"
-                    >
-                      <PersonGear />
-                    </button>
+              {
+                workersList?.map((worker) => (
+                  <tr
+                    id="workerRow"
+                    key={worker.worker_id}
+                    className={!worker.worker_is_active ? "table-danger" : undefined}
+                  >
+                    <td>{worker.worker_name}</td>
+                    <td>{worker.function_name}</td>
+                    <td>{worker.turn_start_time.replace(/:\d{2}$/, '')} - {worker.turn_end_time.replace(/:\d{2}$/, '')}</td>
+                    <td>{worker.worker_is_active ? "Sim" : "Não"}</td>
+                    <td>{worker.cost_center}</td>
+                    <td>{worker.department}</td>
+                    <td>{moment(worker.admission_date).format("DD-MM-YYYY")}</td>
+                    <td>{!worker.worker_is_active ? worker.resignation_date : "Ativo"}</td>
+                    <td>{!worker.worker_is_active ? worker.resignation_reason_name : "Ativo"}</td>
+                    <td>
+                      <button
+                        className="btn btn-warning me-2 mt-2"
+                        onClick={() => handleOpenEditWorkerModal(worker)}
+                        id="editWorker"
+                        aria-label={`Editar informações de ${worker.worker_name}`}
+                        title="Editar colaborador"
+                      >
+                        <PersonGear />
+                      </button>
 
-                    <button
-                      className="btn btn-primary me-2 mt-2"
-                      onClick={() => handleOpenWorkerNotation(worker)}
-                      title="Adicionar observação"
-                      id="workerObservation"
-                    >
-                      <Pen />
-                    </button>
+                      <button
+                        className="btn btn-primary me-2 mt-2"
+                        onClick={() => handleOpenWorkerNotation(worker)}
+                        title="Adicionar observação"
+                        id="workerObservation"
+                      >
+                        <Pen />
+                      </button>
 
-                    <button
-                      className="btn btn-danger me-2 mt-2"
-                      onClick={() => handleOpenDeleteWorkerModal(worker)}
-                      id="deleteWorker"
-                      aria-label={`Excluir ${worker.worker_name}`}
-                      title="Demitir colaborador"
-                    >
-                      <SlashCircle />
-                    </button>
+                      <button
+                        className="btn btn-danger me-2 mt-2"
+                        onClick={() => handleOpenDeleteWorkerModal(worker)}
+                        id="deleteWorker"
+                        aria-label={`Excluir ${worker.worker_name}`}
+                        title="Demitir colaborador"
+                      >
+                        <SlashCircle />
+                      </button>
 
-                    {
-                      !worker.worker_is_active && (
-                        <button
-                          className="btn btn-primary me-2 mt-2"
-                          onClick={() => handleOpenReactivateWorkerModal(worker)}
-                          title="readimitir"
-                        >
-                          <ArrowClockwise />
-                        </button>
-                      )
-                    }
-                  </td>
-                </tr>
-              ))}
+                      {
+                        !worker.worker_is_active && (
+                          <button
+                            className="btn btn-primary me-2 mt-2"
+                            onClick={() => handleOpenReactivateWorkerModal(worker)}
+                            title="readimitir"
+                          >
+                            <ArrowClockwise />
+                          </button>
+                        )
+                      }
+                    </td>
+                  </tr>
+                ))
+              }
             </tbody>
           </table>
         </div>

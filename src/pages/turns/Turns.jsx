@@ -13,15 +13,13 @@ import EditTurnModal from "./EditTurnModal"
 const Turns = () => {
   const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
-  const [addTurnModalOpen, setAddTurnModalOpen] = useState(false)
-
   const [turnsList, setTurnsList] = useState()
 
-  const [turnToEdit, setTurnToEdit] = useState()
+  const [selectedTurn, setSelectedTurn] = useState()
+
+  const [addTurnModalOpen, setAddTurnModalOpen] = useState(false)
 
   const [editTurnModalOpen, setEditTurnModalOpen] = useState(false)
-
-  const [turnToDelete, setTurnToDelete] = useState()
 
   const [deleteTurnModalOpen, setDeleteTurnModalOpen] = useState(false)
 
@@ -36,17 +34,13 @@ const Turns = () => {
   }
 
   const handleOpenEditTurnModal = (turn) => {
-    setTurnToEdit()
-
-    setTurnToEdit(turn)
+    setSelectedTurn(turn)
 
     setEditTurnModalOpen(true)
   }
 
   const handleOpenDeleteTurnModal = (turn) => {
-    setTurnToDelete()
-
-    setTurnToDelete(turn)
+    setSelectedTurn(turn)
 
     setDeleteTurnModalOpen(true)
   }
@@ -144,16 +138,16 @@ const Turns = () => {
       <EditTurnModal
         editTurnModalOpen={editTurnModalOpen}
         setEditTurnModalOpen={setEditTurnModalOpen}
-        turnToEdit={turnToEdit}
-        setTurnToEdit={setTurnToEdit}
+        turnToEdit={selectedTurn}
+        setTurnToEdit={setSelectedTurn}
         setTurnsList={setTurnsList}
       />
 
       <DeleteTurnModal
         deleteTurnModalOpen={deleteTurnModalOpen}
         setDeleteTurnModalOpen={setDeleteTurnModalOpen}
-        turnToDelete={turnToDelete}
-        setTurnToDelete={setTurnToDelete}
+        turnToDelete={selectedTurn}
+        setTurnToDelete={setSelectedTurn}
         setTurnsList={setTurnsList}
       />
     </>

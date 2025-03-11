@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
-import { Pencil, Plus, Trash } from "react-bootstrap-icons"
+import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
+import mountDriver from "../../driverjs/mountDriver"
+import subsidiarieSteps from "../../driverjs/subsidiarieSteps"
 import api from "../../services/api"
 import AddSubsidiarieModal from "./AddSubsidiarieModal"
 import DeleteSubsidiarieModal from "./DeleteSubsidiarieModal"
@@ -39,6 +41,12 @@ const Subsidiaries = () => {
     setDeleteSubsidiarieModalOpen(true)
   }
 
+  const initTour = () => {
+    const driverObj = mountDriver(subsidiarieSteps)
+
+    driverObj.drive()
+  }
+
   return (
     <>
       <Nav />
@@ -48,9 +56,16 @@ const Subsidiaries = () => {
 
         <div className="mt-3 mb-3">
           <button
+            className="btn btn-warning me-2"
+            onClick={initTour}
+          >
+            <Question />
+          </button>
+
+          <button
+            id="addSubsidiarie"
             className="btn btn-primary"
             onClick={handleOpenAddModal}
-            id="add-subsidiarie"
             title="Adicionar filial"
           >
             <Plus />
@@ -84,7 +99,7 @@ const Subsidiaries = () => {
             <tbody>
               {
                 subsidiaries && subsidiaries.map((subsidiarie) => (
-                  <tr>
+                  <tr id="subsidiarieRow" key={subsidiarie.id}>
                     <td>
                       {subsidiarie.name}
                     </td>
@@ -106,7 +121,7 @@ const Subsidiaries = () => {
                         type="button"
                         className="btn btn-warning mt-1 ms-1"
                         onClick={() => handleOpenEditModal(subsidiarie)}
-                        id="edit-subsidiarie"
+                        id="editSubsidiarie"
                         title="Editar filial"
                       >
                         <Pencil />
@@ -116,7 +131,7 @@ const Subsidiaries = () => {
                         type="button"
                         className="btn btn-danger mt-1 ms-1"
                         onClick={() => handleOpenDeleteModal(subsidiarie)}
-                        id="delete-subsidiarie"
+                        id="deleteSubsidiarie"
                         title="Apagar filial"
                       >
                         <Trash />

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
-import { Pencil, Plus, Trash } from "react-bootstrap-icons"
+import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
+import functionsSteps from "../../driverjs/functionsSteps"
+import mountDriver from "../../driverjs/mountDriver"
 import api from "../../services/api"
 import AddFunctionsModal from "./AddFunctionsModal"
 import DeleteFunctionsModal from "./DeleteFunctionsModal"
@@ -44,6 +46,12 @@ const Functions = () => {
     setDeleteFunctionModalOpen(true)
   }
 
+  const initTour = () => {
+    const driverObj = mountDriver(functionsSteps)
+
+    driverObj.drive()
+  }
+
   return (
     <>
       <Nav />
@@ -52,6 +60,13 @@ const Functions = () => {
         <div className="mt-3 mb-3">
           <h4>Cadastro de funções</h4>
         </div>
+
+        <button
+          className="btn btn-warning me-2"
+          onClick={initTour}
+        >
+          <Question />
+        </button>
 
         <button
           id="addFunction"
@@ -76,10 +91,10 @@ const Functions = () => {
               </tr>
             </thead>
 
-            <tbody id="functionsTableBody">
+            <tbody>
               {
                 functionsList?.map((func) => (
-                  <tr key={func.id}>
+                  <tr key={func.id} id="functionsRow">
                     <td>{func.name}</td>
 
                     <td>{func.description}</td>

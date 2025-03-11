@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react"
-import { Pen, Plus, Trash } from "react-bootstrap-icons"
+import { Pen, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
 import AddUserModal from "./AddUserModal"
 import DeleteUserModal from "./DeleteUserModal"
 import EditUserModal from "./EditUserModal"
+import mountDriver from "../../driverjs/mountDriver"
+import userSteps from "../../driverjs/userSteps"
 
 const Users = () => {
   const bearerToken = useUserSessionStore(state => state.bearerToken)
@@ -30,6 +32,12 @@ const Users = () => {
       })
   }, [])
 
+  const initTour = () => {
+    const driverObj = mountDriver(userSteps)
+
+    driverObj.drive()
+  }
+
   return (
     <>
       <Nav />
@@ -38,6 +46,13 @@ const Users = () => {
         <h4>Cadastro de usuários</h4>
 
         <div className="mt-3 mb-3">
+          <button
+            className="btn btn-warning me-2"
+            onClick={initTour}
+          >
+            <Question />
+          </button>
+
           <button
             id="addUser"
             className="btn btn-primary"
@@ -67,7 +82,7 @@ const Users = () => {
             <tbody id="users-table">
               {userList && userList.map((user) => (
                 <>
-                  <tr>
+                  <tr key={user.id} id="userRow">
                     <td>
                       {user.user_email}
                     </td>

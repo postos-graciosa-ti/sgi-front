@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
-import { Pencil, Plus, Trash } from "react-bootstrap-icons"
+import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
+import departmentSteps from "../../driverjs/departmentsSteps"
+import mountDriver from "../../driverjs/mountDriver"
 import api from "../../services/api"
 import AddDepartmentModal from "./AddDepartmentModal"
-import EditDepartmentModal from "./EditDepartmentModal"
 import DeleteDepartmentModal from "./DeleteDepartmentModal"
+import EditDepartmentModal from "./EditDepartmentModal"
 
 const Department = () => {
   const [departmentsList, setDepartmentsList] = useState([])
@@ -35,6 +37,12 @@ const Department = () => {
     setDeleteDepartmentModalOpen(true)
   }
 
+  const initTour = () => {
+    const driverObj = mountDriver(departmentSteps)
+
+    driverObj.drive()
+  }
+
   return (
     <>
       <Nav />
@@ -46,7 +54,14 @@ const Department = () => {
 
         <div className="mt-3 mb-3">
           <button
-            id="addTurn"
+            className="btn btn-warning me-2"
+            onClick={initTour}
+          >
+            <Question />
+          </button>
+
+          <button
+            id="addDepartment"
             type="button"
             className="btn btn-primary"
             onClick={() => setAddDepartmentModalOpen(true)}
@@ -67,12 +82,12 @@ const Department = () => {
             </thead>
             <tbody>
               {departmentsList && departmentsList.map((department) => (
-                <tr key={department.id}>
+                <tr id="departmentRow" key={department.id}>
                   <td>{department.name}</td>
                   <td>{department.description}</td>
                   <td>
                     <button
-                      id="editTurn"
+                      id="editDepartment"
                       type="button"
                       className="btn btn-warning mt-2 me-2"
                       onClick={() => handleOpenEditDepartmentModal(department)}
@@ -82,7 +97,7 @@ const Department = () => {
                     </button>
 
                     <button
-                      id="deleteTurn"
+                      id="deleteDepartment"
                       type="button"
                       className="btn btn-danger mt-2"
                       onClick={() => handleOpenDeleteDepartmentModal(department)}

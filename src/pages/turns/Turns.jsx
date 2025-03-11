@@ -1,9 +1,10 @@
-import { driver } from "driver.js"
 import "driver.js/dist/driver.css"
 import { useEffect, useState } from "react"
 import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
+import mountDriver from "../../driverjs/mountDriver"
+import turnsSteps from "../../driverjs/turnsSteps"
 import api from "../../services/api"
 import AddTurnModal from "./AddTurnModal"
 import DeleteTurnModal from "./DeleteTurnModal"
@@ -51,42 +52,7 @@ const Turns = () => {
   }
 
   const initTour = () => {
-    const driverObj = driver({
-      showProgress: true,
-      steps: [
-        {
-          element: '#addTurn',
-          popover: {
-            title: 'Adicionar turno',
-            description: 'Adicionar um novo turno para essa filial'
-          }
-        },
-        {
-          element: '#turnRow',
-          popover: {
-            title: 'Dados de turno',
-            description: 'Exibe dados de turno'
-          }
-        },
-        {
-          element: '#editTurn',
-          popover: {
-            title: 'Editar turno',
-            description: 'Editar turno'
-          }
-        },
-        {
-          element: '#deleteTurn',
-          popover: {
-            title: 'Deletar turno',
-            description: 'Deletar turno'
-          }
-        },
-      ],
-      prevBtnText: "Anterior",
-      nextBtnText: "Próximo",
-      doneBtnText: "Concluído"
-    })
+    const driverObj = mountDriver(turnsSteps)
 
     driverObj.drive()
   }

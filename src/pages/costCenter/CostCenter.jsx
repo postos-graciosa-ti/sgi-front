@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
-import { Pencil, Plus, Trash } from "react-bootstrap-icons"
+import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
+import costCenterSteps from "../../driverjs/costCenterSteps"
+import mountDriver from "../../driverjs/mountDriver"
 import api from "../../services/api"
 import AddCostCenterModal from "./AddCostCenterModal"
-import EditCostCenterModal from "./EditCostCenterModal"
 import DeleteCostCenterModal from "./DeleteCostCenterModal"
+import EditCostCenterModal from "./EditCostCenterModal"
 
 const CostCenter = () => {
   const [costCenterList, setCostCenterList] = useState([])
@@ -35,6 +37,12 @@ const CostCenter = () => {
     setDeleteCostCenterModalOpen(true)
   }
 
+  const initTour = () => {
+    const driverObj = mountDriver(costCenterSteps)
+
+    driverObj.drive()
+  }
+
   return (
     <>
       <Nav />
@@ -46,7 +54,14 @@ const CostCenter = () => {
 
         <div className="mt-3 mb-3">
           <button
-            id="addTurn"
+            className="btn btn-warning me-2"
+            onClick={initTour}
+          >
+            <Question />
+          </button>
+
+          <button
+            id="addCostCenter"
             type="button"
             className="btn btn-primary"
             onClick={() => setAddCostCenterModalOpen(true)}
@@ -65,15 +80,18 @@ const CostCenter = () => {
                 <th></th>
               </tr>
             </thead>
+
             <tbody>
               {costCenterList &&
                 costCenterList.map((costCenter) => (
-                  <tr key={costCenter.id}>
+                  <tr id="costCenterRow" key={costCenter.id}>
                     <td>{costCenter.name}</td>
+                    
                     <td>{costCenter.description}</td>
+                    
                     <td>
                       <button
-                        id="editTurn"
+                        id="editCostCenter"
                         type="button"
                         className="btn btn-warning mt-2 me-2"
                         onClick={() => handleOpenEditCostCenterModal(costCenter)}
@@ -81,8 +99,9 @@ const CostCenter = () => {
                       >
                         <Pencil />
                       </button>
+
                       <button
-                        id="deleteTurn"
+                        id="deleteCostCenter"
                         type="button"
                         className="btn btn-danger mt-2"
                         onClick={() => handleOpenDeleteCostCenterModal(costCenter)}

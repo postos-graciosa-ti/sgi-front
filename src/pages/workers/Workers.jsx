@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
-import { ArrowClockwise, ClipboardData, Pen, PersonAdd, PersonGear, SlashCircle } from "react-bootstrap-icons"
+import { ArrowClockwise, ClipboardData, Pen, PersonAdd, PersonGear, Question, SlashCircle } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
+import mountDriver from "../../driverjs/mountDriver"
+import workersSteps from "../../driverjs/workersSteps"
 import api from "../../services/api"
 import CreateWorkerModal from "./CreateWorkerModal"
 import DeleteWorkerModal from "./DeleteWorkerModal"
@@ -65,6 +67,12 @@ const Workers = () => {
     setWorkerNotationModalOpen(true)
   }
 
+  const initTour = () => {
+    const driverObj = mountDriver(workersSteps)
+
+    driverObj.drive()
+  }
+
   return (
     <>
       <Nav />
@@ -73,6 +81,14 @@ const Workers = () => {
         <h4>Cadastro de colaboradores</h4>
 
         <button
+          className="btn btn-warning me-2"
+          onClick={initTour}
+        >
+          <Question />
+        </button>
+
+        <button
+          id="workerResignation"
           className="btn btn-danger me-2"
           onClick={handleOpenResigntaionReasonsReportModal}
           title="Filtrar demissões"
@@ -84,7 +100,7 @@ const Workers = () => {
           type="button"
           className="btn btn-primary"
           onClick={() => setCreateWorkerModalOpen(true)}
-          id="add-worker"
+          id="addWorker"
           title="Adicionar colaborador"
         >
           <PersonAdd />
@@ -108,7 +124,7 @@ const Workers = () => {
             </thead>
             <tbody>
               {workersList?.map((worker) => (
-                <tr key={worker.id} className={!worker.worker_is_active && "table-danger"}>
+                <tr id="workerRow" key={worker.id} className={!worker.worker_is_active && "table-danger"}>
                   <td>{worker.worker_name}</td>
                   <td>{worker.function_name}</td>
                   <td>{worker.turn_start_time.replace(/:\d{2}$/, '')} - {worker.turn_end_time.replace(/:\d{2}$/, '')}</td>
@@ -122,7 +138,7 @@ const Workers = () => {
                     <button
                       className="btn btn-warning me-2 mt-2"
                       onClick={() => handleOpenEditWorkerModal(worker)}
-                      id="edit-worker"
+                      id="editWorker"
                       aria-label={`Editar informações de ${worker.worker_name}`}
                       title="Editar colaborador"
                     >
@@ -133,6 +149,7 @@ const Workers = () => {
                       className="btn btn-primary me-2 mt-2"
                       onClick={() => handleOpenWorkerNotation(worker)}
                       title="Adicionar observação"
+                      id="workerObservation"
                     >
                       <Pen />
                     </button>
@@ -140,7 +157,7 @@ const Workers = () => {
                     <button
                       className="btn btn-danger me-2 mt-2"
                       onClick={() => handleOpenDeleteWorkerModal(worker)}
-                      id="delete-worker"
+                      id="deleteWorker"
                       aria-label={`Excluir ${worker.worker_name}`}
                       title="Demitir colaborador"
                     >

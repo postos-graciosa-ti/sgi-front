@@ -23,7 +23,7 @@ import ScaleLogsModal from "./ScaleLogsModal"
 import ScaleRow from "./ScaleRow"
 
 const Scale = () => {
-  moment.locale("pt-br")
+  const firstDayOfMonth = moment().startOf('month')
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
@@ -74,12 +74,6 @@ const Scale = () => {
   const [scaleLogsModalOpen, setScaleLogsModalOpen] = useState()
 
   const [hollidaysModalOpen, setHollidaysModalOpen] = useState(false)
-
-  const [hollidays, setHollidays] = useState()
-
-  const currentYear = new Date().getFullYear()
-
-  const firstDayOfMonth = moment().startOf('month')
 
   useEffect(() => {
     api
@@ -607,7 +601,6 @@ const Scale = () => {
         selectedWorker={selectedWorker}
         setScalesList={setScalesList}
         setDaysOff={setDaysOff}
-        hollidays={hollidays}
       />
 
       <DeleteScaleModal

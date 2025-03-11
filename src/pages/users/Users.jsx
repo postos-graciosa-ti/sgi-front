@@ -32,6 +32,22 @@ const Users = () => {
       })
   }, [])
 
+  const handleOpenAddUserModal = () => {
+    setModalOpen(true)
+  }
+
+  const handleOpenEditUserModal = (user) => {
+    setSelectedUser(user)
+
+    setEditUserModalOpen(true)
+  }
+
+  const handleOpenDeleteUserModal = (user) => {
+    setSelectedUser(user)
+
+    setOpenDeleteUserModal(true)
+  }
+
   const initTour = () => {
     const driverObj = mountDriver(userSteps)
 
@@ -56,7 +72,7 @@ const Users = () => {
           <button
             id="addUser"
             className="btn btn-primary"
-            onClick={() => setModalOpen(true)}
+            onClick={handleOpenAddUserModal}
             title="Adicionar usuário"
           >
             <Plus />
@@ -80,38 +96,31 @@ const Users = () => {
             </thead>
 
             <tbody id="users-table">
-              {userList && userList.map((user) => (
-                <>
-                  <tr key={user.id} id="userRow">
-                    <td>
-                      {user.user_email}
-                    </td>
+              {
+                userList?.map((user) => (
+                  <tr
+                    key={user.user_id}
+                    id="userRow"
+                  >
+                    <td>{user.user_email}</td>
 
-                    <td>
-                      {user.user_name}
-                    </td>
+                    <td>{user.user_name}</td>
 
-                    <td>
-                      {user.role_name}
-                    </td>
+                    <td>{user.role_name}</td>
 
                     <td>
                       {
-                        user.user_subsidiaries?.reduce((acc, curr, index) => {
-                          if (index % 2 === 0) {
-                            acc.push([curr]);
-                          } else {
-                            acc[acc.length - 1].push(curr);
-                          }
-                          return acc;
-                        }, []).map((group, groupIndex) => (
-                          <div key={groupIndex}>
-                            {group.map((subsidiary, subIndex) => (
-                              <span key={subIndex} className="badge text-bg-primary me-1">
-                                {subsidiary.name}
-                              </span>
-                            ))}
-                          </div>
+                        user.user_subsidiaries?.map((subsidiarie, i) => (
+                          <>
+                            <span
+                              key={subsidiarie.id}
+                              className="badge text-bg-primary me-1"
+                            >
+                              {subsidiarie.name}
+                            </span>
+
+                            {i % 2 == 0 && <br></br>}
+                          </>
                         ))
                       }
                     </td>
@@ -120,10 +129,7 @@ const Users = () => {
                       <button
                         id="editUser"
                         className="btn btn-warning mt-2 me-2"
-                        onClick={() => {
-                          setEditUserModalOpen(true);
-                          setSelectedUser(user)
-                        }}
+                        onClick={() => handleOpenEditUserModal(user)}
                         title="Editar usuário"
                       >
                         <Pen />
@@ -132,20 +138,16 @@ const Users = () => {
                       <button
                         id="deleteUser"
                         className="btn btn-danger mt-2 me-2"
-                        onClick={() => {
-                          setOpenDeleteUserModal(true);
-                          setSelectedUser(user);
-                        }}
+                        onClick={() => handleOpenDeleteUserModal(user)}
                         title="Apagar usuário"
                       >
                         <Trash />
                       </button>
                     </td>
                   </tr>
-                </>
-              ))}
+                ))
+              }
             </tbody>
-
           </table>
         </div>
       </div>

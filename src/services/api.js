@@ -14,8 +14,6 @@ api.interceptors.request.use(
 
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`
-    } else {
-      console.warn('Token não encontrado no zustand')
     }
 
     return config

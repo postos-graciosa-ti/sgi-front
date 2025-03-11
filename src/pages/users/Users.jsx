@@ -111,16 +111,13 @@ const Users = () => {
                     <td>
                       {
                         user.user_subsidiaries?.map((subsidiarie, i) => (
-                          <>
-                            <span
-                              key={subsidiarie.id}
-                              className="badge text-bg-primary me-1"
-                            >
+                          <span key={`${subsidiarie.id}-${i}`}>
+                            <span className="badge text-bg-primary me-1">
                               {subsidiarie.name}
                             </span>
 
-                            {i % 2 == 0 && <br></br>}
-                          </>
+                            {(i + 1) % 2 === 0 && <br />}
+                          </span>
                         ))
                       }
                     </td>

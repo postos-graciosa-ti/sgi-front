@@ -7,7 +7,9 @@ import ListGroup from 'react-bootstrap/ListGroup'
 import Modal from 'react-bootstrap/Modal'
 
 const HollidaysModal = (props) => {
-  const { hollidaysModalOpen, setHollidaysModalOpen, hollidays } = props
+  const { hollidaysModalOpen, setHollidaysModalOpen} = props
+
+  const [hollidays, setHollidays] = useState()
 
   const [holidayMessage, setHolidayMessage] = useState('')
 
@@ -21,6 +23,17 @@ const HollidaysModal = (props) => {
     axios
       .get(`https://brasilapi.com.br/api/feriados/v1/${currentYear}`)
       .then(response => {
+        let datesArr = [
+          {
+            "date": `${currentYear}-09-03`,
+            "name": "Aniversário de Joinville",
+            "type": "municipal"
+          },
+          ...response.data
+        ].sort((a, b) => new Date(a.date) - new Date(b.date))
+
+        setHollidays(datesArr)
+
         const holidaysInMonth = response.data.filter(holiday => {
           const holidayMonth = new Date(holiday.date).getMonth() + 1
 

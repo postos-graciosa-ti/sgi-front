@@ -1,3 +1,4 @@
+import "driver.js/dist/driver.css"
 import moment from "moment"
 import "moment/locale/pt-br"
 import { useEffect, useState } from "react"
@@ -8,6 +9,8 @@ import ReactSelect from "react-select"
 import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
+import mountDriver from "../../driverjs/mountDriver"
+import scaleSteps from "../../driverjs/scaleSteps"
 import CalendarPopup from "../../pages/scale/CalendarPopup"
 import api from "../../services/api"
 import AddSomeWorkersModal from "./AddSomeWorkers"
@@ -18,8 +21,6 @@ import HollidaysModal from "./HollidaysModal"
 import PrintModal from "./PrintModal"
 import ScaleLogsModal from "./ScaleLogsModal"
 import ScaleRow from "./ScaleRow"
-import { driver } from "driver.js"
-import "driver.js/dist/driver.css"
 
 const Scale = () => {
   moment.locale("pt-br")
@@ -134,21 +135,6 @@ const Scale = () => {
     api
       .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
       .then((response) => setScalesList(response.data))
-
-    api
-      .get(`https://brasilapi.com.br/api/feriados/v1/${currentYear}`)
-      .then((response) => {
-        let datesArr = [
-          {
-            "date": `${currentYear}-09-03`,
-            "name": "Aniversário de Joinville",
-            "type": "municipal"
-          },
-          ...response.data
-        ].sort((a, b) => new Date(a.date) - new Date(b.date))
-
-        setHollidays(datesArr)
-      })
 
   }, [])
 
@@ -410,100 +396,59 @@ const Scale = () => {
   }
 
   const initTour = () => {
-    const driverObj = driver({
-      showProgress: true,
-      steps: [
-        {
-          element: '#turn-select',
-          popover: {
-            title: 'Selecionar turno',
-            description: 'Selecione um dos turnos disponíveis nessa filial'
-          }
-        },
-        {
-          element: '#function-select',
-          popover: {
-            title: 'Selecionar função',
-            description: 'Selecione uma das funções disponíveis nessa filial'
-          }
-        },
-        {
-          element: '#workers-select',
-          popover: {
-            title: 'Selecionar colaborador',
-            description: 'Selecione um dos colaboradores da função e turno selecionados disponíveis nessa filial'
-          }
-        },
-        {
-          element: '#calendar',
-          popover: {
-            title: 'Calendário',
-            description: 'Selecione os dias de folga para o colaborador selecionado'
-          }
-        },
-        {
-          element: '#save',
-          popover: {
-            title: 'Salvar',
-            description: 'Salve a escala para o colaborador selecionado'
-          }
-        },
-        {
-          element: '#collective-scale',
-          popover: {
-            title: 'Escala coletiva',
-            description: 'Adicionar dias de folga para diversos colaboradores ao mesmo tempo'
-          }
-        },
-        {
-          element: '#scale-logs',
-          popover: {
-            title: 'Logs de escala',
-            description: 'Registra todas as alterações realizadas na escala'
-          }
-        },
-        {
-          element: '#print-scale',
-          popover: {
-            title: 'Impressão de escala',
-            description: 'Imprimir documento de escala para colaboradores'
-          }
-        },
-        {
-          element: '#days-on-report',
-          popover: {
-            title: 'Relatório de dias de trabalho',
-            description: 'Mostra todos os colaboradores escalados para essa semana'
-          }
-        },
-        {
-          element: '#days-off-report',
-          popover: {
-            title: 'Relatório de dias de folga',
-            description: 'Mostra todos os colaboradores folgando nessa semana'
-          }
-        },
-        {
-          element: '#hollidays-button',
-          popover: {
-            title: 'Feriados',
-            description: 'Lista de feriados'
-          }
-        },
-        {
-          element: '#scale-row',
-          popover: {
-            title: 'Escala de colaborador',
-            description: 'Informações de colaborador, dias de trabalho, dias de folga e exclusão de escala'
-          }
-        },
-      ],
-      prevBtnText: "Anterior",
-      nextBtnText: "Próximo",
-      doneBtnText: "Concluído"
-    })
+    const driverObj = mountDriver(scaleSteps)
 
     driverObj.drive()
+  }
+
+  const handleOnChangeWorkersSelect = (worker) => {
+    setDaysOff([])
+
+    setSelectedWorker(worker)
+
+    api
+      .get(`/workers/${worker.value}`)
+      .then((response) => setSelectedWorkerInfo(response.data))
+
+    api
+      .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${worker.value}`)
+      .then((response) => {
+        let scales = response.data
+
+        let options = []
+
+        scales.days_off?.map((scale) => {
+          options.push(scale.date)
+        })
+
+        setDaysOff(options)
+      })
+  }
+
+  const handleTileDisabled = ({ date }) => {
+    const isCaixaFunction = selectedFunction?.value == caixasId?.id
+
+    const dayOfWeek = moment(date).format("dddd")
+
+    if (isCaixaFunction) {
+      return !(dayOfWeek === "Tuesday" || dayOfWeek === "Wednesday")
+    }
+
+    return false
+  }
+
+  const handleOnclickCalendarDay = (value) => {
+    setSelectedDate(value)
+
+    let isAlreadyDayOff = daysOff.some(
+      (dayOff) => dayOff === moment(value).format("DD-MM-YYYY")
+    )
+
+    if (isAlreadyDayOff) {
+      setDeleteScaleModalOpen(true)
+    } else {
+      setCalendarPopupOpen(true)
+    }
   }
 
   return (
@@ -531,31 +476,7 @@ const Scale = () => {
           <ReactSelect
             placeholder="Selecione um colaborador"
             options={workersOptions}
-            onChange={(value) => {
-              setDaysOff([])
-
-              setSelectedWorker(value)
-
-              api
-                .get(`/workers/${value.value}`)
-                .then((response) => {
-                  setSelectedWorkerInfo(response.data)
-                })
-
-              api
-                .get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${value.value}`)
-                .then((response) => {
-                  let scales = response.data
-
-                  let options = []
-
-                  scales.days_off?.map((scale) => {
-                    options.push(scale.date)
-                  })
-
-                  setDaysOff(options)
-                })
-            }}
+            onChange={(worker) => handleOnChangeWorkersSelect(worker)}
           />
         </div>
 
@@ -602,30 +523,8 @@ const Scale = () => {
             className="w-100 rounded"
             tileClassName={handleTitleClassname}
             showNeighboringMonth={false}
-            tileDisabled={({ date }) => {
-              const isCaixaFunction = selectedFunction?.value == caixasId?.id
-
-              const dayOfWeek = moment(date).format("dddd")
-
-              if (isCaixaFunction) {
-                return !(dayOfWeek === "Tuesday" || dayOfWeek === "Wednesday")
-              }
-
-              return false
-            }}
-            onClickDay={(value) => {
-              setSelectedDate(value);
-
-              let isAlreadyDayOff = daysOff.some(
-                (dayOff) => dayOff === moment(value).format("DD-MM-YYYY")
-              );
-
-              if (isAlreadyDayOff) {
-                setDeleteScaleModalOpen(true);
-              } else {
-                setCalendarPopupOpen(true);
-              }
-            }}
+            tileDisabled={handleTileDisabled}
+            onClickDay={handleOnclickCalendarDay}
           />
         </div>
 
@@ -735,8 +634,6 @@ const Scale = () => {
       <PrintModal
         printModalOpen={printModalOpen}
         setPrintModalOpen={setPrintModalOpen}
-      // handlePrintScale={handlePrintScale}
-      // scalesList={scalesList}
       />
 
       <AddSomeWorkersModal
@@ -758,7 +655,6 @@ const Scale = () => {
       <HollidaysModal
         hollidaysModalOpen={hollidaysModalOpen}
         setHollidaysModalOpen={setHollidaysModalOpen}
-        hollidays={hollidays}
       />
 
       <style>

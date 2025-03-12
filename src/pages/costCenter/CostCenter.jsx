@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import costCenterSteps from "../../driverjs/costCenterSteps"
-import mountDriver from "../../driverjs/mountDriver"
+import initTour from "../../driverjs/initTour"
 import api from "../../services/api"
 import AddCostCenterModal from "./AddCostCenterModal"
 import DeleteCostCenterModal from "./DeleteCostCenterModal"
@@ -25,6 +25,10 @@ const CostCenter = () => {
       .then((response) => setCostCenterList(response.data))
   }, [])
 
+  const handleOpenAddCostCenterModal = () => {
+    setAddCostCenterModalOpen(true)
+  }
+
   const handleOpenEditCostCenterModal = (costCenter) => {
     setSelectedCostCenter(costCenter)
 
@@ -35,12 +39,6 @@ const CostCenter = () => {
     setSelectedCostCenter(costCenter)
 
     setDeleteCostCenterModalOpen(true)
-  }
-
-  const initTour = () => {
-    const driverObj = mountDriver(costCenterSteps)
-
-    driverObj.drive()
   }
 
   return (
@@ -55,7 +53,7 @@ const CostCenter = () => {
         <div className="mt-3 mb-3">
           <button
             className="btn btn-warning me-2"
-            onClick={initTour}
+            onClick={() => initTour(costCenterSteps)}
           >
             <Question />
           </button>
@@ -64,7 +62,7 @@ const CostCenter = () => {
             id="addCostCenter"
             type="button"
             className="btn btn-primary"
-            onClick={() => setAddCostCenterModalOpen(true)}
+            onClick={handleOpenAddCostCenterModal}
             title="Adicionar centro de custo"
           >
             <Plus />
@@ -86,9 +84,9 @@ const CostCenter = () => {
                 costCenterList.map((costCenter) => (
                   <tr id="costCenterRow" key={costCenter.id}>
                     <td>{costCenter.name}</td>
-                    
+
                     <td>{costCenter.description}</td>
-                    
+
                     <td>
                       <button
                         id="editCostCenter"

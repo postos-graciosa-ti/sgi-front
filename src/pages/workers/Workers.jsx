@@ -1,8 +1,9 @@
+import moment from "moment"
 import { useEffect, useState } from "react"
 import { ArrowClockwise, ClipboardData, Pen, PersonAdd, PersonGear, Question, SlashCircle } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
-import mountDriver from "../../driverjs/mountDriver"
+import initTour from "../../driverjs/initTour"
 import workersSteps from "../../driverjs/workersSteps"
 import api from "../../services/api"
 import CreateWorkerModal from "./CreateWorkerModal"
@@ -11,7 +12,6 @@ import EditWorkerModal from "./EditWorkerModal"
 import ReactivateWorkerModal from "./ReactivateWorkerModal"
 import ResignationReasonsReportModal from "./ResignationReasonsReportModal"
 import WorkerNotationModal from "./WorkerNotationModal"
-import moment from "moment"
 
 const Workers = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -39,6 +39,10 @@ const Workers = () => {
         setWorkersList(response.data)
       })
   }, [])
+
+  const handleOpenAddWorkerModal = () => {
+    setCreateWorkerModalOpen(true)
+  }
 
   const handleOpenEditWorkerModal = (worker) => {
     setSelectedWorker(worker)
@@ -68,12 +72,6 @@ const Workers = () => {
     setWorkerNotationModalOpen(true)
   }
 
-  const initTour = () => {
-    const driverObj = mountDriver(workersSteps)
-
-    driverObj.drive()
-  }
-
   return (
     <>
       <Nav />
@@ -83,7 +81,7 @@ const Workers = () => {
 
         <button
           className="btn btn-warning me-2"
-          onClick={initTour}
+          onClick={() => initTour(workersSteps)}
         >
           <Question />
         </button>
@@ -100,7 +98,7 @@ const Workers = () => {
         <button
           type="button"
           className="btn btn-primary"
-          onClick={() => setCreateWorkerModalOpen(true)}
+          onClick={handleOpenAddWorkerModal}
           id="addWorker"
           title="Adicionar colaborador"
         >

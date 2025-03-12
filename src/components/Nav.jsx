@@ -113,7 +113,7 @@ const Nav = () => {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-body-tertiary">
+      <nav id="navbar" className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
           <a className="navbar-brand" href="#">SGI</a>
 
@@ -195,7 +195,7 @@ const Nav = () => {
         </div>
       </nav>
 
-      <div className="user-info-container">
+      <div id="userInfo" className="user-info-container">
         <span id="subsidiarie" className="user-info">Filial: {selectedSubsidiarie.label}</span>
 
         <span className="separator"> | </span>

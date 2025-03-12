@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
-import mountDriver from "../../driverjs/mountDriver"
+import initTour from "../../driverjs/initTour"
 import turnsSteps from "../../driverjs/turnsSteps"
 import api from "../../services/api"
 import AddTurnModal from "./AddTurnModal"
@@ -45,12 +45,6 @@ const Turns = () => {
     setDeleteTurnModalOpen(true)
   }
 
-  const initTour = () => {
-    const driverObj = mountDriver(turnsSteps)
-
-    driverObj.drive()
-  }
-
   return (
     <>
       <Nav />
@@ -63,7 +57,7 @@ const Turns = () => {
         <div className="mt-3 mb-3">
           <button
             className="btn btn-warning me-2"
-            onClick={initTour}
+            onClick={() => initTour(turnsSteps)}
           >
             <Question />
           </button>

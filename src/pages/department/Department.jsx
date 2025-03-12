@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import departmentSteps from "../../driverjs/departmentsSteps"
-import mountDriver from "../../driverjs/mountDriver"
+import initTour from "../../driverjs/initTour"
 import api from "../../services/api"
 import AddDepartmentModal from "./AddDepartmentModal"
 import DeleteDepartmentModal from "./DeleteDepartmentModal"
@@ -25,6 +25,10 @@ const Department = () => {
       .then((response) => setDepartmentsList(response.data))
   }, [])
 
+  const handleOpenAddDepartmentModal = () => {
+    setAddDepartmentModalOpen(true)
+  }
+
   const handleOpenEditDepartmentModal = (department) => {
     setSelectedDepartment(department)
 
@@ -35,12 +39,6 @@ const Department = () => {
     setSelectedDepartment(department)
 
     setDeleteDepartmentModalOpen(true)
-  }
-
-  const initTour = () => {
-    const driverObj = mountDriver(departmentSteps)
-
-    driverObj.drive()
   }
 
   return (
@@ -55,7 +53,7 @@ const Department = () => {
         <div className="mt-3 mb-3">
           <button
             className="btn btn-warning me-2"
-            onClick={initTour}
+            onClick={() => initTour(departmentSteps)}
           >
             <Question />
           </button>
@@ -64,7 +62,7 @@ const Department = () => {
             id="addDepartment"
             type="button"
             className="btn btn-primary"
-            onClick={() => setAddDepartmentModalOpen(true)}
+            onClick={handleOpenAddDepartmentModal}
             title="Adicionar setor"
           >
             <Plus />

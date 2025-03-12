@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
-import mountDriver from "../../driverjs/mountDriver"
+import initTour from "../../driverjs/initTour"
 import subsidiarieSteps from "../../driverjs/subsidiarieSteps"
 import api from "../../services/api"
 import AddSubsidiarieModal from "./AddSubsidiarieModal"
@@ -41,12 +41,6 @@ const Subsidiaries = () => {
     setDeleteSubsidiarieModalOpen(true)
   }
 
-  const initTour = () => {
-    const driverObj = mountDriver(subsidiarieSteps)
-
-    driverObj.drive()
-  }
-
   return (
     <>
       <Nav />
@@ -57,7 +51,7 @@ const Subsidiaries = () => {
         <div className="mt-3 mb-3">
           <button
             className="btn btn-warning me-2"
-            onClick={initTour}
+            onClick={() => initTour(subsidiarieSteps)}
           >
             <Question />
           </button>

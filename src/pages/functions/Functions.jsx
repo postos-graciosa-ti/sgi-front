@@ -3,7 +3,7 @@ import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import functionsSteps from "../../driverjs/functionsSteps"
-import mountDriver from "../../driverjs/mountDriver"
+import initTour from "../../driverjs/initTour"
 import api from "../../services/api"
 import AddFunctionsModal from "./AddFunctionsModal"
 import DeleteFunctionsModal from "./DeleteFunctionsModal"
@@ -46,12 +46,6 @@ const Functions = () => {
     setDeleteFunctionModalOpen(true)
   }
 
-  const initTour = () => {
-    const driverObj = mountDriver(functionsSteps)
-
-    driverObj.drive()
-  }
-
   return (
     <>
       <Nav />
@@ -63,7 +57,7 @@ const Functions = () => {
 
         <button
           className="btn btn-warning me-2"
-          onClick={initTour}
+          onClick={() => initTour(functionsSteps)}
         >
           <Question />
         </button>

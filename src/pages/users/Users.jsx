@@ -2,16 +2,14 @@ import { useEffect, useState } from "react"
 import { Pen, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
+import initTour from "../../driverjs/initTour"
+import userSteps from "../../driverjs/userSteps"
 import api from "../../services/api"
 import AddUserModal from "./AddUserModal"
 import DeleteUserModal from "./DeleteUserModal"
 import EditUserModal from "./EditUserModal"
-import mountDriver from "../../driverjs/mountDriver"
-import userSteps from "../../driverjs/userSteps"
 
 const Users = () => {
-  const bearerToken = useUserSessionStore(state => state.bearerToken)
-
   const userList = useUserSessionStore(state => state.userList)
 
   const setUserList = useUserSessionStore(state => state.setUserList)
@@ -48,12 +46,6 @@ const Users = () => {
     setOpenDeleteUserModal(true)
   }
 
-  const initTour = () => {
-    const driverObj = mountDriver(userSteps)
-
-    driverObj.drive()
-  }
-
   return (
     <>
       <Nav />
@@ -64,7 +56,7 @@ const Users = () => {
         <div className="mt-3 mb-3">
           <button
             className="btn btn-warning me-2"
-            onClick={initTour}
+            onClick={() => initTour(userSteps)}
           >
             <Question />
           </button>

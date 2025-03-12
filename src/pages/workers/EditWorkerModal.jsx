@@ -36,7 +36,7 @@ const EditWorkerModal = (props) => {
 
   useEffect(() => {
     api
-      .get("/functions")
+      .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
       .then((response) => {
         const functionsData = response.data
 
@@ -49,7 +49,7 @@ const EditWorkerModal = (props) => {
       })
 
     api
-      .get("/turns")
+      .get(`/subsidiaries/${selectedSubsdiarie.value}/turns`)
       .then((response) => {
         const turnsData = response.data
 

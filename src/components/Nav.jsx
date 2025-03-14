@@ -131,6 +131,10 @@ const Nav = () => {
                 <Link className="nav-link" to="/candidates">Processos Seletivos</Link>
               </li>
 
+              <li className="nav-item">
+                <Link className="nav-link" to="/applicants">Candidatos</Link>
+              </li>
+
               {/* <li className="nav-item">
                 <Link className="nav-link" to="/subsidiarie-status">Status</Link>
               </li> */}

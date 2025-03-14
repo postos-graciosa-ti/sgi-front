@@ -109,81 +109,80 @@ const Workers = () => {
           <table className="table table-hover">
             <thead>
               <tr>
-                <th>Nome</th>
-                <th>Função</th>
-                <th>Turno</th>
-                <th>Ativo</th>
-                <th>C. de custo</th>
-                <th>Setor</th>
-                <th>Admissão</th>
-                <th>Demissão</th>
-                <th>Razão</th>
-                <th>Ações</th>
+                <th style={{ width: "15%" }}>Nome</th>
+                <th style={{ width: "15%" }}>Função</th>
+                <th style={{ width: "10%" }}>Turno</th>
+                <th style={{ width: "5%" }}>Ativo</th>
+                <th style={{ width: "10%" }}>C. de custo</th>
+                <th style={{ width: "10%" }}>Setor</th>
+                <th style={{ width: "10%" }}>Admissão</th>
+                <th style={{ width: "10%" }}>Demissão</th>
+                <th style={{ width: "10%" }}>Razão</th>
+                <th style={{ width: "15%" }}>Ações</th>
               </tr>
             </thead>
 
             <tbody>
-              {
-                workersList?.map((worker) => (
-                  <tr
-                    id="workerRow"
-                    key={worker.worker_id}
-                    className={!worker.worker_is_active ? "table-danger" : undefined}
-                  >
-                    <td>{worker.worker_name}</td>
-                    <td>{worker.function_name}</td>
-                    <td>{worker.turn_start_time.replace(/:\d{2}$/, '')} - {worker.turn_end_time.replace(/:\d{2}$/, '')}</td>
-                    <td>{worker.worker_is_active ? "Sim" : "Não"}</td>
-                    <td>{worker.cost_center}</td>
-                    <td>{worker.department}</td>
-                    <td>{moment(worker.admission_date).format("DD-MM-YYYY")}</td>
-                    <td>{!worker.worker_is_active ? worker.resignation_date : "Ativo"}</td>
-                    <td>{!worker.worker_is_active ? worker.resignation_reason_name : "Ativo"}</td>
-                    <td>
-                      <button
-                        className="btn btn-warning me-2 mt-2"
-                        onClick={() => handleOpenEditWorkerModal(worker)}
-                        id="editWorker"
-                        aria-label={`Editar informações de ${worker.worker_name}`}
-                        title="Editar colaborador"
-                      >
-                        <PersonGear />
-                      </button>
+              {workersList?.map((worker) => (
+                <tr
+                  id="workerRow"
+                  key={worker.worker_id}
+                  className={!worker.worker_is_active ? "table-danger" : undefined}
+                >
+                  <td>{worker.worker_name}</td>
+                  <td>{worker.function_name}</td>
+                  <td>
+                    {worker.turn_start_time.replace(/:\d{2}$/, "")} -{" "}
+                    {worker.turn_end_time.replace(/:\d{2}$/, "")}
+                  </td>
+                  <td>{worker.worker_is_active ? "Sim" : "Não"}</td>
+                  <td>{worker.cost_center}</td>
+                  <td>{worker.department}</td>
+                  <td>{moment(worker.admission_date).format("DD-MM-YYYY")}</td>
+                  <td>{!worker.worker_is_active ? worker.resignation_date : "Ativo"}</td>
+                  <td>{!worker.worker_is_active ? worker.resignation_reason_name : "Ativo"}</td>
+                  <td>
+                    <button
+                      className="btn btn-warning me-2 mt-2"
+                      onClick={() => handleOpenEditWorkerModal(worker)}
+                      id="editWorker"
+                      aria-label={`Editar informações de ${worker.worker_name}`}
+                      title="Editar colaborador"
+                    >
+                      <PersonGear />
+                    </button>
 
+                    <button
+                      className="btn btn-primary me-2 mt-2"
+                      onClick={() => handleOpenWorkerNotation(worker)}
+                      title="Adicionar observação"
+                      id="workerObservation"
+                    >
+                      <Pen />
+                    </button>
+
+                    <button
+                      className="btn btn-danger me-2 mt-2"
+                      onClick={() => handleOpenDeleteWorkerModal(worker)}
+                      id="deleteWorker"
+                      aria-label={`Excluir ${worker.worker_name}`}
+                      title="Demitir colaborador"
+                    >
+                      <SlashCircle />
+                    </button>
+
+                    {!worker.worker_is_active && (
                       <button
                         className="btn btn-primary me-2 mt-2"
-                        onClick={() => handleOpenWorkerNotation(worker)}
-                        title="Adicionar observação"
-                        id="workerObservation"
+                        onClick={() => handleOpenReactivateWorkerModal(worker)}
+                        title="readmitir"
                       >
-                        <Pen />
+                        <ArrowClockwise />
                       </button>
-
-                      <button
-                        className="btn btn-danger me-2 mt-2"
-                        onClick={() => handleOpenDeleteWorkerModal(worker)}
-                        id="deleteWorker"
-                        aria-label={`Excluir ${worker.worker_name}`}
-                        title="Demitir colaborador"
-                      >
-                        <SlashCircle />
-                      </button>
-
-                      {
-                        !worker.worker_is_active && (
-                          <button
-                            className="btn btn-primary me-2 mt-2"
-                            onClick={() => handleOpenReactivateWorkerModal(worker)}
-                            title="readimitir"
-                          >
-                            <ArrowClockwise />
-                          </button>
-                        )
-                      }
-                    </td>
-                  </tr>
-                ))
-              }
+                    )}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

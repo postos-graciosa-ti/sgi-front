@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom"
 import App from "./App"
 import ErrorBoundary from "./components/ErrorBoundary"
 import NotFound from "./components/NotFound"
+import Applicants from "./pages/applicants/Applicants"
 import AllJobs from "./pages/candidates/AllJobs"
 import CandidateFirstInterview from "./pages/candidates/CandidateFirstInterview"
 import Candidates from "./pages/candidates/Candidates"
@@ -19,6 +20,7 @@ import SubsidiariesLogs from "./pages/logsPages/SubsidiariesLogs"
 import TurnsLogs from "./pages/logsPages/TurnsLogs"
 import UsersLogs from "./pages/logsPages/UsersLogs"
 import WorkersLogs from "./pages/logsPages/WorkersLogs"
+import Neighborhood from "./pages/neighborhoods/Neighborhood"
 import Scale from "./pages/scale/Scale"
 import Steps from "./pages/steps/Steps"
 import Subsidiaries from "./pages/subsidiaries/Subsidiaries"
@@ -27,7 +29,6 @@ import Turns from "./pages/turns/Turns"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
-import Neighborhood from "./pages/neighborhoods/Neighborhood"
 
 const Routes = createBrowserRouter([
   // public routes
@@ -166,6 +167,11 @@ const Routes = createBrowserRouter([
   {
     path: "/neighborhoods",
     element: <PrivateRoute><Neighborhood /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/applicants",
+    element: <PrivateRoute><Applicants /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

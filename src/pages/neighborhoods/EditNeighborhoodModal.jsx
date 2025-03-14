@@ -27,8 +27,6 @@ const EditNeighborhoodModal = (props) => {
       "name": name || selectedNeighborhood?.name
     }
 
-    console.log(formData)
-
     api
       .put(`/neighborhoods/${selectedNeighborhood?.id}`, formData)
       .then(() => handleClose())

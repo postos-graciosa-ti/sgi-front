@@ -1,6 +1,7 @@
-import moment from "moment";
+import moment from "moment"
 
 const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn, selectedFunction, selectedSubsdiarie, subsidiarieCnpj, userSession, webAdress) => {
+
   const translateWeekday = (weekday) => ({
     Monday: "Segunda-Feira",
     Tuesday: "Terça-Feira",
@@ -9,11 +10,13 @@ const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn, sele
     Friday: "Sexta-Feira",
     Saturday: "Sábado",
     Sunday: "Domingo",
-  })[weekday] || "";
+  })[weekday] || ""
 
-  const formatDate = (date) => moment(date).format("DD-MM-YYYY");
-  const formatWeekday = (date) => translateWeekday(moment(date, "YYYY-MM-DD").format("dddd"));
-  const countSundays = (scale) => scale.days_off?.filter((dateItem) => moment(dateItem).format("dddd") === "Sunday").length || 0;
+  const formatDate = (date) => moment(date).format("DD-MM-YYYY")
+
+  const formatWeekday = (date) => translateWeekday(moment(date, "YYYY-MM-DD").format("dddd"))
+
+  const countSundays = (scale) => scale.days_on?.filter((dateItem) => moment(dateItem).format("dddd") === "Sunday").length || 0
 
   return (
     <>
@@ -28,7 +31,14 @@ const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn, sele
       </div>
 
       <div className="container" style={{ fontSize: '11px' }}>
-        <h3 style={{ fontSize: '13px' }}>Escala de folgas de Colaboradores — {moment().format("MM/YYYY")}</h3>
+        <h3
+          style={{
+            fontSize: '13px'
+          }}
+        >
+          Escala de folgas de Colaboradores — {moment().format("MM/YYYY")}
+        </h3>
+
         <p style={{ fontSize: '11px' }}>{selectedFunction?.label} (turno {selectedTurn?.label}): semana de {startDate} até {endDate}</p>
 
         {scalesList?.map((scale) => (
@@ -37,19 +47,34 @@ const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn, sele
 
             <div>
               <div style={{ fontWeight: 'bold', marginBottom: '4px', fontSize: '11px' }}>Dias de trabalho:</div>
+
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
-                {scale.days_on?.map((dateItem, index) => (
-                  <div key={index} style={{ fontSize: '11px' }}>{`${formatDate(dateItem)} (${formatWeekday(dateItem)})`}</div>
-                ))}
+                {
+                  scale.days_on?.map((dateItem, index) => {
+                    const isSunday = formatWeekday(dateItem) === "Domingo";
+                    return (
+                      <div key={index} style={{ fontSize: '11px', color: isSunday ? 'red' : 'black' }}>
+                        {`${formatDate(dateItem)} (${formatWeekday(dateItem)})`}
+                      </div>
+                    )
+                  })
+                }
               </div>
+            </div>
+
+            <div style={{ color: "red", marginTop: '7px', fontSize: '11px', fontWeight: 'bold' }}>
+              Domingos de trabalho seguidos: {countSundays(scale)}
             </div>
 
             <div style={{ marginTop: '7px' }}>
               <div style={{ fontWeight: 'bold', marginBottom: '4px', fontSize: '11px' }}>Dias de folga:</div>
+
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
-                {scale.proportion?.map((item, index) => (
-                  <div key={index} style={{ fontSize: '11px' }}>{`${item.data} (${translateWeekday(item.weekday)} - ${item.proporcao})`}</div>
-                ))}
+                {
+                  scale.proportion?.map((item, index) => (
+                    <div key={index} style={{ color: "green", fontSize: '11px' }}>{`${item.data} (${translateWeekday(item.weekday)} - ${item.proporcao})`}</div>
+                  ))
+                }
               </div>
             </div>
           </div>
@@ -57,7 +82,7 @@ const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn, sele
 
         <div>
           <h3 style={{ fontSize: '13px' }}>Plantão</h3>
-          
+
           <div style={{ fontSize: '11px' }}>{onDuty}</div>
         </div>
 

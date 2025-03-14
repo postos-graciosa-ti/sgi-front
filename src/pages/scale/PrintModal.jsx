@@ -12,13 +12,13 @@ import printContent from './printContent'
 const PrintModal = (props) => {
   const { printModalOpen, setPrintModalOpen } = props
 
+  const webAdress = window.location.origin + location.pathname
+
   const userSession = useUserSessionStore((state) => state.userSession)
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const [turnsOptions, setTurnsOptions] = useState()
-
-  const [functionsOptions, setFunctionsOptions] = useState()
 
   const [workersOptions, setWorkersOptions] = useState()
 
@@ -31,10 +31,6 @@ const PrintModal = (props) => {
   const [startDate, setStartDate] = useState()
 
   const [endDate, setEndDate] = useState()
-
-  const [selectAllWorkers, setSelectAllWorkers] = useState()
-
-  const webAdress = window.location.origin + location.pathname
 
   useEffect(() => {
     api
@@ -57,34 +53,12 @@ const PrintModal = (props) => {
         setTurnsOptions(options)
       })
 
-    api
-      .get(`/subsidiaries/${selectedSubsdiarie?.value}/functions`)
-      .then((response) => {
-        let functions = response.data
-
-        let functionsOptions = []
-
-        functions && functions.map((func) => {
-          let inScaleFunctions = (
-            func.name == "Operador(a) de Caixa I" ||
-            func.name == "Frentista I" ||
-            func.name == "Frentista / Caixa II" ||
-            func.name == "Trocador de Óleo / Frentista II"
-          )
-
-          if (inScaleFunctions)
-            functionsOptions.push({ "label": func.name, "value": func.id })
-        })
-
-        setFunctionsOptions(functionsOptions)
-      })
-
   }, [])
 
   useEffect(() => {
-    if (selectedTurn && selectedFunction) {
+    if (selectedTurn) {
       api
-        .get(`/subsidiaries/${selectedSubsdiarie?.value}/turns/${selectedTurn?.value}/functions/${selectedFunction?.value}/workers`)
+        .get(`/subsidiaries/${selectedSubsdiarie?.value}/turns/${selectedTurn?.value}/workers`)
         .then((response) => {
           let options = []
 
@@ -98,7 +72,7 @@ const PrintModal = (props) => {
         })
     }
 
-  }, [selectedTurn, selectedFunction])
+  }, [selectedTurn])
 
   const handleClose = () => {
     setWorkersOptions()
@@ -189,14 +163,6 @@ const PrintModal = (props) => {
               placeholder={"Selecionar turno"}
               options={turnsOptions}
               onChange={(value) => setSelectedTurn(value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <ReactSelect
-              placeholder={"Selecionar função"}
-              options={functionsOptions}
-              onChange={(value) => setSelectedFunction(value)}
             />
           </div>
 

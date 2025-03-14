@@ -49,6 +49,7 @@ const AddNeighborhoodModal = (props) => {
               type="text"
               className="form-control"
               onChange={(e) => setName(e.target.value)}
+              required
             />
           </div>
         </Modal.Body>

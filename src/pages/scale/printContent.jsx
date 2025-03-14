@@ -39,7 +39,9 @@ const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn, sele
           Escala de folgas de Colaboradores — {moment().format("MM/YYYY")}
         </h3>
 
-        <p style={{ fontSize: '11px' }}>{selectedFunction?.label} (turno {selectedTurn?.label}): semana de {startDate} até {endDate}</p>
+        {/* <p style={{ fontSize: '11px' }}>{selectedFunction?.label} (turno {selectedTurn?.label}): semana de {startDate} até {endDate}</p> */}
+
+        <p style={{ fontSize: '11px' }}>Turno {selectedTurn?.label}: semana de {startDate} até {endDate}</p>
 
         {scalesList?.map((scale) => (
           <div key={scale.worker.name} style={{ marginBottom: '15px' }}>

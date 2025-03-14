@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
-import { Pen, PenFill, Plus, Trash } from "react-bootstrap-icons"
+import { Pen, Plus, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
-import AddNeighborhoodModal from "./AddNeighborhoodModal"
 import api from "../../services/api"
+import AddNeighborhoodModal from "./AddNeighborhoodModal"
+import DeleteNeighborhoodModal from "./DeleteNeighborhoodModal"
 import EditNeighborhoodModal from "./EditNeighborhoodModal"
 
 const Neighborhood = () => {
@@ -92,12 +93,20 @@ const Neighborhood = () => {
         setNeighborhoods={setNeighborhoods}
       />
 
-      <EditNeighborhoodModal 
+      <EditNeighborhoodModal
         editNeighborhoodModalOpen={editNeighborhoodModalOpen}
         setEditNeighborhoodModalOpen={setEditNeighborhoodModalOpen}
         selectedNeighborhood={selectedNeighborhood}
         setSelectedNeighborhood={setSelectedNeighborhood}
         setNeighborhoods={setNeighborhoods}
+      />
+
+      <DeleteNeighborhoodModal
+        deleteNeighborhoodModalOpen={deleteNeighborhoodModalOpen}
+        setDeleteNeighborhoodModalOpen={setDeleteNeighborhoodModalOpen}
+        selectedNeighborhood={selectedNeighborhood}
+        setNeighborhoods={setNeighborhoods}
+        setSelectedNeighborhood={setSelectedNeighborhood}
       />
     </>
   )

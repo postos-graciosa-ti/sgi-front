@@ -8,9 +8,7 @@ const EditNeighborhoodModal = (props) => {
 
   const [name, setName] = useState()
 
-  const handleClose = (e) => {
-    e.preventDefault()
-    
+  const handleClose = () => {
     api
       .get("/neighborhoods")
       .then((response) => setNeighborhoods(response.data))
@@ -22,10 +20,14 @@ const EditNeighborhoodModal = (props) => {
     setEditNeighborhoodModalOpen(false)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
     let formData = {
-      "name": name
+      "name": name || selectedNeighborhood?.name
     }
+
+    console.log(formData)
 
     api
       .put(`/neighborhoods/${selectedNeighborhood?.id}`, formData)
@@ -52,6 +54,7 @@ const EditNeighborhoodModal = (props) => {
               placeholder="Nome"
               onChange={(e) => setName(e.target.value)}
               defaultValue={selectedNeighborhood?.name}
+              required
             />
           </div>
         </Modal.Body>

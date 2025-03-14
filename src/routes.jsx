@@ -27,6 +27,7 @@ import Turns from "./pages/turns/Turns"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
+import Neighborhood from "./pages/neighborhoods/Neighborhood"
 
 const Routes = createBrowserRouter([
   // public routes
@@ -160,6 +161,11 @@ const Routes = createBrowserRouter([
   {
     path: "/users-logs",
     element: <PrivateRoute><UsersLogs /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/neighborhoods",
+    element: <PrivateRoute><Neighborhood /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

@@ -11,6 +11,12 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
 
           <div className="trace"></div>
 
+          <div style={{ "textAlign": "center" }}>
+            <img src={`${worker?.picture || 'https://res.cloudinary.com/drvzslkwn/image/upload/v1742237644/avatar_h4zzgq.svg'}`} style={{ "width": "200px" }} />
+          </div>
+
+          <div className="trace"></div>
+
           <div style={{ "marginTop": "15px", "textAlign": "center" }}><b>Nome:</b></div>
 
           <div style={{ "textAlign": "center" }}>{worker?.worker_name}</div>

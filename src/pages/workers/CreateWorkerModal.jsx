@@ -5,6 +5,7 @@ import ReactSelect from 'react-select'
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 import moment from 'moment'
+import axios from 'axios'
 
 const CreateWorkerModal = (props) => {
   const {
@@ -40,6 +41,8 @@ const CreateWorkerModal = (props) => {
   const [selectedDepartment, setSelectedDepartment] = useState()
 
   const [admissionDate, setAdmissionDate] = useState()
+
+  const [picture, setPicture] = useState()
 
   useEffect(() => {
     api
@@ -123,58 +126,71 @@ const CreateWorkerModal = (props) => {
   }
 
   const handleSubmit = () => {
-    let formData = {
-      "name": name,
-      "function_id": selectedFunction.value,
-      "subsidiarie_id": selectedSubsdiarie.value,
-      "is_active": true,
-      "turn_id": selectedTurn.value,
-      "cost_center_id": selectedCostCenter.value,
-      "department_id": selectedDepartment.value,
-      "admission_date": admissionDate,
-      "resignation_date": admissionDate,
-      "enrolment": enrolment,
-      "sales_code": salesCode
-    }
+    let cloudinaryEndpoint = import.meta.env.VITE_CLOUDINARY_ENDPOINT
 
-    api
-      .post("/workers", formData)
-      .then((response) => {
-        let newWorkerData = response.data
+    const cloudinaryFormData = new FormData()
 
-        let newWorkerFunc = functionsOptions.find((func) => func.value == newWorkerData.function_id)
+    cloudinaryFormData.append("file", picture)
 
-        let newWorkerTurn = turnsOptions.find((turn) => turn.value == newWorkerData.turn_id)
+    cloudinaryFormData.append('upload_preset', import.meta.env.VITE_UPLOAD_PRESET)
 
-        let newWorkerCostCenter = costCenterOptions.find((costCenter) => costCenter.value == newWorkerData.cost_center_id)
-
-        let newWorkerDepartment = departmentsOptions.find((department) => department.value == newWorkerData.department_id)
-
-        let logStr = `
-          ${userSession.name} criou ${newWorkerData.name}
-          (
-            nome=${newWorkerData.name},
-            função=${newWorkerFunc.label},
-            filial=${selectedSubsdiarie.label}),
-            ativo=sim,
-            turno=${newWorkerTurn.label},
-            centro de custo=${newWorkerCostCenter.label},
-            setor=${newWorkerDepartment.label},
-            data de admissão=${newWorkerData.admission_date}
-          )
-        `
-
-        let logFormData = {
-          "log_str": logStr,
-          "happened_at": moment(new Date()).format("HH:mm"),
-          "happened_at_time": moment(new Date()).format("DD-MM-YYYY"),
-          "user_id": userSession.id,
-          "subsidiarie_id": selectedSubsdiarie.value
+    axios
+      .post(cloudinaryEndpoint, cloudinaryFormData)
+      .then((cloudinaryResponse) => {
+        let formData = {
+          "name": name,
+          "function_id": selectedFunction.value,
+          "subsidiarie_id": selectedSubsdiarie.value,
+          "is_active": true,
+          "turn_id": selectedTurn.value,
+          "cost_center_id": selectedCostCenter.value,
+          "department_id": selectedDepartment.value,
+          "admission_date": admissionDate,
+          "resignation_date": admissionDate,
+          "enrolment": enrolment,
+          "sales_code": salesCode,
+          "picture": cloudinaryResponse?.data.secure_url
         }
 
         api
-          .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers`, logFormData)
-          .then(() => handleClose())
+          .post("/workers", formData)
+          .then((response) => {
+            let newWorkerData = response.data
+
+            let newWorkerFunc = functionsOptions.find((func) => func.value == newWorkerData.function_id)
+
+            let newWorkerTurn = turnsOptions.find((turn) => turn.value == newWorkerData.turn_id)
+
+            let newWorkerCostCenter = costCenterOptions.find((costCenter) => costCenter.value == newWorkerData.cost_center_id)
+
+            let newWorkerDepartment = departmentsOptions.find((department) => department.value == newWorkerData.department_id)
+
+            let logStr = `
+              ${userSession.name} criou ${newWorkerData.name}
+              (
+                nome=${newWorkerData.name},
+                função=${newWorkerFunc.label},
+                filial=${selectedSubsdiarie.label}),
+                ativo=sim,
+                turno=${newWorkerTurn.label},
+                centro de custo=${newWorkerCostCenter.label},
+                setor=${newWorkerDepartment.label},
+                data de admissão=${newWorkerData.admission_date}
+              )
+            `
+
+            let logFormData = {
+              "log_str": logStr,
+              "happened_at": moment(new Date()).format("HH:mm"),
+              "happened_at_time": moment(new Date()).format("DD-MM-YYYY"),
+              "user_id": userSession.id,
+              "subsidiarie_id": selectedSubsdiarie.value
+            }
+
+            api
+              .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers`, logFormData)
+              .then(() => handleClose())
+          })
       })
   }
 
@@ -255,6 +271,14 @@ const CreateWorkerModal = (props) => {
               type="date"
               className="form-control"
               onChange={(e) => setAdmissionDate(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="file"
+              className="form-control"
+              onChange={(e) => setPicture(e.target.files[0])}
             />
           </div>
         </Modal.Body>

@@ -5,6 +5,7 @@ import ReactSelect from 'react-select'
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 import moment from 'moment'
+import axios from 'axios'
 
 const EditWorkerModal = (props) => {
   const {
@@ -42,6 +43,8 @@ const EditWorkerModal = (props) => {
   const [selectedDepartment, setSelectedDepartment] = useState()
 
   const [admissionDate, setAdmissionDate] = useState()
+
+  const [picture, setPicture] = useState()
 
   useEffect(() => {
     api
@@ -108,80 +111,176 @@ const EditWorkerModal = (props) => {
   }
 
   const handleSubmit = () => {
-    const formData = {
-      name: name || selectedWorker?.worker_name,
-      function_id: selectedFunction?.value || selectedWorker?.function_id,
-      subsidiarie_id: selectedSubsdiarie.value,
-      is_active: selectedWorker?.worker_is_active,
-      turn_id: selectedTurn?.value || selectedWorker?.turn_id,
-      cost_center_id: selectedCostCenter?.value || selectedWorker?.cost_center_id,
-      department_id: selectedDepartment?.value || selectedWorker?.department_id,
-      admission_date: admissionDate || selectedWorker?.admission_date,
-      resignation_date: selectedWorker?.resignation_date,
-      enrolment: enrolment,
-      sales_code: salesCode
+
+    if (picture) {
+
+      let cloudinaryEndpoint = import.meta.env.VITE_CLOUDINARY_ENDPOINT
+
+      const cloudinaryFormData = new FormData()
+
+      cloudinaryFormData.append("file", picture)
+
+      cloudinaryFormData.append('upload_preset', import.meta.env.VITE_UPLOAD_PRESET)
+
+      axios
+        .post(cloudinaryEndpoint, cloudinaryFormData)
+        .then((cloudinaryResponse) => {
+          const formData = {
+            name: name || selectedWorker?.worker_name,
+            function_id: selectedFunction?.value || selectedWorker?.function_id,
+            subsidiarie_id: selectedSubsdiarie.value,
+            is_active: selectedWorker?.worker_is_active,
+            turn_id: selectedTurn?.value || selectedWorker?.turn_id,
+            cost_center_id: selectedCostCenter?.value || selectedWorker?.cost_center_id,
+            department_id: selectedDepartment?.value || selectedWorker?.department_id,
+            admission_date: admissionDate || selectedWorker?.admission_date,
+            resignation_date: selectedWorker?.resignation_date,
+            enrolment: enrolment,
+            sales_code: salesCode,
+            picture: cloudinaryResponse?.data.secure_url
+          }
+
+          api
+            .put(`/workers/${selectedWorker?.worker_id}`, formData)
+            .then((response) => {
+              let oldWorkerData = selectedWorker
+
+              let oldWorkerFunc = functionsOptions.find((func) => func.value == oldWorkerData.function_id)
+
+              let oldWorkerTurn = turnsOptions.find((turn) => turn.value == oldWorkerData.turn_id)
+
+              let oldWorkerCostCenter = costCenterOptions.find((costCenter) => costCenter.value == oldWorkerData.cost_center_id)
+
+              let oldWorkerDepartment = departmentsOptions.find((department) => department.value == oldWorkerData.department_id)
+
+              let updatedWorkerData = response.data
+
+              let updatedWorkerFunc = functionsOptions.find((func) => func.value == updatedWorkerData.function_id)
+
+              let updatedWorkerTurn = turnsOptions.find((turn) => turn.value == updatedWorkerData.turn_id)
+
+              let updatedWorkerCostCenter = costCenterOptions.find((costCenter) => costCenter.value == updatedWorkerData.cost_center_id)
+
+              let updatedWorkerDepartment = departmentsOptions.find((department) => department.value == updatedWorkerData.department_id)
+
+              let logStr = `
+                ${userSession.name} atualizou ${selectedWorker?.worker_name} de 
+                (
+                  nome=${oldWorkerData.worker_name},
+                  função=${oldWorkerFunc.label},
+                  filial=${selectedSubsdiarie.label},
+                  ativo=sim,
+                  turno=${oldWorkerTurn.label},
+                  centro de custo=${oldWorkerCostCenter.label},
+                  setor=${oldWorkerDepartment.label},
+                  data de admissão=${oldWorkerData.admission_date}
+                )
+                para ${updatedWorkerData.name}
+                (
+                  nome=${updatedWorkerData.name},
+                  função=${updatedWorkerFunc.label},
+                  filial=${selectedSubsdiarie.label},
+                  ativo=sim,
+                  turno=${updatedWorkerTurn.label},
+                  centro de custo=${updatedWorkerCostCenter.label},
+                  setor=${updatedWorkerDepartment.label},
+                  data de admissão=${updatedWorkerData.admission_date}
+                )
+              `
+
+              let logFormData = {
+                "log_str": logStr,
+                "happened_at": moment(new Date()).format("HH:mm"),
+                "happened_at_time": moment(new Date()).format("DD-MM-YYYY"),
+                "user_id": userSession.id,
+                "subsidiarie_id": selectedSubsdiarie.value
+              }
+
+              api
+                .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers`, logFormData)
+                .then(() => handleClose())
+            })
+        })
+
+    } else {
+
+      const formData = {
+        name: name || selectedWorker?.worker_name,
+        function_id: selectedFunction?.value || selectedWorker?.function_id,
+        subsidiarie_id: selectedSubsdiarie.value,
+        is_active: selectedWorker?.worker_is_active,
+        turn_id: selectedTurn?.value || selectedWorker?.turn_id,
+        cost_center_id: selectedCostCenter?.value || selectedWorker?.cost_center_id,
+        department_id: selectedDepartment?.value || selectedWorker?.department_id,
+        admission_date: admissionDate || selectedWorker?.admission_date,
+        resignation_date: selectedWorker?.resignation_date,
+        enrolment: enrolment,
+        sales_code: salesCode
+      }
+
+      api
+        .put(`/workers/${selectedWorker?.worker_id}`, formData)
+        .then((response) => {
+          let oldWorkerData = selectedWorker
+
+          let oldWorkerFunc = functionsOptions.find((func) => func.value == oldWorkerData.function_id)
+
+          let oldWorkerTurn = turnsOptions.find((turn) => turn.value == oldWorkerData.turn_id)
+
+          let oldWorkerCostCenter = costCenterOptions.find((costCenter) => costCenter.value == oldWorkerData.cost_center_id)
+
+          let oldWorkerDepartment = departmentsOptions.find((department) => department.value == oldWorkerData.department_id)
+
+          let updatedWorkerData = response.data
+
+          let updatedWorkerFunc = functionsOptions.find((func) => func.value == updatedWorkerData.function_id)
+
+          let updatedWorkerTurn = turnsOptions.find((turn) => turn.value == updatedWorkerData.turn_id)
+
+          let updatedWorkerCostCenter = costCenterOptions.find((costCenter) => costCenter.value == updatedWorkerData.cost_center_id)
+
+          let updatedWorkerDepartment = departmentsOptions.find((department) => department.value == updatedWorkerData.department_id)
+
+          let logStr = `
+            ${userSession.name} atualizou ${selectedWorker?.worker_name} de 
+            (
+              nome=${oldWorkerData.worker_name},
+              função=${oldWorkerFunc.label},
+              filial=${selectedSubsdiarie.label},
+              ativo=sim,
+              turno=${oldWorkerTurn.label},
+              centro de custo=${oldWorkerCostCenter.label},
+              setor=${oldWorkerDepartment.label},
+              data de admissão=${oldWorkerData.admission_date}
+            )
+            para ${updatedWorkerData.name}
+            (
+              nome=${updatedWorkerData.name},
+              função=${updatedWorkerFunc.label},
+              filial=${selectedSubsdiarie.label},
+              ativo=sim,
+              turno=${updatedWorkerTurn.label},
+              centro de custo=${updatedWorkerCostCenter.label},
+              setor=${updatedWorkerDepartment.label},
+              data de admissão=${updatedWorkerData.admission_date}
+            )
+          `
+
+          let logFormData = {
+            "log_str": logStr,
+            "happened_at": moment(new Date()).format("HH:mm"),
+            "happened_at_time": moment(new Date()).format("DD-MM-YYYY"),
+            "user_id": userSession.id,
+            "subsidiarie_id": selectedSubsdiarie.value
+          }
+
+          api
+            .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers`, logFormData)
+            .then(() => handleClose())
+        })
+
     }
 
-    api
-      .put(`/workers/${selectedWorker?.worker_id}`, formData)
-      .then((response) => {
-        let oldWorkerData = selectedWorker
-
-        let oldWorkerFunc = functionsOptions.find((func) => func.value == oldWorkerData.function_id)
-
-        let oldWorkerTurn = turnsOptions.find((turn) => turn.value == oldWorkerData.turn_id)
-
-        let oldWorkerCostCenter = costCenterOptions.find((costCenter) => costCenter.value == oldWorkerData.cost_center_id)
-
-        let oldWorkerDepartment = departmentsOptions.find((department) => department.value == oldWorkerData.department_id)
-
-        let updatedWorkerData = response.data
-
-        let updatedWorkerFunc = functionsOptions.find((func) => func.value == updatedWorkerData.function_id)
-
-        let updatedWorkerTurn = turnsOptions.find((turn) => turn.value == updatedWorkerData.turn_id)
-
-        let updatedWorkerCostCenter = costCenterOptions.find((costCenter) => costCenter.value == updatedWorkerData.cost_center_id)
-
-        let updatedWorkerDepartment = departmentsOptions.find((department) => department.value == updatedWorkerData.department_id)
-
-        let logStr = `
-          ${userSession.name} atualizou ${selectedWorker?.worker_name} de 
-          (
-            nome=${oldWorkerData.worker_name},
-            função=${oldWorkerFunc.label},
-            filial=${selectedSubsdiarie.label},
-            ativo=sim,
-            turno=${oldWorkerTurn.label},
-            centro de custo=${oldWorkerCostCenter.label},
-            setor=${oldWorkerDepartment.label},
-            data de admissão=${oldWorkerData.admission_date}
-          )
-          para ${updatedWorkerData.name}
-          (
-            nome=${updatedWorkerData.name},
-            função=${updatedWorkerFunc.label},
-            filial=${selectedSubsdiarie.label},
-            ativo=sim,
-            turno=${updatedWorkerTurn.label},
-            centro de custo=${updatedWorkerCostCenter.label},
-            setor=${updatedWorkerDepartment.label},
-            data de admissão=${updatedWorkerData.admission_date}
-          )
-        `
-
-        let logFormData = {
-          "log_str": logStr,
-          "happened_at": moment(new Date()).format("HH:mm"),
-          "happened_at_time": moment(new Date()).format("DD-MM-YYYY"),
-          "user_id": userSession.id,
-          "subsidiarie_id": selectedSubsdiarie.value
-        }
-
-        api
-          .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers`, logFormData)
-          .then(() => handleClose())
-      })
   }
 
   return (
@@ -196,7 +295,7 @@ const EditWorkerModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
-        <div className="mb-3">
+        <div className="mb-2">
           <label><b>Matrícula</b></label>
 
           <input
@@ -208,7 +307,7 @@ const EditWorkerModal = (props) => {
           />
         </div>
 
-        <div className="mb-3">
+        <div className="mb-2">
           <label><b>Código de vendas</b></label>
 
           <input
@@ -220,7 +319,7 @@ const EditWorkerModal = (props) => {
           />
         </div>
 
-        <div className="mb-3">
+        <div className="mb-2">
           <label htmlFor="workerName">
             <b>Nome do colaborador</b>
           </label>
@@ -235,7 +334,7 @@ const EditWorkerModal = (props) => {
           />
         </div>
 
-        <div className="mb-3">
+        <div className="mb-2">
           <label htmlFor="workerFunction">
             <b>Função do colaborador</b>
           </label>
@@ -253,7 +352,7 @@ const EditWorkerModal = (props) => {
           />
         </div>
 
-        <div className="mb-3">
+        <div className="mb-2">
           <label htmlFor="workerTurn">
             <b>Turno do colaborador</b>
           </label>
@@ -271,7 +370,7 @@ const EditWorkerModal = (props) => {
           />
         </div>
 
-        <div className="mb-3">
+        <div className="mb-2">
           <label htmlFor="workerCostCenter">
             <b>Centro de custo do colaborador</b>
           </label>
@@ -289,7 +388,7 @@ const EditWorkerModal = (props) => {
           />
         </div>
 
-        <div className="mb-3">
+        <div className="mb-2">
           <label htmlFor="workerDepartment">
             <b>Setor do colaborador</b>
           </label>
@@ -307,7 +406,7 @@ const EditWorkerModal = (props) => {
           />
         </div>
 
-        <div className="mb-3">
+        <div className="mb-2">
           <label htmlFor="workerAdmissionDate">
             <b>Data de admissão do colaborador</b>
           </label>
@@ -318,6 +417,16 @@ const EditWorkerModal = (props) => {
             onChange={(e) => setAdmissionDate(e.target.value)}
             className="form-control"
             defaultValue={selectedWorker?.admission_date}
+          />
+        </div>
+
+        <div className="mb-2">
+          <label><b>Foto</b></label>
+
+          <input
+            type="file"
+            className="form-control"
+            onChange={(e) => setPicture(e.target.files[0])}
           />
         </div>
       </Modal.Body>

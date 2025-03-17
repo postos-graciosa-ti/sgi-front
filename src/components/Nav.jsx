@@ -127,12 +127,12 @@ const Nav = () => {
                 <Link className="nav-link" to="/home">Início</Link>
               </li>
 
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link className="nav-link" to="/candidates">Processos Seletivos</Link>
-              </li>
+              </li> */}
 
               <li className="nav-item">
-                <Link className="nav-link" to="/applicants">Candidatos</Link>
+                <Link className="nav-link" to="/applicants">Processos Seletivos</Link>
               </li>
 
               {/* <li className="nav-item">

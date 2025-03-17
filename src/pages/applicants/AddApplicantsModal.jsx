@@ -1,15 +1,31 @@
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import api from '../../services/api';
 
 const AddApplicantsModal = (props) => {
-  const { addApplicantsModalOpen, setAddApplicantsModalOpen } = props
+  const { addApplicantsModalOpen, setAddApplicantsModalOpen, setApplicants } = props
+
+  const [name, setName] = useState()
 
   const handleClose = () => {
+    api
+      .get("/applicants")
+      .then((response) => setApplicants(response.data))
+
     setAddApplicantsModalOpen(false)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault()
 
+    let formData = {
+      "name": name
+    }
+
+    api
+      .post("/applicants", formData)
+      .then(() => handleClose())
   }
 
   return (
@@ -26,7 +42,12 @@ const AddApplicantsModal = (props) => {
       <form onSubmit={handleSubmit}>
         <Modal.Body>
           <div className="mb-3">
-            <input type="text" className="form-control" placeholder="Nome" />
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Nome"
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
         </Modal.Body>
 

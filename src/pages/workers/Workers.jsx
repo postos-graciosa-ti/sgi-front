@@ -1,6 +1,7 @@
 import moment from "moment"
 import { useEffect, useState } from "react"
-import { ArrowClockwise, ClipboardData, Pen, PersonAdd, PersonGear, Question, SlashCircle } from "react-bootstrap-icons"
+import { ArrowClockwise, ClipboardData, Pen, PersonAdd, PersonBadge, PersonGear, Question, SlashCircle } from "react-bootstrap-icons"
+import ReactDOMServer from 'react-dom/server'
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import initTour from "../../driverjs/initTour"
@@ -9,6 +10,7 @@ import api from "../../services/api"
 import CreateWorkerModal from "./CreateWorkerModal"
 import DeleteWorkerModal from "./DeleteWorkerModal"
 import EditWorkerModal from "./EditWorkerModal"
+import PrintBadgeContent from "./PrintBadgeContent"
 import ReactivateWorkerModal from "./ReactivateWorkerModal"
 import ResignationReasonsReportModal from "./ResignationReasonsReportModal"
 import WorkerNotationModal from "./WorkerNotationModal"
@@ -48,6 +50,27 @@ const Workers = () => {
     setSelectedWorker(worker)
 
     setEditWorkerModalOpen(true)
+  }
+
+  const handleIssueBadge = (worker) => {
+    api
+      .get(`/subsidiaries/${selectedSubsdiarie?.value}`)
+      .then((response) => {
+        let subsidiarieData = response.data
+
+        const printableContent = ReactDOMServer.renderToString(
+          <PrintBadgeContent
+            worker={worker}
+            selectedSubsidiarie={subsidiarieData}
+          />
+        )
+
+        printJS({
+          printable: printableContent,
+          type: 'raw-html',
+          header: null,
+        })
+      })
   }
 
   const handleOpenDeleteWorkerModal = (worker) => {
@@ -150,6 +173,14 @@ const Workers = () => {
                       title="Editar colaborador"
                     >
                       <PersonGear />
+                    </button>
+
+                    <button
+                      className="btn btn-primary me-2 mt-2"
+                      title="cara-crachá"
+                      onClick={() => handleIssueBadge(worker)}
+                    >
+                      <PersonBadge />
                     </button>
 
                     <button

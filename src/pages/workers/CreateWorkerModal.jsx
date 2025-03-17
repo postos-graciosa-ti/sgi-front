@@ -17,18 +17,26 @@ const CreateWorkerModal = (props) => {
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
+  const [enrolment, setEnrolment] = useState()
+
+  const [salesCode, setSalesCode] = useState()
+
   const [name, setName] = useState()
 
   const [functionsOptions, setFunctionsOptions] = useState([])
+
   const [selectedFunction, setSelectedFunction] = useState()
 
   const [turnsOptions, setTurnsOptions] = useState([])
+
   const [selectedTurn, setSelectedTurn] = useState()
 
   const [costCenterOptions, setCostCenterOptions] = useState([])
+
   const [selectedCostCenter, setSelectedCostCenter] = useState()
 
   const [departmentsOptions, setDepartmentsOptions] = useState([])
+
   const [selectedDepartment, setSelectedDepartment] = useState()
 
   const [admissionDate, setAdmissionDate] = useState()
@@ -124,7 +132,9 @@ const CreateWorkerModal = (props) => {
       "cost_center_id": selectedCostCenter.value,
       "department_id": selectedDepartment.value,
       "admission_date": admissionDate,
-      "resignation_date": admissionDate
+      "resignation_date": admissionDate,
+      "enrolment": enrolment,
+      "sales_code": salesCode
     }
 
     api
@@ -181,6 +191,24 @@ const CreateWorkerModal = (props) => {
         </Modal.Header>
 
         <Modal.Body>
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder="Matrícula"
+              className="form-control"
+              onChange={(e) => setEnrolment(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder="Código de vendas"
+              className="form-control"
+              onChange={(e) => setSalesCode(e.target.value)}
+            />
+          </div>
+
           <div className="mb-3">
             <input
               type="text"

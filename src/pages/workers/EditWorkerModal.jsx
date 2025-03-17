@@ -11,25 +11,34 @@ const EditWorkerModal = (props) => {
     editWorkerModalOpen,
     setEditWorkerModalOpen,
     setWorkersList,
-    selectedWorker
+    selectedWorker,
+    setSelectedWorker
   } = props
 
   const userSession = useUserSessionStore(state => state.userSession)
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
+  const [enrolment, setEnrolment] = useState()
+
+  const [salesCode, setSalesCode] = useState()
+
   const [name, setName] = useState()
 
   const [functionsOptions, setFunctionsOptions] = useState([])
+
   const [selectedFunction, setSelectedFunction] = useState()
 
   const [turnsOptions, setTurnsOptions] = useState([])
+
   const [selectedTurn, setSelectedTurn] = useState()
 
   const [costCenterOptions, setCostCenterOptions] = useState([])
+
   const [selectedCostCenter, setSelectedCostCenter] = useState()
 
   const [departmentsOptions, setDepartmentsOptions] = useState([])
+
   const [selectedDepartment, setSelectedDepartment] = useState()
 
   const [admissionDate, setAdmissionDate] = useState()
@@ -38,12 +47,9 @@ const EditWorkerModal = (props) => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
       .then((response) => {
-        const functionsData = response.data
-
-        const options = functionsData?.map((data) => ({
-          value: data.id,
-          label: data.name
-        })) || []
+        let options = response?.data.map((func) => ({
+          value: func.id, label: func.name
+        }))
 
         setFunctionsOptions(options)
       })
@@ -51,12 +57,9 @@ const EditWorkerModal = (props) => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/turns`)
       .then((response) => {
-        const turnsData = response.data
-
-        const options = turnsData?.map((data) => ({
-          value: data.id,
-          label: data.name
-        })) || []
+        let options = response?.data.map((turn) => ({
+          value: turn.id, label: turn.name
+        }))
 
         setTurnsOptions(options)
       })
@@ -64,12 +67,9 @@ const EditWorkerModal = (props) => {
     api
       .get("/cost-center")
       .then((response) => {
-        const costCenterData = response.data
-
-        const options = costCenterData?.map((data) => ({
-          value: data.id,
-          label: data.name
-        })) || []
+        let options = response?.data.map((costCenter) => ({
+          value: costCenter.id, label: costCenter.name
+        }))
 
         setCostCenterOptions(options)
       })
@@ -77,12 +77,9 @@ const EditWorkerModal = (props) => {
     api
       .get("/departments")
       .then((response) => {
-        const departmentsData = response.data
-
-        const options = departmentsData?.map((data) => ({
-          value: data.id,
-          label: data.name
-        })) || []
+        let options = response?.data.map((department) => ({
+          value: department.id, label: department.name
+        }))
 
         setDepartmentsOptions(options)
       })
@@ -92,6 +89,8 @@ const EditWorkerModal = (props) => {
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => setWorkersList(response.data))
+
+    setSelectedWorker()
 
     setName()
 
@@ -118,7 +117,9 @@ const EditWorkerModal = (props) => {
       cost_center_id: selectedCostCenter?.value || selectedWorker?.cost_center_id,
       department_id: selectedDepartment?.value || selectedWorker?.department_id,
       admission_date: admissionDate || selectedWorker?.admission_date,
-      resignation_date: selectedWorker?.resignation_date
+      resignation_date: selectedWorker?.resignation_date,
+      enrolment: enrolment,
+      sales_code: salesCode
     }
 
     api
@@ -195,6 +196,30 @@ const EditWorkerModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
+        <div className="mb-3">
+          <label><b>Matrícula</b></label>
+
+          <input
+            type="text"
+            placeholder="Matrícula"
+            className="form-control"
+            onChange={(e) => setEnrolment(e.target.value)}
+            defaultValue={selectedWorker?.worker_enrolment}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label><b>Código de vendas</b></label>
+
+          <input
+            type="text"
+            placeholder="Código de vendas"
+            className="form-control"
+            onChange={(e) => setSalesCode(e.target.value)}
+            defaultValue={selectedWorker?.worker_sales_code}
+          />
+        </div>
+
         <div className="mb-3">
           <label htmlFor="workerName">
             <b>Nome do colaborador</b>

@@ -1,6 +1,6 @@
 import moment from "moment"
 import { useEffect, useState } from "react"
-import { ArrowClockwise, ClipboardData, Pen, PersonAdd, PersonBadge, PersonGear, Question, SlashCircle } from "react-bootstrap-icons"
+import { ArrowClockwise, ClipboardData, Clock, Pen, PersonAdd, PersonBadge, PersonGear, Question, SlashCircle } from "react-bootstrap-icons"
 import ReactDOMServer from 'react-dom/server'
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
@@ -10,6 +10,7 @@ import api from "../../services/api"
 import CreateWorkerModal from "./CreateWorkerModal"
 import DeleteWorkerModal from "./DeleteWorkerModal"
 import EditWorkerModal from "./EditWorkerModal"
+import ExperienceTimeModal from "./ExperienceTimeModal"
 import PrintBadgeContent from "./PrintBadgeContent"
 import ReactivateWorkerModal from "./ReactivateWorkerModal"
 import ResignationReasonsReportModal from "./ResignationReasonsReportModal"
@@ -33,6 +34,8 @@ const Workers = () => {
   const [reactivateWorkerModalOpen, setReactivateWorkerModalOpen] = useState(false)
 
   const [workerNotationModalOpen, setWorkerNotationModalOpen] = useState(false)
+
+  const [experienceTimeModalOpen, setExperienceTimeModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -93,6 +96,12 @@ const Workers = () => {
     setSelectedWorker(worker)
 
     setWorkerNotationModalOpen(true)
+  }
+
+  const handleOpenExperienceTimeModal = (worker) => {
+    setSelectedWorker(worker)
+
+    setExperienceTimeModalOpen(true)
   }
 
   return (
@@ -193,6 +202,14 @@ const Workers = () => {
                     </button>
 
                     <button
+                      className="btn btn-primary me-2 mt-2"
+                      title="Avaliação de tempo de experiência"
+                      onClick={() => handleOpenExperienceTimeModal(worker)}
+                    >
+                      <Clock />
+                    </button>
+
+                    <button
                       className="btn btn-danger me-2 mt-2"
                       onClick={() => handleOpenDeleteWorkerModal(worker)}
                       id="deleteWorker"
@@ -259,6 +276,12 @@ const Workers = () => {
         setWorkerNotationModalOpen={setWorkerNotationModalOpen}
         selectedWorker={selectedWorker}
         setSelectedWorker={setSelectedWorker}
+      />
+
+      <ExperienceTimeModal
+        experienceTimeModalOpen={experienceTimeModalOpen}
+        setExperienceTimeModalOpen={setExperienceTimeModalOpen}
+        selectedWorker={selectedWorker}
       />
     </>
   )

@@ -46,6 +46,8 @@ const EditWorkerModal = (props) => {
 
   const [picture, setPicture] = useState()
 
+  const [timecode, setTimecode] = useState()
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
@@ -107,6 +109,10 @@ const EditWorkerModal = (props) => {
 
     setAdmissionDate()
 
+    setPicture()
+
+    setTimecode()
+
     setEditWorkerModalOpen(false)
   }
 
@@ -137,7 +143,8 @@ const EditWorkerModal = (props) => {
             resignation_date: selectedWorker?.resignation_date,
             enrolment: enrolment,
             sales_code: salesCode,
-            picture: cloudinaryResponse?.data.secure_url
+            picture: cloudinaryResponse?.data.secure_url,
+            timecode: timecode
           }
 
           api
@@ -215,7 +222,8 @@ const EditWorkerModal = (props) => {
         admission_date: admissionDate || selectedWorker?.admission_date,
         resignation_date: selectedWorker?.resignation_date,
         enrolment: enrolment,
-        sales_code: salesCode
+        sales_code: salesCode,
+        timecode: timecode
       }
 
       api
@@ -295,7 +303,7 @@ const EditWorkerModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
-        <div className="mb-2">
+        <div className="mb-1">
           <label><b>Matrícula</b></label>
 
           <input
@@ -307,7 +315,7 @@ const EditWorkerModal = (props) => {
           />
         </div>
 
-        <div className="mb-2">
+        <div className="mb-1">
           <label><b>Código de vendas</b></label>
 
           <input
@@ -319,7 +327,19 @@ const EditWorkerModal = (props) => {
           />
         </div>
 
-        <div className="mb-2">
+        <div className="mb-1">
+          <label><b>Código de ponto</b></label>
+          
+          <input
+            type="text"
+            placeholder="Código de ponto"
+            className="form-control"
+            onChange={(e) => setTimecode(e.target.value)}
+            defaultValue={selectedWorker?.timecode}
+          />
+        </div>
+
+        <div className="mb-1">
           <label htmlFor="workerName">
             <b>Nome do colaborador</b>
           </label>
@@ -334,7 +354,7 @@ const EditWorkerModal = (props) => {
           />
         </div>
 
-        <div className="mb-2">
+        <div className="mb-1">
           <label htmlFor="workerFunction">
             <b>Função do colaborador</b>
           </label>
@@ -352,7 +372,7 @@ const EditWorkerModal = (props) => {
           />
         </div>
 
-        <div className="mb-2">
+        <div className="mb-1">
           <label htmlFor="workerTurn">
             <b>Turno do colaborador</b>
           </label>
@@ -370,7 +390,7 @@ const EditWorkerModal = (props) => {
           />
         </div>
 
-        <div className="mb-2">
+        <div className="mb-1">
           <label htmlFor="workerCostCenter">
             <b>Centro de custo do colaborador</b>
           </label>
@@ -388,7 +408,7 @@ const EditWorkerModal = (props) => {
           />
         </div>
 
-        <div className="mb-2">
+        <div className="mb-1">
           <label htmlFor="workerDepartment">
             <b>Setor do colaborador</b>
           </label>
@@ -406,7 +426,7 @@ const EditWorkerModal = (props) => {
           />
         </div>
 
-        <div className="mb-2">
+        <div className="mb-1">
           <label htmlFor="workerAdmissionDate">
             <b>Data de admissão do colaborador</b>
           </label>
@@ -420,7 +440,7 @@ const EditWorkerModal = (props) => {
           />
         </div>
 
-        <div className="mb-2">
+        <div className="mb-1">
           <label><b>Foto</b></label>
 
           <input
@@ -432,12 +452,9 @@ const EditWorkerModal = (props) => {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="light" onClick={handleClose}>
-          Fechar
-        </Button>
-        <Button variant="success" onClick={handleSubmit}>
-          Editar
-        </Button>
+        <Button variant="light" onClick={handleClose}>Fechar</Button>
+
+        <Button variant="success" onClick={handleSubmit}>Editar</Button>
       </Modal.Footer>
     </Modal>
   )

@@ -55,9 +55,11 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
 
           <div style={{ "marginTop": "15px" }}><b>{worker?.function_name}</b></div>
 
+          <div style={{ "marginTop": "15px" }}><b>Matrícula: {worker?.worker_enrolment}</b></div>
+
           <div style={{ "marginTop": "15px" }}><b>Cod. vendas: {worker?.worker_sales_code}</b></div>
 
-          <div style={{ "marginTop": "15px" }}><b>Matrícula: {worker?.worker_enrolment}</b></div>
+          <div style={{ "marginTop": "15px" }}><b>Código de ponto: {worker?.timecode}</b></div>
         </div>
       </div>
 

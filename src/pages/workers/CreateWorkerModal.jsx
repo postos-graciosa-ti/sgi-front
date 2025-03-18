@@ -44,6 +44,8 @@ const CreateWorkerModal = (props) => {
 
   const [picture, setPicture] = useState()
 
+  const [timecode, setTimecode] = useState()
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
@@ -122,6 +124,10 @@ const CreateWorkerModal = (props) => {
 
     setAdmissionDate()
 
+    setPicture()
+
+    setTimecode()
+
     setCreateWorkerModalOpen(false)
   }
 
@@ -149,8 +155,12 @@ const CreateWorkerModal = (props) => {
           "resignation_date": admissionDate,
           "enrolment": enrolment,
           "sales_code": salesCode,
-          "picture": cloudinaryResponse?.data.secure_url
+          "picture": cloudinaryResponse?.data.secure_url,
+          "timecode": timecode
         }
+
+        console.log(formData.admission_date)
+        debugger
 
         api
           .post("/workers", formData)
@@ -222,6 +232,15 @@ const CreateWorkerModal = (props) => {
               placeholder="Código de vendas"
               className="form-control"
               onChange={(e) => setSalesCode(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder="Código de ponto"
+              className="form-control"
+              onChange={(e) => setTimecode(e.target.value)}
             />
           </div>
 

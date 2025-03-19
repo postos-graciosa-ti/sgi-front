@@ -1,22 +1,24 @@
 import moment from 'moment'
-import { ArrowBarRight, ArrowRightShort } from 'react-bootstrap-icons'
+import { useState } from 'react'
+import { ArrowRightShort } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import FirstReviewModal from './FirstReviewModal'
-import { useState } from 'react'
+import SecondReviewModal from "./SecondReviewModal"
 
 const ExperienceTimeModal = (props) => {
   const {
     experienceTimeModalOpen,
     setExperienceTimeModalOpen,
-    selectedWorker
+    selectedWorker,
+    setSelectedWorker
   } = props
+
+  let canOpenReview = moment().isSameOrBefore(moment(selectedWorker?.first_review_date, "YYYY-MM-DD"), "day")
 
   const [firstReviewModalOpen, setFirstReviewModalOpen] = useState(false)
 
-  let canOpenFirstReview = moment().format("YYYY-MM-DD") >= selectedWorker?.first_review_date
-
-  let canOpenSecondReview = moment().format("YYYY-MM-DD") >= selectedWorker?.second_review_date
+  const [secondReviewModalOpen, setSecondReviewModalOpen] = useState(false)
 
   const handleClose = () => {
     setExperienceTimeModalOpen(false)
@@ -24,6 +26,10 @@ const ExperienceTimeModal = (props) => {
 
   const handleOpenFirstReviewModal = () => {
     setFirstReviewModalOpen(true)
+  }
+
+  const handleOpenSecondReviewModal = () => {
+    setSecondReviewModalOpen(true)
   }
 
   return (
@@ -49,7 +55,11 @@ const ExperienceTimeModal = (props) => {
             <div className="d-inline-flex justify-content-between align-items-center">
               <span><b>Primeira avaliação (30 dias)</b>: {moment(selectedWorker?.first_review_date).format("DD-MM-YYYY")}</span>
 
-              <button className="btn btn-primary" onClick={handleOpenFirstReviewModal} disabled={canOpenFirstReview && false}>
+              <button
+                className="btn btn-primary"
+                onClick={handleOpenFirstReviewModal}
+                disabled={canOpenReview && true || false}
+              >
                 Ir <ArrowRightShort />
               </button>
             </div>
@@ -59,7 +69,11 @@ const ExperienceTimeModal = (props) => {
             <div className="d-inline-flex justify-content-between align-items-center">
               <span><b>Segunda avaliação (60 dias)</b>: {moment(selectedWorker?.second_review_date).format("DD-MM-YYYY")}</span>
 
-              <button className="btn btn-primary" disabled={canOpenSecondReview && false}>
+              <button
+                className="btn btn-primary"
+                onClick={handleOpenSecondReviewModal}
+                disabled={canOpenReview && true || false}
+              >
                 Ir <ArrowRightShort />
               </button>
             </div>
@@ -77,6 +91,16 @@ const ExperienceTimeModal = (props) => {
         firstReviewModalOpen={firstReviewModalOpen}
         setFirstReviewModalOpen={setFirstReviewModalOpen}
         selectedWorker={selectedWorker}
+        setSelectedWorker={setSelectedWorker}
+        setExperienceTimeModalOpen={setExperienceTimeModalOpen}
+      />
+
+      <SecondReviewModal
+        secondReviewModalOpen={secondReviewModalOpen}
+        setSecondReviewModalOpen={setSecondReviewModalOpen}
+        selectedWorker={selectedWorker}
+        setSelectedWorker={setSelectedWorker}
+        setExperienceTimeModalOpen={setExperienceTimeModalOpen}
       />
     </>
   )

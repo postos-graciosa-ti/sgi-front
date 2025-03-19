@@ -8,8 +8,8 @@ import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 import { attendanceOptions, cooperationOptions, hierarchyOptions, initiativeOptions, interpersonalRelationshipsOptions, knowledgeOptions, learningOptions, personalPresentationOptions, productivityOptions, punctualityOptions } from "./reviewsOptionsEnum"
 
-const FirstReviewModal = (props) => {
-  const { firstReviewModalOpen, setFirstReviewModalOpen, selectedWorker, setSelectedWorker, setExperienceTimeModalOpen } = props
+const SecondReviewModal = (props) => {
+  const { secondReviewModalOpen, setSecondReviewModalOpen, selectedWorker, setSelectedWorker, setExperienceTimeModalOpen } = props
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
@@ -17,7 +17,7 @@ const FirstReviewModal = (props) => {
 
   const [subsidiarieCoordinator, setSubsidiarieCoordinator] = useState()
 
-  const [firstReviewResponses, setFirstReviewResponses] = useState()
+  const [secondReviewResponses, setSecondReviewResponses] = useState()
 
   const [selectedPersonalPresentation, setSelectedPersonalPresentation] = useState()
 
@@ -40,13 +40,13 @@ const FirstReviewModal = (props) => {
   const [selectedAttendance, setSelectedAttendance] = useState()
 
   useEffect(() => {
-    if (firstReviewModalOpen) {
+    if (secondReviewModalOpen) {
       api
-        .get(`/workers/${selectedWorker?.worker_id}/first-review`)
-        .then((response) => setFirstReviewResponses(response.data))
+        .get(`/workers/${selectedWorker?.worker_id}/second-review`)
+        .then((response) => setSecondReviewResponses(response.data))
     }
 
-  }, [firstReviewModalOpen])
+  }, [secondReviewModalOpen])
 
   useEffect(() => {
     api
@@ -71,7 +71,7 @@ const FirstReviewModal = (props) => {
   const handleClose = () => {
     setSelectedWorker()
 
-    setFirstReviewResponses()
+    setSecondReviewResponses()
 
     setSelectedPersonalPresentation()
 
@@ -93,7 +93,7 @@ const FirstReviewModal = (props) => {
 
     setSelectedAttendance()
 
-    setFirstReviewModalOpen(false)
+    setSecondReviewModalOpen(false)
 
     setExperienceTimeModalOpen(false)
   }
@@ -113,20 +113,20 @@ const FirstReviewModal = (props) => {
     }
 
     api
-      .post(`/workers/${selectedWorker.worker_id}/first-review`, formData)
+      .post(`/workers/${selectedWorker.worker_id}/second-review`, formData)
       .then(() => handleClose())
   }
 
   return (
     <Modal
-      show={firstReviewModalOpen}
+      show={secondReviewModalOpen}
       onHide={handleClose}
       backdrop="static"
       keyboard={false}
       fullscreen={true}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Avaliação de primeiro período de experiência</Modal.Title>
+        <Modal.Title>Avaliação de segundo período de experiência</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -162,11 +162,11 @@ const FirstReviewModal = (props) => {
           </div>
 
           {
-            firstReviewResponses &&
-            firstReviewResponses.personal_presentation && (
+            secondReviewResponses &&
+            secondReviewResponses.personal_presentation && (
               <ReactSelect
                 isDisabled={true}
-                placeholder={firstReviewResponses.personal_presentation}
+                placeholder={secondReviewResponses.personal_presentation}
               />
             ) || (
               <ReactSelect
@@ -188,11 +188,11 @@ const FirstReviewModal = (props) => {
           </div>
 
           {
-            firstReviewResponses &&
-            firstReviewResponses.productivity && (
+            secondReviewResponses &&
+            secondReviewResponses.productivity && (
               <ReactSelect
                 isDisabled={true}
-                placeholder={firstReviewResponses.productivity}
+                placeholder={secondReviewResponses.productivity}
               />
             ) || (
               <ReactSelect
@@ -214,11 +214,11 @@ const FirstReviewModal = (props) => {
           </div>
 
           {
-            firstReviewResponses &&
-            firstReviewResponses.knowledge && (
+            secondReviewResponses &&
+            secondReviewResponses.knowledge && (
               <ReactSelect
                 isDisabled={true}
-                placeholder={firstReviewResponses.knowledge}
+                placeholder={secondReviewResponses.knowledge}
               />
             ) || (
               <ReactSelect
@@ -240,11 +240,11 @@ const FirstReviewModal = (props) => {
           </div>
 
           {
-            firstReviewResponses &&
-            firstReviewResponses.cooperation && (
+            secondReviewResponses &&
+            secondReviewResponses.cooperation && (
               <ReactSelect
                 isDisabled={true}
-                placeholder={firstReviewResponses.cooperation}
+                placeholder={secondReviewResponses.cooperation}
               />
             ) || (
               <ReactSelect
@@ -266,11 +266,11 @@ const FirstReviewModal = (props) => {
           </div>
 
           {
-            firstReviewResponses &&
-            firstReviewResponses.initiative && (
+            secondReviewResponses &&
+            secondReviewResponses.initiative && (
               <ReactSelect
                 isDisabled={true}
-                placeholder={firstReviewResponses.initiative}
+                placeholder={secondReviewResponses.initiative}
               />
             ) || (
               <ReactSelect
@@ -292,11 +292,11 @@ const FirstReviewModal = (props) => {
           </div>
 
           {
-            firstReviewResponses &&
-            firstReviewResponses.interpersonal_relationships && (
+            secondReviewResponses &&
+            secondReviewResponses.interpersonal_relationships && (
               <ReactSelect
                 isDisabled={true}
-                placeholder={firstReviewResponses.interpersonal_relationships}
+                placeholder={secondReviewResponses.interpersonal_relationships}
               />
             ) || (
               <ReactSelect
@@ -318,11 +318,11 @@ const FirstReviewModal = (props) => {
           </div>
 
           {
-            firstReviewResponses &&
-            firstReviewResponses.learning && (
+            secondReviewResponses &&
+            secondReviewResponses.learning && (
               <ReactSelect
                 isDisabled={true}
-                placeholder={firstReviewResponses.learning}
+                placeholder={secondReviewResponses.learning}
               />
             ) || (
               <ReactSelect
@@ -344,11 +344,11 @@ const FirstReviewModal = (props) => {
           </div>
 
           {
-            firstReviewResponses &&
-            firstReviewResponses.hierarchy && (
+            secondReviewResponses &&
+            secondReviewResponses.hierarchy && (
               <ReactSelect
                 isDisabled={true}
-                placeholder={firstReviewResponses.hierarchy}
+                placeholder={secondReviewResponses.hierarchy}
               />
             ) || (
               <ReactSelect
@@ -370,11 +370,11 @@ const FirstReviewModal = (props) => {
           </div>
 
           {
-            firstReviewResponses &&
-            firstReviewResponses.punctuality && (
+            secondReviewResponses &&
+            secondReviewResponses.punctuality && (
               <ReactSelect
                 isDisabled={true}
-                placeholder={firstReviewResponses.punctuality}
+                placeholder={secondReviewResponses.punctuality}
               />
             ) || (
               <ReactSelect
@@ -396,11 +396,11 @@ const FirstReviewModal = (props) => {
           </div>
 
           {
-            firstReviewResponses &&
-            firstReviewResponses.attendance && (
+            secondReviewResponses &&
+            secondReviewResponses.attendance && (
               <ReactSelect
                 isDisabled={true}
-                placeholder={firstReviewResponses.attendance}
+                placeholder={secondReviewResponses.attendance}
               />
             ) || (
               <ReactSelect
@@ -421,7 +421,7 @@ const FirstReviewModal = (props) => {
         </Button>
 
         {
-          firstReviewResponses && (
+          secondReviewResponses && (
             <Button variant="success" disabled={true}>Salvar</Button>
           ) || (
             <Button variant="success" onClick={handleSubmit}>Salvar</Button>
@@ -432,4 +432,4 @@ const FirstReviewModal = (props) => {
   )
 }
 
-export default FirstReviewModal
+export default SecondReviewModal

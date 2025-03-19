@@ -282,6 +282,7 @@ const Workers = () => {
         experienceTimeModalOpen={experienceTimeModalOpen}
         setExperienceTimeModalOpen={setExperienceTimeModalOpen}
         selectedWorker={selectedWorker}
+        setSelectedWorker={setSelectedWorker}
       />
     </>
   )

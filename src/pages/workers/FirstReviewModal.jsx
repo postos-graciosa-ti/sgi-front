@@ -3,9 +3,11 @@ import { useEffect, useState } from 'react'
 import { Printer } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
+import FirstReviewPrintContent from './FirstReviewPrintContent'
 import { attendanceOptions, cooperationOptions, hierarchyOptions, initiativeOptions, interpersonalRelationshipsOptions, knowledgeOptions, learningOptions, personalPresentationOptions, productivityOptions, punctualityOptions } from "./reviewsOptionsEnum"
 
 const FirstReviewModal = (props) => {
@@ -117,6 +119,25 @@ const FirstReviewModal = (props) => {
       .then(() => handleClose())
   }
 
+  const handlePrintFirstReview = () => {
+    const printableContent = ReactDOMServer.renderToString(
+      <FirstReviewPrintContent
+        selectedSubsdiarie={selectedSubsdiarie}
+        selectedWorker={selectedWorker}
+        subsidiarieManager={subsidiarieManager}
+        subsidiarieCoordinator={subsidiarieCoordinator}
+        personalPresentationOptions={personalPresentationOptions}
+        firstReviewResponses={firstReviewResponses}
+      />
+    )
+
+    printJS({
+      printable: printableContent,
+      type: 'raw-html',
+      header: null,
+    })
+  }
+
   return (
     <Modal
       show={firstReviewModalOpen}
@@ -130,6 +151,14 @@ const FirstReviewModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
+        <button
+          className="btn btn-primary mb-3"
+          title="Imprimir avaliação de primeiro período de experiência"
+          onClick={handlePrintFirstReview}
+        >
+          <Printer />
+        </button>
+
         <div className="mb-2">
           <div><b>Filial</b>: {selectedSubsdiarie?.label}</div>
 
@@ -415,10 +444,6 @@ const FirstReviewModal = (props) => {
 
       <Modal.Footer>
         <Button variant="light" onClick={handleClose}>Fechar</Button>
-
-        <Button variant="light">
-          <Printer />
-        </Button>
 
         {
           firstReviewResponses && (

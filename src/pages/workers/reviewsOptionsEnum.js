@@ -67,3 +67,8 @@ export const attendanceOptions = [
   { value: 3, label: "Atende o cliente com pouco profissionalismo gerando, às vezes, reclamações por parte do cliente." },
   { value: 4, label: "Atende o cliente de forma desrespeitosa, desinteressada e sem profissionalismo, gerando muitas reclamações por parte do cliente." },
 ]
+
+export const approvedOptions = [
+  { value: 1, label: "Aprovado." },
+  { value: 2, label: "Reprovado." },
+]

@@ -8,7 +8,7 @@ import ReactSelect from "react-select"
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 import FirstReviewPrintContent from './FirstReviewPrintContent'
-import { attendanceOptions, cooperationOptions, hierarchyOptions, initiativeOptions, interpersonalRelationshipsOptions, knowledgeOptions, learningOptions, personalPresentationOptions, productivityOptions, punctualityOptions } from "./reviewsOptionsEnum"
+import { approvedOptions, attendanceOptions, cooperationOptions, hierarchyOptions, initiativeOptions, interpersonalRelationshipsOptions, knowledgeOptions, learningOptions, personalPresentationOptions, productivityOptions, punctualityOptions } from "./reviewsOptionsEnum"
 
 const FirstReviewModal = (props) => {
   const { firstReviewModalOpen, setFirstReviewModalOpen, selectedWorker, setSelectedWorker, setExperienceTimeModalOpen } = props
@@ -40,6 +40,8 @@ const FirstReviewModal = (props) => {
   const [selectedPunctuality, setSelectedPunctuality] = useState()
 
   const [selectedAttendance, setSelectedAttendance] = useState()
+
+  const [selectedApproved, setSelectedApproved] = useState()
 
   useEffect(() => {
     if (firstReviewModalOpen) {
@@ -95,6 +97,8 @@ const FirstReviewModal = (props) => {
 
     setSelectedAttendance()
 
+    setSelectedApproved()
+
     setFirstReviewModalOpen(false)
 
     setExperienceTimeModalOpen(false)
@@ -112,6 +116,7 @@ const FirstReviewModal = (props) => {
       hierarchy: selectedHierarchy?.label,
       punctuality: selectedPunctuality?.label,
       attendance: selectedAttendance?.label,
+      approved: selectedApproved?.label
     }
 
     api
@@ -436,6 +441,28 @@ const FirstReviewModal = (props) => {
                 placeholder="Selecione a opção que mais se aplica"
                 options={attendanceOptions}
                 onChange={(value) => setSelectedAttendance(value)}
+              />
+            )
+          }
+        </div>
+
+        <div className="mb-3">
+          <div>
+            <span><b>Aprovado ou reprovado</b></span>
+          </div>
+
+          {
+            firstReviewResponses &&
+            firstReviewResponses.approved && (
+              <ReactSelect
+                isDisabled={true}
+                placeholder={firstReviewResponses.approved}
+              />
+            ) || (
+              <ReactSelect
+                placeholder="Selecione a opção que mais se aplica"
+                options={approvedOptions}
+                onChange={(value) => setSelectedApproved(value)}
               />
             )
           }

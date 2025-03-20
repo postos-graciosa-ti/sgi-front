@@ -1,6 +1,6 @@
 import moment from "moment"
 
-const FirstReviewPrintContent = ({ selectedSubsdiarie, selectedWorker, subsidiarieManager, subsidiarieCoordinator, personalPresentationOptions, firstReviewResponses }) => {
+const SecondReviewPrintContent = ({ selectedSubsdiarie, selectedWorker, subsidiarieManager, subsidiarieCoordinator, personalPresentationOptions, firstReviewResponses }) => {
   return (
     <>
       <div>
@@ -11,7 +11,7 @@ const FirstReviewPrintContent = ({ selectedSubsdiarie, selectedWorker, subsidiar
       </div>
 
       <div>
-        <h4>Avaliação de primeiro período de experiência de {selectedWorker?.worker_name}</h4>
+        <h4>Avaliação de segundo período de experiência de {selectedWorker?.worker_name}</h4>
       </div>
 
       <div><b>Filial</b>: {selectedSubsdiarie?.label}</div>
@@ -150,4 +150,4 @@ const FirstReviewPrintContent = ({ selectedSubsdiarie, selectedWorker, subsidiar
   )
 }
 
-export default FirstReviewPrintContent
+export default SecondReviewPrintContent

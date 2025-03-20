@@ -46,6 +46,8 @@ const CreateWorkerModal = (props) => {
 
   const [timecode, setTimecode] = useState()
 
+  const [esocial, setEsocial] = useState()
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
@@ -128,6 +130,8 @@ const CreateWorkerModal = (props) => {
 
     setTimecode()
 
+    setEsocial()
+
     setCreateWorkerModalOpen(false)
   }
 
@@ -156,7 +160,8 @@ const CreateWorkerModal = (props) => {
           "enrolment": enrolment,
           "sales_code": salesCode,
           "picture": cloudinaryResponse?.data.secure_url,
-          "timecode": timecode
+          "timecode": timecode,
+          "esocial": esocial
         }
 
         api
@@ -214,6 +219,15 @@ const CreateWorkerModal = (props) => {
         </Modal.Header>
 
         <Modal.Body>
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder="E-Social"
+              className="form-control"
+              onChange={(e) => setEsocial(e.target.value)}
+            />
+          </div>
+
           <div className="mb-3">
             <input
               type="text"

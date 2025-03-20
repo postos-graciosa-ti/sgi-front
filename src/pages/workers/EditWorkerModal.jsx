@@ -48,6 +48,8 @@ const EditWorkerModal = (props) => {
 
   const [timecode, setTimecode] = useState()
 
+  const [esocial, setEsocial] = useState()
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
@@ -113,6 +115,8 @@ const EditWorkerModal = (props) => {
 
     setTimecode()
 
+    setEsocial()
+
     setEditWorkerModalOpen(false)
   }
 
@@ -144,7 +148,8 @@ const EditWorkerModal = (props) => {
             enrolment: enrolment,
             sales_code: salesCode,
             picture: cloudinaryResponse?.data.secure_url,
-            timecode: timecode
+            timecode: timecode,
+            esocial: esocial
           }
 
           api
@@ -223,7 +228,8 @@ const EditWorkerModal = (props) => {
         resignation_date: selectedWorker?.resignation_date,
         enrolment: enrolment,
         sales_code: salesCode,
-        timecode: timecode
+        timecode: timecode,
+        esocial: esocial
       }
 
       api
@@ -304,6 +310,18 @@ const EditWorkerModal = (props) => {
 
       <Modal.Body>
         <div className="mb-1">
+          <label><b>E-social</b></label>
+
+          <input
+            type="text"
+            placeholder="E-social"
+            className="form-control"
+            onChange={(e) => setEsocial(e.target.value)}
+            defaultValue={selectedWorker?.esocial}
+          />
+        </div>
+
+        <div className="mb-1">
           <label><b>Matrícula</b></label>
 
           <input
@@ -329,7 +347,7 @@ const EditWorkerModal = (props) => {
 
         <div className="mb-1">
           <label><b>Código de ponto</b></label>
-          
+
           <input
             type="text"
             placeholder="Código de ponto"

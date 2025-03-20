@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react'
 import { Printer } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
-import { attendanceOptions, cooperationOptions, hierarchyOptions, initiativeOptions, interpersonalRelationshipsOptions, knowledgeOptions, learningOptions, personalPresentationOptions, productivityOptions, punctualityOptions } from "./reviewsOptionsEnum"
+import { approvedOptions, attendanceOptions, cooperationOptions, hierarchyOptions, initiativeOptions, interpersonalRelationshipsOptions, knowledgeOptions, learningOptions, personalPresentationOptions, productivityOptions, punctualityOptions } from "./reviewsOptionsEnum"
+import SecondReviewPrintContent from './SecondReviewPrintContent'
 
 const SecondReviewModal = (props) => {
   const { secondReviewModalOpen, setSecondReviewModalOpen, selectedWorker, setSelectedWorker, setExperienceTimeModalOpen } = props
@@ -38,6 +40,8 @@ const SecondReviewModal = (props) => {
   const [selectedPunctuality, setSelectedPunctuality] = useState()
 
   const [selectedAttendance, setSelectedAttendance] = useState()
+
+  const [selectedApproved, setSelectedApproved] = useState()
 
   useEffect(() => {
     if (secondReviewModalOpen) {
@@ -93,6 +97,8 @@ const SecondReviewModal = (props) => {
 
     setSelectedAttendance()
 
+    setSelectedApproved()
+
     setSecondReviewModalOpen(false)
 
     setExperienceTimeModalOpen(false)
@@ -110,11 +116,31 @@ const SecondReviewModal = (props) => {
       hierarchy: selectedHierarchy?.label,
       punctuality: selectedPunctuality?.label,
       attendance: selectedAttendance?.label,
+      approved: selectedApproved?.label
     }
 
     api
       .post(`/workers/${selectedWorker.worker_id}/second-review`, formData)
       .then(() => handleClose())
+  }
+
+  const handlePrintSecondReview = () => {
+    const printableContent = ReactDOMServer.renderToString(
+      <SecondReviewPrintContent
+        selectedSubsdiarie={selectedSubsdiarie}
+        selectedWorker={selectedWorker}
+        subsidiarieManager={subsidiarieManager}
+        subsidiarieCoordinator={subsidiarieCoordinator}
+        personalPresentationOptions={personalPresentationOptions}
+        firstReviewResponses={secondReviewResponses}
+      />
+    )
+
+    printJS({
+      printable: printableContent,
+      type: 'raw-html',
+      header: null,
+    })
   }
 
   return (
@@ -130,6 +156,12 @@ const SecondReviewModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
+        <div className="mt-3 mb-3">
+          <button className="btn btn-primary" onClick={handlePrintSecondReview}>
+            <Printer />
+          </button>
+        </div>
+
         <div className="mb-2">
           <div><b>Filial</b>: {selectedSubsdiarie?.label}</div>
 
@@ -411,14 +443,32 @@ const SecondReviewModal = (props) => {
             )
           }
         </div>
+
+        <div className="mb-3">
+          <div>
+            <span><b>Aprovado ou reprovado</b></span>
+          </div>
+
+          {
+            secondReviewResponses &&
+            secondReviewResponses.approved && (
+              <ReactSelect
+                isDisabled={true}
+                placeholder={secondReviewResponses.approved}
+              />
+            ) || (
+              <ReactSelect
+                placeholder="Selecione a opção que mais se aplica"
+                options={approvedOptions}
+                onChange={(value) => setSelectedApproved(value)}
+              />
+            )
+          }
+        </div>
       </Modal.Body>
 
       <Modal.Footer>
         <Button variant="light" onClick={handleClose}>Fechar</Button>
-
-        <Button variant="light">
-          <Printer />
-        </Button>
 
         {
           secondReviewResponses && (

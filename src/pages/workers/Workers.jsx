@@ -16,6 +16,7 @@ import ReactivateWorkerModal from "./ReactivateWorkerModal"
 import ResignationReasonsReportModal from "./ResignationReasonsReportModal"
 import WorkerNotationModal from "./WorkerNotationModal"
 import ReactSelect from "react-select"
+import WorkersByTurnModal from "./WorkersByTurnModal"
 
 const Workers = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -39,6 +40,8 @@ const Workers = () => {
   const [experienceTimeModalOpen, setExperienceTimeModalOpen] = useState(false)
 
   const [workersStatus, setWorkersStatus] = useState()
+
+  const [workersByTurnModalOpen, setWorkersByTurnModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -133,6 +136,10 @@ const Workers = () => {
     setExperienceTimeModalOpen(true)
   }
 
+  const handleOpenWorkerByTurnModal = () => {
+    setWorkersByTurnModalOpen(true)
+  }
+
   return (
     <>
       <Nav />
@@ -154,6 +161,13 @@ const Workers = () => {
               className="btn btn-danger me-2"
               onClick={handleOpenResigntaionReasonsReportModal}
               title="Filtrar demissões"
+            >
+              <ClipboardData />
+            </button>
+
+            <button
+              className="btn btn-success me-2"
+              onClick={handleOpenWorkerByTurnModal}
             >
               <ClipboardData />
             </button>
@@ -329,6 +343,11 @@ const Workers = () => {
         setExperienceTimeModalOpen={setExperienceTimeModalOpen}
         selectedWorker={selectedWorker}
         setSelectedWorker={setSelectedWorker}
+      />
+
+      <WorkersByTurnModal
+        workersByTurnModalOpen={workersByTurnModalOpen}
+        setWorkersByTurnModalOpen={setWorkersByTurnModalOpen}
       />
     </>
   )

@@ -15,6 +15,7 @@ import PrintBadgeContent from "./PrintBadgeContent"
 import ReactivateWorkerModal from "./ReactivateWorkerModal"
 import ResignationReasonsReportModal from "./ResignationReasonsReportModal"
 import WorkerNotationModal from "./WorkerNotationModal"
+import ReactSelect from "react-select"
 
 const Workers = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -37,6 +38,8 @@ const Workers = () => {
 
   const [experienceTimeModalOpen, setExperienceTimeModalOpen] = useState(false)
 
+  const [workersStatus, setWorkersStatus] = useState()
+
   useEffect(() => {
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
@@ -44,6 +47,32 @@ const Workers = () => {
         setWorkersList(response.data)
       })
   }, [])
+
+  useEffect(() => {
+    if (workersStatus) {
+      if (workersStatus.value == 3) {
+        api
+          .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
+          .then((response) => {
+            let allWorkers = response.data
+
+            setWorkersList(allWorkers)
+          })
+      } else {
+        api
+          .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
+          .then((response) => {
+            let allWorkers = response.data
+
+            const status = workersStatus.value == 1 && true || false
+
+            const workersByStatus = allWorkers.filter((worker) => worker.worker_is_active === status)
+
+            setWorkersList(workersByStatus)
+          })
+      }
+    }
+  }, [workersStatus])
 
   const handleOpenAddWorkerModal = () => {
     setCreateWorkerModalOpen(true)
@@ -111,31 +140,48 @@ const Workers = () => {
       <div className="container">
         <h4>Cadastro de colaboradores</h4>
 
-        <button
-          className="btn btn-warning me-2"
-          onClick={() => initTour(workersSteps)}
-        >
-          <Question />
-        </button>
+        <div className="row mt-3 mb-3">
+          <div className="col">
+            <button
+              className="btn btn-warning me-2"
+              onClick={() => initTour(workersSteps)}
+            >
+              <Question />
+            </button>
 
-        <button
-          id="workerResignation"
-          className="btn btn-danger me-2"
-          onClick={handleOpenResigntaionReasonsReportModal}
-          title="Filtrar demissões"
-        >
-          <ClipboardData />
-        </button>
+            <button
+              id="workerResignation"
+              className="btn btn-danger me-2"
+              onClick={handleOpenResigntaionReasonsReportModal}
+              title="Filtrar demissões"
+            >
+              <ClipboardData />
+            </button>
 
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={handleOpenAddWorkerModal}
-          id="addWorker"
-          title="Adicionar colaborador"
-        >
-          <PersonAdd />
-        </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleOpenAddWorkerModal}
+              id="addWorker"
+              title="Adicionar colaborador"
+            >
+              <PersonAdd />
+            </button>
+          </div>
+
+          <div className="col">
+            <ReactSelect
+              options={[
+                { value: 1, label: "Somente ativos" },
+                { value: 2, label: "Somente inativos" },
+                { value: 3, label: "Sem filtros" },
+              ]}
+              placeholder="Filtrar colaboradores"
+              onChange={(value) => setWorkersStatus(value)}
+              defaultValue={{ value: 3, label: "Sem filtros" }}
+            />
+          </div>
+        </div>
 
         <div className="table-responsive">
           <table className="table table-hover">

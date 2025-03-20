@@ -159,9 +159,6 @@ const CreateWorkerModal = (props) => {
           "timecode": timecode
         }
 
-        console.log(formData.admission_date)
-        debugger
-
         api
           .post("/workers", formData)
           .then((response) => {

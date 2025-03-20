@@ -5,6 +5,8 @@ import ReactSelect from "react-select"
 import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
 import { Printer } from "react-bootstrap-icons"
+import ReactDOMServer from 'react-dom/server'
+import WorkersByTurnPrintContent from "./WorkersByTurnPrintContent"
 
 const WorkersByTurnModal = (props) => {
   const { workersByTurnModalOpen, setWorkersByTurnModalOpen } = props
@@ -52,11 +54,24 @@ const WorkersByTurnModal = (props) => {
   const handleSubmit = () => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/functions/${selectedFunction?.value}/turns/${selectedTurn?.value}`)
-      .then((response) => {
-        setWorkersByTurn(response.data)
-        console.log(response.data)
-        debugger
-      })
+      .then((response) => setWorkersByTurn(response.data))
+  }
+
+  const handlePrintWorkersByTurn = () => {
+    const printableContent = ReactDOMServer.renderToString(
+      <WorkersByTurnPrintContent
+        selectedSubsdiarie={selectedSubsdiarie}
+        workersByTurn={workersByTurn}
+        selectedFunction={selectedFunction}
+        selectedTurn={selectedTurn}
+      />
+    )
+
+    printJS({
+      printable: printableContent,
+      type: 'raw-html',
+      header: null,
+    })
   }
 
   return (
@@ -91,7 +106,7 @@ const WorkersByTurnModal = (props) => {
           workersByTurn && (
             <>
               <div>
-                <button className="btn btn-primary">
+                <button className="btn btn-primary" onClick={handlePrintWorkersByTurn}>
                   <Printer />
                 </button>
               </div>

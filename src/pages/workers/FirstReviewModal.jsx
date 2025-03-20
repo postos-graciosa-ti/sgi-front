@@ -125,6 +125,8 @@ const FirstReviewModal = (props) => {
   }
 
   const handlePrintFirstReview = () => {
+    let assinature = selectedSubsdiarie?.value == 2 && "Daniel Ireno Souza" || selectedSubsdiarie?.value == 3 && "Roberto Rudnick" || "Michel Jacob Brique"
+
     const printableContent = ReactDOMServer.renderToString(
       <FirstReviewPrintContent
         selectedSubsdiarie={selectedSubsdiarie}
@@ -133,6 +135,7 @@ const FirstReviewModal = (props) => {
         subsidiarieCoordinator={subsidiarieCoordinator}
         personalPresentationOptions={personalPresentationOptions}
         firstReviewResponses={firstReviewResponses}
+        assinature={assinature}
       />
     )
 

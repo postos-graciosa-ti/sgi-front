@@ -125,6 +125,8 @@ const SecondReviewModal = (props) => {
   }
 
   const handlePrintSecondReview = () => {
+    let assinature = selectedSubsdiarie?.value == 2 && "Daniel Ireno Souza" || selectedSubsdiarie?.value == 3 && "Roberto Rudnick" || "Michel Jacob Brique"
+
     const printableContent = ReactDOMServer.renderToString(
       <SecondReviewPrintContent
         selectedSubsdiarie={selectedSubsdiarie}
@@ -133,6 +135,7 @@ const SecondReviewModal = (props) => {
         subsidiarieCoordinator={subsidiarieCoordinator}
         personalPresentationOptions={personalPresentationOptions}
         firstReviewResponses={secondReviewResponses}
+        assinature={assinature}
       />
     )
 

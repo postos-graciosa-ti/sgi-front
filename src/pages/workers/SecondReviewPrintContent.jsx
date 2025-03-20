@@ -1,6 +1,6 @@
 import moment from "moment"
 
-const SecondReviewPrintContent = ({ selectedSubsdiarie, selectedWorker, subsidiarieManager, subsidiarieCoordinator, personalPresentationOptions, firstReviewResponses }) => {
+const SecondReviewPrintContent = ({ selectedSubsdiarie, selectedWorker, subsidiarieManager, subsidiarieCoordinator, personalPresentationOptions, firstReviewResponses, assinature }) => {
   return (
     <>
       <div>
@@ -126,11 +126,17 @@ const SecondReviewPrintContent = ({ selectedSubsdiarie, selectedWorker, subsidia
 
       <div className="grid-container">
         <div className="grid-item">
-          Assinatura coordenador: ______________
+          <div>Assinatura por ilustração (superior hierarquico):</div>
+
+          <div>
+            {assinature}
+          </div>
         </div>
 
         <div className="grid-item">
-          Assinatura recursos humanos: ______________
+          <div>Assinatura por ilustração (recursos humanos):</div>
+
+          <div>Reigiane Souza / Mariele Sambrana Vera</div>
         </div>
       </div>
 

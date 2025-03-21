@@ -20,6 +20,7 @@ import SubsidiariesLogs from "./pages/logsPages/SubsidiariesLogs"
 import TurnsLogs from "./pages/logsPages/TurnsLogs"
 import UsersLogs from "./pages/logsPages/UsersLogs"
 import WorkersLogs from "./pages/logsPages/WorkersLogs"
+import Monitoring from "./pages/monitoring/Monitoring"
 import Neighborhood from "./pages/neighborhoods/Neighborhood"
 import Scale from "./pages/scale/Scale"
 import Steps from "./pages/steps/Steps"
@@ -172,6 +173,11 @@ const Routes = createBrowserRouter([
   {
     path: "/applicants",
     element: <PrivateRoute><Applicants /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/monitoring",
+    element: <PrivateRoute><Monitoring /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

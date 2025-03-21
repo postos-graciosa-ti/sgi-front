@@ -1,9 +1,11 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button, Modal } from 'react-bootstrap'
 import { Link, useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
 import useUserSessionStore from "../data/userSession"
 import api from "../services/api"
+import moment from "moment"
+import useWorkersExperienceTimeStore from "../data/workersExperienceTime"
 
 export const ChangePasswordModal = (props) => {
   const { changePasswordModalOpen, setChangePasswordModalOpen } = props
@@ -109,7 +111,25 @@ const Nav = () => {
 
   const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
+  const workersFirstReview = useWorkersExperienceTimeStore(state => state.workersFirstReview)
+
+  const setWorkersFirstReview = useWorkersExperienceTimeStore(state => state.setWorkersFirstReview)
+
+  const workersSecondReview = useWorkersExperienceTimeStore(state => state.workersSecondReview)
+
+  const setWorkersSecondReview = useWorkersExperienceTimeStore(state => state.setWorkersSecondReview)
+
   const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false)
+
+  useEffect(() => {
+    api
+      .get(`/subsidiaries/${selectedSubsidiarie?.value}/workers/experience-time-no-first-review`)
+      .then((response) => setWorkersFirstReview(response?.data))
+
+    api
+      .get(`/subsidiaries/${selectedSubsidiarie?.value}/workers/experience-time-no-second-review`)
+      .then((response) => setWorkersSecondReview(response?.data))
+  }, [])
 
   return (
     <>
@@ -125,6 +145,10 @@ const Nav = () => {
             <ul className="navbar-nav">
               <li className="nav-item">
                 <Link className="nav-link" to="/home">Início</Link>
+              </li>
+
+              <li>
+                <Link className="nav-link" to="/monitoring">Monitoramento</Link>
               </li>
 
               {/* <li className="nav-item">
@@ -225,6 +249,50 @@ const Nav = () => {
         <span className="separator"> | </span>
 
         <span id="support" className="user-info">Suporte: postosgraciosati@gmail.com</span>
+      </div>
+
+      <div className="container">
+        {
+          workersFirstReview && (
+            <div><h5>Funcionários que vão expirar o tempo de experiência (1° período)</h5></div>
+          )
+        }
+
+        <div className="d-inline-flex">
+          {
+            workersFirstReview && (
+              workersFirstReview.map((worker) => (
+                <div>
+                  <div className="alert alert-danger me-1">
+                    {worker.name} ({moment(worker.first_review_date).format("DD-MM-YYYY")})
+                  </div>
+                </div>
+              ))
+            )
+          }
+        </div>
+      </div>
+
+      <div className="container">
+        {
+          workersSecondReview && (
+            <div><h5>Funcionários que vão expirar o tempo de experiência (2° período)</h5></div>
+          )
+        }
+
+        <div className="d-inline-flex">
+          {
+            workersSecondReview && (
+              workersSecondReview.map((worker) => (
+                <div>
+                  <div className="alert alert-danger me-1">
+                    {worker.name} ({moment(worker.second_review_date).format("DD-MM-YYYY")})
+                  </div>
+                </div>
+              ))
+            )
+          }
+        </div>
       </div>
 
       <ChangePasswordModal

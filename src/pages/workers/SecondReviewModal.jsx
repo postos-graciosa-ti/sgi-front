@@ -6,14 +6,31 @@ import Modal from 'react-bootstrap/Modal'
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import useUserSessionStore from '../../data/userSession'
+import useWorkersExperienceTimeStore from "../../data/workersExperienceTime"
 import api from '../../services/api'
-import { approvedOptions, attendanceOptions, cooperationOptions, hierarchyOptions, initiativeOptions, interpersonalRelationshipsOptions, knowledgeOptions, learningOptions, personalPresentationOptions, productivityOptions, punctualityOptions } from "./reviewsOptionsEnum"
+import {
+  approvedOptions,
+  attendanceOptions,
+  cooperationOptions,
+  hierarchyOptions,
+  initiativeOptions,
+  interpersonalRelationshipsOptions,
+  knowledgeOptions,
+  learningOptions,
+  personalPresentationOptions,
+  productivityOptions,
+  punctualityOptions
+} from "./reviewsOptionsEnum"
 import SecondReviewPrintContent from './SecondReviewPrintContent'
 
 const SecondReviewModal = (props) => {
   const { secondReviewModalOpen, setSecondReviewModalOpen, selectedWorker, setSelectedWorker, setExperienceTimeModalOpen } = props
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
+  const setWorkersFirstReview = useWorkersExperienceTimeStore(state => state.setWorkersFirstReview)
+
+  const setWorkersSecondReview = useWorkersExperienceTimeStore(state => state.setWorkersSecondReview)
 
   const [subsidiarieManager, setSubsidiarieManager] = useState()
 
@@ -73,6 +90,14 @@ const SecondReviewModal = (props) => {
   }, [])
 
   const handleClose = () => {
+    api
+      .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-first-review`)
+      .then((response) => setWorkersFirstReview(response?.data))
+
+    api
+      .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-second-review`)
+      .then((response) => setWorkersSecondReview(response?.data))
+
     setSelectedWorker()
 
     setSecondReviewResponses()

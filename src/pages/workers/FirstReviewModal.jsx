@@ -9,11 +9,16 @@ import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 import FirstReviewPrintContent from './FirstReviewPrintContent'
 import { approvedOptions, attendanceOptions, cooperationOptions, hierarchyOptions, initiativeOptions, interpersonalRelationshipsOptions, knowledgeOptions, learningOptions, personalPresentationOptions, productivityOptions, punctualityOptions } from "./reviewsOptionsEnum"
+import useWorkersExperienceTimeStore from '../../data/workersExperienceTime'
 
 const FirstReviewModal = (props) => {
   const { firstReviewModalOpen, setFirstReviewModalOpen, selectedWorker, setSelectedWorker, setExperienceTimeModalOpen } = props
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
+  const setWorkersFirstReview = useWorkersExperienceTimeStore(state => state.setWorkersFirstReview)
+
+  const setWorkersSecondReview = useWorkersExperienceTimeStore(state => state.setWorkersSecondReview)
 
   const [subsidiarieManager, setSubsidiarieManager] = useState()
 
@@ -73,6 +78,14 @@ const FirstReviewModal = (props) => {
   }, [])
 
   const handleClose = () => {
+    api
+      .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-first-review`)
+      .then((response) => setWorkersFirstReview(response?.data))
+
+    api
+      .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-second-review`)
+      .then((response) => setWorkersSecondReview(response?.data))
+
     setSelectedWorker()
 
     setFirstReviewResponses()

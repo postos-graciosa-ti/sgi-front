@@ -6,6 +6,7 @@ import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 import moment from 'moment'
 import axios from 'axios'
+import useWorkersExperienceTimeStore from '../../data/workersExperienceTime'
 
 const EditWorkerModal = (props) => {
   const {
@@ -19,6 +20,10 @@ const EditWorkerModal = (props) => {
   const userSession = useUserSessionStore(state => state.userSession)
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
+  const setWorkersFirstReview = useWorkersExperienceTimeStore(state => state.setWorkersFirstReview)
+
+  const setWorkersSecondReview = useWorkersExperienceTimeStore(state => state.setWorkersSecondReview)
 
   const [enrolment, setEnrolment] = useState()
 
@@ -93,6 +98,14 @@ const EditWorkerModal = (props) => {
   }, [])
 
   const handleClose = () => {
+    api
+      .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-first-review`)
+      .then((response) => setWorkersFirstReview(response?.data))
+
+    api
+      .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-second-review`)
+      .then((response) => setWorkersSecondReview(response?.data))
+
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => setWorkersList(response.data))

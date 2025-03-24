@@ -1,10 +1,12 @@
 import moment from 'moment'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowRightShort } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import FirstReviewModal from './FirstReviewModal'
 import SecondReviewModal from "./SecondReviewModal"
+import api from '../../services/api'
+import useUserSessionStore from '../../data/userSession'
 
 const ExperienceTimeModal = (props) => {
   const {
@@ -14,11 +16,17 @@ const ExperienceTimeModal = (props) => {
     setSelectedWorker
   } = props
 
-  let canOpenReview = moment().isSameOrBefore(moment(selectedWorker?.first_review_date, "YYYY-MM-DD"), "day")
+  const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
+  const [canOpenFirstReviewModal, setCanOpenFirstReviewModal] = useState()
+
+  const [canOpenSecondReviewModal, setCanOpenSecondReviewModal] = useState()
 
   const [firstReviewModalOpen, setFirstReviewModalOpen] = useState(false)
 
   const [secondReviewModalOpen, setSecondReviewModalOpen] = useState(false)
+
+  console.log(moment().isSameOrAfter(selectedWorker?.first_review_date), moment().isSameOrAfter(selectedWorker?.second_review_date))
 
   const handleClose = () => {
     setExperienceTimeModalOpen(false)
@@ -57,8 +65,11 @@ const ExperienceTimeModal = (props) => {
 
               <button
                 className="btn btn-primary"
-                onClick={handleOpenFirstReviewModal}
-                disabled={canOpenReview && true || false}
+                onClick={handleOpenSecondReviewModal}
+                disabled={
+                  moment().isSameOrAfter(selectedWorker?.first_review_date) == true && false ||
+                  moment().isSameOrAfter(selectedWorker?.first_review_date) == false && true
+                }
               >
                 Ir <ArrowRightShort />
               </button>
@@ -72,7 +83,10 @@ const ExperienceTimeModal = (props) => {
               <button
                 className="btn btn-primary"
                 onClick={handleOpenSecondReviewModal}
-                disabled={canOpenReview && true || false}
+                disabled={
+                  moment().isSameOrAfter(selectedWorker?.second_review_date) == true && false ||
+                  moment().isSameOrAfter(selectedWorker?.second_review_date) == false && true
+                }
               >
                 Ir <ArrowRightShort />
               </button>

@@ -16,17 +16,9 @@ const ExperienceTimeModal = (props) => {
     setSelectedWorker
   } = props
 
-  const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
-
-  const [canOpenFirstReviewModal, setCanOpenFirstReviewModal] = useState()
-
-  const [canOpenSecondReviewModal, setCanOpenSecondReviewModal] = useState()
-
   const [firstReviewModalOpen, setFirstReviewModalOpen] = useState(false)
 
   const [secondReviewModalOpen, setSecondReviewModalOpen] = useState(false)
-
-  console.log(moment().isSameOrAfter(selectedWorker?.first_review_date), moment().isSameOrAfter(selectedWorker?.second_review_date))
 
   const handleClose = () => {
     setExperienceTimeModalOpen(false)
@@ -65,7 +57,7 @@ const ExperienceTimeModal = (props) => {
 
               <button
                 className="btn btn-primary"
-                onClick={handleOpenSecondReviewModal}
+                onClick={handleOpenFirstReviewModal}
                 disabled={
                   moment().isSameOrAfter(selectedWorker?.first_review_date) == true && false ||
                   moment().isSameOrAfter(selectedWorker?.first_review_date) == false && true

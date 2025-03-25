@@ -17,11 +17,18 @@ const WorkersByTurnModal = (props) => {
 
   const [functionsOptions, setFunctionsOptions] = useState()
 
+  const fieldsOptions = [
+    { value: "name", label: "Nome" },
+    { value: "admission_date", label: "Data de admissão" },
+  ]
+
   const [selectedTurn, setSelectedTurn] = useState()
 
   const [selectedFunction, setSelectedFunction] = useState()
 
-  const [workersByTurn, setWorkersByTurn] = useState()
+  const [selectedFields, setSelectedFields] = useState()
+
+  const [workersByTurnAndFunction, setWorkersByTurnAndFunction] = useState()
 
   useEffect(() => {
     api
@@ -46,24 +53,30 @@ const WorkersByTurnModal = (props) => {
 
     setSelectedFunction()
 
-    setWorkersByTurn()
-
     setWorkersByTurnModalOpen(false)
   }
 
   const handleSubmit = () => {
+    let arr = []
+
+    selectedFields?.map((field) => {
+      arr.push(field?.value)
+    })
+
+    let formData = {
+      fields: arr
+    }
+
     api
-      .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/functions/${selectedFunction?.value}/turns/${selectedTurn?.value}`)
-      .then((response) => setWorkersByTurn(response.data))
+      .post(`/subsidiaries/${selectedSubsdiarie?.value}/workers/functions/${selectedFunction?.value}/turns/${selectedTurn?.value}`, formData)
+      .then((response) => setWorkersByTurnAndFunction(response.data))
   }
 
   const handlePrintWorkersByTurn = () => {
     const printableContent = ReactDOMServer.renderToString(
       <WorkersByTurnPrintContent
-        selectedSubsdiarie={selectedSubsdiarie}
-        workersByTurn={workersByTurn}
-        selectedFunction={selectedFunction}
-        selectedTurn={selectedTurn}
+        workersByTurnAndFunction={workersByTurnAndFunction}
+        selectedFields={selectedFields}
       />
     )
 
@@ -102,8 +115,17 @@ const WorkersByTurnModal = (props) => {
           />
         </div>
 
+        <div className="mb-3">
+          <ReactSelect
+            placeholder="Campos selecionados"
+            options={fieldsOptions}
+            isMulti
+            onChange={(value) => setSelectedFields(value)}
+          />
+        </div>
+
         {
-          workersByTurn && (
+          workersByTurnAndFunction && (
             <>
               <div>
                 <button className="btn btn-primary" onClick={handlePrintWorkersByTurn}>
@@ -115,19 +137,31 @@ const WorkersByTurnModal = (props) => {
                 <table className="table table-hover">
                   <thead>
                     <tr>
-                      <th>Nome</th>
+                      {
+                        selectedFields?.map((field) => (
+                          <th key={field.value}>
+                            {field.label}
+                          </th>
+                        ))
+                      }
                     </tr>
                   </thead>
 
-                  {
-                    workersByTurn?.map((worker) => (
-                      <tbody>
-                        <tr>
-                          <td>{worker.name}</td>
+                  <tbody>
+                    {
+                      workersByTurnAndFunction?.map((worker, index) => (
+                        <tr key={index}>
+                          {
+                            selectedFields?.map((field) => (
+                              <td key={field.value}>
+                                {worker[field.value]}
+                              </td>
+                            ))
+                          }
                         </tr>
-                      </tbody>
-                    ))
-                  }
+                      ))
+                    }
+                  </tbody>
                 </table>
               </div>
             </>

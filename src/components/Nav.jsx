@@ -251,49 +251,57 @@ const Nav = () => {
         <span id="support" className="user-info">Suporte: postosgraciosati@gmail.com</span>
       </div>
 
-      <div className="container">
-        {
-          workersFirstReview && (
-            <div><h5>Funcionários que vão expirar o tempo de experiência (1° período)</h5></div>
-          )
-        }
+      {
+        workersFirstReview.length > 0 && (
+          <div className="container">
+            {
+              workersFirstReview.length > 0 && (
+                <div><h5>Funcionários que vão expirar o tempo de experiência (1° período)</h5></div>
+              )
+            }
 
-        <div className="d-inline-flex">
-          {
-            workersFirstReview && (
-              workersFirstReview.map((worker) => (
-                <div>
-                  <div className="alert alert-danger me-1">
-                    {worker.name} ({moment(worker.first_review_date).format("DD-MM-YYYY")})
-                  </div>
-                </div>
-              ))
-            )
-          }
-        </div>
-      </div>
+            <div className="d-inline-flex">
+              {
+                workersFirstReview && (
+                  workersFirstReview.map((worker) => (
+                    <div>
+                      <div className="alert alert-danger me-1">
+                        {worker.name} ({moment(worker.first_review_date).format("DD-MM-YYYY")})
+                      </div>
+                    </div>
+                  ))
+                )
+              }
+            </div>
+          </div>
+        )
+      }
 
-      <div className="container">
-        {
-          workersSecondReview && (
-            <div><h5>Funcionários que vão expirar o tempo de experiência (2° período)</h5></div>
-          )
-        }
+      {
+        workersSecondReview.length > 0 && (
+          <div className="container">
+            {
+              workersSecondReview.length > 0 && (
+                <div><h5>Funcionários que vão expirar o tempo de experiência (2° período)</h5></div>
+              )
+            }
 
-        <div className="d-inline-flex">
-          {
-            workersSecondReview && (
-              workersSecondReview.map((worker) => (
-                <div>
-                  <div className="alert alert-danger me-1">
-                    {worker.name} ({moment(worker.second_review_date).format("DD-MM-YYYY")})
-                  </div>
-                </div>
-              ))
-            )
-          }
-        </div>
-      </div>
+            <div className="d-inline-flex">
+              {
+                workersSecondReview && (
+                  workersSecondReview.map((worker) => (
+                    <div>
+                      <div className="alert alert-danger me-1">
+                        {worker.name} ({moment(worker.second_review_date).format("DD-MM-YYYY")})
+                      </div>
+                    </div>
+                  ))
+                )
+              }
+            </div>
+          </div>
+        )
+      }
 
       <ChangePasswordModal
         changePasswordModalOpen={changePasswordModalOpen}

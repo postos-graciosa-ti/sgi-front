@@ -1,6 +1,6 @@
 import moment from "moment"
 import { useEffect, useState } from "react"
-import { ArrowClockwise, ClipboardData, Clock, Pen, PersonAdd, PersonBadge, PersonGear, Question, SlashCircle } from "react-bootstrap-icons"
+import { ArrowClockwise, ArrowsCollapse, ArrowsExpand, ArrowsFullscreen, ArrowUpRight, ClipboardData, Clock, Filter, Funnel, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonX, Question, SlashCircle } from "react-bootstrap-icons"
 import ReactDOMServer from 'react-dom/server'
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
@@ -17,6 +17,8 @@ import ResignationReasonsReportModal from "./ResignationReasonsReportModal"
 import WorkerNotationModal from "./WorkerNotationModal"
 import ReactSelect from "react-select"
 import WorkersByTurnModal from "./WorkersByTurnModal"
+import NrModal from "./NrModal"
+import WorkerInfoModal from "./WorkerInfoModal"
 
 const Workers = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -42,6 +44,10 @@ const Workers = () => {
   const [workersStatus, setWorkersStatus] = useState()
 
   const [workersByTurnModalOpen, setWorkersByTurnModalOpen] = useState(false)
+
+  const [nrModalOpen, setNrModalOpen] = useState(false)
+
+  const [workerInfoModalOpen, setWorkerInfoModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -140,6 +146,16 @@ const Workers = () => {
     setWorkersByTurnModalOpen(true)
   }
 
+  const handleOpenGetNrList = () => {
+    setNrModalOpen(true)
+  }
+
+  const handleOpenWorkerInfoModal = (worker) => {
+    setSelectedWorker(worker)
+
+    setWorkerInfoModalOpen(true)
+  }
+
   return (
     <>
       <Nav />
@@ -162,14 +178,15 @@ const Workers = () => {
               onClick={handleOpenResigntaionReasonsReportModal}
               title="Filtrar demissões"
             >
-              <ClipboardData />
+              <Funnel />
             </button>
 
             <button
               className="btn btn-success me-2"
               onClick={handleOpenWorkerByTurnModal}
+              title="Filtrar colaboradores por turno e por função"
             >
-              <ClipboardData />
+              <Funnel />
             </button>
 
             <button
@@ -180,6 +197,13 @@ const Workers = () => {
               title="Adicionar colaborador"
             >
               <PersonAdd />
+            </button>
+
+            <button
+              className="btn btn-primary ms-2"
+              onClick={handleOpenGetNrList}
+            >
+              NR20
             </button>
           </div>
 
@@ -198,6 +222,98 @@ const Workers = () => {
         </div>
 
         <div className="table-responsive">
+          <table className="table table-hover">
+            <thead>
+              <tr>
+                <th></th>
+
+                <th>Nome</th>
+
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {
+                workersList?.map((worker) => (
+                  <tr className={!worker.worker_is_active ? "table-danger" : "table-success"}>
+                    <td>
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() => handleOpenWorkerInfoModal(worker)}
+                      >
+                        <ArrowUpRight />
+                      </button>
+                    </td>
+
+                    <td>{worker.worker_name}</td>
+
+                    <td>
+                      <button
+                        className="btn btn-warning me-2 mt-2"
+                        onClick={() => handleOpenEditWorkerModal(worker)}
+                        id="editWorker"
+                        aria-label={`Editar informações de ${worker.worker_name}`}
+                        title="Editar colaborador"
+                      >
+                        <PersonGear />
+                      </button>
+
+                      <button
+                        className="btn btn-primary me-2 mt-2"
+                        title="cara-crachá"
+                        onClick={() => handleIssueBadge(worker)}
+                      >
+                        <PersonBadge />
+                      </button>
+
+                      <button
+                        className="btn btn-primary me-2 mt-2"
+                        onClick={() => handleOpenWorkerNotation(worker)}
+                        title="Adicionar observação"
+                        id="workerObservation"
+                      >
+                        <Pen />
+                      </button>
+
+                      <button
+                        className="btn btn-primary me-2 mt-2"
+                        title="Avaliação de tempo de experiência"
+                        onClick={() => handleOpenExperienceTimeModal(worker)}
+                      >
+                        <HourglassSplit />
+                      </button>
+
+                      <button
+                        className="btn btn-danger me-2 mt-2"
+                        onClick={() => handleOpenDeleteWorkerModal(worker)}
+                        id="deleteWorker"
+                        aria-label={`Excluir ${worker.worker_name}`}
+                        title="Demitir colaborador"
+                      >
+                        <PersonX />
+                      </button>
+
+                      {
+                        !worker.worker_is_active && (
+                          <button
+                            className="btn btn-warning me-2 mt-2"
+                            onClick={() => handleOpenReactivateWorkerModal(worker)}
+                            title="readmitir"
+                          >
+                            <ArrowClockwise />
+                          </button>
+                        )
+                      }
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+
+        {/* <div className="table-responsive">
           <table className="table table-hover">
             <thead>
               <tr>
@@ -293,7 +409,7 @@ const Workers = () => {
               ))}
             </tbody>
           </table>
-        </div>
+        </div> */}
       </div>
 
       <CreateWorkerModal
@@ -348,6 +464,18 @@ const Workers = () => {
       <WorkersByTurnModal
         workersByTurnModalOpen={workersByTurnModalOpen}
         setWorkersByTurnModalOpen={setWorkersByTurnModalOpen}
+      />
+
+      <NrModal
+        nrModalOpen={nrModalOpen}
+        setNrModalOpen={setNrModalOpen}
+      />
+
+      <WorkerInfoModal
+        workerInfoModalOpen={workerInfoModalOpen}
+        setWorkerInfoModalOpen={setWorkerInfoModalOpen}
+        selectedWorker={selectedWorker}
+        setSelectedWorker={setSelectedWorker}
       />
     </>
   )

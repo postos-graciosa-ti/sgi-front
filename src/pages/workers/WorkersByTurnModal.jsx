@@ -18,7 +18,15 @@ const WorkersByTurnModal = (props) => {
   const [functionsOptions, setFunctionsOptions] = useState()
 
   const fieldsOptions = [
-    { value: "name", label: "Nome" },
+    { value: "esocial", label: "E-social" },
+    { value: "enrolment", label: "Matrícula" },
+    { value: "sales_code", label: "Código de vendas" },
+    { value: "timecode", label: "Código de ponto" },
+    { value: "worker_name", label: "Nome" },
+    { value: "function_name", label: "Função" },
+    { value: "turn_name", label: "Turno" },
+    { value: "cost_center_name", label: "Centro de custo" },
+    { value: "department_name", label: "Setor" },
     { value: "admission_date", label: "Data de admissão" },
   ]
 
@@ -69,7 +77,10 @@ const WorkersByTurnModal = (props) => {
 
     api
       .post(`/subsidiaries/${selectedSubsdiarie?.value}/workers/functions/${selectedFunction?.value}/turns/${selectedTurn?.value}`, formData)
-      .then((response) => setWorkersByTurnAndFunction(response.data))
+      .then((response) => {
+        console.log(response)
+        setWorkersByTurnAndFunction(response.data)
+      })
   }
 
   const handlePrintWorkersByTurn = () => {

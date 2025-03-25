@@ -120,28 +120,37 @@ const PrintModal = (props) => {
     await api
       .post(`/subsidiaries/${selectedSubsdiarie?.value}/scales/print`, formData)
       .then((response) => {
-        const printableContent = ReactDOMServer.renderToString(
-          printContent(
-            response.data,
-            onDuty,
-            formData.start_date,
-            formData.end_date,
-            selectedTurn,
-            selectedFunction,
-            selectedSubsdiarie,
-            subsidiarieData.cnpj,
-            userSession,
-            webAdress
-          )
-        )
+        let scalesPrint = response.data
 
-        printJS({
-          printable: printableContent,
-          type: 'raw-html',
-          header: null
-        })
+        api
+          .get(`/subsidiaries/${selectedSubsdiarie?.value}/dates-events`)
+          .then((response) => {
+            let events = response.data
 
-        handleClose()
+            const printableContent = ReactDOMServer.renderToString(
+              printContent(
+                scalesPrint,
+                onDuty,
+                formData.start_date,
+                formData.end_date,
+                selectedTurn,
+                selectedFunction,
+                selectedSubsdiarie,
+                subsidiarieData.cnpj,
+                userSession,
+                webAdress,
+                events,
+              )
+            )
+
+            printJS({
+              printable: printableContent,
+              type: 'raw-html',
+              header: null
+            })
+
+            handleClose()
+          })
       })
   }
 

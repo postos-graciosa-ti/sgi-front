@@ -1,6 +1,6 @@
 import moment from "moment"
 
-const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn, selectedFunction, selectedSubsdiarie, subsidiarieCnpj, userSession, webAdress) => {
+const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn, selectedFunction, selectedSubsdiarie, subsidiarieCnpj, userSession, webAdress, events) => {
 
   const translateWeekday = (weekday) => ({
     Monday: "Segunda-Feira",
@@ -87,6 +87,16 @@ const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn, sele
 
           <div style={{ fontSize: '11px' }}>{onDuty}</div>
         </div>
+
+        <div>
+          <h3>Eventos</h3>
+        </div>
+
+        {
+          events?.map((evt) => (
+            <div>{evt.event_name} ({evt.date})</div>
+          ))
+        }
 
         <div>
           <h3 style={{ fontSize: '13px' }}>Assinaturas:</h3>

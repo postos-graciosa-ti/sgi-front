@@ -75,6 +75,8 @@ const Scale = () => {
 
   const [hollidaysModalOpen, setHollidaysModalOpen] = useState(false)
 
+  const [allHollidays, setAllHollidays] = useState()
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
@@ -130,7 +132,28 @@ const Scale = () => {
       .get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
       .then((response) => setScalesList(response.data))
 
+    const currentDate = new Date()
+
+    const currentYear = currentDate.getFullYear()
+
+    api
+      .get(`https://brasilapi.com.br/api/feriados/v1/${currentYear}`)
+      .then((response) => {
+        let datesArr = [
+          {
+            "date": `${currentYear}-09-03`,
+            "name": "Aniversário de Joinville",
+            "type": "municipal"
+          },
+          ...response.data
+        ].sort((a, b) => new Date(a.date) - new Date(b.date))
+
+        setAllHollidays(datesArr)
+      })
+
   }, [])
+
+  console.log(allHollidays)
 
   useEffect(() => {
     if (selectedSubsdiarie && selectedFunction && selectedTurn) {
@@ -417,6 +440,12 @@ const Scale = () => {
     const isCaixaFunction = selectedFunction?.value == caixasId?.id
 
     const dayOfWeek = moment(date).format("dddd")
+
+    const formattedDate = moment(date).startOf("day").format("YYYY-MM-DD")
+
+    const isHoliday = allHollidays?.some(holiday => holiday.date === formattedDate)
+
+    if (isHoliday) return true
 
     if (isCaixaFunction) {
       return !(dayOfWeek === "Tuesday" || dayOfWeek === "Wednesday")

@@ -147,17 +147,17 @@ const Nav = () => {
                 <Link className="nav-link" to="/home">Início</Link>
               </li>
 
-              <li>
+              {/* <li>
                 <Link className="nav-link" to="/monitoring">Monitoramento</Link>
-              </li>
+              </li> */}
 
               {/* <li className="nav-item">
                 <Link className="nav-link" to="/candidates">Processos Seletivos</Link>
               </li> */}
 
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link className="nav-link" to="/applicants">Processos Seletivos</Link>
-              </li>
+              </li> */}
 
               {/* <li className="nav-item">
                 <Link className="nav-link" to="/subsidiarie-status">Status</Link>
@@ -195,7 +195,7 @@ const Nav = () => {
                 userSession.role_id === 1 && (
                   <li className="nav-item dropdown">
                     <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      Logs
+                      Histórico de alterações
                     </a>
 
                     <ul className="dropdown-menu">

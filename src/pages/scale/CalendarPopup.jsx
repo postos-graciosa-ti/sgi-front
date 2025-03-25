@@ -1,8 +1,11 @@
 import moment from 'moment';
+import { useEffect, useState } from 'react';
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { InfoCircle } from "react-bootstrap-icons";
+import { Dash, InfoCircle, Plus } from "react-bootstrap-icons";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import useUserSessionStore from '../../data/userSession';
+import api from '../../services/api';
 
 const CalendarPopup = (props) => {
   const {
@@ -18,6 +21,44 @@ const CalendarPopup = (props) => {
   } = props
 
   let isHolliday = hollidays?.find((holiday) => holiday.date == moment(selectedDate).format("YYYY-MM-DD"))
+
+  const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
+  const [dateEventList, setDateEventList] = useState()
+
+  const [dateEvent, setDateEvent] = useState()
+
+  useEffect(() => {
+    api
+      .get(`/subsidiaries/${selectedSubsidiarie?.value}/dates/${moment(selectedDate).format("YYYY-MM-DD")}/dates-events`)
+      .then((response) => setDateEventList(response.data))
+
+  }, [calendarPopupOpen])
+
+  const handleAddDateEvent = () => {
+    let formData = {
+      event_name: dateEvent,
+      date: moment(selectedDate).format("YYYY-MM-DD")
+    }
+
+    api
+      .post(`/subsidiaries/${selectedSubsidiarie?.value}/dates-events`, formData)
+      .then(() => {
+        api
+          .get(`/subsidiaries/${selectedSubsidiarie?.value}/dates/${moment(selectedDate).format("YYYY-MM-DD")}/dates-events`)
+          .then((response) => setDateEventList(response.data))
+      })
+  }
+
+  const handleDeleteDateEvent = (event) => {
+    api
+      .delete(`/subsidiaries/${selectedSubsidiarie?.value}/dates-events/${event.id}`)
+      .then(() => {
+        api
+          .get(`/subsidiaries/${selectedSubsidiarie?.value}/dates/${moment(selectedDate).format("YYYY-MM-DD")}/dates-events`)
+          .then((response) => setDateEventList(response.data))
+      })
+  }
 
   return (
     <Modal
@@ -44,16 +85,48 @@ const CalendarPopup = (props) => {
 
       <Modal.Body>
         {
-          isHolliday && (
-            <>
-              Não é possível adicionar {moment(selectedDate).format("DD-MM-YYYY")} como folga
-            </>
-          ) || (
-            <>
-              Adicionar {moment(selectedDate).format("DD-MM-YYYY")} como folga?
-            </>
-          )
+          dateEventList && dateEventList.map((event) => (
+            <div className="row mb-3">
+              <div className="col-10">
+                <input
+                  type="text"
+                  className="form-control"
+                  value={event.event_name}
+                  disabled
+                />
+              </div>
+
+              <div className="col-2">
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleDeleteDateEvent(event)}
+                >
+                  <Dash />
+                </button>
+              </div>
+            </div>
+          ))
         }
+
+        <div className="row">
+          <div className="col-10">
+            <input
+              type="text"
+              placeholder="Deseja adicionar um evento? (opcional)"
+              className="form-control"
+              onChange={(e) => setDateEvent(e.target.value)}
+            />
+          </div>
+
+          <div className="col-2">
+            <button
+              className="btn btn-warning"
+              onClick={handleAddDateEvent}
+            >
+              <Plus />
+            </button>
+          </div>
+        </div>
       </Modal.Body>
 
       <Modal.Footer>

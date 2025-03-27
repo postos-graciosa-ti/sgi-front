@@ -155,6 +155,12 @@ const CreateWorkerModal = (props) => {
 
   const [previousExperience, setPreviousExperience] = useState()
 
+  const [monthWage, setMonthWage] = useState()
+
+  const [hourWage, setHourWage] = useState()
+
+  const [journeyWage, setJourneyWage] = useState()
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
@@ -382,6 +388,10 @@ const CreateWorkerModal = (props) => {
           "union_contribute_current_year": unionContributeCurrentYear?.value,
           "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value,
           "previous_experience": previousExperience?.value,
+
+          "month_wage": monthWage,
+          "hour_wage": hourWage,
+          "journey_wage": journeyWage,
         }
 
         console.log(formData)
@@ -926,6 +936,33 @@ const CreateWorkerModal = (props) => {
               placeholder="Experiência prévia na função?"
               options={[{ value: true, label: "sim" }, { value: false, label: "não" }]}
               onChange={(value) => setPreviousExperience(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              placeholder="Mensalista"
+              type="text"
+              className="form-control"
+              onChange={(e) => setMonthWage(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              placeholder="Valor/horista"
+              type="text"
+              className="form-control"
+              onChange={(e) => setHourWage(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              placeholder="Proporcional a jornada"
+              type="text"
+              className="form-control"
+              onChange={(e) => setJourneyWage(e.target.value)}
             />
           </div>
         </Modal.Body>

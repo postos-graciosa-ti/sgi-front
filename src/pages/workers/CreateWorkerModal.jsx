@@ -101,6 +101,10 @@ const CreateWorkerModal = (props) => {
 
   const [selectedNationality, setSelectedNationality] = useState()
 
+  const [fathername, setFathername] = useState()
+
+  const [mothername, setMothername] = useState()
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
@@ -292,6 +296,9 @@ const CreateWorkerModal = (props) => {
           "birthcity": birthcity?.value,
           "birthstate": selectedBirthstate?.value,
           "nationality": selectedNationality?.value,
+
+          "fathername": fathername,
+          "mothername": mothername,
         }
 
         console.log(formData)
@@ -599,6 +606,24 @@ const CreateWorkerModal = (props) => {
               placeholder="Nacionalidade"
               options={nationalityOptions}
               onChange={(value) => setSelectedNationality(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Nome do pai"
+              onChange={(e) => setFathername(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Nome da mãe"
+              onChange={(e) => setMothername(e.target.value)}
             />
           </div>
         </Modal.Body>

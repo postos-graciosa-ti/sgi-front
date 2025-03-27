@@ -123,6 +123,12 @@ const CreateWorkerModal = (props) => {
 
   const [pisRegisterDate, setPisRegisterDate] = useState()
 
+  const [votantTitle, setVotantTitle] = useState()
+
+  const [votantZone, setVotantZone] = useState()
+
+  const [votantSession, setVotantSession] = useState()
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
@@ -330,6 +336,10 @@ const CreateWorkerModal = (props) => {
           "military_cert_number": militaryCertNumber,
           "pis": pis,
           "pis_register_date": pisRegisterDate,
+
+          "vontant_title": votantTitle,
+          "votant_zone": votantZone,
+          "votant_session": votantSession,
         }
 
         console.log(formData)
@@ -735,6 +745,33 @@ const CreateWorkerModal = (props) => {
               placeholder='Data de cadastro de PIS'
               className="form-control"
               onChange={(e) => setPisRegisterDate(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder='Título de eleitor'
+              className="form-control"
+              onChange={(e) => setVotantTitle(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder='Zona de eleitor'
+              className="form-control"
+              onChange={(e) => setVotantZone(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder='Sessão de eleitor'
+              className="form-control"
+              onChange={(e) => setVotantSession(e.target.value)}
             />
           </div>
         </Modal.Body>

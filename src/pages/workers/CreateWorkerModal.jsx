@@ -105,6 +105,8 @@ const CreateWorkerModal = (props) => {
 
   const [mothername, setMothername] = useState()
 
+  const [hasChildren, setHasChildren] = useState(false)
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
@@ -299,6 +301,9 @@ const CreateWorkerModal = (props) => {
 
           "fathername": fathername,
           "mothername": mothername,
+
+          "has_children": hasChildren?.value,
+          "children_data": "[]"
         }
 
         console.log(formData)
@@ -624,6 +629,14 @@ const CreateWorkerModal = (props) => {
               className="form-control"
               placeholder="Nome da mãe"
               onChange={(e) => setMothername(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <ReactSelect
+              placeholder="Filhos menores de 14?"
+              options={[{ value: true, label: "sim" }, { value: false, label: "não" }]}
+              onChange={(value) => setHasChildren(value)}
             />
           </div>
         </Modal.Body>

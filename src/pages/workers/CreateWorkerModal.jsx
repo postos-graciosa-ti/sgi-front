@@ -107,6 +107,16 @@ const CreateWorkerModal = (props) => {
 
   const [hasChildren, setHasChildren] = useState(false)
 
+  const [cpf, setCpf] = useState()
+
+  const [rg, setRg] = useState()
+
+  const [rgIssuingAgency, setRgIssuingAgency] = useState()
+
+  const [rgState, setRgState] = useState()
+
+  const [rgExpeditionDate, setRgExpeditionDate] = useState()
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
@@ -303,7 +313,13 @@ const CreateWorkerModal = (props) => {
           "mothername": mothername,
 
           "has_children": hasChildren?.value,
-          "children_data": "[]"
+          "children_data": "[]",
+
+          "cpf": cpf,
+          "rg": rg,
+          "rg_issuing_agency": rgIssuingAgency,
+          "rg_state": rgState?.value,
+          "rg_expedition_date": rgExpeditionDate,
         }
 
         console.log(formData)
@@ -637,6 +653,51 @@ const CreateWorkerModal = (props) => {
               placeholder="Filhos menores de 14?"
               options={[{ value: true, label: "sim" }, { value: false, label: "não" }]}
               onChange={(value) => setHasChildren(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder='CPF'
+              onChange={(e) => setCpf(e.target.value)}
+              className="form-control"
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder='RG'
+              onChange={(e) => setRg(e.target.value)}
+              className="form-control"
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder='Órgão emissor'
+              onChange={(e) => setRgIssuingAgency(e.target.value)}
+              className="form-control"
+            />
+          </div>
+
+          <div className="mb-3">
+            <ReactSelect
+              placeholder="Estado de RG"
+              options={statesOptions}
+              onChange={(value) => setRgState(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label><b>Data de expedição</b></label>
+
+            <input
+              type="date"
+              className="form-control"
+              onChange={(e) => setRgExpeditionDate(e.target.value)}
             />
           </div>
         </Modal.Body>

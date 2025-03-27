@@ -137,6 +137,14 @@ const CreateWorkerModal = (props) => {
 
   const [ctpsEmissionDate, setCtpsEmissionDate] = useState()
 
+  const [cnh, setCnh] = useState()
+
+  const [cnhCategory, setCnhCategory] = useState()
+
+  const [cnhEmissionDate, setCnhEmissionDate] = useState()
+
+  const [cnhValidDate, setCnhValidDate] = useState()
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
@@ -352,7 +360,12 @@ const CreateWorkerModal = (props) => {
           "ctps": ctps,
           "ctps_serie": ctpsSerie,
           "ctps_state": ctpsState?.value,
-          "ctps_emission_date": ctpsEmissionDate
+          "ctps_emission_date": ctpsEmissionDate,
+
+          "cnh": cnh,
+          "cnh_category": cnhCategory,
+          "cnh_emition_date": cnhEmissionDate,
+          "cnh_valid_date": cnhValidDate,
         }
 
         console.log(formData)
@@ -819,6 +832,44 @@ const CreateWorkerModal = (props) => {
               placeholder='Data de emissão CTPS'
               className="form-control"
               onChange={(e) => setCtpsEmissionDate(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder='CNH'
+              className="form-control"
+              onChange={(e) => setCnh(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder='Categoria de CNH'
+              className="form-control"
+              onChange={(e) => setCnhCategory(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label><b>Data de emissão de CNH</b></label>
+
+            <input
+              type="date"
+              className="form-control"
+              onChange={(e) => setCnhEmissionDate(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label><b>Validade de CNH</b></label>
+
+            <input
+              type="date"
+              className="form-control"
+              onChange={(e) => setCnhValidDate(e.target.value)}
             />
           </div>
         </Modal.Body>

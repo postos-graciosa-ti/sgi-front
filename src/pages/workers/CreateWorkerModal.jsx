@@ -53,6 +53,34 @@ const CreateWorkerModal = (props) => {
 
   const [esocial, setEsocial] = useState()
 
+  const [gendersOptions, setGendersOptions] = useState()
+
+  const [selectedGender, setSelectedGender] = useState()
+
+  const [civilStatusOptions, setCivilStatusOptions] = useState()
+
+  const [selectedCivilStatus, setSelectedCivilStatus] = useState()
+
+  const [street, setStreet] = useState()
+
+  const [streetNumber, setStreetNumber] = useState()
+
+  const [streetComplement, setStreetComplement] = useState()
+
+  const [neighborhoodOptions, setNeighborhoodOptions] = useState()
+
+  const [selectedNeighborhood, setSelectedNeighborhood] = useState()
+
+  const [cep, setSelectedCep] = useState()
+
+  const [citiesOptions, setCitiesOptions] = useState()
+
+  const [selectedCity, setSelectedCity] = useState()
+
+  const [statesOptions, setStatesOptions] = useState()
+
+  const [selectedState, setSelectedState] = useState()
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
@@ -108,6 +136,46 @@ const CreateWorkerModal = (props) => {
         })
 
         setDepartmentsOptions(options)
+      })
+
+    api
+      .get("/genders")
+      .then((response) => {
+        let options = response?.data.map((gender) => ({ value: gender.id, label: gender.name }))
+
+        setGendersOptions(options)
+      })
+
+    api
+      .get("/civil-status")
+      .then((response) => {
+        let options = response?.data.map((civilStatus) => ({ value: civilStatus.id, label: civilStatus.name }))
+
+        setCivilStatusOptions(options)
+      })
+
+    api
+      .get("/neighborhoods")
+      .then((response) => {
+        let options = response?.data.map((neighborhood) => ({ value: neighborhood.id, label: neighborhood.name }))
+
+        setNeighborhoodOptions(options)
+      })
+
+    api
+      .get("/cities")
+      .then((response) => {
+        let options = response?.data.map((city) => ({ value: city.id, label: city.name }))
+
+        setCitiesOptions(options)
+      })
+
+    api
+      .get("/states")
+      .then((response) => {
+        let options = response?.data.map((state) => ({ value: state.id, label: state.name }))
+
+        setStatesOptions(options)
       })
 
   }, [])
@@ -174,47 +242,65 @@ const CreateWorkerModal = (props) => {
           "sales_code": salesCode,
           "picture": cloudinaryResponse?.data.secure_url,
           "timecode": timecode,
-          "esocial": esocial
+          "esocial": esocial,
+
+          "gender_id": selectedGender?.value,
+          "civil_status_id": selectedCivilStatus?.value,
+
+          "street": street,
+          "street_number": streetNumber,
+          "street_complement": streetComplement,
+          "neighborhood_id": selectedNeighborhood?.value,
+          "cep": cep,
+          "city": selectedCity?.value,
+          "state": selectedState?.value,
         }
+
+        console.log(formData)
+        debugger
 
         api
           .post("/workers", formData)
           .then((response) => {
-            let newWorkerData = response.data
 
-            let newWorkerFunc = functionsOptions.find((func) => func.value == newWorkerData.function_id)
+            console.log(response)
+            debugger
 
-            let newWorkerTurn = turnsOptions.find((turn) => turn.value == newWorkerData.turn_id)
+            // let newWorkerData = response.data
 
-            let newWorkerCostCenter = costCenterOptions.find((costCenter) => costCenter.value == newWorkerData.cost_center_id)
+            // let newWorkerFunc = functionsOptions.find((func) => func.value == newWorkerData.function_id)
 
-            let newWorkerDepartment = departmentsOptions.find((department) => department.value == newWorkerData.department_id)
+            // let newWorkerTurn = turnsOptions.find((turn) => turn.value == newWorkerData.turn_id)
 
-            let logStr = `
-              ${userSession.name} criou ${newWorkerData.name}
-              (
-                nome=${newWorkerData.name},
-                função=${newWorkerFunc.label},
-                filial=${selectedSubsdiarie.label}),
-                ativo=sim,
-                turno=${newWorkerTurn.label},
-                centro de custo=${newWorkerCostCenter.label},
-                setor=${newWorkerDepartment.label},
-                data de admissão=${newWorkerData.admission_date}
-              )
-            `
+            // let newWorkerCostCenter = costCenterOptions.find((costCenter) => costCenter.value == newWorkerData.cost_center_id)
 
-            let logFormData = {
-              "log_str": logStr,
-              "happened_at": moment(new Date()).format("HH:mm"),
-              "happened_at_time": moment(new Date()).format("DD-MM-YYYY"),
-              "user_id": userSession.id,
-              "subsidiarie_id": selectedSubsdiarie.value
-            }
+            // let newWorkerDepartment = departmentsOptions.find((department) => department.value == newWorkerData.department_id)
 
-            api
-              .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers`, logFormData)
-              .then(() => handleClose())
+            // let logStr = `
+            //   ${userSession.name} criou ${newWorkerData.name}
+            //   (
+            //     nome=${newWorkerData.name},
+            //     função=${newWorkerFunc.label},
+            //     filial=${selectedSubsdiarie.label}),
+            //     ativo=sim,
+            //     turno=${newWorkerTurn.label},
+            //     centro de custo=${newWorkerCostCenter.label},
+            //     setor=${newWorkerDepartment.label},
+            //     data de admissão=${newWorkerData.admission_date}
+            //   )
+            // `
+
+            // let logFormData = {
+            //   "log_str": logStr,
+            //   "happened_at": moment(new Date()).format("HH:mm"),
+            //   "happened_at_time": moment(new Date()).format("DD-MM-YYYY"),
+            //   "user_id": userSession.id,
+            //   "subsidiarie_id": selectedSubsdiarie.value
+            // }
+
+            // api
+            //   .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers`, logFormData)
+            //   .then(() => handleClose())
           })
       })
   }
@@ -232,6 +318,10 @@ const CreateWorkerModal = (props) => {
         </Modal.Header>
 
         <Modal.Body>
+          <div>
+            <h5>Dados de trabalho</h5>
+          </div>
+
           <div className="mb-3">
             <input
               type="text"
@@ -322,6 +412,86 @@ const CreateWorkerModal = (props) => {
               type="file"
               className="form-control"
               onChange={(e) => setPicture(e.target.files[0])}
+            />
+          </div>
+
+          <div>
+            <h5>Ficha da contabilidade</h5>
+          </div>
+
+          <div className="mb-3">
+            <ReactSelect
+              placeholder="Genero"
+              options={gendersOptions}
+              onChange={(value) => setSelectedGender(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <ReactSelect
+              placeholder="Estado civil"
+              options={civilStatusOptions}
+              onChange={(value) => setSelectedCivilStatus(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Logradouro"
+              onChange={(e) => setStreet(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Número"
+              onChange={(e) => setStreetNumber(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Complemento"
+              onChange={(e) => setStreetComplement(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <ReactSelect
+              placeholder="Bairro"
+              options={neighborhoodOptions}
+              onChange={(value) => setSelectedNeighborhood(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="CEP"
+              onChange={(e) => setSelectedCep(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <ReactSelect
+              placeholder="Cidade"
+              options={citiesOptions}
+              onChange={(value) => setSelectedCity(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <ReactSelect
+              placeholder="Estado"
+              options={statesOptions}
+              onChange={(value) => setSelectedState(value)}
             />
           </div>
         </Modal.Body>

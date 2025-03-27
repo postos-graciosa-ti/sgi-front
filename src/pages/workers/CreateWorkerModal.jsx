@@ -145,6 +145,16 @@ const CreateWorkerModal = (props) => {
 
   const [cnhValidDate, setCnhValidDate] = useState()
 
+  const [firstJob, setFirstJob] = useState()
+
+  const [wasEmployee, setWasEmployee] = useState()
+
+  const [unionContributeCurrentYear, setUnionContributeCurrentYear] = useState()
+
+  const [receivingUnemploymentInsurance, setReceivingUnemploymentInsurance] = useState()
+
+  const [previousExperience, setPreviousExperience] = useState()
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
@@ -366,6 +376,12 @@ const CreateWorkerModal = (props) => {
           "cnh_category": cnhCategory,
           "cnh_emition_date": cnhEmissionDate,
           "cnh_valid_date": cnhValidDate,
+
+          "firstJob": firstJob?.value,
+          "was_employee": wasEmployee?.value,
+          "union_contribute_current_year": unionContributeCurrentYear?.value,
+          "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value,
+          "previous_experience": previousExperience?.value,
         }
 
         console.log(formData)
@@ -870,6 +886,46 @@ const CreateWorkerModal = (props) => {
               type="date"
               className="form-control"
               onChange={(e) => setCnhValidDate(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <ReactSelect
+              placeholder="Primeiro emprego?"
+              options={[{ value: true, label: "sim" }, { value: false, label: "não" }]}
+              onChange={(value) => setFirstJob(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <ReactSelect
+              placeholder="Já foi empregado da empresa?"
+              options={[{ value: true, label: "sim" }, { value: false, label: "não" }]}
+              onChange={(value) => setWasEmployee(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <ReactSelect
+              placeholder="Contribuição sindical nesse ano?"
+              options={[{ value: true, label: "sim" }, { value: false, label: "não" }]}
+              onChange={(value) => setUnionContributeCurrentYear(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <ReactSelect
+              placeholder="Recebendo seguro-desemprego?"
+              options={[{ value: true, label: "sim" }, { value: false, label: "não" }]}
+              onChange={(value) => setReceivingUnemploymentInsurance(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <ReactSelect
+              placeholder="Experiência prévia na função?"
+              options={[{ value: true, label: "sim" }, { value: false, label: "não" }]}
+              onChange={(value) => setPreviousExperience(value)}
             />
           </div>
         </Modal.Body>

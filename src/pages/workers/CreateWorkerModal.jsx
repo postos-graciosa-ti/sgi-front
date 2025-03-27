@@ -129,6 +129,14 @@ const CreateWorkerModal = (props) => {
 
   const [votantSession, setVotantSession] = useState()
 
+  const [ctps, setCtps] = useState()
+
+  const [ctpsSerie, setCtpsSerie] = useState()
+
+  const [ctpsState, setCtpsState] = useState()
+
+  const [ctpsEmissionDate, setCtpsEmissionDate] = useState()
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
@@ -340,6 +348,11 @@ const CreateWorkerModal = (props) => {
           "vontant_title": votantTitle,
           "votant_zone": votantZone,
           "votant_session": votantSession,
+
+          "ctps": ctps,
+          "ctps_serie": ctpsSerie,
+          "ctps_state": ctpsState?.value,
+          "ctps_emission_date": ctpsEmissionDate
         }
 
         console.log(formData)
@@ -772,6 +785,40 @@ const CreateWorkerModal = (props) => {
               placeholder='Sessão de eleitor'
               className="form-control"
               onChange={(e) => setVotantSession(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder='CTPS'
+              className="form-control"
+              onChange={(e) => setCtps(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder='Série de CTPS'
+              className="form-control"
+              onChange={(e) => setCtpsSerie(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <ReactSelect
+              options={statesOptions}
+              onChange={(value) => setCtpsState(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="date"
+              placeholder='Data de emissão CTPS'
+              className="form-control"
+              onChange={(e) => setCtpsEmissionDate(e.target.value)}
             />
           </div>
         </Modal.Body>

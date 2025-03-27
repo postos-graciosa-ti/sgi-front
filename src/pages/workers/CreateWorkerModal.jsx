@@ -81,6 +81,26 @@ const CreateWorkerModal = (props) => {
 
   const [selectedState, setSelectedState] = useState()
 
+  const [selectedPhone, setSelectedPhone] = useState()
+
+  const [selectedMobile, setSelectedMobile] = useState()
+
+  const [email, setEmail] = useState()
+
+  const [ethnicitiesOptions, setEthnicitiesOptions] = useState()
+
+  const [selectedEthnicity, setSelectedEthnicity] = useState()
+
+  const [birthdate, setBirthdate] = useState()
+
+  const [birthcity, setBirthcity] = useState()
+
+  const [selectedBirthstate, setSelectedBirthstate] = useState()
+
+  const nationalityOptions = [{ value: 1, label: "brasileiro" }]
+
+  const [selectedNationality, setSelectedNationality] = useState()
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
@@ -178,6 +198,14 @@ const CreateWorkerModal = (props) => {
         setStatesOptions(options)
       })
 
+    api
+      .get("/ethnicities")
+      .then((response) => {
+        let options = response?.data.map((ethnicity) => ({ value: ethnicity.id, label: ethnicity.name }))
+
+        setEthnicitiesOptions(options)
+      })
+
   }, [])
 
   const handleClose = () => {
@@ -254,6 +282,16 @@ const CreateWorkerModal = (props) => {
           "cep": cep,
           "city": selectedCity?.value,
           "state": selectedState?.value,
+
+          "phone": selectedPhone,
+          "mobile": selectedMobile,
+          "email": email,
+          "ethnicity_id": selectedEthnicity?.value,
+
+          "birthdate": birthdate,
+          "birthcity": birthcity?.value,
+          "birthstate": selectedBirthstate?.value,
+          "nationality": selectedNationality?.value,
         }
 
         console.log(formData)
@@ -492,6 +530,75 @@ const CreateWorkerModal = (props) => {
               placeholder="Estado"
               options={statesOptions}
               onChange={(value) => setSelectedState(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Telefone fixo"
+              onChange={(e) => setSelectedPhone(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Celular"
+              onChange={(e) => setSelectedMobile(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="email"
+              className="form-control"
+              placeholder="E-mail"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <ReactSelect
+              placeholder="Etnia"
+              options={ethnicitiesOptions}
+              onChange={(value) => setSelectedEthnicity(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label><b>Data de nascimento</b></label>
+
+            <input
+              className="form-control"
+              type="date"
+              onChange={(e) => setBirthdate(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <ReactSelect
+              placeholder="Cidade de nascimento"
+              options={citiesOptions}
+              onChange={(value) => setBirthcity(value)}
+            />
+          </div>
+
+          <div className="mb-4">
+            <ReactSelect
+              placeholder="Estado de nascimento"
+              options={statesOptions}
+              onChange={(value) => setSelectedBirthstate(value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <ReactSelect
+              placeholder="Nacionalidade"
+              options={nationalityOptions}
+              onChange={(value) => setSelectedNationality(value)}
             />
           </div>
         </Modal.Body>

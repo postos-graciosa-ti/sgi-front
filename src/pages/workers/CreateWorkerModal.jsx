@@ -117,6 +117,12 @@ const CreateWorkerModal = (props) => {
 
   const [rgExpeditionDate, setRgExpeditionDate] = useState()
 
+  const [militaryCertNumber, setMilitaryCertNumber] = useState()
+
+  const [pis, setPis] = useState()
+
+  const [pisRegisterDate, setPisRegisterDate] = useState()
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
@@ -320,6 +326,10 @@ const CreateWorkerModal = (props) => {
           "rg_issuing_agency": rgIssuingAgency,
           "rg_state": rgState?.value,
           "rg_expedition_date": rgExpeditionDate,
+
+          "military_cert_number": militaryCertNumber,
+          "pis": pis,
+          "pis_register_date": pisRegisterDate,
         }
 
         console.log(formData)
@@ -698,6 +708,33 @@ const CreateWorkerModal = (props) => {
               type="date"
               className="form-control"
               onChange={(e) => setRgExpeditionDate(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder="Certificado de reservista"
+              className="form-control"
+              onChange={(e) => setMilitaryCertNumber(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder='PIS'
+              className="form-control"
+              onChange={(e) => setPis(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder='Data de cadastro de PIS'
+              className="form-control"
+              onChange={(e) => setPisRegisterDate(e.target.value)}
             />
           </div>
         </Modal.Body>

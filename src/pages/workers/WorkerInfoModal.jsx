@@ -144,6 +144,222 @@ const WorkerInfoModal = (props) => {
           />
         </div>
 
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">Gênero</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.gender?.name || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">Estado civil</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.civil_status?.name || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">Logradouro</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.street || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">Número</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.street_number || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">Complemento</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.street_complement || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">Bairro</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.neighborhood?.name || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">CEP</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.cep || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">Cidade</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.city?.name || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">Estado</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.state?.name || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">Telefone</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.phone || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">Celular</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.mobile || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">E-mail</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.email || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">Etnia</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.ethnicity?.name || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">Data de nascimento</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker && moment(selectedWorker?.birthdate).format("DD-MM-YYYY") || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">Cidade de nascimento</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.birthcity || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">Estado de nascimento</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.birthstate?.name || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">Nome do pai</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.fathername || "Não consta registro"}
+            disabled
+          />
+        </div>
+
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">Nome da mãe</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.mothername || "Não consta registro"}
+            disabled
+          />
+        </div>
+
         {
           !selectedWorker?.worker_is_active && (
             <div className="input-group mb-3">

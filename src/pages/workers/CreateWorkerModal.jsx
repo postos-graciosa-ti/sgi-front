@@ -175,6 +175,12 @@ const CreateWorkerModal = (props) => {
 
   const [transportVoucherQuantity, setTransportVoucherQuantity] = useState()
 
+  const [diaryWorkJourney, setDiaryWorkJourney] = useState()
+
+  const [weekWorkJourney, setWeekWorkJourney] = useState()
+
+  const [monthWorkJourney, setMonthWorkJourney] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
 
@@ -360,7 +366,11 @@ const CreateWorkerModal = (props) => {
           "journey_wage": journeyWage,
 
           "transport_voucher": transportVoucher?.value,
-          "transport_voucher_quantity": transportVoucherQuantity
+          "transport_voucher_quantity": transportVoucherQuantity,
+
+          "diary_workjourney": diaryWorkJourney,
+          "week_workjourney": weekWorkJourney,
+          "month_workjourney": monthWorkJourney,
         }
 
         console.log(formData)
@@ -912,6 +922,21 @@ const CreateWorkerModal = (props) => {
             placeholder="Quantidade vale transporte"
             type="number"
             setSelectedValue={setTransportVoucherQuantity}
+          />
+          <Input
+            placeholder="Carga diária"
+            type="text"
+            setSelectedValue={setDiaryWorkJourney}
+          />
+          <Input
+            placeholder="Carga semanal"
+            type="text"
+            setSelectedValue={setWeekWorkJourney}
+          />
+          <Input
+            placeholder="Carga mensal"
+            type="text"
+            setSelectedValue={setMonthWorkJourney}
           />
         </Modal.Body>
 

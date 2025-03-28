@@ -1,12 +1,17 @@
 import axios from 'axios'
-import moment from 'moment'
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactSelect from 'react-select'
+import Select from "../../components/form/Select"
 import useUserSessionStore from '../../data/userSession'
 import useWorkersExperienceTimeStore from "../../data/workersExperienceTime"
+import loadCostCenterOptions from '../../requests/loadOptions/loadCostCenterOptions'
+import loadDepartmentsOptions from '../../requests/loadOptions/loadDepartmentsOptions'
+import loadFunctionsOptions from '../../requests/loadOptions/loadFunctionsOptions'
+import loadTurnsOptions from "../../requests/loadOptions/loadTurnsOptions"
 import api from '../../services/api'
+import Input from '../../components/form/Input'
 
 const CreateWorkerModal = (props) => {
   const {
@@ -22,6 +27,11 @@ const CreateWorkerModal = (props) => {
   const setWorkersFirstReview = useWorkersExperienceTimeStore(state => state.setWorkersFirstReview)
 
   const setWorkersSecondReview = useWorkersExperienceTimeStore(state => state.setWorkersSecondReview)
+
+  const trueFalseOptions = [
+    { value: true, label: "sim" },
+    { value: false, label: "não" },
+  ]
 
   const [enrolment, setEnrolment] = useState()
 
@@ -161,62 +171,18 @@ const CreateWorkerModal = (props) => {
 
   const [journeyWage, setJourneyWage] = useState()
 
+  const [transportVoucher, setTransportVoucher] = useState()
+
+  const [transportVoucherQuantity, setTransportVoucherQuantity] = useState()
+
   useEffect(() => {
-    api
-      .get(`/subsidiaries/${selectedSubsdiarie.value}/functions`)
-      .then((response) => {
-        let functionsData = response.data
+    loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
 
-        let options = []
+    loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
 
-        functionsData && functionsData.map((data) => {
-          options.push({ "value": data.id, "label": data.name })
-        })
+    loadCostCenterOptions(setCostCenterOptions)
 
-        setFunctionsOptions(options)
-      })
-
-    api
-      .get(`/subsidiaries/${selectedSubsdiarie.value}/turns`)
-      .then((response) => {
-        let turnsData = response.data
-
-        let options = []
-
-        turnsData && turnsData.map((data) => {
-          options.push({ "value": data.id, "label": data.name })
-        })
-
-        setTurnsOptions(options)
-      })
-
-    api
-      .get("/cost-center")
-      .then((response) => {
-        let costCenterData = response.data
-
-        let options = []
-
-        costCenterData && costCenterData.map((data) => {
-          options.push({ "value": data.id, "label": data.name })
-        })
-
-        setCostCenterOptions(options)
-      })
-
-    api
-      .get("/departments")
-      .then((response) => {
-        let departmentsData = response.data
-
-        let options = []
-
-        departmentsData && departmentsData.map((data) => {
-          options.push({ "value": data.id, "label": data.name })
-        })
-
-        setDepartmentsOptions(options)
-      })
+    loadDepartmentsOptions(setDepartmentsOptions)
 
     api
       .get("/genders")
@@ -392,6 +358,9 @@ const CreateWorkerModal = (props) => {
           "month_wage": monthWage,
           "hour_wage": hourWage,
           "journey_wage": journeyWage,
+
+          "transport_voucher": transportVoucher?.value,
+          "transport_voucher_quantity": transportVoucherQuantity
         }
 
         console.log(formData)
@@ -404,41 +373,6 @@ const CreateWorkerModal = (props) => {
             console.log(response)
             debugger
 
-            // let newWorkerData = response.data
-
-            // let newWorkerFunc = functionsOptions.find((func) => func.value == newWorkerData.function_id)
-
-            // let newWorkerTurn = turnsOptions.find((turn) => turn.value == newWorkerData.turn_id)
-
-            // let newWorkerCostCenter = costCenterOptions.find((costCenter) => costCenter.value == newWorkerData.cost_center_id)
-
-            // let newWorkerDepartment = departmentsOptions.find((department) => department.value == newWorkerData.department_id)
-
-            // let logStr = `
-            //   ${userSession.name} criou ${newWorkerData.name}
-            //   (
-            //     nome=${newWorkerData.name},
-            //     função=${newWorkerFunc.label},
-            //     filial=${selectedSubsdiarie.label}),
-            //     ativo=sim,
-            //     turno=${newWorkerTurn.label},
-            //     centro de custo=${newWorkerCostCenter.label},
-            //     setor=${newWorkerDepartment.label},
-            //     data de admissão=${newWorkerData.admission_date}
-            //   )
-            // `
-
-            // let logFormData = {
-            //   "log_str": logStr,
-            //   "happened_at": moment(new Date()).format("HH:mm"),
-            //   "happened_at_time": moment(new Date()).format("DD-MM-YYYY"),
-            //   "user_id": userSession.id,
-            //   "subsidiarie_id": selectedSubsdiarie.value
-            // }
-
-            // api
-            //   .post(`/logs/subsidiaries/${selectedSubsdiarie.value}/workers`, logFormData)
-            //   .then(() => handleClose())
           })
       })
   }
@@ -538,6 +472,7 @@ const CreateWorkerModal = (props) => {
           </div>
 
           <div className="mb-3">
+            <label><b>Data de admissão</b></label>
             <input
               type="date"
               className="form-control"
@@ -546,6 +481,7 @@ const CreateWorkerModal = (props) => {
           </div>
 
           <div className="mb-3">
+            <label><b>Foto</b></label>
             <input
               type="file"
               className="form-control"
@@ -847,15 +783,16 @@ const CreateWorkerModal = (props) => {
 
           <div className="mb-3">
             <ReactSelect
+              placeholder="UF CTPS"
               options={statesOptions}
               onChange={(value) => setCtpsState(value)}
             />
           </div>
 
           <div className="mb-3">
+            <label><b>Data de emissão CTPS</b></label>
             <input
               type="date"
-              placeholder='Data de emissão CTPS'
               className="form-control"
               onChange={(e) => setCtpsEmissionDate(e.target.value)}
             />
@@ -965,6 +902,17 @@ const CreateWorkerModal = (props) => {
               onChange={(e) => setJourneyWage(e.target.value)}
             />
           </div>
+
+          <Select
+            placeholder="Vale transporte"
+            options={trueFalseOptions}
+            setSelectedValue={setTransportVoucher}
+          />
+          <Input
+            placeholder="Quantidade vale transporte"
+            type="number"
+            setSelectedValue={setTransportVoucherQuantity}
+          />
         </Modal.Body>
 
         <Modal.Footer>

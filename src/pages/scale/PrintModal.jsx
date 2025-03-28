@@ -151,6 +151,30 @@ const PrintModal = (props) => {
 
             handleClose()
           })
+          .catch(() => {
+            const printableContent = ReactDOMServer.renderToString(
+              printContent(
+                scalesPrint,
+                onDuty,
+                formData.start_date,
+                formData.end_date,
+                selectedTurn,
+                selectedFunction,
+                selectedSubsdiarie,
+                subsidiarieData.cnpj,
+                userSession,
+                webAdress,
+              )
+            )
+
+            printJS({
+              printable: printableContent,
+              type: 'raw-html',
+              header: null
+            })
+
+            handleClose()
+          })
       })
   }
 

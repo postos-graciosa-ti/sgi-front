@@ -1,9 +1,9 @@
 import api from "../../services/api"
 
-const loadNeighborhoodsOptions = (setNeighborhoodOptions) => {
+const loadNeighborhoodsOptions = (selectedCity, setNeighborhoodOptions) => {
   return (
     api
-      .get("/neighborhoods")
+      .get(`/cities/${selectedCity?.value}/neighborhoods`)
       .then((response) => {
         let options = response?.data.map((neighborhood) => ({ value: neighborhood.id, label: neighborhood.name }))
         setNeighborhoodOptions(options)

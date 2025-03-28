@@ -198,6 +198,12 @@ const CreateWorkerModal = (props) => {
 
   const [nocturneHours, setNocturneHours] = useState()
 
+  const [dangerousness, setDangerousness] = useState()
+
+  const [unhealthy, setUnhealthy] = useState()
+
+  const [wagePaymentMethod, setWagePaymentMethod] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -205,11 +211,21 @@ const CreateWorkerModal = (props) => {
     loadDepartmentsOptions(setDepartmentsOptions)
     loadGendersOptions(setGendersOptions)
     loadCivilStatusOptions(setCivilStatusOptions)
-    loadNeighborhoodsOptions(setNeighborhoodOptions)
-    loadCitiesOptions(setCitiesOptions)
     loadStatesOptions(setStatesOptions)
     loadEthnicitiesOptions(setEthnicitiesOptions)
   }, [])
+
+  useEffect(() => {
+    if (selectedState) {
+      loadCitiesOptions(selectedState, setCitiesOptions)
+    }
+  }, [selectedState])
+
+  useEffect(() => {
+    if (selectedCity) {
+      loadNeighborhoodsOptions(selectedCity, setNeighborhoodOptions)
+    }
+  }, [selectedCity])
 
   const handleClose = () => {
     api
@@ -239,6 +255,10 @@ const CreateWorkerModal = (props) => {
     const cloudinaryFormData = new FormData()
     cloudinaryFormData.append("file", picture)
     cloudinaryFormData.append('upload_preset', import.meta.env.VITE_UPLOAD_PRESET)
+
+    console.log(selectedCity, birthcity)
+    debugger
+
     await axios
       .post(cloudinaryEndpoint, cloudinaryFormData)
       .then(async (cloudinaryResponse) => {
@@ -327,7 +347,11 @@ const CreateWorkerModal = (props) => {
           "month_workjourney": monthWorkJourney,
 
           "experience_time": experienceTime?.value,
-          "nocturne_hours": nocturneHours
+          "nocturne_hours": nocturneHours,
+
+          "dangerousness": dangerousness,
+          "unhealthy": unhealthy,
+          "wage_payment_method": wagePaymentMethod,
         }
         await api
           .post("/workers", formData)
@@ -495,14 +519,6 @@ const CreateWorkerModal = (props) => {
           </div>
 
           <div className="mb-3">
-            <ReactSelect
-              placeholder="Bairro"
-              options={neighborhoodOptions}
-              onChange={(value) => setSelectedNeighborhood(value)}
-            />
-          </div>
-
-          <div className="mb-3">
             <input
               type="text"
               className="form-control"
@@ -511,21 +527,21 @@ const CreateWorkerModal = (props) => {
             />
           </div>
 
-          <div className="mb-3">
-            <ReactSelect
-              placeholder="Cidade"
-              options={citiesOptions}
-              onChange={(value) => setSelectedCity(value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <ReactSelect
-              placeholder="Estado"
-              options={statesOptions}
-              onChange={(value) => setSelectedState(value)}
-            />
-          </div>
+          <Select
+            placeholder="Estado"
+            options={statesOptions}
+            setSelectedValue={setSelectedState}
+          />
+          <Select
+            placeholder="Cidade"
+            options={citiesOptions}
+            setSelectedValue={setSelectedCity}
+          />
+          <Select
+            placeholder="Bairro"
+            options={neighborhoodOptions}
+            setSelectedValue={setSelectedNeighborhood}
+          />
 
           <div className="mb-3">
             <input
@@ -574,9 +590,9 @@ const CreateWorkerModal = (props) => {
 
           <div className="mb-3">
             <ReactSelect
-              placeholder="Cidade de nascimento"
-              options={citiesOptions}
-              onChange={(value) => setBirthcity(value)}
+              placeholder="Nacionalidade"
+              options={nationalityOptions}
+              onChange={(value) => setSelectedNationality(value)}
             />
           </div>
 
@@ -590,9 +606,9 @@ const CreateWorkerModal = (props) => {
 
           <div className="mb-3">
             <ReactSelect
-              placeholder="Nacionalidade"
-              options={nationalityOptions}
-              onChange={(value) => setSelectedNationality(value)}
+              placeholder="Cidade de nascimento"
+              options={citiesOptions}
+              onChange={(value) => setBirthcity(value)}
             />
           </div>
 
@@ -839,6 +855,24 @@ const CreateWorkerModal = (props) => {
             placeholder="Horas noturnas"
             type="text"
             setSelectedValue={setNocturneHours}
+          />
+          <Select
+            placeholder="Periculosidade"
+            options={trueFalseOptions}
+            setSelectedValue={setDangerousness}
+          />
+          <Select
+            placeholder="Insalubridade"
+            options={trueFalseOptions}
+            setSelectedValue={setUnhealthy}
+          />
+          <Select
+            placeholder="Método de pagamento"
+            options={[
+              { value: 1, label: "dinheiro" },
+              { value: 2, label: "cheque" },
+            ]}
+            setSelectedValue={setUnhealthy}
           />
         </Modal.Body>
 

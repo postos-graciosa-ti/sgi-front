@@ -277,10 +277,8 @@ const CreateWorkerModal = (props) => {
           "picture": cloudinaryResponse?.data.secure_url,
           "timecode": timecode,
           "esocial": esocial,
-
           "gender_id": selectedGender?.value,
           "civil_status_id": selectedCivilStatus?.value,
-
           "street": street,
           "street_number": streetNumber,
           "street_complement": streetComplement,
@@ -288,70 +286,55 @@ const CreateWorkerModal = (props) => {
           "cep": cep,
           "city": selectedCity?.value,
           "state": selectedState?.value,
-
           "phone": selectedPhone,
           "mobile": selectedMobile,
           "email": email,
           "ethnicity_id": selectedEthnicity?.value,
-
           "birthdate": birthdate,
           "birthcity": birthcity?.value,
           "birthstate": selectedBirthstate?.value,
           "nationality": selectedNationality?.value,
-
           "fathername": fathername,
           "mothername": mothername,
-
           "has_children": hasChildren?.value,
           "children_data": "[]",
-
           "cpf": cpf,
           "rg": rg,
           "rg_issuing_agency": rgIssuingAgency,
           "rg_state": rgState?.value,
           "rg_expedition_date": rgExpeditionDate,
-
           "military_cert_number": militaryCertNumber,
           "pis": pis,
           "pis_register_date": pisRegisterDate,
-
           "vontant_title": votantTitle,
           "votant_zone": votantZone,
           "votant_session": votantSession,
-
           "ctps": ctps,
           "ctps_serie": ctpsSerie,
           "ctps_state": ctpsState?.value,
           "ctps_emission_date": ctpsEmissionDate,
-
           "cnh": cnh,
           "cnh_category": cnhCategory,
           "cnh_emition_date": cnhEmissionDate,
           "cnh_valid_date": cnhValidDate,
-
           "firstJob": firstJob?.value,
           "was_employee": wasEmployee?.value,
           "union_contribute_current_year": unionContributeCurrentYear?.value,
           "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value,
           "previous_experience": previousExperience?.value,
-
           "month_wage": monthWage,
           "hour_wage": hourWage,
           "journey_wage": journeyWage,
-
           "transport_voucher": transportVoucher?.value,
           "transport_voucher_quantity": transportVoucherQuantity,
-
           "diary_workjourney": diaryWorkJourney,
           "week_workjourney": weekWorkJourney,
           "month_workjourney": monthWorkJourney,
-
           "experience_time": experienceTime?.value,
           "nocturne_hours": nocturneHours,
-
-          "dangerousness": dangerousness,
-          "unhealthy": unhealthy,
-          "wage_payment_method": wagePaymentMethod,
+          "dangerousness": dangerousness?.value,
+          "unhealthy": unhealthy?.value,
+          "wage_payment_method": wagePaymentMethod?.value,
         }
         await api
           .post("/workers", formData)
@@ -872,7 +855,7 @@ const CreateWorkerModal = (props) => {
               { value: 1, label: "dinheiro" },
               { value: 2, label: "cheque" },
             ]}
-            setSelectedValue={setUnhealthy}
+            setSelectedValue={setWagePaymentMethod}
           />
         </Modal.Body>
 

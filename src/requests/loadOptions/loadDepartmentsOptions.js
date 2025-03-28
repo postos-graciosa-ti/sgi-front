@@ -6,7 +6,6 @@ const loadDepartmentsOptions = (setDepartmentsOptions) => {
       .get("/departments")
       .then((response) => {
         let options = response?.data.map((department) => ({ value: department.id, label: department.name }))
-
         setDepartmentsOptions(options)
       })
   )

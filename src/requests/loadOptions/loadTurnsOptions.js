@@ -6,7 +6,6 @@ const loadTurnsOptions = (selectedSubsdiarie, setTurnsOptions) => {
       .get(`/subsidiaries/${selectedSubsdiarie?.value}/turns`)
       .then((response) => {
         let options = response?.data.map((turn) => ({ value: turn.id, label: turn.name }))
-
         setTurnsOptions(options)
       })
   )

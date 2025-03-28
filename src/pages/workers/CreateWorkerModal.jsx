@@ -3,15 +3,21 @@ import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactSelect from 'react-select'
+import Input from '../../components/form/Input'
 import Select from "../../components/form/Select"
 import useUserSessionStore from '../../data/userSession'
 import useWorkersExperienceTimeStore from "../../data/workersExperienceTime"
+import loadCitiesOptions from "../../requests/loadOptions/loadCitiesOptions"
+import loadCivilStatusOptions from '../../requests/loadOptions/loadCivilStatusOptions'
 import loadCostCenterOptions from '../../requests/loadOptions/loadCostCenterOptions'
 import loadDepartmentsOptions from '../../requests/loadOptions/loadDepartmentsOptions'
 import loadFunctionsOptions from '../../requests/loadOptions/loadFunctionsOptions'
+import loadGendersOptions from "../../requests/loadOptions/loadGendersOptions"
+import loadNeighborhoodsOptions from "../../requests/loadOptions/loadNeighborhoodsOptions"
+import loadStatesOptions from "../../requests/loadOptions/loadStatesOptions"
 import loadTurnsOptions from "../../requests/loadOptions/loadTurnsOptions"
 import api from '../../services/api'
-import Input from '../../components/form/Input'
+import loadEthnicitiesOptions from "../../requests/loadOptions/loadEthnicitiesOptions"
 
 const CreateWorkerModal = (props) => {
   const {
@@ -181,113 +187,61 @@ const CreateWorkerModal = (props) => {
 
   const [monthWorkJourney, setMonthWorkJourney] = useState()
 
+  const experienceTimeOptions = [
+    { value: 1, label: "30 dias" },
+    { value: 2, label: "45 dias" },
+    { value: 3, label: "60 dias" },
+    { value: 4, label: "sem tempo de experiência" },
+  ]
+
+  const [experienceTime, setExperienceTime] = useState()
+
+  const [nocturneHours, setNocturneHours] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
-
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
-
     loadCostCenterOptions(setCostCenterOptions)
-
     loadDepartmentsOptions(setDepartmentsOptions)
-
-    api
-      .get("/genders")
-      .then((response) => {
-        let options = response?.data.map((gender) => ({ value: gender.id, label: gender.name }))
-
-        setGendersOptions(options)
-      })
-
-    api
-      .get("/civil-status")
-      .then((response) => {
-        let options = response?.data.map((civilStatus) => ({ value: civilStatus.id, label: civilStatus.name }))
-
-        setCivilStatusOptions(options)
-      })
-
-    api
-      .get("/neighborhoods")
-      .then((response) => {
-        let options = response?.data.map((neighborhood) => ({ value: neighborhood.id, label: neighborhood.name }))
-
-        setNeighborhoodOptions(options)
-      })
-
-    api
-      .get("/cities")
-      .then((response) => {
-        let options = response?.data.map((city) => ({ value: city.id, label: city.name }))
-
-        setCitiesOptions(options)
-      })
-
-    api
-      .get("/states")
-      .then((response) => {
-        let options = response?.data.map((state) => ({ value: state.id, label: state.name }))
-
-        setStatesOptions(options)
-      })
-
-    api
-      .get("/ethnicities")
-      .then((response) => {
-        let options = response?.data.map((ethnicity) => ({ value: ethnicity.id, label: ethnicity.name }))
-
-        setEthnicitiesOptions(options)
-      })
-
+    loadGendersOptions(setGendersOptions)
+    loadCivilStatusOptions(setCivilStatusOptions)
+    loadNeighborhoodsOptions(setNeighborhoodOptions)
+    loadCitiesOptions(setCitiesOptions)
+    loadStatesOptions(setStatesOptions)
+    loadEthnicitiesOptions(setEthnicitiesOptions)
   }, [])
 
   const handleClose = () => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-first-review`)
       .then((response) => setWorkersFirstReview(response?.data))
-
     api
       .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-second-review`)
       .then((response) => setWorkersSecondReview(response?.data))
-
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => setWorkersList(response.data))
-
     setName()
-
     setSelectedFunction()
-
     setSelectedTurn()
-
     setSelectedTurn()
-
     setSelectedCostCenter()
-
     setSelectedDepartment()
-
     setAdmissionDate()
-
     setPicture()
-
     setTimecode()
-
     setEsocial()
-
     setCreateWorkerModalOpen(false)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let cloudinaryEndpoint = import.meta.env.VITE_CLOUDINARY_ENDPOINT
-
     const cloudinaryFormData = new FormData()
-
     cloudinaryFormData.append("file", picture)
-
     cloudinaryFormData.append('upload_preset', import.meta.env.VITE_UPLOAD_PRESET)
-
-    axios
+    await axios
       .post(cloudinaryEndpoint, cloudinaryFormData)
-      .then((cloudinaryResponse) => {
+      .then(async (cloudinaryResponse) => {
         let formData = {
           "name": name,
           "function_id": selectedFunction.value,
@@ -371,19 +325,13 @@ const CreateWorkerModal = (props) => {
           "diary_workjourney": diaryWorkJourney,
           "week_workjourney": weekWorkJourney,
           "month_workjourney": monthWorkJourney,
+
+          "experience_time": experienceTime?.value,
+          "nocturne_hours": nocturneHours
         }
-
-        console.log(formData)
-        debugger
-
-        api
+        await api
           .post("/workers", formData)
-          .then((response) => {
-
-            console.log(response)
-            debugger
-
-          })
+          .then(() => handleClose())
       })
   }
 
@@ -782,137 +730,81 @@ const CreateWorkerModal = (props) => {
             />
           </div>
 
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder='Série de CTPS'
-              className="form-control"
-              onChange={(e) => setCtpsSerie(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <ReactSelect
-              placeholder="UF CTPS"
-              options={statesOptions}
-              onChange={(value) => setCtpsState(value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label><b>Data de emissão CTPS</b></label>
-            <input
-              type="date"
-              className="form-control"
-              onChange={(e) => setCtpsEmissionDate(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder='CNH'
-              className="form-control"
-              onChange={(e) => setCnh(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder='Categoria de CNH'
-              className="form-control"
-              onChange={(e) => setCnhCategory(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label><b>Data de emissão de CNH</b></label>
-
-            <input
-              type="date"
-              className="form-control"
-              onChange={(e) => setCnhEmissionDate(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label><b>Validade de CNH</b></label>
-
-            <input
-              type="date"
-              className="form-control"
-              onChange={(e) => setCnhValidDate(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <ReactSelect
-              placeholder="Primeiro emprego?"
-              options={[{ value: true, label: "sim" }, { value: false, label: "não" }]}
-              onChange={(value) => setFirstJob(value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <ReactSelect
-              placeholder="Já foi empregado da empresa?"
-              options={[{ value: true, label: "sim" }, { value: false, label: "não" }]}
-              onChange={(value) => setWasEmployee(value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <ReactSelect
-              placeholder="Contribuição sindical nesse ano?"
-              options={[{ value: true, label: "sim" }, { value: false, label: "não" }]}
-              onChange={(value) => setUnionContributeCurrentYear(value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <ReactSelect
-              placeholder="Recebendo seguro-desemprego?"
-              options={[{ value: true, label: "sim" }, { value: false, label: "não" }]}
-              onChange={(value) => setReceivingUnemploymentInsurance(value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <ReactSelect
-              placeholder="Experiência prévia na função?"
-              options={[{ value: true, label: "sim" }, { value: false, label: "não" }]}
-              onChange={(value) => setPreviousExperience(value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              placeholder="Mensalista"
-              type="text"
-              className="form-control"
-              onChange={(e) => setMonthWage(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              placeholder="Valor/horista"
-              type="text"
-              className="form-control"
-              onChange={(e) => setHourWage(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              placeholder="Proporcional a jornada"
-              type="text"
-              className="form-control"
-              onChange={(e) => setJourneyWage(e.target.value)}
-            />
-          </div>
-
+          <Input
+            type="text"
+            placeholder="Série de CTPS"
+            setSelectedValue={setCtpsSerie}
+          />
+          <Select
+            placeholder="UF CTPS"
+            options={statesOptions}
+            setSelectedValue={setCtpsState}
+          />
+          <Input
+            type="date"
+            label="Data de emissão CTPS"
+            setSelectedValue={setCtpsEmissionDate}
+          />
+          <Input
+            type="text"
+            placeholder="CNH"
+            setSelectedValue={setCnh}
+          />
+          <Input
+            type="text"
+            placeholder="Categoria de CNH"
+            setSelectedValue={setCnhCategory}
+          />
+          <Input
+            type="date"
+            label="Data de emissão de CNH"
+            setSelectedValue={setCnhEmissionDate}
+          />
+          <Input
+            type="date"
+            label="Validade de CNH"
+            setSelectedValue={setCnhValidDate}
+          />
+          <Select
+            placeholder="Primeiro emprego?"
+            options={trueFalseOptions}
+            setSelectedValue={setFirstJob}
+          />
+          <Select
+            placeholder="Já foi empregado da empresa?"
+            options={trueFalseOptions}
+            setSelectedValue={setWasEmployee}
+          />
+          <Select
+            placeholder="Contribuição sindical nesse ano?"
+            options={trueFalseOptions}
+            setSelectedValue={setUnionContributeCurrentYear}
+          />
+          <Select
+            placeholder="Recebendo seguro-desemprego?"
+            options={trueFalseOptions}
+            setSelectedValue={setReceivingUnemploymentInsurance}
+          />
+          <Select
+            placeholder="Experiência prévia na função?"
+            options={trueFalseOptions}
+            setSelectedValue={setPreviousExperience}
+          />
+          <Input
+            placeholder="Mensalista"
+            type="text"
+            setSelectedValue={setMonthWage}
+          />
+          <Input
+            placeholder="Valor/horista"
+            type="text"
+            setSelectedValue={setHourWage}
+          />
+          <Input
+            placeholder="Proporcional a jornada"
+            type="text"
+            setSelectedValue={setJourneyWage}
+          />
           <Select
             placeholder="Vale transporte"
             options={trueFalseOptions}
@@ -937,6 +829,16 @@ const CreateWorkerModal = (props) => {
             placeholder="Carga mensal"
             type="text"
             setSelectedValue={setMonthWorkJourney}
+          />
+          <Select
+            placeholder="Tempo de experiência"
+            options={experienceTimeOptions}
+            setSelectedValue={setExperienceTime}
+          />
+          <Input
+            placeholder="Horas noturnas"
+            type="text"
+            setSelectedValue={setNocturneHours}
           />
         </Modal.Body>
 

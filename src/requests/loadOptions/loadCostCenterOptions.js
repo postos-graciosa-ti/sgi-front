@@ -6,7 +6,6 @@ const loadCostCenterOptions = (setCostCenterOptions) => {
       .get("/cost-center")
       .then((response) => {
         let options = response?.data.map((costCenter) => ({ value: costCenter.id, label: costCenter.name }))
-
         setCostCenterOptions(options)
       })
   )

@@ -360,6 +360,18 @@ const WorkerInfoModal = (props) => {
           />
         </div>
 
+        <div className="input-group mb-3">
+          <span className="input-group-text fw-bold">CPF</span>
+
+          <textarea
+            className="form-control"
+            aria-label="With textarea"
+            rows={1}
+            value={selectedWorker?.cpf || "Não consta registro"}
+            disabled
+          />
+        </div>
+
         {
           !selectedWorker?.worker_is_active && (
             <div className="input-group mb-3">

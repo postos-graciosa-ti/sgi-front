@@ -75,7 +75,7 @@ const Users = () => {
           <table className="table table-hover">
             <thead>
               <tr>
-                <th>Email</th>
+                <th>Email,</th>
 
                 <th>Nome</th>
 

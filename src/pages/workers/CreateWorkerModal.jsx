@@ -273,64 +273,64 @@ const CreateWorkerModal = (props) => {
           "picture": cloudinaryResponse?.data.secure_url,
           "timecode": timecode,
           "esocial": esocial,
-          // "gender_id": selectedGender?.value,
-          // "civil_status_id": selectedCivilStatus?.value,
-          // "street": street,
-          // "street_number": streetNumber,
-          // "street_complement": streetComplement,
-          // "neighborhood_id": selectedNeighborhood?.value,
-          // "cep": cep,
-          // "city": selectedCity?.value,
-          // "state": selectedState?.value,
-          // "phone": selectedPhone,
-          // "mobile": selectedMobile,
-          // "email": email,
-          // "ethnicity_id": selectedEthnicity?.value,
-          // "birthdate": birthdate,
-          // "birthcity": birthcity?.value,
-          // "birthstate": selectedBirthstate?.value,
-          // "nationality": selectedNationality?.value,
-          // "fathername": fathername,
-          // "mothername": mothername,
-          // "has_children": hasChildren?.value,
-          // "children_data": "[]",
-          // "cpf": cpf,
-          // "rg": rg,
-          // "rg_issuing_agency": rgIssuingAgency,
-          // "rg_state": rgState?.value,
-          // "rg_expedition_date": rgExpeditionDate,
-          // "military_cert_number": militaryCertNumber,
-          // "pis": pis,
-          // "pis_register_date": pisRegisterDate,
-          // "vontant_title": votantTitle,
-          // "votant_zone": votantZone,
-          // "votant_session": votantSession,
-          // "ctps": ctps,
-          // "ctps_serie": ctpsSerie,
-          // "ctps_state": ctpsState?.value,
-          // "ctps_emission_date": ctpsEmissionDate,
-          // "cnh": cnh,
-          // "cnh_category": cnhCategory,
-          // "cnh_emition_date": cnhEmissionDate,
-          // "cnh_valid_date": cnhValidDate,
-          // "firstJob": firstJob?.value,
-          // "was_employee": wasEmployee?.value,
-          // "union_contribute_current_year": unionContributeCurrentYear?.value,
-          // "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value,
-          // "previous_experience": previousExperience?.value,
-          // "month_wage": monthWage,
-          // "hour_wage": hourWage,
-          // "journey_wage": journeyWage,
-          // "transport_voucher": transportVoucher?.value,
-          // "transport_voucher_quantity": transportVoucherQuantity,
-          // "diary_workjourney": diaryWorkJourney,
-          // "week_workjourney": weekWorkJourney,
-          // "month_workjourney": monthWorkJourney,
-          // "experience_time": experienceTime?.value,
-          // "nocturne_hours": nocturneHours,
-          // "dangerousness": dangerousness?.value,
-          // "unhealthy": unhealthy?.value,
-          // "wage_payment_method": wagePaymentMethod?.value,
+          "gender_id": selectedGender?.value,
+          "civil_status_id": selectedCivilStatus?.value,
+          "street": street,
+          "street_number": streetNumber,
+          "street_complement": streetComplement,
+          "neighborhood_id": selectedNeighborhood?.value,
+          "cep": cep,
+          "city": selectedCity?.value,
+          "state": selectedState?.value,
+          "phone": selectedPhone,
+          "mobile": selectedMobile,
+          "email": email,
+          "ethnicity_id": selectedEthnicity?.value,
+          "birthdate": birthdate,
+          "birthcity": birthcity?.value,
+          "birthstate": selectedBirthstate?.value,
+          "nationality": selectedNationality?.value,
+          "fathername": fathername,
+          "mothername": mothername,
+          "has_children": hasChildren?.value,
+          "children_data": "[]",
+          "cpf": cpf,
+          "rg": rg,
+          "rg_issuing_agency": rgIssuingAgency,
+          "rg_state": rgState?.value,
+          "rg_expedition_date": rgExpeditionDate,
+          "military_cert_number": militaryCertNumber,
+          "pis": pis,
+          "pis_register_date": pisRegisterDate,
+          "vontant_title": votantTitle,
+          "votant_zone": votantZone,
+          "votant_session": votantSession,
+          "ctps": ctps,
+          "ctps_serie": ctpsSerie,
+          "ctps_state": ctpsState?.value,
+          "ctps_emission_date": ctpsEmissionDate,
+          "cnh": cnh,
+          "cnh_category": cnhCategory,
+          "cnh_emition_date": cnhEmissionDate,
+          "cnh_valid_date": cnhValidDate,
+          "firstJob": firstJob?.value,
+          "was_employee": wasEmployee?.value,
+          "union_contribute_current_year": unionContributeCurrentYear?.value,
+          "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value,
+          "previous_experience": previousExperience?.value,
+          "month_wage": monthWage,
+          "hour_wage": hourWage,
+          "journey_wage": journeyWage,
+          "transport_voucher": transportVoucher?.value,
+          "transport_voucher_quantity": transportVoucherQuantity,
+          "diary_workjourney": diaryWorkJourney,
+          "week_workjourney": weekWorkJourney,
+          "month_workjourney": monthWorkJourney,
+          "experience_time": experienceTime?.value,
+          "nocturne_hours": nocturneHours,
+          "dangerousness": dangerousness?.value,
+          "unhealthy": unhealthy?.value,
+          "wage_payment_method": wagePaymentMethod?.value,
         }
         await api
           .post("/workers", formData)
@@ -354,158 +354,94 @@ const CreateWorkerModal = (props) => {
           <div>
             <h5>Dados de trabalho</h5>
           </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder="E-Social"
-              className="form-control"
-              onChange={(e) => setEsocial(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder="Matrícula"
-              className="form-control"
-              onChange={(e) => setEnrolment(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder="Código de vendas"
-              className="form-control"
-              onChange={(e) => setSalesCode(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder="Código de ponto"
-              className="form-control"
-              onChange={(e) => setTimecode(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder="Nome"
-              className='form-control'
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-
-          <div className='mb-3'>
-            <ReactSelect
-              placeholder="Função"
-              options={functionsOptions}
-              onChange={(value) => setSelectedFunction(value)}
-            />
-          </div>
-
-          <div className='mb-3'>
-            <ReactSelect
-              placeholder="Turnos"
-              options={turnsOptions}
-              onChange={(value) => setSelectedTurn(value)}
-            />
-          </div>
-
-          <div className='mb-3'>
-            <ReactSelect
-              placeholder="C. de custos"
-              options={costCenterOptions}
-              onChange={(value) => setSelectedCostCenter(value)}
-            />
-          </div>
-
-          <div className='mb-3'>
-            <ReactSelect
-              placeholder="Setor"
-              options={departmentsOptions}
-              onChange={(value) => setSelectedDepartment(value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label><b>Data de admissão</b></label>
-            <input
-              type="date"
-              className="form-control"
-              onChange={(e) => setAdmissionDate(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label><b>Foto</b></label>
-            <input
-              type="file"
-              className="form-control"
-              onChange={(e) => setPicture(e.target.files[0])}
-            />
-          </div>
-
-          {/* <div>
+          <Input
+            type="text"
+            placeholder="E-Social"
+            setSelectedValue={setEsocial}
+          />
+          <Input
+            type="text"
+            placeholder="Matrícula"
+            setSelectedValue={setEnrolment}
+          />
+          <Input
+            type="text"
+            placeholder="Código de vendas"
+            setSelectedValue={setSalesCode}
+          />
+          <Input
+            type="text"
+            placeholder="Código de ponto"
+            setSelectedValue={setTimecode}
+          />
+          <Input
+            type="text"
+            placeholder="Nome"
+            setSelectedValue={setName}
+          />
+          <Select
+            placeholder="Função"
+            options={functionsOptions}
+            setSelectedValue={setSelectedFunction}
+          />
+          <Select
+            placeholder="Turnos"
+            options={turnsOptions}
+            setSelectedValue={setSelectedTurn}
+          />
+          <Select
+            placeholder="Centro de custos"
+            options={costCenterOptions}
+            setSelectedValue={setSelectedCostCenter}
+          />
+          <Select
+            placeholder="Setor"
+            options={departmentsOptions}
+            setSelectedValue={setSelectedDepartment}
+          />
+          <Input
+            type="date"
+            setSelectedValue={setAdmissionDate}
+            label={"Data de admissão"}
+          />
+          <Input
+            type="file"
+            setSelectedValue={setPicture}
+            label={"Foto"}
+          />
+          <div>
             <h5>Ficha da contabilidade</h5>
           </div>
-
-          <div className="mb-3">
-            <ReactSelect
-              placeholder="Genero"
-              options={gendersOptions}
-              onChange={(value) => setSelectedGender(value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <ReactSelect
-              placeholder="Estado civil"
-              options={civilStatusOptions}
-              onChange={(value) => setSelectedCivilStatus(value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Logradouro"
-              onChange={(e) => setStreet(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Número"
-              onChange={(e) => setStreetNumber(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Complemento"
-              onChange={(e) => setStreetComplement(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="CEP"
-              onChange={(e) => setSelectedCep(e.target.value)}
-            />
-          </div>
-
+          <Select
+            placeholder={"Genero"}
+            options={gendersOptions}
+            setSelectedValue={setSelectedGender}
+          />
+          <Select
+            placeholder="Estado civil"
+            options={civilStatusOptions}
+            setSelectedValue={setSelectedCivilStatus}
+          />
+          <Input
+            type="text"
+            placeholder="Logradouro"
+            setSelectedValue={setStreet}
+          />
+          <Input
+            type="text"
+            placeholder="Número"
+            setSelectedValue={setStreetNumber}
+          />
+          <Input
+            type="text"
+            placeholder="Complemento"
+            setSelectedValue={setStreetComplement}
+          />
+          <Input
+            type="text"
+            placeholder="CEP"
+            setSelectedValue={setSelectedCep}
+          />
           <Select
             placeholder="Estado"
             options={statesOptions}
@@ -521,210 +457,121 @@ const CreateWorkerModal = (props) => {
             options={neighborhoodOptions}
             setSelectedValue={setSelectedNeighborhood}
           />
-
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Telefone fixo"
-              onChange={(e) => setSelectedPhone(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Celular"
-              onChange={(e) => setSelectedMobile(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="email"
-              className="form-control"
-              placeholder="E-mail"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <ReactSelect
-              placeholder="Etnia"
-              options={ethnicitiesOptions}
-              onChange={(value) => setSelectedEthnicity(value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label><b>Data de nascimento</b></label>
-
-            <input
-              className="form-control"
-              type="date"
-              onChange={(e) => setBirthdate(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <ReactSelect
-              placeholder="Nacionalidade"
-              options={nationalityOptions}
-              onChange={(value) => setSelectedNationality(value)}
-            />
-          </div>
-
-          <div className="mb-4">
-            <ReactSelect
-              placeholder="Estado de nascimento"
-              options={statesOptions}
-              onChange={(value) => setSelectedBirthstate(value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <ReactSelect
-              placeholder="Cidade de nascimento"
-              options={citiesOptions}
-              onChange={(value) => setBirthcity(value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Nome do pai"
-              onChange={(e) => setFathername(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Nome da mãe"
-              onChange={(e) => setMothername(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <ReactSelect
-              placeholder="Filhos menores de 14?"
-              options={[{ value: true, label: "sim" }, { value: false, label: "não" }]}
-              onChange={(value) => setHasChildren(value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder='CPF'
-              onChange={(e) => setCpf(e.target.value)}
-              className="form-control"
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder='RG'
-              onChange={(e) => setRg(e.target.value)}
-              className="form-control"
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder='Órgão emissor'
-              onChange={(e) => setRgIssuingAgency(e.target.value)}
-              className="form-control"
-            />
-          </div>
-
-          <div className="mb-3">
-            <ReactSelect
-              placeholder="Estado de RG"
-              options={statesOptions}
-              onChange={(value) => setRgState(value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label><b>Data de expedição</b></label>
-
-            <input
-              type="date"
-              className="form-control"
-              onChange={(e) => setRgExpeditionDate(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder="Certificado de reservista"
-              className="form-control"
-              onChange={(e) => setMilitaryCertNumber(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder='PIS'
-              className="form-control"
-              onChange={(e) => setPis(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder='Data de cadastro de PIS'
-              className="form-control"
-              onChange={(e) => setPisRegisterDate(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder='Título de eleitor'
-              className="form-control"
-              onChange={(e) => setVotantTitle(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder='Zona de eleitor'
-              className="form-control"
-              onChange={(e) => setVotantZone(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder='Sessão de eleitor'
-              className="form-control"
-              onChange={(e) => setVotantSession(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder='CTPS'
-              className="form-control"
-              onChange={(e) => setCtps(e.target.value)}
-            />
-          </div>
-
+          <Input
+            type="text"
+            placeholder="Telefone fixo"
+            setSelectedValue={setSelectedPhone}
+          />
+          <Input
+            type="text"
+            placeholder="Celular"
+            setSelectedValue={setSelectedMobile}
+          />
+          <Input
+            type="email"
+            placeholder="E-mail"
+            setSelectedValue={setEmail}
+          />
+          <Select
+            placeholder="Etnia"
+            options={ethnicitiesOptions}
+            setSelectedValue={setSelectedEthnicity}
+          />
+          <Input
+            type="date"
+            setSelectedValue={setBirthdate}
+            label={"Data de nascimento"}
+          />
+          <Select
+            placeholder="Nacionalidade"
+            options={nationalityOptions}
+            setSelectedValue={setSelectedNationality}
+          />
+          <Select
+            placeholder="Estado de nascimento"
+            options={statesOptions}
+            setSelectedValue={setSelectedBirthstate}
+          />
+          <Select
+            placeholder="Cidade de nascimento"
+            options={citiesOptions}
+            setSelectedValue={setBirthcity}
+          />
+          <Input
+            type="text"
+            placeholder="Nome do pai"
+            setSelectedValue={setFathername}
+          />
+          <Input
+            type="text"
+            placeholder="Nome da mãe"
+            setSelectedValue={setMothername}
+          />
+          <Select
+            placeholder="Filhos menores de 14?"
+            options={trueFalseOptions}
+            setSelectedValue={setHasChildren}
+          />
+          <Input
+            type="text"
+            placeholder="CPF"
+            setSelectedValue={setCpf}
+          />
+          <Input
+            type="text"
+            placeholder='RG'
+            setSelectedValue={setRg}
+          />
+          <Input
+            type="text"
+            placeholder='Órgão emissor'
+            setSelectedValue={setRgIssuingAgency}
+          />
+          <Select
+            placeholder="Estado de RG"
+            options={statesOptions}
+            setSelectedValue={setRgState}
+          />
+          <Input
+            type="date"
+            setSelectedValue={setRgExpeditionDate}
+            label={"Data de expedição de RG"}
+          />
+          <Input
+            type="text"
+            placeholder="Certificado de reservista"
+            setSelectedValue={setMilitaryCertNumber}
+          />
+          <Input
+            type="text"
+            placeholder='PIS'
+            setSelectedValue={setPis}
+          />
+          <Input
+            type={"date"}
+            setSelectedValue={setPisRegisterDate}
+            label={"Data de cadastro de PIS"}
+          />
+          <Input
+            type="text"
+            placeholder='Título de eleitor'
+            setSelectedValue={setVotantTitle}
+          />
+          <Input
+            type="text"
+            placeholder='Zona de eleitor'
+            setSelectedValue={setVotantZone}
+          />
+          <Input
+            type="text"
+            setSelectedValue={setVotantSession}
+            placeholder="Sessão de eleitor"
+          />
+          <Input
+            type="text"
+            placeholder='CTPS'
+            setSelectedValue={setCtps}
+          />
           <Input
             type="text"
             placeholder="Série de CTPS"
@@ -852,7 +699,7 @@ const CreateWorkerModal = (props) => {
               { value: 2, label: "cheque" },
             ]}
             setSelectedValue={setWagePaymentMethod}
-          /> */}
+          />
         </Modal.Body>
 
         <Modal.Footer>

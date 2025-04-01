@@ -144,7 +144,7 @@ const WorkerInfoModal = (props) => {
           />
         </div>
 
-        <div className="input-group mb-3">
+        {/* <div className="input-group mb-3">
           <span className="input-group-text fw-bold">Gênero</span>
 
           <textarea
@@ -802,7 +802,7 @@ const WorkerInfoModal = (props) => {
             value={selectedWorker?.wage_payment_method || "Não consta registro"}
             disabled
           />
-        </div>
+        </div> */}
 
         {
           !selectedWorker?.worker_is_active && (

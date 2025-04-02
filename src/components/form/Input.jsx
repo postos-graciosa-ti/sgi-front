@@ -6,13 +6,7 @@ const Input = ({ placeholder, type, setSelectedValue, label, defaultValue }) => 
         placeholder={placeholder}
         type={type}
         className="form-control"
-        // onChange={(e) => setSelectedValue(e.target.value)}
-
-        onChange={(e) => {
-          type == "file" && setSelectedValue(e.target.files[0]) ||
-            setSelectedValue(e.target.value)
-        }}
-
+        onChange={(e) => setSelectedValue(e.target.value)}
         defaultValue={defaultValue && defaultValue}
       />
     </div>

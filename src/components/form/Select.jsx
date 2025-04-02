@@ -1,6 +1,6 @@
 import ReactSelect from "react-select"
 
-const Select = ({ placeholder, options, setSelectedValue, defaultValue, label }) => {
+const Select = ({ placeholder, options, setSelectedValue, defaultValue, label, isMulti }) => {
   return (
     <div className="mb-3">
       {label && <label><b>{label}</b></label>}
@@ -9,6 +9,7 @@ const Select = ({ placeholder, options, setSelectedValue, defaultValue, label })
         options={options}
         onChange={(value) => setSelectedValue(value)}
         defaultValue={defaultValue && defaultValue || false}
+        isMulti={isMulti}
       />
     </div>
   )

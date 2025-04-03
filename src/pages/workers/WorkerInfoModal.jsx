@@ -21,7 +21,7 @@ const WorkerInfoModal = (props) => {
   ]
 
   const [selectedFields, setSelectedFields] = useState()
-  
+
   const handleClose = () => {
     setSelectedFields()
 
@@ -855,32 +855,72 @@ const WorkerInfoModal = (props) => {
 
         {
           !selectedWorker?.worker_is_active && (
-            <div className="input-group mb-3">
-              <span className="input-group-text fw-bold">Data de demissão</span>
+            <div className="bg-danger p-4 rounded">
+              <div className="input-group mb-3">
+                <span className="input-group-text fw-bold">Razão de demissão</span>
 
-              <textarea
-                className="form-control"
-                aria-label="With textarea"
-                rows={1}
-                value={selectedWorker?.resignation_date || "Não consta registro"}
-                disabled
-              />
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  value={selectedWorker?.resignation_reason_name || "Não consta registro"}
+                  disabled
+                />
+              </div>
+
+              <div className="input-group mb-3">
+                <span className="input-group-text fw-bold">Data de demissão</span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  value={selectedWorker?.resignation_date || "Não consta registro"}
+                  disabled
+                />
+              </div>
             </div>
           )
         }
 
         {
-          !selectedWorker?.worker_is_active && (
-            <div className="input-group mb-3">
-              <span className="input-group-text fw-bold">Razão de demissão</span>
+          selectedWorker?.is_away && (
+            <div className="bg-warning p-3 rounded">
+              <div className="input-group mb-3">
+                <span className="input-group-text fw-bold">Razão de afastamento</span>
 
-              <textarea
-                className="form-control"
-                aria-label="With textarea"
-                rows={1}
-                value={selectedWorker?.resignation_reason_name || "Não consta registro"}
-                disabled
-              />
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  value={selectedWorker?.away_reason?.name || "Não consta registro"}
+                  disabled
+                />
+              </div>
+
+              <div className="input-group mb-3">
+                <span className="input-group-text fw-bold">Data de afastamento</span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  value={selectedWorker?.away_start_date || "Não consta registro"}
+                  disabled
+                />
+              </div>
+
+              <div className="input-group mb-3">
+                <span className="input-group-text fw-bold">Data de retorno</span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  value={selectedWorker?.away_end_date || "Não consta registro"}
+                  disabled
+                />
+              </div>
             </div>
           )
         }

@@ -449,7 +449,7 @@ const WorkerInfoModal = (props) => {
                   className="form-control"
                   aria-label="With textarea"
                   rows={1}
-                  value={selectedWorker?.rg_state || "Não consta registro"}
+                  value={selectedWorker?.rg_state?.name || "Não consta registro"}
                   disabled
                 />
               </div>
@@ -497,7 +497,7 @@ const WorkerInfoModal = (props) => {
                   className="form-control"
                   aria-label="With textarea"
                   rows={1}
-                  value={selectedWorker?.pis_register_date || "Não consta registro"}
+                  value={moment(selectedWorker?.pis_register_date).format("DD-MM-YYYY") || "Não consta registro"}
                   disabled
                 />
               </div>
@@ -821,7 +821,7 @@ const WorkerInfoModal = (props) => {
                   className="form-control"
                   aria-label="With textarea"
                   rows={1}
-                  value={selectedWorker?.dangerousness || "Não consta registro"}
+                  value={selectedWorker?.dangerousness ? "Sim" : "Não" || "Não consta registro"}
                   disabled
                 />
               </div>
@@ -833,7 +833,7 @@ const WorkerInfoModal = (props) => {
                   className="form-control"
                   aria-label="With textarea"
                   rows={1}
-                  value={selectedWorker?.unhealthy || "Não consta registro"}
+                  value={selectedWorker?.unhealthy ? "Sim" : "Não" || "Não consta registro"}
                   disabled
                 />
               </div>
@@ -846,6 +846,102 @@ const WorkerInfoModal = (props) => {
                   aria-label="With textarea"
                   rows={1}
                   value={selectedWorker?.wage_payment_method || "Não consta registro"}
+                  disabled
+                />
+              </div>
+
+              <div className="input-group mb-3">
+                <span className="input-group-text fw-bold">Código geral de função</span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  value={selectedWorker?.general_function_code || "Não consta registro"}
+                  disabled
+                />
+              </div>
+
+              <div className="input-group mb-3">
+                <span className="input-group-text fw-bold">Salário</span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  value={selectedWorker?.wage || "Não consta registro"}
+                  disabled
+                />
+              </div>
+
+              <div className="input-group mb-3">
+                <span className="input-group-text fw-bold">Data de última função</span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  value={selectedWorker?.last_function_date || "Não consta registro"}
+                  disabled
+                />
+              </div>
+
+              <div className="input-group mb-3">
+                <span className="input-group-text fw-bold">Escolaridade</span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  value={selectedWorker?.school_level?.name || "Não consta registro"}
+                  disabled
+                />
+              </div>
+
+              <div className="input-group mb-3">
+                <span className="input-group-text fw-bold">Número de emergência</span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  value={selectedWorker?.emergency_number || "Não consta registro"}
+                  disabled
+                />
+              </div>
+
+              <div className="input-group mb-3">
+                <span className="input-group-text fw-bold">Banco</span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  value={selectedWorker?.bank?.name || "Não consta registro"}
+                  disabled
+                />
+              </div>
+
+              <div className="input-group mb-3">
+                <span className="input-group-text fw-bold">Agência do banco</span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  value={selectedWorker?.bank_agency || "Não consta registro"}
+                  disabled
+                />
+              </div>
+
+              <div className="input-group mb-3">
+                <span className="input-group-text fw-bold">Conta do banco</span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  value={selectedWorker?.bank_account || "Não consta registro"}
                   disabled
                 />
               </div>

@@ -2,22 +2,23 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import ReactSelect from 'react-select'
 import Input from '../../components/form/Input'
 import Select from "../../components/form/Select"
 import useUserSessionStore from '../../data/userSession'
 import useWorkersExperienceTimeStore from "../../data/workersExperienceTime"
+import loadBanksOptions from "../../requests/loadOptions/loadBanksOptions"
 import loadCitiesOptions from "../../requests/loadOptions/loadCitiesOptions"
 import loadCivilStatusOptions from '../../requests/loadOptions/loadCivilStatusOptions'
 import loadCostCenterOptions from '../../requests/loadOptions/loadCostCenterOptions'
 import loadDepartmentsOptions from '../../requests/loadOptions/loadDepartmentsOptions'
+import loadEthnicitiesOptions from "../../requests/loadOptions/loadEthnicitiesOptions"
 import loadFunctionsOptions from '../../requests/loadOptions/loadFunctionsOptions'
 import loadGendersOptions from "../../requests/loadOptions/loadGendersOptions"
 import loadNeighborhoodsOptions from "../../requests/loadOptions/loadNeighborhoodsOptions"
+import loadSchoolLevels from "../../requests/loadOptions/loadSchoolLevels"
 import loadStatesOptions from "../../requests/loadOptions/loadStatesOptions"
 import loadTurnsOptions from "../../requests/loadOptions/loadTurnsOptions"
 import api from '../../services/api'
-import loadEthnicitiesOptions from "../../requests/loadOptions/loadEthnicitiesOptions"
 
 const CreateWorkerModal = (props) => {
   const {
@@ -204,6 +205,28 @@ const CreateWorkerModal = (props) => {
 
   const [wagePaymentMethod, setWagePaymentMethod] = useState()
 
+  const [codeGeneralFunction, setCodeGeneralFunction] = useState()
+
+  const [wage, setWage] = useState()
+
+  const [lastFunctionDate, setLastFunctionDate] = useState()
+
+  const [currentFunctionTime, setCurrentFunctionTime] = useState()
+
+  const [schoolLevelsOptions, setSchoolLevelsOptions] = useState()
+
+  const [selectedSchoolLevel, setSelectedSchoolLevel] = useState()
+
+  const [emergencyNumber, setEmergencyNumber] = useState()
+
+  const [banksOptions, setBanksOptions] = useState()
+
+  const [selectedBankOption, setSelectedBankOption] = useState()
+
+  const [bankAgency, setBankAgency] = useState()
+
+  const [bankAccount, setBankAccount] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -213,6 +236,8 @@ const CreateWorkerModal = (props) => {
     loadCivilStatusOptions(setCivilStatusOptions)
     loadStatesOptions(setStatesOptions)
     loadEthnicitiesOptions(setEthnicitiesOptions)
+    loadSchoolLevels(setSchoolLevelsOptions)
+    loadBanksOptions(setBanksOptions)
   }, [])
 
   useEffect(() => {
@@ -250,92 +275,194 @@ const CreateWorkerModal = (props) => {
     setCreateWorkerModalOpen(false)
   }
 
-  const handleSubmit = async () => {
-    let cloudinaryEndpoint = import.meta.env.VITE_CLOUDINARY_ENDPOINT
-    const cloudinaryFormData = new FormData()
-    cloudinaryFormData.append("file", picture)
-    cloudinaryFormData.append('upload_preset', import.meta.env.VITE_UPLOAD_PRESET)
-    await axios
-      .post(cloudinaryEndpoint, cloudinaryFormData)
-      .then(async (cloudinaryResponse) => {
-        let formData = {
-          "name": name,
-          "function_id": selectedFunction.value,
-          "subsidiarie_id": selectedSubsdiarie.value,
-          "is_active": true,
-          "turn_id": selectedTurn.value,
-          "cost_center_id": selectedCostCenter.value,
-          "department_id": selectedDepartment.value,
-          "admission_date": admissionDate,
-          "resignation_date": admissionDate,
-          "enrolment": enrolment,
-          "sales_code": salesCode,
-          "picture": cloudinaryResponse?.data.secure_url,
-          "timecode": timecode,
-          "esocial": esocial,
-          "gender_id": selectedGender?.value,
-          "civil_status_id": selectedCivilStatus?.value,
-          "street": street,
-          "street_number": streetNumber,
-          "street_complement": streetComplement,
-          "neighborhood_id": selectedNeighborhood?.value,
-          "cep": cep,
-          "city": selectedCity?.value,
-          "state": selectedState?.value,
-          "phone": selectedPhone,
-          "mobile": selectedMobile,
-          "email": email,
-          "ethnicity_id": selectedEthnicity?.value,
-          "birthdate": birthdate,
-          "birthcity": birthcity?.value,
-          "birthstate": selectedBirthstate?.value,
-          "nationality": selectedNationality?.value,
-          "fathername": fathername,
-          "mothername": mothername,
-          "has_children": hasChildren?.value,
-          "children_data": "[]",
-          "cpf": cpf,
-          "rg": rg,
-          "rg_issuing_agency": rgIssuingAgency,
-          "rg_state": rgState?.value,
-          "rg_expedition_date": rgExpeditionDate,
-          "military_cert_number": militaryCertNumber,
-          "pis": pis,
-          "pis_register_date": pisRegisterDate,
-          "vontant_title": votantTitle,
-          "votant_zone": votantZone,
-          "votant_session": votantSession,
-          "ctps": ctps,
-          "ctps_serie": ctpsSerie,
-          "ctps_state": ctpsState?.value,
-          "ctps_emission_date": ctpsEmissionDate,
-          "cnh": cnh,
-          "cnh_category": cnhCategory,
-          "cnh_emition_date": cnhEmissionDate,
-          "cnh_valid_date": cnhValidDate,
-          "firstJob": firstJob?.value,
-          "was_employee": wasEmployee?.value,
-          "union_contribute_current_year": unionContributeCurrentYear?.value,
-          "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value,
-          "previous_experience": previousExperience?.value,
-          "month_wage": monthWage,
-          "hour_wage": hourWage,
-          "journey_wage": journeyWage,
-          "transport_voucher": transportVoucher?.value,
-          "transport_voucher_quantity": transportVoucherQuantity,
-          "diary_workjourney": diaryWorkJourney,
-          "week_workjourney": weekWorkJourney,
-          "month_workjourney": monthWorkJourney,
-          "experience_time": experienceTime?.value,
-          "nocturne_hours": nocturneHours,
-          "dangerousness": dangerousness?.value,
-          "unhealthy": unhealthy?.value,
-          "wage_payment_method": wagePaymentMethod?.value,
-        }
-        await api
-          .post("/workers", formData)
-          .then(() => handleClose())
-      })
+  const handleSubmit = () => {
+    let formData = {
+      "name": name,
+      "function_id": selectedFunction.value,
+      "subsidiarie_id": selectedSubsdiarie.value,
+      "is_active": true,
+      "turn_id": selectedTurn.value,
+      "cost_center_id": selectedCostCenter.value,
+      "department_id": selectedDepartment.value,
+      "admission_date": admissionDate,
+      "resignation_date": admissionDate,
+      "enrolment": enrolment,
+      "sales_code": salesCode,
+      // "picture": cloudinaryResponse?.data.secure_url,
+      "timecode": timecode,
+      "esocial": esocial,
+      "gender_id": selectedGender?.value,
+      "civil_status_id": selectedCivilStatus?.value,
+      "street": street,
+      "street_number": streetNumber,
+      "street_complement": streetComplement,
+      "neighborhood_id": selectedNeighborhood?.value,
+      "cep": cep,
+      "city": selectedCity?.value,
+      "state": selectedState?.value,
+      "phone": selectedPhone,
+      "mobile": selectedMobile,
+      "email": email,
+      "ethnicity_id": selectedEthnicity?.value,
+      "birthdate": birthdate,
+      "birthcity": birthcity?.value,
+      "birthstate": selectedBirthstate?.value,
+      "nationality": selectedNationality?.value,
+      "fathername": fathername,
+      "mothername": mothername,
+      "has_children": hasChildren?.value,
+      "children_data": "[]",
+      "cpf": cpf,
+      "rg": rg,
+      "rg_issuing_agency": rgIssuingAgency,
+      "rg_state": rgState?.value,
+      "rg_expedition_date": rgExpeditionDate,
+      "military_cert_number": militaryCertNumber,
+      "pis": pis,
+      "pis_register_date": pisRegisterDate,
+      "vontant_title": votantTitle,
+      "votant_zone": votantZone,
+      "votant_session": votantSession,
+      "ctps": ctps,
+      "ctps_serie": ctpsSerie,
+      "ctps_state": ctpsState?.value,
+      "ctps_emission_date": ctpsEmissionDate,
+      "cnh": cnh,
+      "cnh_category": cnhCategory,
+      "cnh_emition_date": cnhEmissionDate,
+      "cnh_valid_date": cnhValidDate,
+      "firstJob": firstJob?.value,
+      "was_employee": wasEmployee?.value,
+      "union_contribute_current_year": unionContributeCurrentYear?.value,
+      "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value,
+      "previous_experience": previousExperience?.value,
+      "month_wage": monthWage,
+      "hour_wage": hourWage,
+      "journey_wage": journeyWage,
+      "transport_voucher": transportVoucher?.value,
+      "transport_voucher_quantity": transportVoucherQuantity,
+      "diary_workjourney": diaryWorkJourney,
+      "week_workjourney": weekWorkJourney,
+      "month_workjourney": monthWorkJourney,
+      "experience_time": experienceTime?.value,
+      "nocturne_hours": nocturneHours,
+      "dangerousness": dangerousness?.value,
+      "unhealthy": unhealthy?.value,
+      "wage_payment_method": wagePaymentMethod?.value,
+      "general_function_code": codeGeneralFunction,
+      "wage": wage,
+      "last_function_date": lastFunctionDate,
+      "current_function_time": currentFunctionTime,
+      "school_level": selectedSchoolLevel?.value,
+      "emergency_number": emergencyNumber,
+      "bank": selectedBankOption?.value,
+      "bank_agency": bankAgency,
+      "bank_account": bankAccount,
+    }
+
+    api
+      .post("/workers", formData)
+      .then(() => handleClose())
+
+    // let cloudinaryEndpoint = import.meta.env.VITE_CLOUDINARY_ENDPOINT
+
+    // const cloudinaryFormData = new FormData()
+
+    // cloudinaryFormData.append("file", picture)
+
+    // cloudinaryFormData.append('upload_preset', import.meta.env.VITE_UPLOAD_PRESET)
+
+    // axios
+    //   .post(cloudinaryEndpoint, cloudinaryFormData)
+    //   .then((cloudinaryResponse) => {
+    //     let formData = {
+    //       "name": name,
+    //       "function_id": selectedFunction.value,
+    //       "subsidiarie_id": selectedSubsdiarie.value,
+    //       "is_active": true,
+    //       "turn_id": selectedTurn.value,
+    //       "cost_center_id": selectedCostCenter.value,
+    //       "department_id": selectedDepartment.value,
+    //       "admission_date": admissionDate,
+    //       "resignation_date": admissionDate,
+    //       "enrolment": enrolment,
+    //       "sales_code": salesCode,
+    //       "picture": cloudinaryResponse?.data.secure_url,
+    //       "timecode": timecode,
+    //       "esocial": esocial,
+    //       "gender_id": selectedGender?.value,
+    //       "civil_status_id": selectedCivilStatus?.value,
+    //       "street": street,
+    //       "street_number": streetNumber,
+    //       "street_complement": streetComplement,
+    //       "neighborhood_id": selectedNeighborhood?.value,
+    //       "cep": cep,
+    //       "city": selectedCity?.value,
+    //       "state": selectedState?.value,
+    //       "phone": selectedPhone,
+    //       "mobile": selectedMobile,
+    //       "email": email,
+    //       "ethnicity_id": selectedEthnicity?.value,
+    //       "birthdate": birthdate,
+    //       "birthcity": birthcity?.value,
+    //       "birthstate": selectedBirthstate?.value,
+    //       "nationality": selectedNationality?.value,
+    //       "fathername": fathername,
+    //       "mothername": mothername,
+    //       "has_children": hasChildren?.value,
+    //       "children_data": "[]",
+    //       "cpf": cpf,
+    //       "rg": rg,
+    //       "rg_issuing_agency": rgIssuingAgency,
+    //       "rg_state": rgState?.value,
+    //       "rg_expedition_date": rgExpeditionDate,
+    //       "military_cert_number": militaryCertNumber,
+    //       "pis": pis,
+    //       "pis_register_date": pisRegisterDate,
+    //       "vontant_title": votantTitle,
+    //       "votant_zone": votantZone,
+    //       "votant_session": votantSession,
+    //       "ctps": ctps,
+    //       "ctps_serie": ctpsSerie,
+    //       "ctps_state": ctpsState?.value,
+    //       "ctps_emission_date": ctpsEmissionDate,
+    //       "cnh": cnh,
+    //       "cnh_category": cnhCategory,
+    //       "cnh_emition_date": cnhEmissionDate,
+    //       "cnh_valid_date": cnhValidDate,
+    //       "firstJob": firstJob?.value,
+    //       "was_employee": wasEmployee?.value,
+    //       "union_contribute_current_year": unionContributeCurrentYear?.value,
+    //       "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value,
+    //       "previous_experience": previousExperience?.value,
+    //       "month_wage": monthWage,
+    //       "hour_wage": hourWage,
+    //       "journey_wage": journeyWage,
+    //       "transport_voucher": transportVoucher?.value,
+    //       "transport_voucher_quantity": transportVoucherQuantity,
+    //       "diary_workjourney": diaryWorkJourney,
+    //       "week_workjourney": weekWorkJourney,
+    //       "month_workjourney": monthWorkJourney,
+    //       "experience_time": experienceTime?.value,
+    //       "nocturne_hours": nocturneHours,
+    //       "dangerousness": dangerousness?.value,
+    //       "unhealthy": unhealthy?.value,
+    //       "wage_payment_method": wagePaymentMethod?.value,
+    //       "general_function_code": codeGeneralFunction,
+    //       "wage": wage,
+    //       "last_function_date": lastFunctionDate,
+    //       "current_function_time": currentFunctionTime,
+    //       "school_level": selectedSchoolLevel?.value,
+    //       "emergency_number": emergencyNumber,
+    //       "bank": selectedBankOption?.value,
+    //       "bank_agency": bankAgency,
+    //       "bank_account": bankAccount,
+    //     }
+
+    //     api
+    //       .post("/workers", formData)
+    //       .then(() => handleClose())
+    //   })
   }
 
   return (
@@ -699,6 +826,51 @@ const CreateWorkerModal = (props) => {
               { value: 2, label: "cheque" },
             ]}
             setSelectedValue={setWagePaymentMethod}
+          />
+          <Input
+            placeholder="Código geral de função"
+            type="text"
+            setSelectedValue={setCodeGeneralFunction}
+          />
+          <Input
+            placeholder="Salário"
+            type="text"
+            setSelectedValue={setWage}
+          />
+          <Input
+            placeholder="Data de última função"
+            type="text"
+            setSelectedValue={setLastFunctionDate}
+          />
+          <Input
+            placeholder="Tempo na função atual"
+            type="text"
+            setSelectedValue={setCurrentFunctionTime}
+          />
+          <Select
+            placeholder="Escolaridade"
+            options={schoolLevelsOptions}
+            setSelectedValue={setSelectedSchoolLevel}
+          />
+          <Input
+            placeholder="Número de emergência"
+            type="text"
+            setSelectedValue={setEmergencyNumber}
+          />
+          <Select
+            placeholder="Banco"
+            options={banksOptions}
+            setSelectedValue={setSelectedBankOption}
+          />
+          <Input
+            placeholder="Agência do banco"
+            type="text"
+            setSelectedValue={setBankAgency}
+          />
+          <Input
+            placeholder="Conta do banco"
+            type="text"
+            setSelectedValue={setBankAccount}
           />
         </Modal.Body>
 

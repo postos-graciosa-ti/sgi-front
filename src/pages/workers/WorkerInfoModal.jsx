@@ -30,6 +30,8 @@ const WorkerInfoModal = (props) => {
     setWorkerInfoModalOpen(false)
   }
 
+  console.log(selectedWorker)
+
   return (
     <Modal
       show={workerInfoModalOpen}

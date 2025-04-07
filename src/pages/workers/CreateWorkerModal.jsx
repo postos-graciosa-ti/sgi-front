@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
@@ -227,6 +226,16 @@ const CreateWorkerModal = (props) => {
 
   const [bankAccount, setBankAccount] = useState()
 
+  const [birthstateOptions, setBirthstateOptions] = useState()
+
+  const [birthcityOptions, setBirthcityOptions] = useState()
+
+  const [childrenName, setChildrenName] = useState()
+
+  const [childrenCitiesStates, setChildrenCitiesStates] = useState()
+
+  const [childrenCpf, setChildrenCpf] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -252,6 +261,30 @@ const CreateWorkerModal = (props) => {
     }
   }, [selectedCity])
 
+  useEffect(() => {
+    if (selectedNationality) {
+      api
+        .get(`/nationalities/${selectedNationality?.value}/states`)
+        .then((response) => {
+          let options = response?.data.map((state) => ({ value: state.id, label: state.name }))
+
+          setBirthstateOptions(options)
+        })
+    }
+  }, [selectedNationality])
+
+  useEffect(() => {
+    if (selectedBirthstate) {
+      api
+        .get(`/states/${selectedBirthstate.value}/cities`)
+        .then((response) => {
+          let options = response?.data.map((city) => ({ value: city.id, label: city.name }))
+
+          setBirthcityOptions(options)
+        })
+    }
+  }, [selectedBirthstate])
+
   const handleClose = () => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-first-review`)
@@ -276,6 +309,8 @@ const CreateWorkerModal = (props) => {
   }
 
   const handleSubmit = () => {
+    let childrenData = `["name": ${childrenName}, "citystate": ${childrenCitiesStates}, "cpf": ${childrenCpf}]`
+
     let formData = {
       "name": name,
       "function_id": selectedFunction.value,
@@ -311,7 +346,7 @@ const CreateWorkerModal = (props) => {
       "fathername": fathername,
       "mothername": mothername,
       "has_children": hasChildren?.value,
-      "children_data": "[]",
+      "children_data": childrenData,
       "cpf": cpf,
       "rg": rg,
       "rg_issuing_agency": rgIssuingAgency,
@@ -363,106 +398,6 @@ const CreateWorkerModal = (props) => {
     api
       .post("/workers", formData)
       .then(() => handleClose())
-
-    // let cloudinaryEndpoint = import.meta.env.VITE_CLOUDINARY_ENDPOINT
-
-    // const cloudinaryFormData = new FormData()
-
-    // cloudinaryFormData.append("file", picture)
-
-    // cloudinaryFormData.append('upload_preset', import.meta.env.VITE_UPLOAD_PRESET)
-
-    // axios
-    //   .post(cloudinaryEndpoint, cloudinaryFormData)
-    //   .then((cloudinaryResponse) => {
-    //     let formData = {
-    //       "name": name,
-    //       "function_id": selectedFunction.value,
-    //       "subsidiarie_id": selectedSubsdiarie.value,
-    //       "is_active": true,
-    //       "turn_id": selectedTurn.value,
-    //       "cost_center_id": selectedCostCenter.value,
-    //       "department_id": selectedDepartment.value,
-    //       "admission_date": admissionDate,
-    //       "resignation_date": admissionDate,
-    //       "enrolment": enrolment,
-    //       "sales_code": salesCode,
-    //       "picture": cloudinaryResponse?.data.secure_url,
-    //       "timecode": timecode,
-    //       "esocial": esocial,
-    //       "gender_id": selectedGender?.value,
-    //       "civil_status_id": selectedCivilStatus?.value,
-    //       "street": street,
-    //       "street_number": streetNumber,
-    //       "street_complement": streetComplement,
-    //       "neighborhood_id": selectedNeighborhood?.value,
-    //       "cep": cep,
-    //       "city": selectedCity?.value,
-    //       "state": selectedState?.value,
-    //       "phone": selectedPhone,
-    //       "mobile": selectedMobile,
-    //       "email": email,
-    //       "ethnicity_id": selectedEthnicity?.value,
-    //       "birthdate": birthdate,
-    //       "birthcity": birthcity?.value,
-    //       "birthstate": selectedBirthstate?.value,
-    //       "nationality": selectedNationality?.value,
-    //       "fathername": fathername,
-    //       "mothername": mothername,
-    //       "has_children": hasChildren?.value,
-    //       "children_data": "[]",
-    //       "cpf": cpf,
-    //       "rg": rg,
-    //       "rg_issuing_agency": rgIssuingAgency,
-    //       "rg_state": rgState?.value,
-    //       "rg_expedition_date": rgExpeditionDate,
-    //       "military_cert_number": militaryCertNumber,
-    //       "pis": pis,
-    //       "pis_register_date": pisRegisterDate,
-    //       "vontant_title": votantTitle,
-    //       "votant_zone": votantZone,
-    //       "votant_session": votantSession,
-    //       "ctps": ctps,
-    //       "ctps_serie": ctpsSerie,
-    //       "ctps_state": ctpsState?.value,
-    //       "ctps_emission_date": ctpsEmissionDate,
-    //       "cnh": cnh,
-    //       "cnh_category": cnhCategory,
-    //       "cnh_emition_date": cnhEmissionDate,
-    //       "cnh_valid_date": cnhValidDate,
-    //       "firstJob": firstJob?.value,
-    //       "was_employee": wasEmployee?.value,
-    //       "union_contribute_current_year": unionContributeCurrentYear?.value,
-    //       "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value,
-    //       "previous_experience": previousExperience?.value,
-    //       "month_wage": monthWage,
-    //       "hour_wage": hourWage,
-    //       "journey_wage": journeyWage,
-    //       "transport_voucher": transportVoucher?.value,
-    //       "transport_voucher_quantity": transportVoucherQuantity,
-    //       "diary_workjourney": diaryWorkJourney,
-    //       "week_workjourney": weekWorkJourney,
-    //       "month_workjourney": monthWorkJourney,
-    //       "experience_time": experienceTime?.value,
-    //       "nocturne_hours": nocturneHours,
-    //       "dangerousness": dangerousness?.value,
-    //       "unhealthy": unhealthy?.value,
-    //       "wage_payment_method": wagePaymentMethod?.value,
-    //       "general_function_code": codeGeneralFunction,
-    //       "wage": wage,
-    //       "last_function_date": lastFunctionDate,
-    //       "current_function_time": currentFunctionTime,
-    //       "school_level": selectedSchoolLevel?.value,
-    //       "emergency_number": emergencyNumber,
-    //       "bank": selectedBankOption?.value,
-    //       "bank_agency": bankAgency,
-    //       "bank_account": bankAccount,
-    //     }
-
-    //     api
-    //       .post("/workers", formData)
-    //       .then(() => handleClose())
-    //   })
   }
 
   return (
@@ -616,12 +551,12 @@ const CreateWorkerModal = (props) => {
           />
           <Select
             placeholder="Estado de nascimento"
-            options={statesOptions}
+            options={birthstateOptions}
             setSelectedValue={setSelectedBirthstate}
           />
           <Select
             placeholder="Cidade de nascimento"
-            options={citiesOptions}
+            options={birthcityOptions}
             setSelectedValue={setBirthcity}
           />
           <Input
@@ -639,6 +574,37 @@ const CreateWorkerModal = (props) => {
             options={trueFalseOptions}
             setSelectedValue={setHasChildren}
           />
+
+          {
+            hasChildren?.value == true && (
+              <div className="row">
+                <div className="col">
+                  <Input
+                    type="text"
+                    placeholder="Nome"
+                    setSelectedValue={setChildrenName}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    type="text"
+                    placeholder="Cidade/estado"
+                    setSelectedValue={setChildrenCitiesStates}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    type="text"
+                    placeholder="CPF"
+                    setSelectedValue={setChildrenCpf}
+                  />
+                </div>
+              </div>
+            ) || (<></>)
+          }
+
           <Input
             type="text"
             placeholder="CPF"

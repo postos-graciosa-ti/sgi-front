@@ -3,22 +3,10 @@ import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Select from '../../components/form/Select'
+import { fieldsOptions } from './fieldsOptions'
 
 const WorkerInfoModal = (props) => {
   const { workerInfoModalOpen, setWorkerInfoModalOpen, selectedWorker, setSelectedWorker } = props
-
-  const fieldsOptions = [
-    { value: "esocial", label: "E-social" },
-    { value: "enrolment", label: "Matrícula" },
-    { value: "sales_code", label: "Código de vendas" },
-    { value: "timecode", label: "Código de ponto" },
-    { value: "worker_name", label: "Nome" },
-    { value: "function_name", label: "Função" },
-    { value: "turn_name", label: "Turno" },
-    { value: "cost_center", label: "Centro de custo" },
-    { value: "department", label: "Setor" },
-    { value: "admission_date", label: "Data de admissão" },
-  ]
 
   const [selectedFields, setSelectedFields] = useState()
 
@@ -29,8 +17,6 @@ const WorkerInfoModal = (props) => {
 
     setWorkerInfoModalOpen(false)
   }
-
-  console.log(selectedWorker)
 
   return (
     <Modal

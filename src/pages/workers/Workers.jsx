@@ -1,6 +1,6 @@
 import moment from "moment"
 import { useEffect, useState } from "react"
-import { ArrowClockwise, ArrowsCollapse, ArrowsExpand, ArrowsFullscreen, ArrowUpRight, ClipboardData, Clock, Filter, Funnel, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonX, Question, SlashCircle } from "react-bootstrap-icons"
+import { ArrowClockwise, ArrowsCollapse, ArrowsExpand, ArrowsFullscreen, ArrowUpRight, ClipboardData, Clock, Filter, Funnel, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX, Question, SlashCircle } from "react-bootstrap-icons"
 import ReactDOMServer from 'react-dom/server'
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
@@ -19,6 +19,8 @@ import ReactSelect from "react-select"
 import WorkersByTurnModal from "./WorkersByTurnModal"
 import NrModal from "./NrModal"
 import WorkerInfoModal from "./WorkerInfoModal"
+import WorkerAwayModal from "./WorkerAwayModal"
+import WorkerReturnModal from "./WorkerReturnModal"
 
 const Workers = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -49,37 +51,80 @@ const Workers = () => {
 
   const [workerInfoModalOpen, setWorkerInfoModalOpen] = useState(false)
 
+  const [workerAwayModalOpen, setWorkerAwayModalOpen] = useState(false)
+
+  const [workerReturnModalOpen, setWorkerReturnModalOpen] = useState(false)
+
   useEffect(() => {
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => {
-        setWorkersList(response.data)
+        let allWorkers = response.data
+
+        let statusWorkers = allWorkers.filter((worker) => worker.worker_is_active == true && worker.is_away == false)
+
+        setWorkersList(statusWorkers)
       })
   }, [])
 
   useEffect(() => {
     if (workersStatus) {
-      if (workersStatus.value == 3) {
-        api
-          .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
-          .then((response) => {
+
+      api
+        .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
+        .then((response) => {
+          if (workersStatus.value == 1) {
+            let allWorkers = response.data
+
+            let statusWorkers = allWorkers.filter((worker) => worker.worker_is_active == true && worker.is_away == false)
+
+            setWorkersList(statusWorkers)
+          }
+
+          if (workersStatus.value == 2) {
+            let allWorkers = response.data
+
+            let statusWorkers = allWorkers.filter((worker) => worker.is_away == true)
+
+            setWorkersList(statusWorkers)
+          }
+
+          if (workersStatus.value == 3) {
+            let allWorkers = response.data
+
+            let statusWorkers = allWorkers.filter((worker) => worker.worker_is_active == false)
+
+            setWorkersList(statusWorkers)
+          }
+
+          if (workersStatus.value == 4) {
             let allWorkers = response.data
 
             setWorkersList(allWorkers)
-          })
-      } else {
-        api
-          .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
-          .then((response) => {
-            let allWorkers = response.data
+          }
+        })
 
-            const status = workersStatus.value == 1 && true || false
+      // if (workersStatus.value == 3) {
+      //   api
+      //     .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
+      //     .then((response) => {
+      //       let allWorkers = response.data
 
-            const workersByStatus = allWorkers.filter((worker) => worker.worker_is_active === status)
+      //       setWorkersList(allWorkers)
+      //     })
+      // } else {
+      //   api
+      //     .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
+      //     .then((response) => {
+      //       let allWorkers = response.data
 
-            setWorkersList(workersByStatus)
-          })
-      }
+      //       const status = workersStatus.value == 1 && true || false
+
+      //       const workersByStatus = allWorkers.filter((worker) => worker.worker_is_active === status)
+
+      //       setWorkersList(workersByStatus)
+      //     })
+      // }
     }
   }, [workersStatus])
 
@@ -156,6 +201,18 @@ const Workers = () => {
     setWorkerInfoModalOpen(true)
   }
 
+  const handleOpenWorkerAwayModal = (worker) => {
+    setSelectedWorker(worker)
+
+    setWorkerAwayModalOpen(true)
+  }
+
+  const handleOpenWorkerReturnModal = (worker) => {
+    setSelectedWorker(worker)
+
+    setWorkerReturnModalOpen(true)
+  }
+
   return (
     <>
       <Nav />
@@ -211,12 +268,13 @@ const Workers = () => {
             <ReactSelect
               options={[
                 { value: 1, label: "Somente ativos" },
-                { value: 2, label: "Somente inativos" },
-                { value: 3, label: "Sem filtros" },
+                { value: 2, label: "Somente afastados" },
+                { value: 3, label: "Somente inativos" },
+                { value: 4, label: "Sem filtros" },
               ]}
               placeholder="Filtrar colaboradores"
               onChange={(value) => setWorkersStatus(value)}
-              defaultValue={{ value: 3, label: "Sem filtros" }}
+              defaultValue={{ value: 1, label: "Somente ativos" }}
             />
           </div>
         </div>
@@ -229,14 +287,28 @@ const Workers = () => {
 
                 <th>Nome</th>
 
-                <th></th>
+                <th>
+                  <div>
+                    <span class="badge text-bg-success p-2 me-3">Ativo</span>
+                    <span class="badge text-bg-warning p-2 me-3">Afastado</span>
+                    <span class="badge text-bg-danger p-2 me-3">Inativo</span>
+                  </div>
+                </th>
               </tr>
             </thead>
 
             <tbody>
               {
                 workersList?.map((worker) => (
-                  <tr className={!worker.worker_is_active ? "table-danger" : "table-success"}>
+                  <tr
+                    className={
+                      !worker.worker_is_active
+                        ? "table-danger"
+                        : worker.is_away
+                          ? "table-warning"
+                          : "table-success"
+                    }
+                  >
                     <td>
                       <button
                         className="btn btn-sm btn-primary"
@@ -286,6 +358,14 @@ const Workers = () => {
 
                       <button
                         className="btn btn-danger me-2 mt-2"
+                        title="Afastar colaborador"
+                        onClick={() => handleOpenWorkerAwayModal(worker)}
+                      >
+                        <PersonSlash />
+                      </button>
+
+                      <button
+                        className="btn btn-danger me-2 mt-2"
                         onClick={() => handleOpenDeleteWorkerModal(worker)}
                         id="deleteWorker"
                         aria-label={`Excluir ${worker.worker_name}`}
@@ -293,6 +373,18 @@ const Workers = () => {
                       >
                         <PersonX />
                       </button>
+
+                      {
+                        worker.is_away && (
+                          <button
+                            className="btn btn-warning me-2 mt-2"
+                            title="Retorno ao trabalho"
+                            onClick={() => handleOpenWorkerReturnModal(worker)}
+                          >
+                            <ArrowClockwise />
+                          </button>
+                        )
+                      }
 
                       {
                         !worker.worker_is_active && (
@@ -476,6 +568,22 @@ const Workers = () => {
         setWorkerInfoModalOpen={setWorkerInfoModalOpen}
         selectedWorker={selectedWorker}
         setSelectedWorker={setSelectedWorker}
+      />
+
+      <WorkerAwayModal
+        workerAwayModalOpen={workerAwayModalOpen}
+        setWorkerAwayModalOpen={setWorkerAwayModalOpen}
+        selectedWorker={selectedWorker}
+        setSelectedWorker={setSelectedWorker}
+        setWorkersList={setWorkersList}
+      />
+
+      <WorkerReturnModal
+        workerReturnModalOpen={workerReturnModalOpen}
+        setWorkerReturnModalOpen={setWorkerReturnModalOpen}
+        selectedWorker={selectedWorker}
+        setSelectedWorker={setSelectedWorker}
+        setWorkersList={setWorkersList}
       />
     </>
   )

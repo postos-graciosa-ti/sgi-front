@@ -506,8 +506,6 @@ const EditWorkerModal = (props) => {
 
   }
 
-  console.log(selectedWorker, selectedWorker?.rg_expedition_date)
-
   return (
     <Modal
       show={editWorkerModalOpen}

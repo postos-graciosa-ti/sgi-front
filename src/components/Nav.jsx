@@ -187,6 +187,12 @@ const Nav = () => {
 
                   {userSession.role_id === 1 && <li><Link className="dropdown-item" to="/functions">Funções</Link></li>}
 
+                  <li><Link className="dropdown-item" to="/nationalities">Nacionalidades</Link></li>
+
+                  <li><Link className="dropdown-item" to="/">Estados</Link></li>
+
+                  <li><Link className="dropdown-item" to="/">Cidades</Link></li>
+
                   <li><Link className="dropdown-item" to="/neighborhoods">Bairros</Link></li>
                 </ul>
               </li>

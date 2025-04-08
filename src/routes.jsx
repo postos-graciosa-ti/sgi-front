@@ -21,8 +21,10 @@ import TurnsLogs from "./pages/logsPages/TurnsLogs"
 import UsersLogs from "./pages/logsPages/UsersLogs"
 import WorkersLogs from "./pages/logsPages/WorkersLogs"
 import Monitoring from "./pages/monitoring/Monitoring"
+import Nationalities from "./pages/nationalities/Nationalities"
 import Neighborhood from "./pages/neighborhoods/Neighborhood"
 import Scale from "./pages/scale/Scale"
+import States from "./pages/states/States"
 import Steps from "./pages/steps/Steps"
 import Subsidiaries from "./pages/subsidiaries/Subsidiaries"
 import SubsidiarieStatus from "./pages/subsidiarieStatus/SubsidiarieStatus"
@@ -30,7 +32,6 @@ import Turns from "./pages/turns/Turns"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
-import Nationalities from "./pages/nationalities/Nationalities"
 
 const Routes = createBrowserRouter([
   // public routes
@@ -184,6 +185,11 @@ const Routes = createBrowserRouter([
   {
     path: "/nationalities",
     element: <PrivateRoute><Nationalities /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/states",
+    element: <PrivateRoute><States /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

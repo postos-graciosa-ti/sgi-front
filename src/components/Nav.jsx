@@ -189,7 +189,7 @@ const Nav = () => {
 
                   <li><Link className="dropdown-item" to="/nationalities">Nacionalidades</Link></li>
 
-                  <li><Link className="dropdown-item" to="/">Estados</Link></li>
+                  <li><Link className="dropdown-item" to="/states">Estados</Link></li>
 
                   <li><Link className="dropdown-item" to="/">Cidades</Link></li>
 

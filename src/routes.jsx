@@ -30,6 +30,7 @@ import Turns from "./pages/turns/Turns"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
+import Nationalities from "./pages/nationalities/Nationalities"
 
 const Routes = createBrowserRouter([
   // public routes
@@ -178,6 +179,11 @@ const Routes = createBrowserRouter([
   {
     path: "/monitoring",
     element: <PrivateRoute><Monitoring /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/nationalities",
+    element: <PrivateRoute><Nationalities /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

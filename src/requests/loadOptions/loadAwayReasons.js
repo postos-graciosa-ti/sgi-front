@@ -5,8 +5,6 @@ const loadAwayReasons = (setAwayReasonsOptions) => {
     api
       .get("/away-reasons")
       .then((response) => {
-        console.log(response)
-        
         let options = response?.data.map((awayReason) => ({ value: awayReason.id, label: awayReason.name }))
 
         setAwayReasonsOptions(options)

@@ -63,13 +63,14 @@ const Workers = () => {
 
         let statusWorkers = allWorkers.filter((worker) => worker.worker_is_active == true && worker.is_away == false)
 
-        setWorkersList(statusWorkers)
+        let sortStatusWorkers = statusWorkers.sort()
+
+        setWorkersList(sortStatusWorkers)
       })
   }, [])
 
   useEffect(() => {
     if (workersStatus) {
-
       api
         .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
         .then((response) => {
@@ -78,7 +79,9 @@ const Workers = () => {
 
             let statusWorkers = allWorkers.filter((worker) => worker.worker_is_active == true && worker.is_away == false)
 
-            setWorkersList(statusWorkers)
+            let sortStatusWorkers = statusWorkers.sort()
+
+            setWorkersList(sortStatusWorkers)
           }
 
           if (workersStatus.value == 2) {
@@ -86,7 +89,9 @@ const Workers = () => {
 
             let statusWorkers = allWorkers.filter((worker) => worker.is_away == true)
 
-            setWorkersList(statusWorkers)
+            let sortStatusWorkers = statusWorkers.sort()
+
+            setWorkersList(sortStatusWorkers)
           }
 
           if (workersStatus.value == 3) {
@@ -94,37 +99,19 @@ const Workers = () => {
 
             let statusWorkers = allWorkers.filter((worker) => worker.worker_is_active == false)
 
-            setWorkersList(statusWorkers)
+            let sortStatusWorkers = statusWorkers.sort()
+
+            setWorkersList(sortStatusWorkers)
           }
 
           if (workersStatus.value == 4) {
             let allWorkers = response.data
 
-            setWorkersList(allWorkers)
+            let sortStatusWorkers = allWorkers.sort()
+
+            setWorkersList(sortStatusWorkers)
           }
         })
-
-      // if (workersStatus.value == 3) {
-      //   api
-      //     .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
-      //     .then((response) => {
-      //       let allWorkers = response.data
-
-      //       setWorkersList(allWorkers)
-      //     })
-      // } else {
-      //   api
-      //     .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
-      //     .then((response) => {
-      //       let allWorkers = response.data
-
-      //       const status = workersStatus.value == 1 && true || false
-
-      //       const workersByStatus = allWorkers.filter((worker) => worker.worker_is_active === status)
-
-      //       setWorkersList(workersByStatus)
-      //     })
-      // }
     }
   }, [workersStatus])
 

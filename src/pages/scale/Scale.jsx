@@ -153,8 +153,6 @@ const Scale = () => {
 
   }, [])
 
-  console.log(allHollidays)
-
   useEffect(() => {
     if (selectedSubsdiarie && selectedFunction && selectedTurn) {
       api

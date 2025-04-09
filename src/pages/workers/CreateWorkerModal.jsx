@@ -305,6 +305,7 @@ const CreateWorkerModal = (props) => {
     setPicture()
     setTimecode()
     setEsocial()
+    setHasChildren()
     setCreateWorkerModalOpen(false)
   }
 
@@ -407,170 +408,531 @@ const CreateWorkerModal = (props) => {
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
+        fullscreen={true}
       >
         <Modal.Header closeButton>
           <Modal.Title>Adicionar colaborador</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          <div>
-            <h5>Dados de trabalho</h5>
+          <div className="row">
+            <div className="col">
+              <div className="mb-3 mt-3">
+                <h4>Informações pessoais</h4>
+              </div>
+
+              <Input
+                type="text"
+                // placeholder="Nome"
+                label={"Nome"}
+                setSelectedValue={setName}
+              />
+
+              <Input
+                type="date"
+                setSelectedValue={setBirthdate}
+                // label={"Data de nascimento"}
+                label={"Data de nascimento"}
+              />
+
+              <Input
+                type="text"
+                // placeholder="CPF"
+                label={"CPF"}
+                setSelectedValue={setCpf}
+              />
+
+              <Input
+                type="text"
+                // placeholder='RG'
+                label={"RG"}
+                setSelectedValue={setRg}
+              />
+
+              <Input
+                type="text"
+                // placeholder='Órgão emissor'
+                label={"Órgão emissor"}
+                setSelectedValue={setRgIssuingAgency}
+              />
+
+              <Select
+                placeholder=""
+                label={"Estado"}
+                options={statesOptions}
+                setSelectedValue={setRgState}
+              />
+            </div>
+
+            <div className="col"></div>
+
+            <div className="col"></div>
           </div>
+
+
+          <Input
+            type="date"
+            setSelectedValue={setRgExpeditionDate}
+            label={"Data de expedição"}
+          />
+
           <Input
             type="text"
-            placeholder="E-Social"
+            // placeholder="Telefone fixo"
+            label={"Telefone fixo"}
+            setSelectedValue={setSelectedPhone}
+          />
+
+          <Input
+            type="text"
+            // placeholder="Celular"
+            label={"Celular"}
+            setSelectedValue={setSelectedMobile}
+          />
+
+          <Input
+            type="email"
+            // placeholder="E-mail"
+            label={"E-mail"}
+            setSelectedValue={setEmail}
+          />
+
+          <Input
+            type="text"
+            // placeholder='PIS'
+            setSelectedValue={setPis}
+            label={"PIS"}
+          />
+
+          <Input
+            type={"date"}
+            setSelectedValue={setPisRegisterDate}
+            label={"Data de cadastro"}
+          />
+
+          <Input
+            type="text"
+            // placeholder='CTPS'
+            label={"CTPS"}
+            setSelectedValue={setCtps}
+          />
+
+          <Input
+            type="text"
+            // placeholder="Série de CTPS"
+            label={"Série"}
+            setSelectedValue={setCtpsSerie}
+          />
+
+          <Select
+            placeholder=""
+            label={"UF"}
+            options={statesOptions}
+            setSelectedValue={setCtpsState}
+          />
+
+          <Input
+            type="date"
+            label="Data de emissão"
+            setSelectedValue={setCtpsEmissionDate}
+          />
+
+          <Select
+            placeholder=""
+            label={"Escolaridade"}
+            options={schoolLevelsOptions}
+            setSelectedValue={setSelectedSchoolLevel}
+          />
+
+          <Input
+            // placeholder="Número de emergência"
+            label={"Número de emergência"}
+            type="text"
+            setSelectedValue={setEmergencyNumber}
+          />
+
+          <Input
+            type="text"
+            // placeholder="E-Social"
+            label={"E-social"}
             setSelectedValue={setEsocial}
           />
+
           <Input
             type="text"
-            placeholder="Matrícula"
+            // placeholder="Matrícula"
+            label={"Matrícula"}
             setSelectedValue={setEnrolment}
           />
+
           <Input
             type="text"
-            placeholder="Código de vendas"
+            // placeholder="Código de vendas"
+            label={"Código de vendas"}
             setSelectedValue={setSalesCode}
           />
+
           <Input
             type="text"
-            placeholder="Código de ponto"
+            // placeholder="Código de ponto"
+            label={"Código de ponto"}
             setSelectedValue={setTimecode}
           />
-          <Input
-            type="text"
-            placeholder="Nome"
-            setSelectedValue={setName}
-          />
+
           <Select
-            placeholder="Função"
+            placeholder=""
+            label={"Função"}
             options={functionsOptions}
             setSelectedValue={setSelectedFunction}
           />
+
           <Select
-            placeholder="Turnos"
+            placeholder=""
+            label={"Turnos"}
             options={turnsOptions}
             setSelectedValue={setSelectedTurn}
           />
+
           <Select
-            placeholder="Centro de custos"
+            label={"Centro de custos"}
+            placeholder=""
             options={costCenterOptions}
             setSelectedValue={setSelectedCostCenter}
           />
+
           <Select
-            placeholder="Setor"
+            label={"Setor"}
+            placeholder=""
             options={departmentsOptions}
             setSelectedValue={setSelectedDepartment}
           />
+
           <Input
             type="date"
             setSelectedValue={setAdmissionDate}
             label={"Data de admissão"}
           />
+
           <Input
             type="file"
             setSelectedValue={setPicture}
             label={"Foto"}
           />
-          <div>
-            <h5>Ficha da contabilidade</h5>
-          </div>
+
           <Select
-            placeholder={"Genero"}
+            placeholder=""
+            label={"Gênero"}
             options={gendersOptions}
             setSelectedValue={setSelectedGender}
           />
+
           <Select
-            placeholder="Estado civil"
+            label={"Estado civil"}
+            placeholder=""
             options={civilStatusOptions}
             setSelectedValue={setSelectedCivilStatus}
           />
+
           <Input
             type="text"
-            placeholder="Logradouro"
+            // placeholder="Logradouro"
+            label={"Logradouro"}
             setSelectedValue={setStreet}
           />
+
           <Input
             type="text"
-            placeholder="Número"
+            // placeholder="Número"
+            label={"Número"}
             setSelectedValue={setStreetNumber}
           />
+
           <Input
             type="text"
-            placeholder="Complemento"
+            // placeholder="Complemento"
+            label={"Complemento"}
             setSelectedValue={setStreetComplement}
           />
+
           <Input
             type="text"
-            placeholder="CEP"
+            // placeholder="CEP"
+            label={"CEP"}
             setSelectedValue={setSelectedCep}
           />
+
           <Select
-            placeholder="Estado"
+            placeholder=""
+            label={"Estado"}
             options={statesOptions}
             setSelectedValue={setSelectedState}
           />
+
           <Select
-            placeholder="Cidade"
+            placeholder=""
+            label={"Cidade"}
             options={citiesOptions}
             setSelectedValue={setSelectedCity}
           />
+
           <Select
-            placeholder="Bairro"
+            label={"Bairro"}
+            placeholder=""
             options={neighborhoodOptions}
             setSelectedValue={setSelectedNeighborhood}
           />
-          <Input
-            type="text"
-            placeholder="Telefone fixo"
-            setSelectedValue={setSelectedPhone}
-          />
-          <Input
-            type="text"
-            placeholder="Celular"
-            setSelectedValue={setSelectedMobile}
-          />
-          <Input
-            type="email"
-            placeholder="E-mail"
-            setSelectedValue={setEmail}
-          />
+
           <Select
-            placeholder="Etnia"
+            label={"Etnia"}
+            placeholder=""
             options={ethnicitiesOptions}
             setSelectedValue={setSelectedEthnicity}
           />
-          <Input
-            type="date"
-            setSelectedValue={setBirthdate}
-            label={"Data de nascimento"}
-          />
+
           <Select
-            placeholder="Nacionalidade"
+            label={"Nacionalidade"}
+            placeholder=""
             options={nationalityOptions}
             setSelectedValue={setSelectedNationality}
           />
+
           <Select
-            placeholder="Estado de nascimento"
+            label={"Estado de nascimento"}
+            placeholder=""
             options={birthstateOptions}
             setSelectedValue={setSelectedBirthstate}
           />
+
           <Select
-            placeholder="Cidade de nascimento"
+            label={"Cidade de nascimento"}
+            placeholder=""
             options={birthcityOptions}
             setSelectedValue={setBirthcity}
           />
+
           <Input
             type="text"
-            placeholder="Nome do pai"
+            label={"Nome do pai"}
+            // placeholder="Nome do pai"
             setSelectedValue={setFathername}
           />
+
           <Input
             type="text"
-            placeholder="Nome da mãe"
+            label={"Nome da mãe"}
+            // placeholder="Nome da mãe"
             setSelectedValue={setMothername}
           />
+
+          <Input
+            type="text"
+            label="Certificado de reservista"
+            setSelectedValue={setMilitaryCertNumber}
+          />
+
+          <Input
+            type="text"
+            label='Título de eleitor'
+            setSelectedValue={setVotantTitle}
+          />
+
+          <Input
+            type="text"
+            label='Zona'
+            setSelectedValue={setVotantZone}
+          />
+
+          <Input
+            type="text"
+            setSelectedValue={setVotantSession}
+            label="Sessão"
+          />
+
+          <Input
+            type="text"
+            label="CNH"
+            setSelectedValue={setCnh}
+          />
+
+          <Input
+            type="text"
+            label="Categoria"
+            setSelectedValue={setCnhCategory}
+          />
+
+          <Input
+            type="date"
+            label="Data de emissão"
+            setSelectedValue={setCnhEmissionDate}
+          />
+
+          <Input
+            type="date"
+            label="Validade de CNH"
+            setSelectedValue={setCnhValidDate}
+          />
+
           <Select
-            placeholder="Filhos menores de 14?"
+            placeholder={""}
+            label="Primeiro emprego?"
+            options={trueFalseOptions}
+            setSelectedValue={setFirstJob}
+          />
+
+          <Select
+            placeholder={""}
+            label="Já foi empregado da empresa?"
+            options={trueFalseOptions}
+            setSelectedValue={setWasEmployee}
+          />
+
+          <Select
+            placeholder={""}
+            label="Contribuição sindical nesse ano?"
+            options={trueFalseOptions}
+            setSelectedValue={setUnionContributeCurrentYear}
+          />
+
+          <Select
+            placeholder={""}
+            label="Recebendo seguro-desemprego?"
+            options={trueFalseOptions}
+            setSelectedValue={setReceivingUnemploymentInsurance}
+          />
+
+          <Select
+            placeholder={""}
+            label="Experiência prévia na função?"
+            options={trueFalseOptions}
+            setSelectedValue={setPreviousExperience}
+          />
+
+          <Input
+            label="Mensalista"
+            type="text"
+            setSelectedValue={setMonthWage}
+          />
+
+          <Input
+            label="Valor/horista"
+            type="text"
+            setSelectedValue={setHourWage}
+          />
+
+          <Input
+            label="Proporcional a jornada"
+            type="text"
+            setSelectedValue={setJourneyWage}
+          />
+
+          <Select
+            placeholder={""}
+            label="Vale transporte"
+            options={trueFalseOptions}
+            setSelectedValue={setTransportVoucher}
+          />
+
+          <Input
+            label="Carga diária"
+            type="text"
+            setSelectedValue={setDiaryWorkJourney}
+          />
+
+          <Input
+            label="Carga semanal"
+            type="text"
+            setSelectedValue={setWeekWorkJourney}
+          />
+
+          <Input
+            label="Carga mensal"
+            type="text"
+            setSelectedValue={setMonthWorkJourney}
+          />
+
+          <Select
+            placeholder={""}
+            label="Tempo de experiência"
+            options={experienceTimeOptions}
+            setSelectedValue={setExperienceTime}
+          />
+
+          <Input
+            label="Horas noturnas"
+            type="text"
+            setSelectedValue={setNocturneHours}
+          />
+
+          <Select
+            placeholder={""}
+            label="Periculosidade"
+            options={trueFalseOptions}
+            setSelectedValue={setDangerousness}
+          />
+
+          <Select
+            placeholder={""}
+            label="Insalubridade"
+            options={trueFalseOptions}
+            setSelectedValue={setUnhealthy}
+          />
+
+          <Select
+            placeholder={""}
+            label="Método de pagamento"
+            options={[
+              { value: 1, label: "dinheiro" },
+              { value: 2, label: "cheque" },
+            ]}
+            setSelectedValue={setWagePaymentMethod}
+          />
+
+          <Input
+            label="Código geral de função"
+            type="text"
+            setSelectedValue={setCodeGeneralFunction}
+          />
+
+          <Input
+            label="Salário"
+            type="text"
+            setSelectedValue={setWage}
+          />
+
+          <Input
+            label="Data de última função"
+            type="text"
+            setSelectedValue={setLastFunctionDate}
+          />
+
+          <Input
+            label="Tempo na função atual"
+            type="text"
+            setSelectedValue={setCurrentFunctionTime}
+          />
+
+          <Select
+            placeholder={""}
+            label="Banco"
+            options={banksOptions}
+            setSelectedValue={setSelectedBankOption}
+          />
+
+          <Input
+            label="Agência do banco"
+            type="text"
+            setSelectedValue={setBankAgency}
+          />
+
+          <Input
+            label="Conta do banco"
+            type="text"
+            setSelectedValue={setBankAccount}
+          />
+
+          <Select
+            placeholder=""
+            label="Filhos menores de 14?"
             options={trueFalseOptions}
             setSelectedValue={setHasChildren}
           />
@@ -581,7 +943,7 @@ const CreateWorkerModal = (props) => {
                 <div className="col">
                   <Input
                     type="text"
-                    placeholder="Nome"
+                    label="Nome"
                     setSelectedValue={setChildrenName}
                   />
                 </div>
@@ -589,7 +951,7 @@ const CreateWorkerModal = (props) => {
                 <div className="col">
                   <Input
                     type="text"
-                    placeholder="Cidade/estado"
+                    label="Cidade/estado"
                     setSelectedValue={setChildrenCitiesStates}
                   />
                 </div>
@@ -597,247 +959,13 @@ const CreateWorkerModal = (props) => {
                 <div className="col">
                   <Input
                     type="text"
-                    placeholder="CPF"
+                    label="CPF"
                     setSelectedValue={setChildrenCpf}
                   />
                 </div>
               </div>
             ) || (<></>)
           }
-
-          <Input
-            type="text"
-            placeholder="CPF"
-            setSelectedValue={setCpf}
-          />
-          <Input
-            type="text"
-            placeholder='RG'
-            setSelectedValue={setRg}
-          />
-          <Input
-            type="text"
-            placeholder='Órgão emissor'
-            setSelectedValue={setRgIssuingAgency}
-          />
-          <Select
-            placeholder="Estado de RG"
-            options={statesOptions}
-            setSelectedValue={setRgState}
-          />
-          <Input
-            type="date"
-            setSelectedValue={setRgExpeditionDate}
-            label={"Data de expedição de RG"}
-          />
-          <Input
-            type="text"
-            placeholder="Certificado de reservista"
-            setSelectedValue={setMilitaryCertNumber}
-          />
-          <Input
-            type="text"
-            placeholder='PIS'
-            setSelectedValue={setPis}
-          />
-          <Input
-            type={"date"}
-            setSelectedValue={setPisRegisterDate}
-            label={"Data de cadastro de PIS"}
-          />
-          <Input
-            type="text"
-            placeholder='Título de eleitor'
-            setSelectedValue={setVotantTitle}
-          />
-          <Input
-            type="text"
-            placeholder='Zona de eleitor'
-            setSelectedValue={setVotantZone}
-          />
-          <Input
-            type="text"
-            setSelectedValue={setVotantSession}
-            placeholder="Sessão de eleitor"
-          />
-          <Input
-            type="text"
-            placeholder='CTPS'
-            setSelectedValue={setCtps}
-          />
-          <Input
-            type="text"
-            placeholder="Série de CTPS"
-            setSelectedValue={setCtpsSerie}
-          />
-          <Select
-            placeholder="UF CTPS"
-            options={statesOptions}
-            setSelectedValue={setCtpsState}
-          />
-          <Input
-            type="date"
-            label="Data de emissão CTPS"
-            setSelectedValue={setCtpsEmissionDate}
-          />
-          <Input
-            type="text"
-            placeholder="CNH"
-            setSelectedValue={setCnh}
-          />
-          <Input
-            type="text"
-            placeholder="Categoria de CNH"
-            setSelectedValue={setCnhCategory}
-          />
-          <Input
-            type="date"
-            label="Data de emissão de CNH"
-            setSelectedValue={setCnhEmissionDate}
-          />
-          <Input
-            type="date"
-            label="Validade de CNH"
-            setSelectedValue={setCnhValidDate}
-          />
-          <Select
-            placeholder="Primeiro emprego?"
-            options={trueFalseOptions}
-            setSelectedValue={setFirstJob}
-          />
-          <Select
-            placeholder="Já foi empregado da empresa?"
-            options={trueFalseOptions}
-            setSelectedValue={setWasEmployee}
-          />
-          <Select
-            placeholder="Contribuição sindical nesse ano?"
-            options={trueFalseOptions}
-            setSelectedValue={setUnionContributeCurrentYear}
-          />
-          <Select
-            placeholder="Recebendo seguro-desemprego?"
-            options={trueFalseOptions}
-            setSelectedValue={setReceivingUnemploymentInsurance}
-          />
-          <Select
-            placeholder="Experiência prévia na função?"
-            options={trueFalseOptions}
-            setSelectedValue={setPreviousExperience}
-          />
-          <Input
-            placeholder="Mensalista"
-            type="text"
-            setSelectedValue={setMonthWage}
-          />
-          <Input
-            placeholder="Valor/horista"
-            type="text"
-            setSelectedValue={setHourWage}
-          />
-          <Input
-            placeholder="Proporcional a jornada"
-            type="text"
-            setSelectedValue={setJourneyWage}
-          />
-          <Select
-            placeholder="Vale transporte"
-            options={trueFalseOptions}
-            setSelectedValue={setTransportVoucher}
-          />
-          <Input
-            placeholder="Quantidade vale transporte"
-            type="number"
-            setSelectedValue={setTransportVoucherQuantity}
-          />
-          <Input
-            placeholder="Carga diária"
-            type="text"
-            setSelectedValue={setDiaryWorkJourney}
-          />
-          <Input
-            placeholder="Carga semanal"
-            type="text"
-            setSelectedValue={setWeekWorkJourney}
-          />
-          <Input
-            placeholder="Carga mensal"
-            type="text"
-            setSelectedValue={setMonthWorkJourney}
-          />
-          <Select
-            placeholder="Tempo de experiência"
-            options={experienceTimeOptions}
-            setSelectedValue={setExperienceTime}
-          />
-          <Input
-            placeholder="Horas noturnas"
-            type="text"
-            setSelectedValue={setNocturneHours}
-          />
-          <Select
-            placeholder="Periculosidade"
-            options={trueFalseOptions}
-            setSelectedValue={setDangerousness}
-          />
-          <Select
-            placeholder="Insalubridade"
-            options={trueFalseOptions}
-            setSelectedValue={setUnhealthy}
-          />
-          <Select
-            placeholder="Método de pagamento"
-            options={[
-              { value: 1, label: "dinheiro" },
-              { value: 2, label: "cheque" },
-            ]}
-            setSelectedValue={setWagePaymentMethod}
-          />
-          <Input
-            placeholder="Código geral de função"
-            type="text"
-            setSelectedValue={setCodeGeneralFunction}
-          />
-          <Input
-            placeholder="Salário"
-            type="text"
-            setSelectedValue={setWage}
-          />
-          <Input
-            placeholder="Data de última função"
-            type="text"
-            setSelectedValue={setLastFunctionDate}
-          />
-          <Input
-            placeholder="Tempo na função atual"
-            type="text"
-            setSelectedValue={setCurrentFunctionTime}
-          />
-          <Select
-            placeholder="Escolaridade"
-            options={schoolLevelsOptions}
-            setSelectedValue={setSelectedSchoolLevel}
-          />
-          <Input
-            placeholder="Número de emergência"
-            type="text"
-            setSelectedValue={setEmergencyNumber}
-          />
-          <Select
-            placeholder="Banco"
-            options={banksOptions}
-            setSelectedValue={setSelectedBankOption}
-          />
-          <Input
-            placeholder="Agência do banco"
-            type="text"
-            setSelectedValue={setBankAgency}
-          />
-          <Input
-            placeholder="Conta do banco"
-            type="text"
-            setSelectedValue={setBankAccount}
-          />
         </Modal.Body>
 
         <Modal.Footer>

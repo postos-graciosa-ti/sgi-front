@@ -30,6 +30,8 @@ const WorkerInfoModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
+        <div className="row"></div>
+
         <div className="mb-3">
           <Select
             options={fieldsOptions}

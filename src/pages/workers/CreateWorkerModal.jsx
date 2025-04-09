@@ -415,60 +415,47 @@ const CreateWorkerModal = (props) => {
         </Modal.Header>
 
         <Modal.Body>
-          <div className="row">
-            <div className="col">
-              <div className="mb-3 mt-3">
-                <h4>Informações pessoais</h4>
-              </div>
+          <Input
+            type="text"
+            // placeholder="Nome"
+            label={"Nome"}
+            setSelectedValue={setName}
+          />
 
-              <Input
-                type="text"
-                // placeholder="Nome"
-                label={"Nome"}
-                setSelectedValue={setName}
-              />
+          <Input
+            type="date"
+            setSelectedValue={setBirthdate}
+            // label={"Data de nascimento"}
+            label={"Data de nascimento"}
+          />
 
-              <Input
-                type="date"
-                setSelectedValue={setBirthdate}
-                // label={"Data de nascimento"}
-                label={"Data de nascimento"}
-              />
+          <Input
+            type="text"
+            // placeholder="CPF"
+            label={"CPF"}
+            setSelectedValue={setCpf}
+          />
 
-              <Input
-                type="text"
-                // placeholder="CPF"
-                label={"CPF"}
-                setSelectedValue={setCpf}
-              />
+          <Input
+            type="text"
+            // placeholder='RG'
+            label={"RG"}
+            setSelectedValue={setRg}
+          />
 
-              <Input
-                type="text"
-                // placeholder='RG'
-                label={"RG"}
-                setSelectedValue={setRg}
-              />
+          <Input
+            type="text"
+            // placeholder='Órgão emissor'
+            label={"Órgão emissor"}
+            setSelectedValue={setRgIssuingAgency}
+          />
 
-              <Input
-                type="text"
-                // placeholder='Órgão emissor'
-                label={"Órgão emissor"}
-                setSelectedValue={setRgIssuingAgency}
-              />
-
-              <Select
-                placeholder=""
-                label={"Estado"}
-                options={statesOptions}
-                setSelectedValue={setRgState}
-              />
-            </div>
-
-            <div className="col"></div>
-
-            <div className="col"></div>
-          </div>
-
+          <Select
+            placeholder=""
+            label={"Estado"}
+            options={statesOptions}
+            setSelectedValue={setRgState}
+          />
 
           <Input
             type="date"

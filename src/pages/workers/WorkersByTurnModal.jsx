@@ -65,7 +65,7 @@ const WorkersByTurnModal = (props) => {
             const key = `${turn.label} - ${func.label}`
 
             const workers = response.data.filter(
-              (worker) => worker.function_id == func.value && worker.turn_id == turn.value
+              (worker) => worker.worker_is_active && worker.function_id == func.value && worker.turn_id == turn.value
             )
 
             if (workers.length > 0) {

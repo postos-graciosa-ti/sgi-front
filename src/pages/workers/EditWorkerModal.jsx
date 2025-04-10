@@ -440,7 +440,7 @@ const EditWorkerModal = (props) => {
               label={"Gênero"}
               options={gendersOptions}
               setSelectedValue={setSelectedGender}
-              defaultValue={gendersOptions.find((option) => option.value == selectedWorker?.gender?.id)}
+              defaultValue={gendersOptions?.find((option) => option.value == selectedWorker?.gender?.id)}
             />
           </div>
 
@@ -450,7 +450,7 @@ const EditWorkerModal = (props) => {
               placeholder=""
               options={civilStatusOptions}
               setSelectedValue={setSelectedCivilStatus}
-              defaultValue={civilStatusOptions.find((option) => option.value == selectedWorker?.civil_status?.id)}
+              defaultValue={civilStatusOptions?.find((option) => option.value == selectedWorker?.civil_status?.id)}
             />
           </div>
         </div>
@@ -527,6 +527,7 @@ const EditWorkerModal = (props) => {
               label={"Estado"}
               options={statesOptions}
               setSelectedValue={setSelectedState}
+              defaultValue={statesOptions.find((option) => option.value == selectedWorker?.state?.id)}
             />
           </div>
 
@@ -535,6 +536,7 @@ const EditWorkerModal = (props) => {
               type="text"
               label={"Complemento"}
               setSelectedValue={setStreetComplement}
+              defaultValue={selectedWorker?.street_complement}
             />
 
             <div className="row">
@@ -544,6 +546,7 @@ const EditWorkerModal = (props) => {
                   label={"Cidade"}
                   options={citiesOptions}
                   setSelectedValue={setSelectedCity}
+                  defaultValue={citiesOptions.find((option) => option.value == selectedWorker?.city?.id)}
                 />
               </div>
 

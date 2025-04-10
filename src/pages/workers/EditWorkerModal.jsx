@@ -262,6 +262,8 @@ const EditWorkerModal = (props) => {
         let options = response?.data.map((state) => ({ value: state.id, label: state.name }))
 
         setBirthstateOptions(options)
+
+        setStatesOptions(options)
       })
 
     api
@@ -270,6 +272,16 @@ const EditWorkerModal = (props) => {
         let options = response?.data.map((city) => ({ value: city.id, label: city.name }))
 
         setBirthcityOptions(options)
+
+        setCitiesOptions(options)
+      })
+
+    api
+      .get("/neighborhoods")
+      .then((response) => {
+        let options = response?.data.map((city) => ({ value: city.id, label: city.name }))
+
+        setNeighborhoodOptions(options)
       })
   }, [])
 
@@ -387,6 +399,8 @@ const EditWorkerModal = (props) => {
       .put(`/workers/${selectedWorker.worker_id}`, formData)
       .then(() => handleClose())
   }
+
+  console.log(selectedWorker)
 
   return (
     <Modal
@@ -656,7 +670,7 @@ const EditWorkerModal = (props) => {
               label="Filhos menores de 14?"
               options={trueFalseOptions}
               setSelectedValue={setHasChildren}
-            // defaultValue={selectedWorker}
+              defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.has_children)}
             />
 
             {
@@ -751,7 +765,7 @@ const EditWorkerModal = (props) => {
               label={"Estado"}
               options={statesOptions}
               setSelectedValue={setRgState}
-              defaultValue={selectedWorker?.rg_state?.value}
+              defaultValue={statesOptions?.find((option) => option.value == selectedWorker?.rg_state?.id)}
             />
           </div>
 
@@ -772,7 +786,7 @@ const EditWorkerModal = (props) => {
                   label={"Escolaridade"}
                   options={schoolLevelsOptions}
                   setSelectedValue={setSelectedSchoolLevel}
-                  defaultValue={selectedWorker?.school_level?.id}
+                  defaultValue={schoolLevelsOptions?.find((option) => option.value == selectedWorker?.school_level?.id)}
                 />
               </div>
             </div>
@@ -870,6 +884,7 @@ const EditWorkerModal = (props) => {
                   label={"UF"}
                   options={statesOptions}
                   setSelectedValue={setCtpsState}
+                  defaultValue={statesOptions?.find((option) => option.value == selectedWorker?.ctps_state?.id)}
                 />
               </div>
 

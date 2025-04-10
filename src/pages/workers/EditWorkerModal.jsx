@@ -318,18 +318,17 @@ const EditWorkerModal = (props) => {
     let childrenData = `["name": ${childrenName}, "citystate": ${childrenCitiesStates}, "cpf": ${childrenCpf}]`
 
     let formData = {
-      "name": name,
-      "function_id": selectedFunction.value,
-      "subsidiarie_id": selectedSubsdiarie.value,
+      "name": name || selectedWorker?.worker_name,
+      "function_id": selectedFunction?.value || selectedWorker?.function_id,
+      "subsidiarie_id": selectedSubsdiarie?.value,
       "is_active": true,
-      "turn_id": selectedTurn.value,
-      "cost_center_id": selectedCostCenter.value,
-      "department_id": selectedDepartment.value,
-      "admission_date": admissionDate,
-      "resignation_date": admissionDate,
+      "turn_id": selectedTurn?.value || selectedWorker?.turn_id,
+      "cost_center_id": selectedCostCenter?.value || selectedWorker?.cost_center_id,
+      "department_id": selectedDepartment?.value || selectedWorker?.department_id,
+      "admission_date": admissionDate || selectedWorker?.admission_date,
+      "resignation_date": admissionDate || selectedWorker?.admission_date,
       "enrolment": enrolment,
       "sales_code": salesCode,
-      // "picture": cloudinaryResponse?.data.secure_url,
       "timecode": timecode,
       "esocial": esocial,
       "gender_id": selectedGender?.value,
@@ -403,7 +402,7 @@ const EditWorkerModal = (props) => {
     }
 
     api
-      .post("/workers", formData)
+      .put(`/workers/${selectedWorker.worker_id}`, formData)
       .then(() => handleClose())
   }
 

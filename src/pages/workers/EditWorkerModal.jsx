@@ -440,6 +440,7 @@ const EditWorkerModal = (props) => {
               label={"Gênero"}
               options={gendersOptions}
               setSelectedValue={setSelectedGender}
+              defaultValue={gendersOptions.find((option) => option.value == selectedWorker?.gender?.id)}
             />
           </div>
 
@@ -449,6 +450,7 @@ const EditWorkerModal = (props) => {
               placeholder=""
               options={civilStatusOptions}
               setSelectedValue={setSelectedCivilStatus}
+              defaultValue={civilStatusOptions.find((option) => option.value == selectedWorker?.civil_status?.id)}
             />
           </div>
         </div>
@@ -459,6 +461,7 @@ const EditWorkerModal = (props) => {
               label={"Número de emergência"}
               type="text"
               setSelectedValue={setEmergencyNumber}
+              defaultValue={selectedWorker?.emergency_number}
             />
           </div>
 
@@ -467,6 +470,7 @@ const EditWorkerModal = (props) => {
               type="text"
               label={"E-social"}
               setSelectedValue={setEsocial}
+              defaultValue={selectedWorker?.esocial}
             />
           </div>
 
@@ -475,6 +479,7 @@ const EditWorkerModal = (props) => {
               type="text"
               label={"Código de acesso"}
               setSelectedValue={setEnrolment}
+              defaultValue={selectedWorker?.worker_enrolment}
             />
           </div>
 

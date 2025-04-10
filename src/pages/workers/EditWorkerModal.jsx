@@ -1043,6 +1043,7 @@ const EditWorkerModal = (props) => {
               label="Código geral de função"
               type="text"
               setSelectedValue={setCodeGeneralFunction}
+              defaultValue={selectedWorker?.general_function_code}
             />
           </div>
 
@@ -1051,6 +1052,7 @@ const EditWorkerModal = (props) => {
               label="CBO"
               type="text"
               setSelectedValue={setCbo}
+              defaultValue={selectedWorker?.cbo}
             />
           </div>
 
@@ -1059,6 +1061,7 @@ const EditWorkerModal = (props) => {
               label="Data de última função"
               type="text"
               setSelectedValue={setLastFunctionDate}
+              defaultValue={selectedWorker?.last_function_date}
             />
           </div>
 
@@ -1067,6 +1070,7 @@ const EditWorkerModal = (props) => {
               label="Tempo na função atual"
               type="text"
               setSelectedValue={setCurrentFunctionTime}
+              defaultValue={selectedWorker?.current_function_time}
             />
           </div>
         </div>
@@ -1078,6 +1082,7 @@ const EditWorkerModal = (props) => {
               setSelectedValue={setAdmissionDate}
               label={"Data de admissão"}
               required={true}
+              defaultValue={selectedWorker?.admission_date}
             />
           </div>
 
@@ -1088,6 +1093,7 @@ const EditWorkerModal = (props) => {
                   label="Mensalista"
                   type="text"
                   setSelectedValue={setMonthWage}
+                  defaultValue={selectedWorker?.month_wage}
                 />
               </div>
 
@@ -1096,6 +1102,7 @@ const EditWorkerModal = (props) => {
                   label="Valor/horista"
                   type="text"
                   setSelectedValue={setHourWage}
+                  defaultValue={selectedWorker?.hour_wage}
                 />
               </div>
 
@@ -1104,6 +1111,7 @@ const EditWorkerModal = (props) => {
                   label="Prop. a jornada"
                   type="text"
                   setSelectedValue={setJourneyWage}
+                  defaultValue={selectedWorker?.journey_wage}
                 />
               </div>
             </div>
@@ -1112,26 +1120,13 @@ const EditWorkerModal = (props) => {
 
         <div className="row">
           <div className="col">
-            <div className="row">
-              <div className="col">
-                <Select
-                  placeholder={""}
-                  label="Vale transporte"
-                  options={trueFalseOptions}
-                  setSelectedValue={setTransportVoucher}
-                />
-              </div>
-
-              <div className="col">
-                <Select
-                  placeholder=""
-                  label={"Turno"}
-                  options={turnsOptions}
-                  setSelectedValue={setSelectedTurn}
-                  required={true}
-                />
-              </div>
-            </div>
+            <Select
+              placeholder={""}
+              label="Vale transporte"
+              options={trueFalseOptions}
+              setSelectedValue={setTransportVoucher}
+              defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.transport_voucher)}
+            />
           </div>
 
           <div className="col">
@@ -1141,6 +1136,7 @@ const EditWorkerModal = (props) => {
                   label="Carga diária"
                   type="text"
                   setSelectedValue={setDiaryWorkJourney}
+                  defaultValue={selectedWorker?.diary_workjourney}
                 />
               </div>
 
@@ -1149,6 +1145,7 @@ const EditWorkerModal = (props) => {
                   label="Carga semanal"
                   type="text"
                   setSelectedValue={setWeekWorkJourney}
+                  defaultValue={selectedWorker?.week_workjourney}
                 />
               </div>
 
@@ -1157,6 +1154,7 @@ const EditWorkerModal = (props) => {
                   label="Carga mensal"
                   type="text"
                   setSelectedValue={setMonthWorkJourney}
+                  defaultValue={selectedWorker?.month_workjourney}
                 />
               </div>
             </div>
@@ -1170,6 +1168,7 @@ const EditWorkerModal = (props) => {
               label="Tempo de experiência"
               options={experienceTimeOptions}
               setSelectedValue={setExperienceTime}
+              defaultValue={experienceTimeOptions?.find((option) => option.value == selectedWorker?.experience_time)}
             />
           </div>
         </div>
@@ -1181,6 +1180,7 @@ const EditWorkerModal = (props) => {
               label="Periculosidade"
               options={trueFalseOptions}
               setSelectedValue={setDangerousness}
+              defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.dangerousness)}
             />
           </div>
 
@@ -1190,6 +1190,7 @@ const EditWorkerModal = (props) => {
               label="Insalubridade"
               options={trueFalseOptions}
               setSelectedValue={setUnhealthy}
+              defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.unhealthy)}
             />
           </div>
 
@@ -1202,6 +1203,7 @@ const EditWorkerModal = (props) => {
                 { value: 2, label: "cheque" },
               ]}
               setSelectedValue={setWagePaymentMethod}
+
             />
           </div>
         </div>
@@ -1213,6 +1215,7 @@ const EditWorkerModal = (props) => {
               label="Banco"
               options={banksOptions}
               setSelectedValue={setSelectedBankOption}
+              defaultValue={banksOptions?.find((option) => option.value == selectedWorker?.bank?.id)}
             />
           </div>
 
@@ -1221,6 +1224,7 @@ const EditWorkerModal = (props) => {
               label="Agência do banco"
               type="text"
               setSelectedValue={setBankAgency}
+              defaultValue={selectedWorker?.bank_agency}
             />
           </div>
 
@@ -1229,6 +1233,7 @@ const EditWorkerModal = (props) => {
               label="Conta do banco"
               type="text"
               setSelectedValue={setBankAccount}
+              defaultValue={selectedWorker?.bank_account}
             />
           </div>
         </div>
@@ -1239,6 +1244,7 @@ const EditWorkerModal = (props) => {
               label="Horas noturnas"
               type="text"
               setSelectedValue={setNocturneHours}
+              defaultValue={selectedWorker?.nocturne_hours}
             />
           </div>
 
@@ -1247,6 +1253,7 @@ const EditWorkerModal = (props) => {
               label="Salário"
               type="text"
               setSelectedValue={setWage}
+              defaultValue={selectedWorker?.wage}
             />
           </div>
         </div>

@@ -796,6 +796,7 @@ const EditWorkerModal = (props) => {
               type="text"
               setSelectedValue={setPis}
               label={"PIS"}
+              defaultValue={selectedWorker?.pis}
             />
           </div>
 
@@ -804,6 +805,7 @@ const EditWorkerModal = (props) => {
               type={"date"}
               setSelectedValue={setPisRegisterDate}
               label={"Data de cadastro"}
+              defaultValue={selectedWorker?.pis_register_date}
             />
           </div>
         </div>
@@ -814,6 +816,7 @@ const EditWorkerModal = (props) => {
               type="text"
               label='Título de eleitor'
               setSelectedValue={setVotantTitle}
+              defaultValue={selectedWorker?.vontant_title}
             />
           </div>
 
@@ -822,6 +825,7 @@ const EditWorkerModal = (props) => {
               type="text"
               label='Zona'
               setSelectedValue={setVotantZone}
+              defaultValue={selectedWorker?.votant_zone}
             />
           </div>
 
@@ -830,6 +834,7 @@ const EditWorkerModal = (props) => {
               type="text"
               setSelectedValue={setVotantSession}
               label="Sessão"
+              defaultValue={selectedWorker?.votant_session}
             />
           </div>
         </div>
@@ -842,6 +847,7 @@ const EditWorkerModal = (props) => {
                   type="text"
                   label={"CTPS"}
                   setSelectedValue={setCtps}
+                  defaultValue={selectedWorker?.ctps}
                 />
               </div>
 
@@ -850,6 +856,7 @@ const EditWorkerModal = (props) => {
                   type="text"
                   label={"Série"}
                   setSelectedValue={setCtpsSerie}
+                  defaultValue={selectedWorker?.ctps_serie}
                 />
               </div>
             </div>
@@ -871,6 +878,7 @@ const EditWorkerModal = (props) => {
                   type="date"
                   label="Data de emissão"
                   setSelectedValue={setCtpsEmissionDate}
+                  defaultValue={selectedWorker?.ctps_emission_date}
                 />
               </div>
             </div>
@@ -885,6 +893,7 @@ const EditWorkerModal = (props) => {
                   type="text"
                   label="CNH"
                   setSelectedValue={setCnh}
+                  defaultValue={selectedWorker?.cnh}
                 />
               </div>
 
@@ -893,6 +902,7 @@ const EditWorkerModal = (props) => {
                   type="text"
                   label="Categoria"
                   setSelectedValue={setCnhCategory}
+                  defaultValue={selectedWorker?.cnh_category}
                 />
               </div>
             </div>
@@ -905,6 +915,7 @@ const EditWorkerModal = (props) => {
                   type="date"
                   label="Data de emissão"
                   setSelectedValue={setCnhEmissionDate}
+                  defaultValue={selectedWorker?.cnh_emition_date}
                 />
               </div>
 
@@ -913,6 +924,7 @@ const EditWorkerModal = (props) => {
                   type="date"
                   label="Validade"
                   setSelectedValue={setCnhValidDate}
+                  defaultValue={selectedWorker?.cnh_valid_date}
                 />
               </div>
             </div>
@@ -928,6 +940,7 @@ const EditWorkerModal = (props) => {
                   label="Primeiro emprego?"
                   options={trueFalseOptions}
                   setSelectedValue={setFirstJob}
+
                 />
               </div>
 
@@ -986,6 +999,7 @@ const EditWorkerModal = (props) => {
               options={functionsOptions}
               setSelectedValue={setSelectedFunction}
               required={true}
+              defaultValue={functionsOptions?.find((option) => option.value == selectedWorker?.function_id)}
             />
           </div>
 
@@ -996,6 +1010,7 @@ const EditWorkerModal = (props) => {
               options={turnsOptions}
               setSelectedValue={setSelectedTurn}
               required={true}
+              defaultValue={turnsOptions?.find((option) => option.value == selectedWorker?.turn_id)}
             />
           </div>
 
@@ -1006,6 +1021,7 @@ const EditWorkerModal = (props) => {
               options={costCenterOptions}
               setSelectedValue={setSelectedCostCenter}
               required={true}
+              defaultValue={costCenterOptions?.find((option) => option.value == selectedWorker?.cost_center_id)}
             />
           </div>
 
@@ -1016,6 +1032,7 @@ const EditWorkerModal = (props) => {
               options={departmentsOptions}
               setSelectedValue={setSelectedDepartment}
               required={true}
+              defaultValue={departmentsOptions?.find((option) => option.value == selectedWorker?.department_id)}
             />
           </div>
         </div>

@@ -1,5 +1,3 @@
-import axios from 'axios'
-import moment from 'moment'
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
@@ -7,19 +5,20 @@ import Input from '../../components/form/Input'
 import Select from "../../components/form/Select"
 import useUserSessionStore from '../../data/userSession'
 import useWorkersExperienceTimeStore from '../../data/workersExperienceTime'
+import loadBanksOptions from '../../requests/loadOptions/loadBanksOptions'
+import loadCitiesOptions from '../../requests/loadOptions/loadCitiesOptions'
 import loadCivilStatusOptions from '../../requests/loadOptions/loadCivilStatusOptions'
 import loadCostCenterOptions from '../../requests/loadOptions/loadCostCenterOptions'
 import loadDepartmentsOptions from '../../requests/loadOptions/loadDepartmentsOptions'
 import loadEthnicitiesOptions from '../../requests/loadOptions/loadEthnicitiesOptions'
 import loadFunctionsOptions from '../../requests/loadOptions/loadFunctionsOptions'
 import loadGendersOptions from '../../requests/loadOptions/loadGendersOptions'
+import loadNeighborhoodsOptions from '../../requests/loadOptions/loadNeighborhoodsOptions'
+import loadSchoolLevels from '../../requests/loadOptions/loadSchoolLevels'
 import loadStatesOptions from '../../requests/loadOptions/loadStatesOptions'
 import loadTurnsOptions from '../../requests/loadOptions/loadTurnsOptions'
 import api from '../../services/api'
-import loadNeighborhoodsOptions from '../../requests/loadOptions/loadNeighborhoodsOptions'
-import loadCitiesOptions from '../../requests/loadOptions/loadCitiesOptions'
-import loadBanksOptions from '../../requests/loadOptions/loadBanksOptions'
-import loadSchoolLevels from '../../requests/loadOptions/loadSchoolLevels'
+import loadNationalitiesOptions from '../../requests/loadOptions/loadNationalitiesOptions'
 
 const EditWorkerModal = (props) => {
   const {
@@ -117,7 +116,7 @@ const EditWorkerModal = (props) => {
 
   const [selectedBirthstate, setSelectedBirthstate] = useState()
 
-  const nationalityOptions = [{ value: 1, label: "brasileiro" }]
+  const [nationalityOptions, setNationalityOptions] = useState()
 
   const [selectedNationality, setSelectedNationality] = useState()
 
@@ -253,6 +252,7 @@ const EditWorkerModal = (props) => {
     loadEthnicitiesOptions(setEthnicitiesOptions)
     loadSchoolLevels(setSchoolLevelsOptions)
     loadBanksOptions(setBanksOptions)
+    loadNationalitiesOptions(setNationalityOptions)
   }, [])
 
   useEffect(() => {
@@ -266,6 +266,30 @@ const EditWorkerModal = (props) => {
       loadNeighborhoodsOptions(selectedCity, setNeighborhoodOptions)
     }
   }, [selectedCity])
+
+  useEffect(() => {
+    if (selectedNationality) {
+      api
+        .get(`/nationalities/${selectedNationality?.value}/states`)
+        .then((response) => {
+          let options = response?.data.map((state) => ({ value: state.id, label: state.name }))
+
+          setBirthstateOptions(options)
+        })
+    }
+  }, [selectedNationality])
+
+  useEffect(() => {
+    if (selectedBirthstate) {
+      api
+        .get(`/states/${selectedBirthstate.value}/cities`)
+        .then((response) => {
+          let options = response?.data.map((city) => ({ value: city.id, label: city.name }))
+
+          setBirthcityOptions(options)
+        })
+    }
+  }, [selectedBirthstate])
 
   const handleClose = () => {
     api
@@ -601,6 +625,7 @@ const EditWorkerModal = (props) => {
               label={"Gênero"}
               options={gendersOptions}
               setSelectedValue={setSelectedGender}
+              defaultValue={gendersOptions?.find((option) => option.value == selectedWorker?.gender?.id)}
             />
 
             <Select
@@ -608,34 +633,35 @@ const EditWorkerModal = (props) => {
               placeholder=""
               options={civilStatusOptions}
               setSelectedValue={setSelectedCivilStatus}
+              defaultValue={civilStatusOptions?.find((option) => option.value == selectedWorker?.civil_status?.id)}
             />
 
             <Input
               type="text"
-              // placeholder="Logradouro"
               label={"Logradouro"}
               setSelectedValue={setStreet}
+              defaultValue={selectedWorker?.street}
             />
 
             <Input
               type="text"
-              // placeholder="Número"
               label={"Número"}
               setSelectedValue={setStreetNumber}
+              defaultValue={selectedWorker?.street_number}
             />
 
             <Input
               type="text"
-              // placeholder="Complemento"
               label={"Complemento"}
               setSelectedValue={setStreetComplement}
+              defaultValue={selectedWorker?.street_complement}
             />
 
             <Input
               type="text"
-              // placeholder="CEP"
               label={"CEP"}
               setSelectedValue={setSelectedCep}
+              defaultValue={selectedWorker?.cep}
             />
 
             <Select
@@ -643,6 +669,7 @@ const EditWorkerModal = (props) => {
               label={"Estado"}
               options={statesOptions}
               setSelectedValue={setSelectedState}
+              defaultValue={statesOptions?.find((option) => option.value == selectedWorker?.state?.id)}
             />
 
             <Select
@@ -650,6 +677,7 @@ const EditWorkerModal = (props) => {
               label={"Cidade"}
               options={citiesOptions}
               setSelectedValue={setSelectedCity}
+              defaultValue={citiesOptions?.find((option) => option.value == selectedWorker?.city?.id)}
             />
 
             <Select
@@ -657,6 +685,7 @@ const EditWorkerModal = (props) => {
               placeholder=""
               options={neighborhoodOptions}
               setSelectedValue={setSelectedNeighborhood}
+              defaultValue={neighborhoodOptions?.find((option) => option.value == selectedWorker?.city?.id)}
             />
 
             <Select

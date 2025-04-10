@@ -488,6 +488,7 @@ const EditWorkerModal = (props) => {
               type="text"
               label={"Código de ponto"}
               setSelectedValue={setTimecode}
+              defaultValue={selectedWorker?.worker_timecode}
             />
           </div>
         </div>
@@ -502,12 +503,14 @@ const EditWorkerModal = (props) => {
               type="text"
               label={"Logradouro"}
               setSelectedValue={setStreet}
+              defaultValue={selectedWorker?.street}
             />
 
             <Input
               type="text"
               label={"CEP"}
               setSelectedValue={setSelectedCep}
+              defaultValue={selectedWorker?.cep}
             />
           </div>
 
@@ -516,6 +519,7 @@ const EditWorkerModal = (props) => {
               type="text"
               label={"Número"}
               setSelectedValue={setStreetNumber}
+              defaultValue={selectedWorker?.street_number}
             />
 
             <Select

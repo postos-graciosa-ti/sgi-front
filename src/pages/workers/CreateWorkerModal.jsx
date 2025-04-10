@@ -417,234 +417,97 @@ const CreateWorkerModal = (props) => {
         </Modal.Header>
 
         <Modal.Body>
+          <div>
+            <h4>Dados pessoais</h4>
+          </div>
 
           <div className="row">
-            <div className="col-4">
+            <div className="col">
               <Input
                 type="text"
                 label={"Nome"}
                 setSelectedValue={setName}
                 required={true}
               />
-
-              <Select
-                placeholder=""
-                label={"Função"}
-                options={functionsOptions}
-                setSelectedValue={setSelectedFunction}
-                required={true}
-              />
-
-              <Select
-                placeholder=""
-                label={"Turnos"}
-                options={turnsOptions}
-                setSelectedValue={setSelectedTurn}
-                required={true}
-              />
-
-              <Select
-                label={"Centro de custos"}
-                placeholder=""
-                options={costCenterOptions}
-                setSelectedValue={setSelectedCostCenter}
-                required={true}
-              />
-
-              <Select
-                label={"Setor"}
-                placeholder=""
-                options={departmentsOptions}
-                setSelectedValue={setSelectedDepartment}
-                required={true}
-              />
-
-              <Input
-                type="date"
-                setSelectedValue={setAdmissionDate}
-                label={"Data de admissão"}
-                required={true}
-              />
-
-              <Input
-                type="text"
-                // placeholder="CPF"
-                label={"CPF"}
-                setSelectedValue={setCpf}
-              />
-
-              <Input
-                type="text"
-                // placeholder='RG'
-                label={"RG"}
-                setSelectedValue={setRg}
-              />
-
-              <Input
-                type="text"
-                // placeholder='Órgão emissor'
-                label={"Órgão emissor"}
-                setSelectedValue={setRgIssuingAgency}
-              />
-
-              <Select
-                placeholder=""
-                label={"Estado"}
-                options={statesOptions}
-                setSelectedValue={setRgState}
-              />
-
-              <Input
-                type="date"
-                setSelectedValue={setRgExpeditionDate}
-                label={"Data de expedição"}
-              />
-
-              <Input
-                type="text"
-                // placeholder="Telefone fixo"
-                label={"Telefone fixo"}
-                setSelectedValue={setSelectedPhone}
-              />
-
-              <Input
-                type="text"
-                // placeholder="Celular"
-                label={"Celular"}
-                setSelectedValue={setSelectedMobile}
-              />
-
-              <Input
-                type="email"
-                // placeholder="E-mail"
-                label={"E-mail"}
-                setSelectedValue={setEmail}
-              />
-
-              <Input
-                type="text"
-                // placeholder='PIS'
-                setSelectedValue={setPis}
-                label={"PIS"}
-              />
-
-              <Input
-                type={"date"}
-                setSelectedValue={setPisRegisterDate}
-                label={"Data de cadastro"}
-              />
-
-              <Input
-                type="text"
-                // placeholder='CTPS'
-                label={"CTPS"}
-                setSelectedValue={setCtps}
-              />
-
-              <Input
-                type="text"
-                // placeholder="Série de CTPS"
-                label={"Série"}
-                setSelectedValue={setCtpsSerie}
-              />
-
-              <Select
-                placeholder=""
-                label={"UF"}
-                options={statesOptions}
-                setSelectedValue={setCtpsState}
-              />
-
-              <Input
-                type="date"
-                label="Data de emissão"
-                setSelectedValue={setCtpsEmissionDate}
-              />
-
-              <Select
-                placeholder=""
-                label={"Escolaridade"}
-                options={schoolLevelsOptions}
-                setSelectedValue={setSelectedSchoolLevel}
-              />
-
-              <Input
-                // placeholder="Número de emergência"
-                label={"Número de emergência"}
-                type="text"
-                setSelectedValue={setEmergencyNumber}
-              />
-
-              <Input
-                type="text"
-                // placeholder="E-Social"
-                label={"E-social"}
-                setSelectedValue={setEsocial}
-              />
-
-              <Input
-                type="text"
-                // placeholder="Matrícula"
-                label={"Código de acesso"}
-                setSelectedValue={setEnrolment}
-              />
-
-              <Input
-                type="text"
-                // placeholder="Código de ponto"
-                label={"Código de ponto"}
-                setSelectedValue={setTimecode}
-              />
             </div>
 
-            <div className="col-4">
-              <Input
-                type="date"
-                setSelectedValue={setBirthdate}
-                // label={"Data de nascimento"}
-                label={"Data de nascimento"}
-              />
-
+            <div className="col">
               <Select
                 placeholder=""
                 label={"Gênero"}
                 options={gendersOptions}
                 setSelectedValue={setSelectedGender}
               />
+            </div>
 
+            <div className="col">
               <Select
                 label={"Estado civil"}
                 placeholder=""
                 options={civilStatusOptions}
                 setSelectedValue={setSelectedCivilStatus}
               />
+            </div>
+          </div>
 
+          <div className="row">
+            <div className="col">
+              <Input
+                label={"Número de emergência"}
+                type="text"
+                setSelectedValue={setEmergencyNumber}
+              />
+            </div>
+
+            <div className="col">
               <Input
                 type="text"
-                // placeholder="Logradouro"
+                label={"E-social"}
+                setSelectedValue={setEsocial}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                type="text"
+                label={"Código de acesso"}
+                setSelectedValue={setEnrolment}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                type="text"
+                label={"Código de ponto"}
+                setSelectedValue={setTimecode}
+              />
+            </div>
+          </div>
+
+          <div>
+            <h4>Endereço residencial</h4>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Input
+                type="text"
                 label={"Logradouro"}
                 setSelectedValue={setStreet}
               />
 
               <Input
                 type="text"
-                // placeholder="Número"
-                label={"Número"}
-                setSelectedValue={setStreetNumber}
-              />
-
-              <Input
-                type="text"
-                // placeholder="Complemento"
-                label={"Complemento"}
-                setSelectedValue={setStreetComplement}
-              />
-
-              <Input
-                type="text"
-                // placeholder="CEP"
                 label={"CEP"}
                 setSelectedValue={setSelectedCep}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                type="text"
+                label={"Número"}
+                setSelectedValue={setStreetNumber}
               />
 
               <Select
@@ -653,26 +516,73 @@ const CreateWorkerModal = (props) => {
                 options={statesOptions}
                 setSelectedValue={setSelectedState}
               />
+            </div>
 
-              <Select
-                placeholder=""
-                label={"Cidade"}
-                options={citiesOptions}
-                setSelectedValue={setSelectedCity}
+            <div className="col">
+              <Input
+                type="text"
+                label={"Complemento"}
+                setSelectedValue={setStreetComplement}
               />
 
-              <Select
-                label={"Bairro"}
-                placeholder=""
-                options={neighborhoodOptions}
-                setSelectedValue={setSelectedNeighborhood}
-              />
+              <div className="row">
+                <div className="col">
+                  <Select
+                    placeholder=""
+                    label={"Cidade"}
+                    options={citiesOptions}
+                    setSelectedValue={setSelectedCity}
+                  />
+                </div>
 
-              <Select
-                label={"Etnia"}
-                placeholder=""
-                options={ethnicitiesOptions}
-                setSelectedValue={setSelectedEthnicity}
+                <div className="col">
+                  <Select
+                    label={"Bairro"}
+                    placeholder=""
+                    options={neighborhoodOptions}
+                    setSelectedValue={setSelectedNeighborhood}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h4>Dados pessoais</h4>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Input
+                    type="text"
+                    label={"Telefone fixo"}
+                    setSelectedValue={setSelectedPhone}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    type="text"
+                    label={"Celular"}
+                    setSelectedValue={setSelectedMobile}
+                  />
+                </div>
+              </div>
+
+              <Input
+                type="date"
+                setSelectedValue={setBirthdate}
+                label={"Data de nascimento"}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                type="email"
+                label={"E-mail"}
+                setSelectedValue={setEmail}
               />
 
               <Select
@@ -681,249 +591,58 @@ const CreateWorkerModal = (props) => {
                 options={nationalityOptions}
                 setSelectedValue={setSelectedNationality}
               />
+            </div>
 
+            <div className="col">
               <Select
-                label={"Estado de nascimento"}
+                label={"Etnia"}
                 placeholder=""
-                options={birthstateOptions}
-                setSelectedValue={setSelectedBirthstate}
+                options={ethnicitiesOptions}
+                setSelectedValue={setSelectedEthnicity}
               />
 
-              <Select
-                label={"Cidade de nascimento"}
-                placeholder=""
-                options={birthcityOptions}
-                setSelectedValue={setBirthcity}
-              />
+              <div className="row">
+                <div className="col">
+                  <Select
+                    placeholder=""
+                    label={"Estado"}
+                    options={statesOptions}
+                    setSelectedValue={setSelectedState}
+                  />
+                </div>
 
-              <Input
-                type="text"
-                label={"Nome do pai"}
-                // placeholder="Nome do pai"
-                setSelectedValue={setFathername}
-              />
+                <div className="col">
+                  <Select
+                    placeholder=""
+                    label={"Cidade"}
+                    options={citiesOptions}
+                    setSelectedValue={setSelectedCity}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
 
+          <div className="row">
+            <div className="col">
               <Input
                 type="text"
                 label={"Nome da mãe"}
-                // placeholder="Nome da mãe"
                 setSelectedValue={setMothername}
-              />
-
-              <Input
-                type="text"
-                label="Certificado de reservista"
-                setSelectedValue={setMilitaryCertNumber}
-              />
-
-              <Input
-                type="text"
-                label='Título de eleitor'
-                setSelectedValue={setVotantTitle}
-              />
-
-              <Input
-                type="text"
-                label='Zona'
-                setSelectedValue={setVotantZone}
-              />
-
-              <Input
-                type="text"
-                setSelectedValue={setVotantSession}
-                label="Sessão"
-              />
-
-              <Input
-                type="text"
-                label="CNH"
-                setSelectedValue={setCnh}
-              />
-
-              <Input
-                type="text"
-                label="Categoria"
-                setSelectedValue={setCnhCategory}
-              />
-
-              <Input
-                type="date"
-                label="Data de emissão"
-                setSelectedValue={setCnhEmissionDate}
-              />
-
-              <Input
-                type="date"
-                label="Validade"
-                setSelectedValue={setCnhValidDate}
-              />
-
-              <Select
-                placeholder={""}
-                label="Primeiro emprego?"
-                options={trueFalseOptions}
-                setSelectedValue={setFirstJob}
               />
             </div>
 
-            <div className="col-4">
-              <Select
-                placeholder={""}
-                label="Já foi empregado da empresa?"
-                options={trueFalseOptions}
-                setSelectedValue={setWasEmployee}
-              />
-
-              <Select
-                placeholder={""}
-                label="Contribuição sindical nesse ano?"
-                options={trueFalseOptions}
-                setSelectedValue={setUnionContributeCurrentYear}
-              />
-
-              <Select
-                placeholder={""}
-                label="Recebendo seguro-desemprego?"
-                options={trueFalseOptions}
-                setSelectedValue={setReceivingUnemploymentInsurance}
-              />
-
-              <Select
-                placeholder={""}
-                label="Experiência prévia na função?"
-                options={trueFalseOptions}
-                setSelectedValue={setPreviousExperience}
-              />
-
+            <div className="col">
               <Input
-                label="Mensalista"
                 type="text"
-                setSelectedValue={setMonthWage}
+                label={"Nome do pai"}
+                setSelectedValue={setFathername}
               />
+            </div>
+          </div>
 
-              <Input
-                label="Valor/horista"
-                type="text"
-                setSelectedValue={setHourWage}
-              />
-
-              <Input
-                label="Proporcional a jornada"
-                type="text"
-                setSelectedValue={setJourneyWage}
-              />
-
-              <Select
-                placeholder={""}
-                label="Vale transporte"
-                options={trueFalseOptions}
-                setSelectedValue={setTransportVoucher}
-              />
-
-              <Input
-                label="Carga diária"
-                type="text"
-                setSelectedValue={setDiaryWorkJourney}
-              />
-
-              <Input
-                label="Carga semanal"
-                type="text"
-                setSelectedValue={setWeekWorkJourney}
-              />
-
-              <Input
-                label="Carga mensal"
-                type="text"
-                setSelectedValue={setMonthWorkJourney}
-              />
-
-              <Select
-                placeholder={""}
-                label="Tempo de experiência"
-                options={experienceTimeOptions}
-                setSelectedValue={setExperienceTime}
-              />
-
-              <Input
-                label="Horas noturnas"
-                type="text"
-                setSelectedValue={setNocturneHours}
-              />
-
-              <Select
-                placeholder={""}
-                label="Periculosidade"
-                options={trueFalseOptions}
-                setSelectedValue={setDangerousness}
-              />
-
-              <Select
-                placeholder={""}
-                label="Insalubridade"
-                options={trueFalseOptions}
-                setSelectedValue={setUnhealthy}
-              />
-
-              <Select
-                placeholder={""}
-                label="Método de pagamento"
-                options={[
-                  { value: 1, label: "dinheiro" },
-                  { value: 2, label: "cheque" },
-                ]}
-                setSelectedValue={setWagePaymentMethod}
-              />
-
-              <Input
-                label="Código geral de função"
-                type="text"
-                setSelectedValue={setCodeGeneralFunction}
-              />
-
-              <Input
-                label="Salário"
-                type="text"
-                setSelectedValue={setWage}
-              />
-
-              <Input
-                label="Data de última função"
-                type="text"
-                setSelectedValue={setLastFunctionDate}
-              />
-
-              <Input
-                label="Tempo na função atual"
-                type="text"
-                setSelectedValue={setCurrentFunctionTime}
-              />
-
-              <Select
-                placeholder={""}
-                label="Banco"
-                options={banksOptions}
-                setSelectedValue={setSelectedBankOption}
-              />
-
-              <Input
-                label="Agência do banco"
-                type="text"
-                setSelectedValue={setBankAgency}
-              />
-
-              <Input
-                label="Conta do banco"
-                type="text"
-                setSelectedValue={setBankAccount}
-              />
-
-              <Input
-                label="CBO"
-                type="text"
-                setSelectedValue={setCbo}
-              />
-
+          <div className="row">
+            <div className="col">
               <Select
                 placeholder=""
                 label="Filhos menores de 14?"
@@ -957,9 +676,545 @@ const CreateWorkerModal = (props) => {
                         setSelectedValue={setChildrenCpf}
                       />
                     </div>
+
+                    <div className="col">
+                      <Input
+                        type="text"
+                        label="Livro"
+                      // setSelectedValue={setChildrenCpf}
+                      />
+                    </div>
+
+                    <div className="col">
+                      <Input
+                        type="text"
+                        label="Folhas"
+                      // setSelectedValue={setChildrenCpf}
+                      />
+                    </div>
                   </div>
                 ) || (<></>)
               }
+            </div>
+          </div>
+
+          <div>
+            <h4>Documentos</h4>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Input
+                type="text"
+                label={"CPF"}
+                setSelectedValue={setCpf}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Input
+                    type="text"
+                    label={"RG"}
+                    setSelectedValue={setRg}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    type="text"
+                    label={"Órgão emissor"}
+                    setSelectedValue={setRgIssuingAgency}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="col">
+              <Select
+                placeholder=""
+                label={"Estado"}
+                options={statesOptions}
+                setSelectedValue={setRgState}
+              />
+            </div>
+
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Input
+                    type="date"
+                    setSelectedValue={setRgExpeditionDate}
+                    label={"Data de expedição"}
+                  />
+                </div>
+
+                <div className="col">
+                  <Select
+                    placeholder=""
+                    label={"Escolaridade"}
+                    options={schoolLevelsOptions}
+                    setSelectedValue={setSelectedSchoolLevel}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Input
+                type="text"
+                label="Certificado de reservista"
+                setSelectedValue={setMilitaryCertNumber}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Input
+                type="text"
+                setSelectedValue={setPis}
+                label={"PIS"}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                type={"date"}
+                setSelectedValue={setPisRegisterDate}
+                label={"Data de cadastro"}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Input
+                type="text"
+                label='Título de eleitor'
+                setSelectedValue={setVotantTitle}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                type="text"
+                label='Zona'
+                setSelectedValue={setVotantZone}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                type="text"
+                setSelectedValue={setVotantSession}
+                label="Sessão"
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Input
+                    type="text"
+                    label={"CTPS"}
+                    setSelectedValue={setCtps}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    type="text"
+                    label={"Série"}
+                    setSelectedValue={setCtpsSerie}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Select
+                    placeholder=""
+                    label={"UF"}
+                    options={statesOptions}
+                    setSelectedValue={setCtpsState}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    type="date"
+                    label="Data de emissão"
+                    setSelectedValue={setCtpsEmissionDate}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Input
+                    type="text"
+                    label="CNH"
+                    setSelectedValue={setCnh}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    type="text"
+                    label="Categoria"
+                    setSelectedValue={setCnhCategory}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Input
+                    type="date"
+                    label="Data de emissão"
+                    setSelectedValue={setCnhEmissionDate}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    type="date"
+                    label="Validade"
+                    setSelectedValue={setCnhValidDate}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Select
+                    placeholder={""}
+                    label="Primeiro emprego?"
+                    options={trueFalseOptions}
+                    setSelectedValue={setFirstJob}
+                  />
+                </div>
+
+                <div className="col">
+                  <Select
+                    placeholder={""}
+                    label="Já foi empregado da empresa?"
+                    options={trueFalseOptions}
+                    setSelectedValue={setWasEmployee}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="col">
+              <Select
+                placeholder={""}
+                label="Contribuição sindical nesse ano?"
+                options={trueFalseOptions}
+                setSelectedValue={setUnionContributeCurrentYear}
+              />
+            </div>
+
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Select
+                    placeholder={""}
+                    label="Recebendo seguro-desemprego?"
+                    options={trueFalseOptions}
+                    setSelectedValue={setReceivingUnemploymentInsurance}
+                  />
+                </div>
+
+                <div className="col">
+                  <Select
+                    placeholder={""}
+                    label="Experiência prévia na função?"
+                    options={trueFalseOptions}
+                    setSelectedValue={setPreviousExperience}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h4>Para preenchimento exclusivo da empresa - Dados de contratação</h4>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Select
+                placeholder=""
+                label={"Função"}
+                options={functionsOptions}
+                setSelectedValue={setSelectedFunction}
+                required={true}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                placeholder=""
+                label={"Turno"}
+                options={turnsOptions}
+                setSelectedValue={setSelectedTurn}
+                required={true}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                label={"Centro de custos"}
+                placeholder=""
+                options={costCenterOptions}
+                setSelectedValue={setSelectedCostCenter}
+                required={true}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                label={"Setor"}
+                placeholder=""
+                options={departmentsOptions}
+                setSelectedValue={setSelectedDepartment}
+                required={true}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Input
+                label="Código geral de função"
+                type="text"
+                setSelectedValue={setCodeGeneralFunction}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                label="CBO"
+                type="text"
+                setSelectedValue={setCbo}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                label="Data de última função"
+                type="text"
+                setSelectedValue={setLastFunctionDate}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                label="Tempo na função atual"
+                type="text"
+                setSelectedValue={setCurrentFunctionTime}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Input
+                type="date"
+                setSelectedValue={setAdmissionDate}
+                label={"Data de admissão"}
+                required={true}
+              />
+            </div>
+
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Input
+                    label="Mensalista"
+                    type="text"
+                    setSelectedValue={setMonthWage}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    label="Valor/horista"
+                    type="text"
+                    setSelectedValue={setHourWage}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    label="Prop. a jornada"
+                    type="text"
+                    setSelectedValue={setJourneyWage}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Select
+                    placeholder={""}
+                    label="Vale transporte"
+                    options={trueFalseOptions}
+                    setSelectedValue={setTransportVoucher}
+                  />
+                </div>
+
+                <div className="col">
+                  <Select
+                    placeholder=""
+                    label={"Turno"}
+                    options={turnsOptions}
+                    setSelectedValue={setSelectedTurn}
+                    required={true}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Input
+                    label="Carga diária"
+                    type="text"
+                    setSelectedValue={setDiaryWorkJourney}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    label="Carga semanal"
+                    type="text"
+                    setSelectedValue={setWeekWorkJourney}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    label="Carga mensal"
+                    type="text"
+                    setSelectedValue={setMonthWorkJourney}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Select
+                placeholder={""}
+                label="Tempo de experiência"
+                options={experienceTimeOptions}
+                setSelectedValue={setExperienceTime}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Select
+                placeholder={""}
+                label="Periculosidade"
+                options={trueFalseOptions}
+                setSelectedValue={setDangerousness}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                placeholder={""}
+                label="Insalubridade"
+                options={trueFalseOptions}
+                setSelectedValue={setUnhealthy}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                placeholder={""}
+                label="Método de pagamento"
+                options={[
+                  { value: 1, label: "dinheiro" },
+                  { value: 2, label: "cheque" },
+                ]}
+                setSelectedValue={setWagePaymentMethod}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Select
+                placeholder={""}
+                label="Banco"
+                options={banksOptions}
+                setSelectedValue={setSelectedBankOption}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                label="Agência do banco"
+                type="text"
+                setSelectedValue={setBankAgency}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                label="Conta do banco"
+                type="text"
+                setSelectedValue={setBankAccount}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Input
+                label="Horas noturnas"
+                type="text"
+                setSelectedValue={setNocturneHours}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                label="Salário"
+                type="text"
+                setSelectedValue={setWage}
+              />
             </div>
           </div>
         </Modal.Body>

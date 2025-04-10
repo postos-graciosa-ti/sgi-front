@@ -253,43 +253,25 @@ const EditWorkerModal = (props) => {
     loadSchoolLevels(setSchoolLevelsOptions)
     loadBanksOptions(setBanksOptions)
     loadNationalitiesOptions(setNationalityOptions)
+    loadCitiesOptions(selectedState, setCitiesOptions)
+    loadNeighborhoodsOptions(selectedCity, setNeighborhoodOptions)
+
+    api
+      .get(`/states`)
+      .then((response) => {
+        let options = response?.data.map((state) => ({ value: state.id, label: state.name }))
+
+        setBirthstateOptions(options)
+      })
+
+    api
+      .get(`/cities`)
+      .then((response) => {
+        let options = response?.data.map((city) => ({ value: city.id, label: city.name }))
+
+        setBirthcityOptions(options)
+      })
   }, [])
-
-  useEffect(() => {
-    if (selectedState) {
-      loadCitiesOptions(selectedState, setCitiesOptions)
-    }
-  }, [selectedState])
-
-  useEffect(() => {
-    if (selectedCity) {
-      loadNeighborhoodsOptions(selectedCity, setNeighborhoodOptions)
-    }
-  }, [selectedCity])
-
-  useEffect(() => {
-    if (selectedNationality) {
-      api
-        .get(`/nationalities/${selectedNationality?.value}/states`)
-        .then((response) => {
-          let options = response?.data.map((state) => ({ value: state.id, label: state.name }))
-
-          setBirthstateOptions(options)
-        })
-    }
-  }, [selectedNationality])
-
-  useEffect(() => {
-    if (selectedBirthstate) {
-      api
-        .get(`/states/${selectedBirthstate.value}/cities`)
-        .then((response) => {
-          let options = response?.data.map((city) => ({ value: city.id, label: city.name }))
-
-          setBirthcityOptions(options)
-        })
-    }
-  }, [selectedBirthstate])
 
   const handleClose = () => {
     api
@@ -488,7 +470,7 @@ const EditWorkerModal = (props) => {
               type="text"
               label={"Código de ponto"}
               setSelectedValue={setTimecode}
-              defaultValue={selectedWorker?.worker_timecode}
+              defaultValue={selectedWorker?.timecode}
             />
           </div>
         </div>
@@ -527,7 +509,7 @@ const EditWorkerModal = (props) => {
               label={"Estado"}
               options={statesOptions}
               setSelectedValue={setSelectedState}
-              defaultValue={statesOptions.find((option) => option.value == selectedWorker?.state?.id)}
+              defaultValue={statesOptions?.find((option) => option.value == selectedWorker?.state?.id)}
             />
           </div>
 
@@ -546,7 +528,7 @@ const EditWorkerModal = (props) => {
                   label={"Cidade"}
                   options={citiesOptions}
                   setSelectedValue={setSelectedCity}
-                  defaultValue={citiesOptions.find((option) => option.value == selectedWorker?.city?.id)}
+                  defaultValue={citiesOptions?.find((option) => option.value == selectedWorker?.city?.id)}
                 />
               </div>
 
@@ -556,6 +538,7 @@ const EditWorkerModal = (props) => {
                   placeholder=""
                   options={neighborhoodOptions}
                   setSelectedValue={setSelectedNeighborhood}
+                  defaultValue={neighborhoodOptions?.find((option) => option.value == selectedWorker?.neighborhood?.id)}
                 />
               </div>
             </div>
@@ -574,6 +557,7 @@ const EditWorkerModal = (props) => {
                   type="text"
                   label={"Telefone fixo"}
                   setSelectedValue={setSelectedPhone}
+                  defaultValue={selectedWorker?.phone}
                 />
               </div>
 
@@ -582,6 +566,7 @@ const EditWorkerModal = (props) => {
                   type="text"
                   label={"Celular"}
                   setSelectedValue={setSelectedMobile}
+                  defaultValue={selectedWorker?.mobile}
                 />
               </div>
             </div>
@@ -590,6 +575,7 @@ const EditWorkerModal = (props) => {
               type="date"
               setSelectedValue={setBirthdate}
               label={"Data de nascimento"}
+              defaultValue={selectedWorker?.birthdate}
             />
           </div>
 
@@ -598,6 +584,7 @@ const EditWorkerModal = (props) => {
               type="email"
               label={"E-mail"}
               setSelectedValue={setEmail}
+              defaultValue={selectedWorker?.email}
             />
 
             <Select
@@ -605,6 +592,7 @@ const EditWorkerModal = (props) => {
               placeholder=""
               options={nationalityOptions}
               setSelectedValue={setSelectedNationality}
+              defaultValue={nationalityOptions?.find((option) => option.value == selectedWorker?.nationality?.id)}
             />
           </div>
 
@@ -614,6 +602,7 @@ const EditWorkerModal = (props) => {
               placeholder=""
               options={ethnicitiesOptions}
               setSelectedValue={setSelectedEthnicity}
+              defaultValue={ethnicitiesOptions?.find((option) => option.value == selectedWorker?.ethnicity?.id)}
             />
 
             <div className="row">
@@ -623,6 +612,7 @@ const EditWorkerModal = (props) => {
                   label={"Estado"}
                   options={statesOptions}
                   setSelectedValue={setSelectedState}
+                  defaultValue={statesOptions?.find((option) => option.value == selectedWorker?.state?.id)}
                 />
               </div>
 
@@ -632,6 +622,7 @@ const EditWorkerModal = (props) => {
                   label={"Cidade"}
                   options={citiesOptions}
                   setSelectedValue={setSelectedCity}
+                  defaultValue={citiesOptions?.find((option) => option.value == selectedWorker?.city?.id)}
                 />
               </div>
             </div>
@@ -644,6 +635,7 @@ const EditWorkerModal = (props) => {
               type="text"
               label={"Nome da mãe"}
               setSelectedValue={setMothername}
+              defaultValue={selectedWorker?.mothername}
             />
           </div>
 
@@ -652,6 +644,7 @@ const EditWorkerModal = (props) => {
               type="text"
               label={"Nome do pai"}
               setSelectedValue={setFathername}
+              defaultValue={selectedWorker?.fathername}
             />
           </div>
         </div>
@@ -663,6 +656,7 @@ const EditWorkerModal = (props) => {
               label="Filhos menores de 14?"
               options={trueFalseOptions}
               setSelectedValue={setHasChildren}
+            // defaultValue={selectedWorker}
             />
 
             {
@@ -723,6 +717,7 @@ const EditWorkerModal = (props) => {
               type="text"
               label={"CPF"}
               setSelectedValue={setCpf}
+              defaultValue={selectedWorker?.cpf}
             />
           </div>
         </div>
@@ -735,6 +730,7 @@ const EditWorkerModal = (props) => {
                   type="text"
                   label={"RG"}
                   setSelectedValue={setRg}
+                  defaultValue={selectedWorker?.rg}
                 />
               </div>
 
@@ -743,6 +739,7 @@ const EditWorkerModal = (props) => {
                   type="text"
                   label={"Órgão emissor"}
                   setSelectedValue={setRgIssuingAgency}
+                  defaultValue={selectedWorker?.rg_issuing_agency}
                 />
               </div>
             </div>
@@ -754,6 +751,7 @@ const EditWorkerModal = (props) => {
               label={"Estado"}
               options={statesOptions}
               setSelectedValue={setRgState}
+              defaultValue={selectedWorker?.rg_state?.value}
             />
           </div>
 
@@ -764,6 +762,7 @@ const EditWorkerModal = (props) => {
                   type="date"
                   setSelectedValue={setRgExpeditionDate}
                   label={"Data de expedição"}
+                  defaultValue={setSelectedWorker?.rg_expedition_date}
                 />
               </div>
 
@@ -773,6 +772,7 @@ const EditWorkerModal = (props) => {
                   label={"Escolaridade"}
                   options={schoolLevelsOptions}
                   setSelectedValue={setSelectedSchoolLevel}
+                  defaultValue={selectedWorker?.school_level?.id}
                 />
               </div>
             </div>
@@ -785,6 +785,7 @@ const EditWorkerModal = (props) => {
               type="text"
               label="Certificado de reservista"
               setSelectedValue={setMilitaryCertNumber}
+              defaultValue={selectedWorker?.military_cert_number}
             />
           </div>
         </div>

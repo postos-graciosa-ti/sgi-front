@@ -24,6 +24,7 @@ const WorkerInfoModal = (props) => {
       onHide={handleClose}
       backdrop="static"
       keyboard={false}
+      fullscreen={true}
     >
       <Modal.Header closeButton>
         <Modal.Title>Informações de colaborador</Modal.Title>
@@ -60,6 +61,99 @@ const WorkerInfoModal = (props) => {
         {
           !selectedFields && (
             <>
+
+              <div className="input-group mb-3 align-items-center">
+                <span className="input-group-text fw-bold d-flex align-items-center">
+                  <span style={{ color: "red" }}>*</span>&nbsp;Nome
+                </span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  style={{ resize: "none" }}
+                  value={selectedWorker?.worker_name || "Não consta registro"}
+                  disabled
+                />
+              </div>
+
+              <div className="input-group mb-3 align-items-center">
+                <span className="input-group-text fw-bold d-flex align-items-center">
+                  <span style={{ color: "red" }}>*</span>&nbsp;Função
+                </span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  style={{ resize: "none" }}
+                  value={selectedWorker?.function_name || "Não consta registro"}
+                  disabled
+                />
+              </div>
+
+              <div className="input-group mb-3 align-items-center">
+                <span className="input-group-text fw-bold d-flex align-items-center">
+                  <span style={{ color: "red" }}>*</span>&nbsp;Turno
+                </span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  style={{ resize: "none" }}
+                  value={selectedWorker?.turn_name || "Não consta registro"}
+                  disabled
+                />
+              </div>
+
+              <div className="input-group mb-3 align-items-center">
+                <span className="input-group-text fw-bold d-flex align-items-center">
+                  <span style={{ color: "red" }}>*</span>&nbsp;Centro de custo
+                </span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  style={{ resize: "none" }}
+                  value={selectedWorker?.cost_center || "Não consta registro"}
+                  disabled
+                />
+              </div>
+
+              <div className="input-group mb-3 align-items-center">
+                <span className="input-group-text fw-bold d-flex align-items-center">
+                  <span style={{ color: "red" }}>*</span>&nbsp;Setor
+                </span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  style={{ resize: "none" }}
+                  value={selectedWorker?.department || "Não consta registro"}
+                  disabled
+                />
+              </div>
+
+              <div className="input-group mb-3 align-items-center">
+                <span className="input-group-text fw-bold d-flex align-items-center">
+                  <span style={{ color: "red" }}>*</span>&nbsp;Data de admissão
+                </span>
+
+                <textarea
+                  className="form-control"
+                  aria-label="With textarea"
+                  rows={1}
+                  style={{ resize: "none" }}
+                  value={selectedWorker?.admission_date
+                    ? moment(selectedWorker.admission_date).format("DD-MM-YYYY")
+                    : "Não consta registro"}
+                  disabled
+                />
+              </div>
+
               <div className="input-group mb-3">
                 <span className="input-group-text fw-bold">E-social</span>
 
@@ -73,25 +167,13 @@ const WorkerInfoModal = (props) => {
               </div>
 
               <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Matrícula</span>
+                <span className="input-group-text fw-bold">Código de acesso</span>
 
                 <textarea
                   className="form-control"
                   aria-label="With textarea"
                   rows={1}
                   value={selectedWorker?.worker_enrolment || "Não consta registro"}
-                  disabled
-                />
-              </div>
-
-              <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Código de vendas</span>
-
-                <textarea
-                  className="form-control"
-                  aria-label="With textarea"
-                  rows={1}
-                  value={selectedWorker?.worker_sales_code || "Não consta registro"}
                   disabled
                 />
               </div>
@@ -104,78 +186,6 @@ const WorkerInfoModal = (props) => {
                   aria-label="With textarea"
                   rows={1}
                   value={selectedWorker?.timecode || "Não consta registro"}
-                  disabled
-                />
-              </div>
-
-              <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Nome</span>
-
-                <textarea
-                  className="form-control"
-                  aria-label="With textarea"
-                  rows={1}
-                  value={selectedWorker?.worker_name || "Não consta registro"}
-                  disabled
-                />
-              </div>
-
-              <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Função</span>
-
-                <textarea
-                  className="form-control"
-                  aria-label="With textarea"
-                  rows={1}
-                  value={selectedWorker?.function_name || "Não consta registro"}
-                  disabled
-                />
-              </div>
-
-              <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Turno</span>
-
-                <textarea
-                  className="form-control"
-                  aria-label="With textarea"
-                  rows={1}
-                  value={selectedWorker?.turn_name || "Não consta registro"}
-                  disabled
-                />
-              </div>
-
-              <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Centro de custo</span>
-
-                <textarea
-                  className="form-control"
-                  aria-label="With textarea"
-                  rows={1}
-                  value={selectedWorker?.cost_center || "Não consta registro"}
-                  disabled
-                />
-              </div>
-
-              <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Setor</span>
-
-                <textarea
-                  className="form-control"
-                  aria-label="With textarea"
-                  rows={1}
-                  value={selectedWorker?.department || "Não consta registro"}
-                  disabled
-                />
-              </div>
-
-              <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Data de admissão</span>
-
-                <textarea
-                  className="form-control"
-                  aria-label="With textarea"
-                  rows={1}
-                  value={moment(selectedWorker?.admission_date).format("DD-MM-YYYY") || "Não consta registro"}
                   disabled
                 />
               </div>
@@ -421,7 +431,7 @@ const WorkerInfoModal = (props) => {
               </div>
 
               <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Órgão emissor de RG</span>
+                <span className="input-group-text fw-bold">Órgão emissor</span>
 
                 <textarea
                   className="form-control"
@@ -433,7 +443,7 @@ const WorkerInfoModal = (props) => {
               </div>
 
               <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Estado de RG</span>
+                <span className="input-group-text fw-bold">Estado</span>
 
                 <textarea
                   className="form-control"
@@ -445,7 +455,7 @@ const WorkerInfoModal = (props) => {
               </div>
 
               <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Data de expedição de RG</span>
+                <span className="input-group-text fw-bold">Data de expedição</span>
 
                 <textarea
                   className="form-control"
@@ -481,7 +491,7 @@ const WorkerInfoModal = (props) => {
               </div>
 
               <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Data de cadastro de PIS</span>
+                <span className="input-group-text fw-bold">Data de cadastro</span>
 
                 <textarea
                   className="form-control"
@@ -505,7 +515,7 @@ const WorkerInfoModal = (props) => {
               </div>
 
               <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Zona eleitoral</span>
+                <span className="input-group-text fw-bold">Zona</span>
 
                 <textarea
                   className="form-control"
@@ -517,7 +527,7 @@ const WorkerInfoModal = (props) => {
               </div>
 
               <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Sessão eleitoral</span>
+                <span className="input-group-text fw-bold">Sessão</span>
 
                 <textarea
                   className="form-control"
@@ -541,7 +551,7 @@ const WorkerInfoModal = (props) => {
               </div>
 
               <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Série de CTPS</span>
+                <span className="input-group-text fw-bold">Série</span>
 
                 <textarea
                   className="form-control"
@@ -553,7 +563,7 @@ const WorkerInfoModal = (props) => {
               </div>
 
               <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Estado de CTPS</span>
+                <span className="input-group-text fw-bold">Estado</span>
 
                 <textarea
                   className="form-control"
@@ -565,7 +575,7 @@ const WorkerInfoModal = (props) => {
               </div>
 
               <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Data de emissão de CTPS</span>
+                <span className="input-group-text fw-bold">Data de emissão</span>
 
                 <textarea
                   className="form-control"
@@ -589,7 +599,7 @@ const WorkerInfoModal = (props) => {
               </div>
 
               <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Categoria de CNH</span>
+                <span className="input-group-text fw-bold">Categoria</span>
 
                 <textarea
                   className="form-control"
@@ -601,7 +611,7 @@ const WorkerInfoModal = (props) => {
               </div>
 
               <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Data de emissão de CNH</span>
+                <span className="input-group-text fw-bold">Data de emissão</span>
 
                 <textarea
                   className="form-control"
@@ -613,7 +623,7 @@ const WorkerInfoModal = (props) => {
               </div>
 
               <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Validade de CNH</span>
+                <span className="input-group-text fw-bold">Validade</span>
 
                 <textarea
                   className="form-control"
@@ -696,6 +706,8 @@ const WorkerInfoModal = (props) => {
                 />
               </div>
 
+
+
               <div className="input-group mb-3">
                 <span className="input-group-text fw-bold">Salário por hora</span>
 
@@ -728,18 +740,6 @@ const WorkerInfoModal = (props) => {
                   aria-label="With textarea"
                   rows={1}
                   value={selectedWorker?.transport_voucher || "Não consta registro"}
-                  disabled
-                />
-              </div>
-
-              <div className="input-group mb-3">
-                <span className="input-group-text fw-bold">Quantidade de vale transporte</span>
-
-                <textarea
-                  className="form-control"
-                  aria-label="With textarea"
-                  rows={1}
-                  value={selectedWorker?.transport_voucher_quantity || "Não consta registro"}
                   disabled
                 />
               </div>

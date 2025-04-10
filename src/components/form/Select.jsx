@@ -1,9 +1,9 @@
 import ReactSelect from "react-select"
 
-const Select = ({ placeholder, options, setSelectedValue, defaultValue, label, isMulti }) => {
+const Select = ({ placeholder, options, setSelectedValue, defaultValue, label, isMulti, required }) => {
   return (
     <div className="mb-3">
-      {label && <label><b>{label}</b></label>}
+      {required && <span style={{ "color": "red" }}>*</span>}{label && <label><b>{label}</b></label>}
       <ReactSelect
         placeholder={placeholder}
         options={options}

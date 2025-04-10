@@ -270,17 +270,9 @@ const Workers = () => {
           <table className="table table-hover">
             <thead>
               <tr>
-                <th></th>
-
                 <th>Nome</th>
 
-                <th>
-                  <div>
-                    <span class="badge text-bg-success p-2 me-3">Ativo</span>
-                    <span class="badge text-bg-warning p-2 me-3">Afastado</span>
-                    <span class="badge text-bg-danger p-2 me-3">Inativo</span>
-                  </div>
-                </th>
+                <th></th>
               </tr>
             </thead>
 
@@ -296,15 +288,6 @@ const Workers = () => {
                           : "table-success"
                     }
                   >
-                    <td>
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => handleOpenWorkerInfoModal(worker)}
-                      >
-                        <ArrowUpRight />
-                      </button>
-                    </td>
-
                     <td>{worker.worker_name}</td>
 
                     <td>

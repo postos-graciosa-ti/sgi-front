@@ -1,7 +1,7 @@
-const Input = ({ placeholder, type, setSelectedValue, label, defaultValue }) => {
+const Input = ({ placeholder, type, setSelectedValue, label, defaultValue, required }) => {
   return (
     <div className="mb-3">
-      {label && <label><b>{label}</b></label>}
+      {required && <span style={{ "color": "red" }}>*</span>}{label && <label><b>{label}</b></label>}
       <input
         placeholder={placeholder}
         type={type}

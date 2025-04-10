@@ -18,6 +18,7 @@ import loadSchoolLevels from "../../requests/loadOptions/loadSchoolLevels"
 import loadStatesOptions from "../../requests/loadOptions/loadStatesOptions"
 import loadTurnsOptions from "../../requests/loadOptions/loadTurnsOptions"
 import api from '../../services/api'
+import loadNationalitiesOptions from "../../requests/loadOptions/loadNationalitiesOptions"
 
 const CreateWorkerModal = (props) => {
   const {
@@ -113,7 +114,7 @@ const CreateWorkerModal = (props) => {
 
   const [selectedBirthstate, setSelectedBirthstate] = useState()
 
-  const nationalityOptions = [{ value: 1, label: "brasileiro" }]
+  const [nationalityOptions, setNationalityOptions] = useState()
 
   const [selectedNationality, setSelectedNationality] = useState()
 
@@ -236,6 +237,8 @@ const CreateWorkerModal = (props) => {
 
   const [childrenCpf, setChildrenCpf] = useState()
 
+  const [cbo, setCbo] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -247,6 +250,7 @@ const CreateWorkerModal = (props) => {
     loadEthnicitiesOptions(setEthnicitiesOptions)
     loadSchoolLevels(setSchoolLevelsOptions)
     loadBanksOptions(setBanksOptions)
+    loadNationalitiesOptions(setNationalityOptions)
   }, [])
 
   useEffect(() => {
@@ -323,8 +327,6 @@ const CreateWorkerModal = (props) => {
       "admission_date": admissionDate,
       "resignation_date": admissionDate,
       "enrolment": enrolment,
-      "sales_code": salesCode,
-      // "picture": cloudinaryResponse?.data.secure_url,
       "timecode": timecode,
       "esocial": esocial,
       "gender_id": selectedGender?.value,
@@ -376,7 +378,6 @@ const CreateWorkerModal = (props) => {
       "hour_wage": hourWage,
       "journey_wage": journeyWage,
       "transport_voucher": transportVoucher?.value,
-      "transport_voucher_quantity": transportVoucherQuantity,
       "diary_workjourney": diaryWorkJourney,
       "week_workjourney": weekWorkJourney,
       "month_workjourney": monthWorkJourney,
@@ -394,6 +395,7 @@ const CreateWorkerModal = (props) => {
       "bank": selectedBankOption?.value,
       "bank_agency": bankAgency,
       "bank_account": bankAccount,
+      "cbo": cbo,
     }
 
     api
@@ -415,544 +417,551 @@ const CreateWorkerModal = (props) => {
         </Modal.Header>
 
         <Modal.Body>
-          <Input
-            type="text"
-            // placeholder="Nome"
-            label={"Nome"}
-            setSelectedValue={setName}
-          />
-
-          <Input
-            type="date"
-            setSelectedValue={setBirthdate}
-            // label={"Data de nascimento"}
-            label={"Data de nascimento"}
-          />
-
-          <Input
-            type="text"
-            // placeholder="CPF"
-            label={"CPF"}
-            setSelectedValue={setCpf}
-          />
-
-          <Input
-            type="text"
-            // placeholder='RG'
-            label={"RG"}
-            setSelectedValue={setRg}
-          />
-
-          <Input
-            type="text"
-            // placeholder='Órgão emissor'
-            label={"Órgão emissor"}
-            setSelectedValue={setRgIssuingAgency}
-          />
-
-          <Select
-            placeholder=""
-            label={"Estado"}
-            options={statesOptions}
-            setSelectedValue={setRgState}
-          />
-
-          <Input
-            type="date"
-            setSelectedValue={setRgExpeditionDate}
-            label={"Data de expedição"}
-          />
-
-          <Input
-            type="text"
-            // placeholder="Telefone fixo"
-            label={"Telefone fixo"}
-            setSelectedValue={setSelectedPhone}
-          />
-
-          <Input
-            type="text"
-            // placeholder="Celular"
-            label={"Celular"}
-            setSelectedValue={setSelectedMobile}
-          />
-
-          <Input
-            type="email"
-            // placeholder="E-mail"
-            label={"E-mail"}
-            setSelectedValue={setEmail}
-          />
-
-          <Input
-            type="text"
-            // placeholder='PIS'
-            setSelectedValue={setPis}
-            label={"PIS"}
-          />
-
-          <Input
-            type={"date"}
-            setSelectedValue={setPisRegisterDate}
-            label={"Data de cadastro"}
-          />
-
-          <Input
-            type="text"
-            // placeholder='CTPS'
-            label={"CTPS"}
-            setSelectedValue={setCtps}
-          />
-
-          <Input
-            type="text"
-            // placeholder="Série de CTPS"
-            label={"Série"}
-            setSelectedValue={setCtpsSerie}
-          />
-
-          <Select
-            placeholder=""
-            label={"UF"}
-            options={statesOptions}
-            setSelectedValue={setCtpsState}
-          />
-
-          <Input
-            type="date"
-            label="Data de emissão"
-            setSelectedValue={setCtpsEmissionDate}
-          />
-
-          <Select
-            placeholder=""
-            label={"Escolaridade"}
-            options={schoolLevelsOptions}
-            setSelectedValue={setSelectedSchoolLevel}
-          />
-
-          <Input
-            // placeholder="Número de emergência"
-            label={"Número de emergência"}
-            type="text"
-            setSelectedValue={setEmergencyNumber}
-          />
-
-          <Input
-            type="text"
-            // placeholder="E-Social"
-            label={"E-social"}
-            setSelectedValue={setEsocial}
-          />
-
-          <Input
-            type="text"
-            // placeholder="Matrícula"
-            label={"Matrícula"}
-            setSelectedValue={setEnrolment}
-          />
-
-          <Input
-            type="text"
-            // placeholder="Código de vendas"
-            label={"Código de vendas"}
-            setSelectedValue={setSalesCode}
-          />
-
-          <Input
-            type="text"
-            // placeholder="Código de ponto"
-            label={"Código de ponto"}
-            setSelectedValue={setTimecode}
-          />
-
-          <Select
-            placeholder=""
-            label={"Função"}
-            options={functionsOptions}
-            setSelectedValue={setSelectedFunction}
-          />
-
-          <Select
-            placeholder=""
-            label={"Turnos"}
-            options={turnsOptions}
-            setSelectedValue={setSelectedTurn}
-          />
-
-          <Select
-            label={"Centro de custos"}
-            placeholder=""
-            options={costCenterOptions}
-            setSelectedValue={setSelectedCostCenter}
-          />
-
-          <Select
-            label={"Setor"}
-            placeholder=""
-            options={departmentsOptions}
-            setSelectedValue={setSelectedDepartment}
-          />
-
-          <Input
-            type="date"
-            setSelectedValue={setAdmissionDate}
-            label={"Data de admissão"}
-          />
-
-          <Input
-            type="file"
-            setSelectedValue={setPicture}
-            label={"Foto"}
-          />
-
-          <Select
-            placeholder=""
-            label={"Gênero"}
-            options={gendersOptions}
-            setSelectedValue={setSelectedGender}
-          />
-
-          <Select
-            label={"Estado civil"}
-            placeholder=""
-            options={civilStatusOptions}
-            setSelectedValue={setSelectedCivilStatus}
-          />
-
-          <Input
-            type="text"
-            // placeholder="Logradouro"
-            label={"Logradouro"}
-            setSelectedValue={setStreet}
-          />
-
-          <Input
-            type="text"
-            // placeholder="Número"
-            label={"Número"}
-            setSelectedValue={setStreetNumber}
-          />
-
-          <Input
-            type="text"
-            // placeholder="Complemento"
-            label={"Complemento"}
-            setSelectedValue={setStreetComplement}
-          />
-
-          <Input
-            type="text"
-            // placeholder="CEP"
-            label={"CEP"}
-            setSelectedValue={setSelectedCep}
-          />
-
-          <Select
-            placeholder=""
-            label={"Estado"}
-            options={statesOptions}
-            setSelectedValue={setSelectedState}
-          />
-
-          <Select
-            placeholder=""
-            label={"Cidade"}
-            options={citiesOptions}
-            setSelectedValue={setSelectedCity}
-          />
-
-          <Select
-            label={"Bairro"}
-            placeholder=""
-            options={neighborhoodOptions}
-            setSelectedValue={setSelectedNeighborhood}
-          />
-
-          <Select
-            label={"Etnia"}
-            placeholder=""
-            options={ethnicitiesOptions}
-            setSelectedValue={setSelectedEthnicity}
-          />
-
-          <Select
-            label={"Nacionalidade"}
-            placeholder=""
-            options={nationalityOptions}
-            setSelectedValue={setSelectedNationality}
-          />
-
-          <Select
-            label={"Estado de nascimento"}
-            placeholder=""
-            options={birthstateOptions}
-            setSelectedValue={setSelectedBirthstate}
-          />
-
-          <Select
-            label={"Cidade de nascimento"}
-            placeholder=""
-            options={birthcityOptions}
-            setSelectedValue={setBirthcity}
-          />
-
-          <Input
-            type="text"
-            label={"Nome do pai"}
-            // placeholder="Nome do pai"
-            setSelectedValue={setFathername}
-          />
-
-          <Input
-            type="text"
-            label={"Nome da mãe"}
-            // placeholder="Nome da mãe"
-            setSelectedValue={setMothername}
-          />
-
-          <Input
-            type="text"
-            label="Certificado de reservista"
-            setSelectedValue={setMilitaryCertNumber}
-          />
-
-          <Input
-            type="text"
-            label='Título de eleitor'
-            setSelectedValue={setVotantTitle}
-          />
-
-          <Input
-            type="text"
-            label='Zona'
-            setSelectedValue={setVotantZone}
-          />
-
-          <Input
-            type="text"
-            setSelectedValue={setVotantSession}
-            label="Sessão"
-          />
-
-          <Input
-            type="text"
-            label="CNH"
-            setSelectedValue={setCnh}
-          />
-
-          <Input
-            type="text"
-            label="Categoria"
-            setSelectedValue={setCnhCategory}
-          />
-
-          <Input
-            type="date"
-            label="Data de emissão"
-            setSelectedValue={setCnhEmissionDate}
-          />
-
-          <Input
-            type="date"
-            label="Validade de CNH"
-            setSelectedValue={setCnhValidDate}
-          />
-
-          <Select
-            placeholder={""}
-            label="Primeiro emprego?"
-            options={trueFalseOptions}
-            setSelectedValue={setFirstJob}
-          />
-
-          <Select
-            placeholder={""}
-            label="Já foi empregado da empresa?"
-            options={trueFalseOptions}
-            setSelectedValue={setWasEmployee}
-          />
-
-          <Select
-            placeholder={""}
-            label="Contribuição sindical nesse ano?"
-            options={trueFalseOptions}
-            setSelectedValue={setUnionContributeCurrentYear}
-          />
-
-          <Select
-            placeholder={""}
-            label="Recebendo seguro-desemprego?"
-            options={trueFalseOptions}
-            setSelectedValue={setReceivingUnemploymentInsurance}
-          />
-
-          <Select
-            placeholder={""}
-            label="Experiência prévia na função?"
-            options={trueFalseOptions}
-            setSelectedValue={setPreviousExperience}
-          />
-
-          <Input
-            label="Mensalista"
-            type="text"
-            setSelectedValue={setMonthWage}
-          />
-
-          <Input
-            label="Valor/horista"
-            type="text"
-            setSelectedValue={setHourWage}
-          />
-
-          <Input
-            label="Proporcional a jornada"
-            type="text"
-            setSelectedValue={setJourneyWage}
-          />
-
-          <Select
-            placeholder={""}
-            label="Vale transporte"
-            options={trueFalseOptions}
-            setSelectedValue={setTransportVoucher}
-          />
-
-          <Input
-            label="Carga diária"
-            type="text"
-            setSelectedValue={setDiaryWorkJourney}
-          />
-
-          <Input
-            label="Carga semanal"
-            type="text"
-            setSelectedValue={setWeekWorkJourney}
-          />
-
-          <Input
-            label="Carga mensal"
-            type="text"
-            setSelectedValue={setMonthWorkJourney}
-          />
-
-          <Select
-            placeholder={""}
-            label="Tempo de experiência"
-            options={experienceTimeOptions}
-            setSelectedValue={setExperienceTime}
-          />
-
-          <Input
-            label="Horas noturnas"
-            type="text"
-            setSelectedValue={setNocturneHours}
-          />
-
-          <Select
-            placeholder={""}
-            label="Periculosidade"
-            options={trueFalseOptions}
-            setSelectedValue={setDangerousness}
-          />
-
-          <Select
-            placeholder={""}
-            label="Insalubridade"
-            options={trueFalseOptions}
-            setSelectedValue={setUnhealthy}
-          />
-
-          <Select
-            placeholder={""}
-            label="Método de pagamento"
-            options={[
-              { value: 1, label: "dinheiro" },
-              { value: 2, label: "cheque" },
-            ]}
-            setSelectedValue={setWagePaymentMethod}
-          />
-
-          <Input
-            label="Código geral de função"
-            type="text"
-            setSelectedValue={setCodeGeneralFunction}
-          />
-
-          <Input
-            label="Salário"
-            type="text"
-            setSelectedValue={setWage}
-          />
-
-          <Input
-            label="Data de última função"
-            type="text"
-            setSelectedValue={setLastFunctionDate}
-          />
-
-          <Input
-            label="Tempo na função atual"
-            type="text"
-            setSelectedValue={setCurrentFunctionTime}
-          />
-
-          <Select
-            placeholder={""}
-            label="Banco"
-            options={banksOptions}
-            setSelectedValue={setSelectedBankOption}
-          />
-
-          <Input
-            label="Agência do banco"
-            type="text"
-            setSelectedValue={setBankAgency}
-          />
-
-          <Input
-            label="Conta do banco"
-            type="text"
-            setSelectedValue={setBankAccount}
-          />
-
-          <Select
-            placeholder=""
-            label="Filhos menores de 14?"
-            options={trueFalseOptions}
-            setSelectedValue={setHasChildren}
-          />
-
-          {
-            hasChildren?.value == true && (
-              <div className="row">
-                <div className="col">
-                  <Input
-                    type="text"
-                    label="Nome"
-                    setSelectedValue={setChildrenName}
-                  />
-                </div>
-
-                <div className="col">
-                  <Input
-                    type="text"
-                    label="Cidade/estado"
-                    setSelectedValue={setChildrenCitiesStates}
-                  />
-                </div>
-
-                <div className="col">
-                  <Input
-                    type="text"
-                    label="CPF"
-                    setSelectedValue={setChildrenCpf}
-                  />
-                </div>
-              </div>
-            ) || (<></>)
-          }
+
+          <div className="row">
+            <div className="col-4">
+              <Input
+                type="text"
+                label={"Nome"}
+                setSelectedValue={setName}
+                required={true}
+              />
+
+              <Select
+                placeholder=""
+                label={"Função"}
+                options={functionsOptions}
+                setSelectedValue={setSelectedFunction}
+                required={true}
+              />
+
+              <Select
+                placeholder=""
+                label={"Turnos"}
+                options={turnsOptions}
+                setSelectedValue={setSelectedTurn}
+                required={true}
+              />
+
+              <Select
+                label={"Centro de custos"}
+                placeholder=""
+                options={costCenterOptions}
+                setSelectedValue={setSelectedCostCenter}
+                required={true}
+              />
+
+              <Select
+                label={"Setor"}
+                placeholder=""
+                options={departmentsOptions}
+                setSelectedValue={setSelectedDepartment}
+                required={true}
+              />
+
+              <Input
+                type="date"
+                setSelectedValue={setAdmissionDate}
+                label={"Data de admissão"}
+                required={true}
+              />
+
+              <Input
+                type="text"
+                // placeholder="CPF"
+                label={"CPF"}
+                setSelectedValue={setCpf}
+              />
+
+              <Input
+                type="text"
+                // placeholder='RG'
+                label={"RG"}
+                setSelectedValue={setRg}
+              />
+
+              <Input
+                type="text"
+                // placeholder='Órgão emissor'
+                label={"Órgão emissor"}
+                setSelectedValue={setRgIssuingAgency}
+              />
+
+              <Select
+                placeholder=""
+                label={"Estado"}
+                options={statesOptions}
+                setSelectedValue={setRgState}
+              />
+
+              <Input
+                type="date"
+                setSelectedValue={setRgExpeditionDate}
+                label={"Data de expedição"}
+              />
+
+              <Input
+                type="text"
+                // placeholder="Telefone fixo"
+                label={"Telefone fixo"}
+                setSelectedValue={setSelectedPhone}
+              />
+
+              <Input
+                type="text"
+                // placeholder="Celular"
+                label={"Celular"}
+                setSelectedValue={setSelectedMobile}
+              />
+
+              <Input
+                type="email"
+                // placeholder="E-mail"
+                label={"E-mail"}
+                setSelectedValue={setEmail}
+              />
+
+              <Input
+                type="text"
+                // placeholder='PIS'
+                setSelectedValue={setPis}
+                label={"PIS"}
+              />
+
+              <Input
+                type={"date"}
+                setSelectedValue={setPisRegisterDate}
+                label={"Data de cadastro"}
+              />
+
+              <Input
+                type="text"
+                // placeholder='CTPS'
+                label={"CTPS"}
+                setSelectedValue={setCtps}
+              />
+
+              <Input
+                type="text"
+                // placeholder="Série de CTPS"
+                label={"Série"}
+                setSelectedValue={setCtpsSerie}
+              />
+
+              <Select
+                placeholder=""
+                label={"UF"}
+                options={statesOptions}
+                setSelectedValue={setCtpsState}
+              />
+
+              <Input
+                type="date"
+                label="Data de emissão"
+                setSelectedValue={setCtpsEmissionDate}
+              />
+
+              <Select
+                placeholder=""
+                label={"Escolaridade"}
+                options={schoolLevelsOptions}
+                setSelectedValue={setSelectedSchoolLevel}
+              />
+
+              <Input
+                // placeholder="Número de emergência"
+                label={"Número de emergência"}
+                type="text"
+                setSelectedValue={setEmergencyNumber}
+              />
+
+              <Input
+                type="text"
+                // placeholder="E-Social"
+                label={"E-social"}
+                setSelectedValue={setEsocial}
+              />
+
+              <Input
+                type="text"
+                // placeholder="Matrícula"
+                label={"Código de acesso"}
+                setSelectedValue={setEnrolment}
+              />
+
+              <Input
+                type="text"
+                // placeholder="Código de ponto"
+                label={"Código de ponto"}
+                setSelectedValue={setTimecode}
+              />
+            </div>
+
+            <div className="col-4">
+              <Input
+                type="date"
+                setSelectedValue={setBirthdate}
+                // label={"Data de nascimento"}
+                label={"Data de nascimento"}
+              />
+
+              <Select
+                placeholder=""
+                label={"Gênero"}
+                options={gendersOptions}
+                setSelectedValue={setSelectedGender}
+              />
+
+              <Select
+                label={"Estado civil"}
+                placeholder=""
+                options={civilStatusOptions}
+                setSelectedValue={setSelectedCivilStatus}
+              />
+
+              <Input
+                type="text"
+                // placeholder="Logradouro"
+                label={"Logradouro"}
+                setSelectedValue={setStreet}
+              />
+
+              <Input
+                type="text"
+                // placeholder="Número"
+                label={"Número"}
+                setSelectedValue={setStreetNumber}
+              />
+
+              <Input
+                type="text"
+                // placeholder="Complemento"
+                label={"Complemento"}
+                setSelectedValue={setStreetComplement}
+              />
+
+              <Input
+                type="text"
+                // placeholder="CEP"
+                label={"CEP"}
+                setSelectedValue={setSelectedCep}
+              />
+
+              <Select
+                placeholder=""
+                label={"Estado"}
+                options={statesOptions}
+                setSelectedValue={setSelectedState}
+              />
+
+              <Select
+                placeholder=""
+                label={"Cidade"}
+                options={citiesOptions}
+                setSelectedValue={setSelectedCity}
+              />
+
+              <Select
+                label={"Bairro"}
+                placeholder=""
+                options={neighborhoodOptions}
+                setSelectedValue={setSelectedNeighborhood}
+              />
+
+              <Select
+                label={"Etnia"}
+                placeholder=""
+                options={ethnicitiesOptions}
+                setSelectedValue={setSelectedEthnicity}
+              />
+
+              <Select
+                label={"Nacionalidade"}
+                placeholder=""
+                options={nationalityOptions}
+                setSelectedValue={setSelectedNationality}
+              />
+
+              <Select
+                label={"Estado de nascimento"}
+                placeholder=""
+                options={birthstateOptions}
+                setSelectedValue={setSelectedBirthstate}
+              />
+
+              <Select
+                label={"Cidade de nascimento"}
+                placeholder=""
+                options={birthcityOptions}
+                setSelectedValue={setBirthcity}
+              />
+
+              <Input
+                type="text"
+                label={"Nome do pai"}
+                // placeholder="Nome do pai"
+                setSelectedValue={setFathername}
+              />
+
+              <Input
+                type="text"
+                label={"Nome da mãe"}
+                // placeholder="Nome da mãe"
+                setSelectedValue={setMothername}
+              />
+
+              <Input
+                type="text"
+                label="Certificado de reservista"
+                setSelectedValue={setMilitaryCertNumber}
+              />
+
+              <Input
+                type="text"
+                label='Título de eleitor'
+                setSelectedValue={setVotantTitle}
+              />
+
+              <Input
+                type="text"
+                label='Zona'
+                setSelectedValue={setVotantZone}
+              />
+
+              <Input
+                type="text"
+                setSelectedValue={setVotantSession}
+                label="Sessão"
+              />
+
+              <Input
+                type="text"
+                label="CNH"
+                setSelectedValue={setCnh}
+              />
+
+              <Input
+                type="text"
+                label="Categoria"
+                setSelectedValue={setCnhCategory}
+              />
+
+              <Input
+                type="date"
+                label="Data de emissão"
+                setSelectedValue={setCnhEmissionDate}
+              />
+
+              <Input
+                type="date"
+                label="Validade"
+                setSelectedValue={setCnhValidDate}
+              />
+
+              <Select
+                placeholder={""}
+                label="Primeiro emprego?"
+                options={trueFalseOptions}
+                setSelectedValue={setFirstJob}
+              />
+            </div>
+
+            <div className="col-4">
+              <Select
+                placeholder={""}
+                label="Já foi empregado da empresa?"
+                options={trueFalseOptions}
+                setSelectedValue={setWasEmployee}
+              />
+
+              <Select
+                placeholder={""}
+                label="Contribuição sindical nesse ano?"
+                options={trueFalseOptions}
+                setSelectedValue={setUnionContributeCurrentYear}
+              />
+
+              <Select
+                placeholder={""}
+                label="Recebendo seguro-desemprego?"
+                options={trueFalseOptions}
+                setSelectedValue={setReceivingUnemploymentInsurance}
+              />
+
+              <Select
+                placeholder={""}
+                label="Experiência prévia na função?"
+                options={trueFalseOptions}
+                setSelectedValue={setPreviousExperience}
+              />
+
+              <Input
+                label="Mensalista"
+                type="text"
+                setSelectedValue={setMonthWage}
+              />
+
+              <Input
+                label="Valor/horista"
+                type="text"
+                setSelectedValue={setHourWage}
+              />
+
+              <Input
+                label="Proporcional a jornada"
+                type="text"
+                setSelectedValue={setJourneyWage}
+              />
+
+              <Select
+                placeholder={""}
+                label="Vale transporte"
+                options={trueFalseOptions}
+                setSelectedValue={setTransportVoucher}
+              />
+
+              <Input
+                label="Carga diária"
+                type="text"
+                setSelectedValue={setDiaryWorkJourney}
+              />
+
+              <Input
+                label="Carga semanal"
+                type="text"
+                setSelectedValue={setWeekWorkJourney}
+              />
+
+              <Input
+                label="Carga mensal"
+                type="text"
+                setSelectedValue={setMonthWorkJourney}
+              />
+
+              <Select
+                placeholder={""}
+                label="Tempo de experiência"
+                options={experienceTimeOptions}
+                setSelectedValue={setExperienceTime}
+              />
+
+              <Input
+                label="Horas noturnas"
+                type="text"
+                setSelectedValue={setNocturneHours}
+              />
+
+              <Select
+                placeholder={""}
+                label="Periculosidade"
+                options={trueFalseOptions}
+                setSelectedValue={setDangerousness}
+              />
+
+              <Select
+                placeholder={""}
+                label="Insalubridade"
+                options={trueFalseOptions}
+                setSelectedValue={setUnhealthy}
+              />
+
+              <Select
+                placeholder={""}
+                label="Método de pagamento"
+                options={[
+                  { value: 1, label: "dinheiro" },
+                  { value: 2, label: "cheque" },
+                ]}
+                setSelectedValue={setWagePaymentMethod}
+              />
+
+              <Input
+                label="Código geral de função"
+                type="text"
+                setSelectedValue={setCodeGeneralFunction}
+              />
+
+              <Input
+                label="Salário"
+                type="text"
+                setSelectedValue={setWage}
+              />
+
+              <Input
+                label="Data de última função"
+                type="text"
+                setSelectedValue={setLastFunctionDate}
+              />
+
+              <Input
+                label="Tempo na função atual"
+                type="text"
+                setSelectedValue={setCurrentFunctionTime}
+              />
+
+              <Select
+                placeholder={""}
+                label="Banco"
+                options={banksOptions}
+                setSelectedValue={setSelectedBankOption}
+              />
+
+              <Input
+                label="Agência do banco"
+                type="text"
+                setSelectedValue={setBankAgency}
+              />
+
+              <Input
+                label="Conta do banco"
+                type="text"
+                setSelectedValue={setBankAccount}
+              />
+
+              <Input
+                label="CBO"
+                type="text"
+                setSelectedValue={setCbo}
+              />
+
+              <Select
+                placeholder=""
+                label="Filhos menores de 14?"
+                options={trueFalseOptions}
+                setSelectedValue={setHasChildren}
+              />
+
+              {
+                hasChildren?.value == true && (
+                  <div className="row">
+                    <div className="col">
+                      <Input
+                        type="text"
+                        label="Nome"
+                        setSelectedValue={setChildrenName}
+                      />
+                    </div>
+
+                    <div className="col">
+                      <Input
+                        type="text"
+                        label="Cidade/estado"
+                        setSelectedValue={setChildrenCitiesStates}
+                      />
+                    </div>
+
+                    <div className="col">
+                      <Input
+                        type="text"
+                        label="CPF"
+                        setSelectedValue={setChildrenCpf}
+                      />
+                    </div>
+                  </div>
+                ) || (<></>)
+              }
+            </div>
+          </div>
         </Modal.Body>
 
         <Modal.Footer>

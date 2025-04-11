@@ -19,6 +19,8 @@ import loadStatesOptions from '../../requests/loadOptions/loadStatesOptions'
 import loadTurnsOptions from '../../requests/loadOptions/loadTurnsOptions'
 import api from '../../services/api'
 import loadNationalitiesOptions from '../../requests/loadOptions/loadNationalitiesOptions'
+import moment from 'moment'
+import loadWagePaymentMethodOptions from '../../requests/loadOptions/loadWagePaymentMethodOptions'
 
 const EditWorkerModal = (props) => {
   const {
@@ -241,6 +243,14 @@ const EditWorkerModal = (props) => {
 
   const [cbo, setCbo] = useState()
 
+  const [hierarchyStructureOptions, setHierarchyStructureOptions] = useState()
+
+  const [selectedHierarchyStructure, setSelectedHierarchyStructure] = useState()
+
+  const [enterpriseTime, setEnterpriseTime] = useState()
+
+  const [wagePaymentMethodOptions, setWagePaymentMethodOptions] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -255,6 +265,15 @@ const EditWorkerModal = (props) => {
     loadNationalitiesOptions(setNationalityOptions)
     loadCitiesOptions(selectedState, setCitiesOptions)
     loadNeighborhoodsOptions(selectedCity, setNeighborhoodOptions)
+    loadWagePaymentMethodOptions(setWagePaymentMethodOptions)
+
+    api
+      .get(`/hierarchy-structure`)
+      .then((response) => {
+        let options = response?.data.map((hierarchyStructure) => ({ value: hierarchyStructure.id, label: hierarchyStructure.name }))
+
+        setHierarchyStructureOptions(options)
+      })
 
     api
       .get(`/states`)
@@ -309,7 +328,8 @@ const EditWorkerModal = (props) => {
   }
 
   const handleSubmit = () => {
-    let childrenData = `["name": ${childrenName}, "citystate": ${childrenCitiesStates}, "cpf": ${childrenCpf}]`
+    console.log(selectedWorker)
+    debugger
 
     let formData = {
       "name": name || selectedWorker?.worker_name,
@@ -321,79 +341,80 @@ const EditWorkerModal = (props) => {
       "department_id": selectedDepartment?.value || selectedWorker?.department_id,
       "admission_date": admissionDate || selectedWorker?.admission_date,
       "resignation_date": admissionDate || selectedWorker?.admission_date,
-      "enrolment": enrolment,
-      "sales_code": salesCode,
-      "timecode": timecode,
-      "esocial": esocial,
-      "gender_id": selectedGender?.value,
-      "civil_status_id": selectedCivilStatus?.value,
-      "street": street,
-      "street_number": streetNumber,
-      "street_complement": streetComplement,
-      "neighborhood_id": selectedNeighborhood?.value,
-      "cep": cep,
-      "city": selectedCity?.value,
-      "state": selectedState?.value,
-      "phone": selectedPhone,
-      "mobile": selectedMobile,
-      "email": email,
-      "ethnicity_id": selectedEthnicity?.value,
-      "birthdate": birthdate,
-      "birthcity": birthcity?.value,
-      "birthstate": selectedBirthstate?.value,
-      "nationality": selectedNationality?.value,
-      "fathername": fathername,
-      "mothername": mothername,
-      "has_children": hasChildren?.value,
-      "children_data": childrenData,
-      "cpf": cpf,
-      "rg": rg,
-      "rg_issuing_agency": rgIssuingAgency,
-      "rg_state": rgState?.value,
-      "rg_expedition_date": rgExpeditionDate,
-      "military_cert_number": militaryCertNumber,
-      "pis": pis,
-      "pis_register_date": pisRegisterDate,
-      "vontant_title": votantTitle,
-      "votant_zone": votantZone,
-      "votant_session": votantSession,
-      "ctps": ctps,
-      "ctps_serie": ctpsSerie,
-      "ctps_state": ctpsState?.value,
-      "ctps_emission_date": ctpsEmissionDate,
-      "cnh": cnh,
-      "cnh_category": cnhCategory,
-      "cnh_emition_date": cnhEmissionDate,
-      "cnh_valid_date": cnhValidDate,
-      "firstJob": firstJob?.value,
-      "was_employee": wasEmployee?.value,
-      "union_contribute_current_year": unionContributeCurrentYear?.value,
-      "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value,
-      "previous_experience": previousExperience?.value,
-      "month_wage": monthWage,
-      "hour_wage": hourWage,
-      "journey_wage": journeyWage,
-      "transport_voucher": transportVoucher?.value,
-      "transport_voucher_quantity": transportVoucherQuantity,
-      "diary_workjourney": diaryWorkJourney,
-      "week_workjourney": weekWorkJourney,
-      "month_workjourney": monthWorkJourney,
-      "experience_time": experienceTime?.value,
-      "nocturne_hours": nocturneHours,
-      "dangerousness": dangerousness?.value,
-      "unhealthy": unhealthy?.value,
-      "wage_payment_method": wagePaymentMethod?.value,
-      "general_function_code": codeGeneralFunction,
-      "wage": wage,
-      "last_function_date": lastFunctionDate,
-      "current_function_time": currentFunctionTime,
-      "school_level": selectedSchoolLevel?.value,
-      "emergency_number": emergencyNumber,
-      "bank": selectedBankOption?.value,
-      "bank_agency": bankAgency,
-      "bank_account": bankAccount,
-      "cbo": cbo
+      "enrolment": enrolment || selectedWorker?.worker_enrolment,
+      "timecode": timecode || selectedWorker?.timecode,
+      "esocial": esocial || selectedWorker?.esocial,
+      "gender_id": selectedGender?.value || selectedWorker?.gender?.id,
+      "civil_status_id": selectedCivilStatus?.value || selectedWorker?.civil_status?.id,
+      "street": street || selectedWorker?.street,
+      "street_number": streetNumber || selectedWorker?.street_number,
+      "street_complement": streetComplement || selectedWorker?.street_complement,
+      "neighborhood_id": selectedNeighborhood?.value || selectedWorker?.neighborhood?.id,
+      "cep": cep || selectedWorker?.cep,
+      "city": selectedCity?.value || selectedWorker?.city?.id,
+      "state": selectedState?.value || selectedWorker?.state?.id,
+      "phone": selectedPhone || selectedWorker?.phone,
+      "mobile": selectedMobile || selectedWorker?.mobile,
+      "email": email || selectedWorker?.email,
+      "ethnicity_id": selectedEthnicity?.value || selectedWorker?.ethnicity?.id,
+      "birthdate": birthdate || selectedWorker?.birthdate,
+      "birthcity": birthcity?.value || selectedWorker?.birthcity?.id,
+      "birthstate": selectedBirthstate?.value || selectedWorker?.birthstate?.id,
+      "nationality": selectedNationality?.value || selectedWorker?.nationality?.id,
+      "fathername": fathername || selectedWorker?.fathername,
+      "mothername": mothername || selectedWorker?.mothername,
+      "cpf": cpf || selectedWorker?.cpf,
+      "rg": rg || selectedWorker?.rg,
+      "rg_issuing_agency": rgIssuingAgency || selectedWorker?.rg_issuing_agency,
+      "rg_state": rgState?.value || selectedWorker?.rg_state?.id,
+      "rg_expedition_date": rgExpeditionDate || selectedWorker?.rg_expedition_date,
+      "military_cert_number": militaryCertNumber || selectedWorker?.military_cert_number,
+      "pis": pis || selectedWorker?.pis,
+      "pis_register_date": pisRegisterDate || selectedWorker?.pis_register_date,
+      "vontant_title": votantTitle || selectedWorker?.vontant_title,
+      "votant_zone": votantZone || selectedWorker?.votant_zone,
+      "votant_session": votantSession || selectedWorker?.votant_session,
+      "ctps": ctps || selectedWorker?.ctps,
+      "ctps_serie": ctpsSerie || selectedWorker?.ctps_serie,
+      "ctps_state": ctpsState?.value || selectedWorker?.ctps_state?.id,
+      "ctps_emission_date": ctpsEmissionDate || selectedWorker?.ctps_emission_date,
+      "cnh": cnh || selectedWorker?.cnh,
+      "cnh_category": cnhCategory || selectedWorker?.cnh_category,
+      "cnh_emition_date": cnhEmissionDate || selectedWorker?.cnh_emition_date,
+      "cnh_valid_date": cnhValidDate || selectedWorker?.cnh_valid_date,
+      "firstJob": firstJob?.value || selectedWorker?.first_job,
+      "was_employee": wasEmployee?.value || selectedWorker?.was_employee,
+      "union_contribute_current_year": unionContributeCurrentYear?.value || selectedWorker?.union_contribute_current_year,
+      "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value || selectedWorker?.receiving_unemployment_insurance,
+      "previous_experience": previousExperience?.value || selectedWorker?.previous_experience,
+      "month_wage": monthWage || selectedWorker?.month_wage,
+      "hour_wage": hourWage || selectedWorker?.hour_wage,
+      "journey_wage": journeyWage || selectedWorker?.journey_wage,
+      "transport_voucher": transportVoucher?.value || selectedWorker?.transport_voucher,
+      "diary_workjourney": diaryWorkJourney || selectedWorker?.diary_workjourney,
+      "week_workjourney": weekWorkJourney || selectedWorker?.week_workjourney,
+      "month_workjourney": monthWorkJourney || selectedWorker?.month_workjourney,
+      "experience_time": experienceTime?.value || selectedWorker?.experienceTime,
+      "nocturne_hours": nocturneHours || selectedWorker?.nocturne_hours,
+      "dangerousness": dangerousness?.value || selectedWorker?.dangerousness,
+      "unhealthy": unhealthy?.value || selectedWorker?.unhealthy,
+      "wage_payment_method": wagePaymentMethod?.value || selectedWorker?.wage_payment_method,
+      "general_function_code": codeGeneralFunction || selectedWorker?.general_function_code,
+      "wage": wage || selectedWorker?.wage,
+      "last_function_date": lastFunctionDate || selectedWorker?.last_function_date,
+      "current_function_time": currentFunctionTime || selectedWorker?.current_function_time,
+      "school_level": selectedSchoolLevel?.value || selectedWorker?.school_level?.id,
+      "emergency_number": emergencyNumber || selectedWorker?.emergency_number,
+      "bank": selectedBankOption?.value || selectedWorker?.bank?.id,
+      "bank_agency": bankAgency || selectedWorker?.bank_agency,
+      "bank_account": bankAccount || selectedWorker?.bankAccount,
+      "cbo": cbo || selectedWorker?.cbo,
+      "hierarchy_structure": selectedHierarchyStructure?.value || selectedWorker?.hierarchy_structure?.id,
+      "enterprise_time": enterpriseTime || selectedWorker?.enterprise_time,
     }
+
+    console.log(formData)
+    debugger
 
     api
       .put(`/workers/${selectedWorker.worker_id}`, formData)
@@ -663,64 +684,6 @@ const EditWorkerModal = (props) => {
           </div>
         </div>
 
-        <div className="row">
-          <div className="col">
-            <Select
-              placeholder=""
-              label="Filhos menores de 14?"
-              options={trueFalseOptions}
-              setSelectedValue={setHasChildren}
-              defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.has_children)}
-            />
-
-            {
-              hasChildren?.value == true && (
-                <div className="row">
-                  <div className="col">
-                    <Input
-                      type="text"
-                      label="Nome"
-                      setSelectedValue={setChildrenName}
-                    />
-                  </div>
-
-                  <div className="col">
-                    <Input
-                      type="text"
-                      label="Cidade/estado"
-                      setSelectedValue={setChildrenCitiesStates}
-                    />
-                  </div>
-
-                  <div className="col">
-                    <Input
-                      type="text"
-                      label="CPF"
-                      setSelectedValue={setChildrenCpf}
-                    />
-                  </div>
-
-                  <div className="col">
-                    <Input
-                      type="text"
-                      label="Livro"
-                    // setSelectedValue={setChildrenCpf}
-                    />
-                  </div>
-
-                  <div className="col">
-                    <Input
-                      type="text"
-                      label="Folhas"
-                    // setSelectedValue={setChildrenCpf}
-                    />
-                  </div>
-                </div>
-              ) || (<></>)
-            }
-          </div>
-        </div>
-
         <div>
           <h4>Documentos</h4>
         </div>
@@ -955,7 +918,7 @@ const EditWorkerModal = (props) => {
                   label="Primeiro emprego?"
                   options={trueFalseOptions}
                   setSelectedValue={setFirstJob}
-
+                  defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.first_job)}
                 />
               </div>
 
@@ -965,6 +928,7 @@ const EditWorkerModal = (props) => {
                   label="Já foi empregado da empresa?"
                   options={trueFalseOptions}
                   setSelectedValue={setWasEmployee}
+                  defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.was_employee)}
                 />
               </div>
             </div>
@@ -976,6 +940,7 @@ const EditWorkerModal = (props) => {
               label="Contribuição sindical nesse ano?"
               options={trueFalseOptions}
               setSelectedValue={setUnionContributeCurrentYear}
+              defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.union_contribute_current_year)}
             />
           </div>
 
@@ -987,6 +952,7 @@ const EditWorkerModal = (props) => {
                   label="Recebendo seguro-desemprego?"
                   options={trueFalseOptions}
                   setSelectedValue={setReceivingUnemploymentInsurance}
+                  defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.receiving_unemployment_insurance)}
                 />
               </div>
 
@@ -996,6 +962,7 @@ const EditWorkerModal = (props) => {
                   label="Experiência prévia na função?"
                   options={trueFalseOptions}
                   setSelectedValue={setPreviousExperience}
+                  defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.previous_experience)}
                 />
               </div>
             </div>
@@ -1213,10 +1180,7 @@ const EditWorkerModal = (props) => {
             <Select
               placeholder={""}
               label="Método de pagamento"
-              options={[
-                { value: 1, label: "dinheiro" },
-                { value: 2, label: "cheque" },
-              ]}
+              options={wagePaymentMethodOptions}
               setSelectedValue={setWagePaymentMethod}
 
             />
@@ -1269,6 +1233,27 @@ const EditWorkerModal = (props) => {
               type="text"
               setSelectedValue={setWage}
               defaultValue={selectedWorker?.wage}
+            />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col">
+            <Select
+              options={hierarchyStructureOptions}
+              placeholder={""}
+              label={"Estrutura hierárquica"}
+              setSelectedValue={setSelectedHierarchyStructure}
+              defaultValue={hierarchyStructureOptions?.find((option) => option.value == selectedWorker?.hierarchy_structure?.id)}
+            />
+          </div>
+
+          <div className="col">
+            <Input
+              type={"text"}
+              label={"Tempo de empresa"}
+              setSelectedValue={setEnterpriseTime}
+              defaultValue={selectedWorker?.enterprise_time}
             />
           </div>
         </div>

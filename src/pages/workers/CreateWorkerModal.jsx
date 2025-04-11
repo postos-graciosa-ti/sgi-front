@@ -13,12 +13,13 @@ import loadDepartmentsOptions from '../../requests/loadOptions/loadDepartmentsOp
 import loadEthnicitiesOptions from "../../requests/loadOptions/loadEthnicitiesOptions"
 import loadFunctionsOptions from '../../requests/loadOptions/loadFunctionsOptions'
 import loadGendersOptions from "../../requests/loadOptions/loadGendersOptions"
+import loadNationalitiesOptions from "../../requests/loadOptions/loadNationalitiesOptions"
 import loadNeighborhoodsOptions from "../../requests/loadOptions/loadNeighborhoodsOptions"
 import loadSchoolLevels from "../../requests/loadOptions/loadSchoolLevels"
 import loadStatesOptions from "../../requests/loadOptions/loadStatesOptions"
 import loadTurnsOptions from "../../requests/loadOptions/loadTurnsOptions"
 import api from '../../services/api'
-import loadNationalitiesOptions from "../../requests/loadOptions/loadNationalitiesOptions"
+import loadWagePaymentMethodOptions from "../../requests/loadOptions/loadWagePaymentMethodOptions"
 
 const CreateWorkerModal = (props) => {
   const {
@@ -239,6 +240,14 @@ const CreateWorkerModal = (props) => {
 
   const [cbo, setCbo] = useState()
 
+  const [hierarchyStructureOptions, setHierarchyStructureOptions] = useState()
+
+  const [selectedHierarchyStructure, setSelectedHierarchyStructure] = useState()
+
+  const [enterpriseTime, setEnterpriseTime] = useState()
+
+  const [wagePaymentMethodOptions, setWagePaymentMethodOptions] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -251,6 +260,15 @@ const CreateWorkerModal = (props) => {
     loadSchoolLevels(setSchoolLevelsOptions)
     loadBanksOptions(setBanksOptions)
     loadNationalitiesOptions(setNationalityOptions)
+    loadWagePaymentMethodOptions(setWagePaymentMethodOptions)
+
+    api
+      .get(`/hierarchy-structure`)
+      .then((response) => {
+        let options = response?.data.map((hierarchyStructure) => ({ value: hierarchyStructure.id, label: hierarchyStructure.name }))
+
+        setHierarchyStructureOptions(options)
+      })
   }, [])
 
   useEffect(() => {
@@ -314,8 +332,6 @@ const CreateWorkerModal = (props) => {
   }
 
   const handleSubmit = () => {
-    let childrenData = `["name": ${childrenName}, "citystate": ${childrenCitiesStates}, "cpf": ${childrenCpf}]`
-
     let formData = {
       "name": name,
       "function_id": selectedFunction.value,
@@ -348,8 +364,6 @@ const CreateWorkerModal = (props) => {
       "nationality": selectedNationality?.value,
       "fathername": fathername,
       "mothername": mothername,
-      "has_children": hasChildren?.value,
-      "children_data": childrenData,
       "cpf": cpf,
       "rg": rg,
       "rg_issuing_agency": rgIssuingAgency,
@@ -369,11 +383,11 @@ const CreateWorkerModal = (props) => {
       "cnh_category": cnhCategory,
       "cnh_emition_date": cnhEmissionDate,
       "cnh_valid_date": cnhValidDate,
-      "firstJob": firstJob?.value,
-      "was_employee": wasEmployee?.value,
-      "union_contribute_current_year": unionContributeCurrentYear?.value,
-      "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value,
-      "previous_experience": previousExperience?.value,
+      "firstJob": firstJob && true,
+      "was_employee": wasEmployee && true,
+      "union_contribute_current_year": unionContributeCurrentYear?.value && true,
+      "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value && true,
+      "previous_experience": previousExperience?.value && true,
       "month_wage": monthWage,
       "hour_wage": hourWage,
       "journey_wage": journeyWage,
@@ -396,7 +410,12 @@ const CreateWorkerModal = (props) => {
       "bank_agency": bankAgency,
       "bank_account": bankAccount,
       "cbo": cbo,
+      "hierarchy_structure": selectedHierarchyStructure?.value,
+      "enterprise_time": enterpriseTime,
     }
+
+    console.log(formData)
+    debugger
 
     api
       .post("/workers", formData)
@@ -607,7 +626,7 @@ const CreateWorkerModal = (props) => {
                     placeholder=""
                     label={"Estado"}
                     options={statesOptions}
-                    setSelectedValue={setSelectedState}
+                    setSelectedValue={setSelectedBirthstate}
                   />
                 </div>
 
@@ -616,7 +635,7 @@ const CreateWorkerModal = (props) => {
                     placeholder=""
                     label={"Cidade"}
                     options={citiesOptions}
-                    setSelectedValue={setSelectedCity}
+                    setSelectedValue={setBirthcity}
                   />
                 </div>
               </div>
@@ -638,63 +657,6 @@ const CreateWorkerModal = (props) => {
                 label={"Nome do pai"}
                 setSelectedValue={setFathername}
               />
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col">
-              <Select
-                placeholder=""
-                label="Filhos menores de 14?"
-                options={trueFalseOptions}
-                setSelectedValue={setHasChildren}
-              />
-
-              {
-                hasChildren?.value == true && (
-                  <div className="row">
-                    <div className="col">
-                      <Input
-                        type="text"
-                        label="Nome"
-                        setSelectedValue={setChildrenName}
-                      />
-                    </div>
-
-                    <div className="col">
-                      <Input
-                        type="text"
-                        label="Cidade/estado"
-                        setSelectedValue={setChildrenCitiesStates}
-                      />
-                    </div>
-
-                    <div className="col">
-                      <Input
-                        type="text"
-                        label="CPF"
-                        setSelectedValue={setChildrenCpf}
-                      />
-                    </div>
-
-                    <div className="col">
-                      <Input
-                        type="text"
-                        label="Livro"
-                      // setSelectedValue={setChildrenCpf}
-                      />
-                    </div>
-
-                    <div className="col">
-                      <Input
-                        type="text"
-                        label="Folhas"
-                      // setSelectedValue={setChildrenCpf}
-                      />
-                    </div>
-                  </div>
-                ) || (<></>)
-              }
             </div>
           </div>
 
@@ -1079,26 +1041,12 @@ const CreateWorkerModal = (props) => {
 
           <div className="row">
             <div className="col">
-              <div className="row">
-                <div className="col">
-                  <Select
-                    placeholder={""}
-                    label="Vale transporte"
-                    options={trueFalseOptions}
-                    setSelectedValue={setTransportVoucher}
-                  />
-                </div>
-
-                <div className="col">
-                  <Select
-                    placeholder=""
-                    label={"Turno"}
-                    options={turnsOptions}
-                    setSelectedValue={setSelectedTurn}
-                    required={true}
-                  />
-                </div>
-              </div>
+              <Select
+                placeholder={""}
+                label="Vale transporte"
+                options={trueFalseOptions}
+                setSelectedValue={setTransportVoucher}
+              />
             </div>
 
             <div className="col">
@@ -1164,10 +1112,7 @@ const CreateWorkerModal = (props) => {
               <Select
                 placeholder={""}
                 label="Método de pagamento"
-                options={[
-                  { value: 1, label: "dinheiro" },
-                  { value: 2, label: "cheque" },
-                ]}
+                options={wagePaymentMethodOptions}
                 setSelectedValue={setWagePaymentMethod}
               />
             </div>
@@ -1214,6 +1159,25 @@ const CreateWorkerModal = (props) => {
                 label="Salário"
                 type="text"
                 setSelectedValue={setWage}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Select
+                options={hierarchyStructureOptions}
+                placeholder={""}
+                label={"Estrutura hierárquica"}
+                setSelectedValue={setSelectedHierarchyStructure}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                type={"text"}
+                label={"Tempo de empresa"}
+                setSelectedValue={setEnterpriseTime}
               />
             </div>
           </div>

@@ -1,6 +1,6 @@
 import moment from "moment"
 import { useEffect, useState } from "react"
-import { ArrowClockwise, ArrowsCollapse, ArrowsExpand, ArrowsFullscreen, ArrowUpRight, ClipboardData, Clock, Filter, Funnel, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX, Question, SlashCircle } from "react-bootstrap-icons"
+import { ArrowClockwise, ArrowsCollapse, ArrowsExpand, ArrowsFullscreen, ArrowUpRight, ClipboardData, Clock, Filter, Funnel, HourglassSplit, HouseAdd, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX, Question, SlashCircle } from "react-bootstrap-icons"
 import ReactDOMServer from 'react-dom/server'
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
@@ -21,6 +21,7 @@ import NrModal from "./NrModal"
 import WorkerInfoModal from "./WorkerInfoModal"
 import WorkerAwayModal from "./WorkerAwayModal"
 import WorkerReturnModal from "./WorkerReturnModal"
+import AddWorkerParentsModal from "./AddWorkerParentsModal"
 
 const Workers = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -54,6 +55,8 @@ const Workers = () => {
   const [workerAwayModalOpen, setWorkerAwayModalOpen] = useState(false)
 
   const [workerReturnModalOpen, setWorkerReturnModalOpen] = useState(false)
+
+  const [addWorkersParentsModalOpen, setAddWorkersParentsModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -200,6 +203,12 @@ const Workers = () => {
     setWorkerReturnModalOpen(true)
   }
 
+  const handleOpenAddWorkersParentsModal = (worker) => {
+    setSelectedWorker(worker)
+
+    setAddWorkersParentsModalOpen(true)
+  }
+
   return (
     <>
       <Nav />
@@ -303,10 +312,18 @@ const Workers = () => {
 
                       <button
                         className="btn btn-primary me-2 mt-2"
-                        title="cara-crachá"
+                        title="Emitir crachá"
                         onClick={() => handleIssueBadge(worker)}
                       >
                         <PersonBadge />
+                      </button>
+
+                      <button
+                        className="btn btn-primary me-2 mt-2"
+                        title="Adicionar parentes"
+                        onClick={() => handleOpenAddWorkersParentsModal(worker)}
+                      >
+                        <HouseAdd />
                       </button>
 
                       <button
@@ -554,6 +571,13 @@ const Workers = () => {
         selectedWorker={selectedWorker}
         setSelectedWorker={setSelectedWorker}
         setWorkersList={setWorkersList}
+      />
+
+      <AddWorkerParentsModal
+        addWorkersParentsModalOpen={addWorkersParentsModalOpen}
+        setAddWorkersParentsModalOpen={setAddWorkersParentsModalOpen}
+        selectedWorker={selectedWorker}
+        setSelectedWorker={setSelectedWorker}
       />
     </>
   )

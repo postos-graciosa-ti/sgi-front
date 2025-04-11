@@ -434,6 +434,8 @@ const Scale = () => {
       })
   }
 
+  console.log(selectedSubsdiarie)
+
   const handleTileDisabled = ({ date }) => {
     const isCaixaFunction = selectedFunction?.value == caixasId?.id
 
@@ -445,8 +447,8 @@ const Scale = () => {
 
     if (isHoliday) return true
 
-    if (isCaixaFunction) {
-      return !(dayOfWeek === "Tuesday" || dayOfWeek === "Wednesday")
+    if (isCaixaFunction && selectedSubsdiarie.value !== 2 && selectedSubsdiarie.value !== 3) {
+      return !(dayOfWeek === "Tuesday" || dayOfWeek === "Wednesday");
     }
 
     return false

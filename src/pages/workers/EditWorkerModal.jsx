@@ -747,7 +747,7 @@ const EditWorkerModal = (props) => {
                   type="date"
                   setSelectedValue={setRgExpeditionDate}
                   label={"Data de expedição"}
-                  defaultValue={setSelectedWorker?.rg_expedition_date}
+                  defaultValue={selectedWorker?.rg_expedition_date}
                 />
               </div>
 

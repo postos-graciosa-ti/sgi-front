@@ -379,7 +379,7 @@ const EditWorkerModal = (props) => {
       "military_cert_number": militaryCertNumber || selectedWorker?.military_cert_number,
       "pis": pis || selectedWorker?.pis,
       "pis_register_date": pisRegisterDate || selectedWorker?.pis_register_date,
-      "vontant_title": votantTitle || selectedWorker?.vontant_title,
+      "votant_title": votantTitle || selectedWorker?.votant_title,
       "votant_zone": votantZone || selectedWorker?.votant_zone,
       "votant_session": votantSession || selectedWorker?.votant_session,
       "ctps": ctps || selectedWorker?.ctps,
@@ -801,7 +801,7 @@ const EditWorkerModal = (props) => {
               type="text"
               label='Título de eleitor'
               setSelectedValue={setVotantTitle}
-              defaultValue={selectedWorker?.vontant_title}
+              defaultValue={selectedWorker?.votant_title}
             />
           </div>
 

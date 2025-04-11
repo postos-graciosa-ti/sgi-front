@@ -390,7 +390,7 @@ const EditWorkerModal = (props) => {
       "cnh_category": cnhCategory || selectedWorker?.cnh_category,
       "cnh_emition_date": cnhEmissionDate || selectedWorker?.cnh_emition_date,
       "cnh_valid_date": cnhValidDate || selectedWorker?.cnh_valid_date,
-      "firstJob": firstJob?.value || selectedWorker?.first_job,
+      "first_job": firstJob?.value || selectedWorker?.first_job,
       "was_employee": wasEmployee?.value || selectedWorker?.was_employee,
       "union_contribute_current_year": unionContributeCurrentYear?.value || selectedWorker?.union_contribute_current_year,
       "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value || selectedWorker?.receiving_unemployment_insurance,

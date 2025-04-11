@@ -313,7 +313,15 @@ const EditWorkerModal = (props) => {
       .then((response) => setWorkersSecondReview(response?.data))
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
-      .then((response) => setWorkersList(response.data))
+      .then((response) => {
+        let allWorkers = response.data
+
+        let statusWorkers = allWorkers.filter((worker) => worker.worker_is_active == true && worker.is_away == false)
+
+        let sortStatusWorkers = statusWorkers.sort()
+
+        setWorkersList(sortStatusWorkers)
+      })
     setSelectedWorker()
     setName()
     setSelectedFunction()

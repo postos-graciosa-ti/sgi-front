@@ -22,6 +22,10 @@ const AddFunctionsModal = (props) => {
 
   const [functionQuantity, setFunctionQuantity] = useState()
 
+  const [functionCbo, setFunctionCbo] = useState()
+
+  const [generalFunctionCode, setGeneralFunctionCode] = useState()
+
   const handleCloseModal = () => {
     api
       .get("/functions")
@@ -43,7 +47,9 @@ const AddFunctionsModal = (props) => {
       name: functionName,
       description: functionDescription,
       ideal_quantity: functionQuantity,
-      subsidiarie_id: selectedSubsdiarie.value
+      subsidiarie_id: selectedSubsdiarie.value,
+      cbo: functionCbo,
+      general_function_code: generalFunctionCode,
     }
 
     api
@@ -88,6 +94,14 @@ const AddFunctionsModal = (props) => {
 
           <div className="mb-3">
             <input type="number" className="form-control" placeholder="Quantidade ideal por turno" required onChange={(e) => setFunctionQuantity(e.target.value)} />
+          </div>
+
+          <div className="mb-3">
+            <input type="text" className="form-control" placeholder="CBO" required onChange={(e) => setFunctionCbo(e.target.value)} />
+          </div>
+
+          <div className="mb-3">
+            <input type="text" className="form-control" placeholder="Código geral de função" required onChange={(e) => setGeneralFunctionCode(e.target.value)} />
           </div>
         </Modal.Body>
 

@@ -21,6 +21,10 @@ const EditFunctionsModal = (props) => {
 
   const [functionQuantity, setFunctionQuantity] = useState()
 
+  const [functionCbo, setFunctionCbo] = useState()
+
+  const [functionGeneralCode, setFunctionGeneralCode] = useState()
+
   const handleClose = () => {
     setFunctionName()
 
@@ -29,6 +33,10 @@ const EditFunctionsModal = (props) => {
     setFunctionQuantity()
 
     setSelectedFunction({})
+
+    setFunctionCbo()
+
+    setFunctionGeneralCode()
 
     setEditFunctionModalOpen(false)
   }
@@ -40,7 +48,9 @@ const EditFunctionsModal = (props) => {
       name: functionName || selectedFunction?.name,
       description: functionDescription || selectedFunction?.description,
       ideal_quantity: functionQuantity || selectedFunction?.ideal_quantity,
-      subsidiarie_id: selectedSubsdiarie.value
+      subsidiarie_id: selectedSubsdiarie.value,
+      cbo: functionCbo,
+      general_function_code: functionGeneralCode,
     }
 
     api
@@ -70,19 +80,64 @@ const EditFunctionsModal = (props) => {
           <div className="mb-3">
             <label className='fw-bold mb-2'>Nome</label>
 
-            <input type="text" className="form-control" defaultValue={selectedFunction?.name} onChange={(e) => setFunctionName(e.target.value)} />
+            <input
+              type="text"
+              className="form-control"
+              defaultValue={selectedFunction?.name}
+              required
+              onChange={(e) => setFunctionName(e.target.value)}
+            />
           </div>
 
           <div className="mb-3">
             <label className='fw-bold mb-2'>Descrição</label>
 
-            <input type="text" className="form-control" defaultValue={selectedFunction?.description} onChange={(e) => setFunctionDescription(e.target.value)} />
+            <input
+              type="text"
+              className="form-control"
+              defaultValue={selectedFunction?.description}
+              required
+              onChange={(e) => setFunctionDescription(e.target.value)}
+            />
           </div>
 
           <div className="mb-3">
             <label className='fw-bold mb-2'>Quantidade ideal por turno</label>
 
-            <input type="number" className="form-control" defaultValue={selectedFunction?.ideal_quantity} placeholder="Quantidade ideal por turno" required onChange={(e) => setFunctionQuantity(e.target.value)} />
+            <input
+              type="number"
+              className="form-control"
+              defaultValue={selectedFunction?.ideal_quantity}
+              placeholder="Quantidade ideal por turno"
+              required
+              onChange={(e) => setFunctionQuantity(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className='fw-bold mb-2'>CBO</label>
+
+            <input
+              type="text"
+              className="form-control"
+              defaultValue={selectedFunction?.cbo}
+              placeholder="CBO"
+              required
+              onChange={(e) => setFunctionCbo(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className='fw-bold mb-2'>Código geral de função</label>
+
+            <input
+              type="text"
+              className="form-control"
+              defaultValue={selectedFunction?.general_function_code}
+              placeholder="Código geral de função"
+              required
+              onChange={(e) => setFunctionGeneralCode(e.target.value)}
+            />
           </div>
         </Modal.Body>
 

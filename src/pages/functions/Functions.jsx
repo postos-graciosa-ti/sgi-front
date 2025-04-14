@@ -81,6 +81,10 @@ const Functions = () => {
 
                 <th>Quantidade ideal por turno</th>
 
+                <th>CBO</th>
+
+                <th>Código geral de função</th>
+
                 <th></th>
               </tr>
             </thead>
@@ -89,11 +93,15 @@ const Functions = () => {
               {
                 functionsList?.map((func) => (
                   <tr key={func.id} id="functionsRow">
-                    <td>{func.name}</td>
+                    <td>{func.name || "Não consta registro"}</td>
 
-                    <td>{func.description}</td>
+                    <td>{func.description || "Não consta registro"}</td>
 
-                    <td>{func.ideal_quantity || "indefenido"}</td>
+                    <td>{func.ideal_quantity || "Não consta registro"}</td>
+
+                    <td>{func.cbo || "Não consta registro"}</td>
+
+                    <td>{func.general_function_code || "Não consta registro"}</td>
 
                     <td>
                       <button

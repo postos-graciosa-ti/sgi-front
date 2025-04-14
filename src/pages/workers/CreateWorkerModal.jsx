@@ -1,4 +1,6 @@
+import moment from 'moment'
 import { useEffect, useState } from 'react'
+import { Plus } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Input from '../../components/form/Input'
@@ -6,7 +8,6 @@ import Select from "../../components/form/Select"
 import useUserSessionStore from '../../data/userSession'
 import useWorkersExperienceTimeStore from "../../data/workersExperienceTime"
 import loadBanksOptions from "../../requests/loadOptions/loadBanksOptions"
-import loadCitiesOptions from "../../requests/loadOptions/loadCitiesOptions"
 import loadCivilStatusOptions from '../../requests/loadOptions/loadCivilStatusOptions'
 import loadCostCenterOptions from '../../requests/loadOptions/loadCostCenterOptions'
 import loadDepartmentsOptions from '../../requests/loadOptions/loadDepartmentsOptions'
@@ -14,12 +15,13 @@ import loadEthnicitiesOptions from "../../requests/loadOptions/loadEthnicitiesOp
 import loadFunctionsOptions from '../../requests/loadOptions/loadFunctionsOptions'
 import loadGendersOptions from "../../requests/loadOptions/loadGendersOptions"
 import loadNationalitiesOptions from "../../requests/loadOptions/loadNationalitiesOptions"
-import loadNeighborhoodsOptions from "../../requests/loadOptions/loadNeighborhoodsOptions"
 import loadSchoolLevels from "../../requests/loadOptions/loadSchoolLevels"
 import loadStatesOptions from "../../requests/loadOptions/loadStatesOptions"
 import loadTurnsOptions from "../../requests/loadOptions/loadTurnsOptions"
-import api from '../../services/api'
 import loadWagePaymentMethodOptions from "../../requests/loadOptions/loadWagePaymentMethodOptions"
+import getParentsType from '../../requests/parentsType/getParentsType'
+import postWorkersParents from '../../requests/workersParents/postWorkersParents'
+import api from '../../services/api'
 
 const CreateWorkerModal = (props) => {
   const {
@@ -248,6 +250,22 @@ const CreateWorkerModal = (props) => {
 
   const [wagePaymentMethodOptions, setWagePaymentMethodOptions] = useState()
 
+  const [parentsTypeOptions, setParentsTypeOptions] = useState()
+
+  const [selectedParentsType, setSelectedParentsType] = useState()
+
+  const [parentsName, setParentsName] = useState()
+
+  const [parentsCpf, setParentsCpf] = useState()
+
+  const [parentsDatebirth, setParentsDatebirth] = useState()
+
+  const [parentsBooks, setParentsBooks] = useState()
+
+  const [parentsPapers, setParentsPapers] = useState()
+
+  const [parentsData, setParentsData] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -269,51 +287,40 @@ const CreateWorkerModal = (props) => {
 
         setHierarchyStructureOptions(options)
       })
+
+    getParentsType()
+      .then((response) => {
+        let options = response?.data.map((parentType) => ({ value: parentType.id, label: parentType.name }))
+
+        setParentsTypeOptions(options)
+      })
+
+    api
+      .get("/neighborhoods")
+      .then((response) => {
+        let options = response?.data.map((neighborhood) => ({ value: neighborhood.id, label: neighborhood.name }))
+
+        setNeighborhoodOptions(options)
+      })
+
+    api
+      .get("/cities")
+      .then((response) => {
+        let options = response?.data.map((city) => ({ value: city.id, label: city.name }))
+
+        setCitiesOptions(options)
+      })
   }, [])
-
-  useEffect(() => {
-    if (selectedState) {
-      loadCitiesOptions(selectedState, setCitiesOptions)
-    }
-  }, [selectedState])
-
-  useEffect(() => {
-    if (selectedCity) {
-      loadNeighborhoodsOptions(selectedCity, setNeighborhoodOptions)
-    }
-  }, [selectedCity])
-
-  useEffect(() => {
-    if (selectedNationality) {
-      api
-        .get(`/nationalities/${selectedNationality?.value}/states`)
-        .then((response) => {
-          let options = response?.data.map((state) => ({ value: state.id, label: state.name }))
-
-          setBirthstateOptions(options)
-        })
-    }
-  }, [selectedNationality])
-
-  useEffect(() => {
-    if (selectedBirthstate) {
-      api
-        .get(`/states/${selectedBirthstate.value}/cities`)
-        .then((response) => {
-          let options = response?.data.map((city) => ({ value: city.id, label: city.name }))
-
-          setBirthcityOptions(options)
-        })
-    }
-  }, [selectedBirthstate])
 
   const handleClose = () => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-first-review`)
       .then((response) => setWorkersFirstReview(response?.data))
+
     api
       .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-second-review`)
       .then((response) => setWorkersSecondReview(response?.data))
+
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => {
@@ -327,17 +334,81 @@ const CreateWorkerModal = (props) => {
       })
 
     setName()
+
     setSelectedFunction()
+
     setSelectedTurn()
+
     setSelectedTurn()
+
     setSelectedCostCenter()
+
     setSelectedDepartment()
+
     setAdmissionDate()
+
     setPicture()
+
     setTimecode()
+
     setEsocial()
+
     setHasChildren()
+
+    setSelectedParentsType()
+
+    setParentsName()
+
+    setParentsCpf()
+
+    setParentsDatebirth()
+
+    setParentsBooks()
+
+    setParentsPapers()
+
+    setParentsData()
+
     setCreateWorkerModalOpen(false)
+  }
+
+  const handleWorkersParents = () => {
+    setParentsData((prevState) => {
+      if (prevState) {
+        return [
+          ...prevState,
+          {
+            "parentsType": selectedParentsType,
+            "parentsName": parentsName,
+            "parentsCpf": parentsCpf,
+            "parentsDatebirth": parentsDatebirth,
+            "parentsBooks": parentsBooks,
+            "parentsPapers": parentsPapers,
+          }
+        ]
+      } else {
+        return [{
+          "parentsType": selectedParentsType,
+          "parentsName": parentsName,
+          "parentsCpf": parentsCpf,
+          "parentsDatebirth": parentsDatebirth,
+          "parentsBooks": parentsBooks,
+          "parentsPapers": parentsPapers,
+        }]
+      }
+    })
+
+    setSelectedParentsType()
+
+    setParentsName()
+
+    setParentsCpf()
+
+    setParentsDatebirth()
+
+    setParentsBooks()
+
+    setParentsPapers()
   }
 
   const handleSubmit = () => {
@@ -381,7 +452,7 @@ const CreateWorkerModal = (props) => {
       "military_cert_number": militaryCertNumber,
       "pis": pis,
       "pis_register_date": pisRegisterDate,
-      "vontant_title": votantTitle,
+      "votant_title": votantTitle,
       "votant_zone": votantZone,
       "votant_session": votantSession,
       "ctps": ctps,
@@ -392,7 +463,7 @@ const CreateWorkerModal = (props) => {
       "cnh_category": cnhCategory,
       "cnh_emition_date": cnhEmissionDate,
       "cnh_valid_date": cnhValidDate,
-      "firstJob": firstJob && true,
+      "first_job": firstJob && true,
       "was_employee": wasEmployee && true,
       "union_contribute_current_year": unionContributeCurrentYear?.value && true,
       "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value && true,
@@ -423,12 +494,33 @@ const CreateWorkerModal = (props) => {
       "enterprise_time": enterpriseTime,
     }
 
-    console.log(formData)
-    debugger
-
     api
       .post("/workers", formData)
-      .then(() => handleClose())
+      .then((response) => {
+        let newWorkerData = response?.data
+
+        if (response.status == 200 && parentsData.length > 0) {
+          const promises = parentsData.map((parentData) => {
+            let formData = {
+              worker_id: newWorkerData?.id,
+              parent_type_id: parentData?.parentsType?.value,
+              name: parentData?.parentsName,
+              cpf: parentData?.parentsCpf,
+              birthdate: parentData?.parentsDatebirth,
+              books: parentData?.parentsBooks && parentData?.parentsBooks,
+              papers: parentData?.parentsPapers && parentData?.parentsPapers,
+            }
+
+            return postWorkersParents(formData)
+          })
+
+          Promise.all(promises).then(() => {
+            handleClose()
+          })
+        } else {
+          handleClose()
+        }
+      })
   }
 
   return (
@@ -516,7 +608,7 @@ const CreateWorkerModal = (props) => {
             <h4>Endereço residencial</h4>
           </div>
 
-          <div className="row">
+          {/* <div className="row">
             <div className="col">
               <Input
                 type="text"
@@ -573,13 +665,58 @@ const CreateWorkerModal = (props) => {
                 </div>
               </div>
             </div>
+          </div> */}
+
+          <div className="row">
+            <div className="col">
+              <Input
+                type="text"
+                label={"Logradouro"}
+                setSelectedValue={setStreet}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                type="text"
+                label={"Número"}
+                setSelectedValue={setStreetNumber}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                type="text"
+                label={"Complemento"}
+                setSelectedValue={setStreetComplement}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Input
+                type="text"
+                label={"CEP"}
+                setSelectedValue={setSelectedCep}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                label={"Bairro"}
+                placeholder=""
+                options={neighborhoodOptions}
+                setSelectedValue={setSelectedNeighborhood}
+              />
+            </div>
           </div>
 
           <div>
             <h4>Dados pessoais</h4>
           </div>
 
-          <div className="row">
+          {/* <div className="row">
             <div className="col">
               <div className="row">
                 <div className="col">
@@ -649,6 +786,60 @@ const CreateWorkerModal = (props) => {
                 </div>
               </div>
             </div>
+          </div> */}
+
+          <div className="row">
+            <div className="col">
+              <Input
+                type="text"
+                label={"Telefone fixo"}
+                setSelectedValue={setSelectedPhone}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                type="text"
+                label={"Celular"}
+                setSelectedValue={setSelectedMobile}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                type="email"
+                label={"E-mail"}
+                setSelectedValue={setEmail}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                label={"Etnia"}
+                placeholder=""
+                options={ethnicitiesOptions}
+                setSelectedValue={setSelectedEthnicity}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Input
+                type="date"
+                setSelectedValue={setBirthdate}
+                label={"Data de nascimento"}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                placeholder=""
+                label={"Cidade"}
+                options={citiesOptions}
+                setSelectedValue={setBirthcity}
+              />
+            </div>
           </div>
 
           <div className="row">
@@ -666,6 +857,76 @@ const CreateWorkerModal = (props) => {
                 label={"Nome do pai"}
                 setSelectedValue={setFathername}
               />
+            </div>
+          </div>
+
+          {
+            parentsData?.map((parent) => (
+              <input
+                type="text"
+                className="form-control mb-2"
+                disabled="true"
+                value={
+                  `${parent.parentsType?.label} / ${parent?.parentsName} / ${parent.parentsCpf} / ${moment(parent.parentsDatebirth).format("DD/MM/YYYY")} / ${parent.parentsBooks && parent.parentsBooks || "Não"} / ${parent.parentsPapers && parent.parentsPapers || "Não"}`
+                }
+              />
+            ))
+          }
+
+          <div className="row">
+            <div className="col">
+              <div className="row">
+                <div className="col-11">
+                  <Select
+                    placeholder={""}
+                    options={parentsTypeOptions}
+                    setSelectedValue={setSelectedParentsType}
+                    label={"Tipo de parente"}
+                  />
+                </div>
+
+                <div className="col-1">
+                  <button className="btn btn-primary mt-4" onClick={handleWorkersParents}>
+                    <Plus />
+                  </button>
+                </div>
+              </div>
+
+              <Input
+                type={"text"}
+                label={"Nome"}
+                setSelectedValue={setParentsName}
+              />
+
+              <Input
+                type={"text"}
+                label={"CPF"}
+                setSelectedValue={setParentsCpf}
+              />
+
+              <Input
+                type={"date"}
+                label={"Data de nascimento"}
+                setSelectedValue={setParentsDatebirth}
+              />
+
+              {
+                selectedParentsType?.value == 3 && (
+                  <>
+                    <Input
+                      type={"text"}
+                      label={"Livros"}
+                      setSelectedValue={setParentsBooks}
+                    />
+
+                    <Input
+                      type={"text"}
+                      label={"Folhas"}
+                      setSelectedValue={setParentsPapers}
+                    />
+                  </>
+                )
+              }
             </div>
           </div>
 
@@ -976,7 +1237,7 @@ const CreateWorkerModal = (props) => {
           </div>
 
           <div className="row">
-            <div className="col">
+            {/* <div className="col">
               <Input
                 label="Código geral de função"
                 type="text"
@@ -990,7 +1251,7 @@ const CreateWorkerModal = (props) => {
                 type="text"
                 setSelectedValue={setCbo}
               />
-            </div>
+            </div> */}
 
             <div className="col">
               <Input

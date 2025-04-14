@@ -434,8 +434,6 @@ const Scale = () => {
       })
   }
 
-  console.log(selectedSubsdiarie)
-
   const handleTileDisabled = ({ date }) => {
     const isCaixaFunction = selectedFunction?.value == caixasId?.id
 
@@ -569,13 +567,13 @@ const Scale = () => {
             Relatório de dias de folga
           </button>
 
-          <button
+          {/* <button
             id="hollidays-button"
             className="btn btn-primary"
             onClick={() => setHollidaysModalOpen(true)}
           >
             Feriados
-          </button>
+          </button> */}
         </div>
 
         <ScaleRow

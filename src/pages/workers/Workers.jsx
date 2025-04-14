@@ -318,13 +318,13 @@ const Workers = () => {
                         <PersonBadge />
                       </button>
 
-                      <button
+                      {/* <button
                         className="btn btn-primary me-2 mt-2"
                         title="Adicionar parentes"
                         onClick={() => handleOpenAddWorkersParentsModal(worker)}
                       >
                         <HouseAdd />
-                      </button>
+                      </button> */}
 
                       <button
                         className="btn btn-primary me-2 mt-2"
@@ -495,6 +495,7 @@ const Workers = () => {
         createWorkerModalOpen={createWorkerModalOpen}
         setCreateWorkerModalOpen={setCreateWorkerModalOpen}
         setWorkersList={setWorkersList}
+        setAddWorkersParentsModalOpen={setAddWorkersParentsModalOpen}
       />
 
       <EditWorkerModal

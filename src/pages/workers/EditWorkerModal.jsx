@@ -1,6 +1,10 @@
+import moment from 'moment'
+import printJS from 'print-js'
 import { useEffect, useState } from 'react'
+import { Plus, Printer, Trash } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import ReactDOMServer from 'react-dom/server'
 import Input from '../../components/form/Input'
 import Select from "../../components/form/Select"
 import useUserSessionStore from '../../data/userSession'
@@ -13,14 +17,16 @@ import loadDepartmentsOptions from '../../requests/loadOptions/loadDepartmentsOp
 import loadEthnicitiesOptions from '../../requests/loadOptions/loadEthnicitiesOptions'
 import loadFunctionsOptions from '../../requests/loadOptions/loadFunctionsOptions'
 import loadGendersOptions from '../../requests/loadOptions/loadGendersOptions'
+import loadNationalitiesOptions from '../../requests/loadOptions/loadNationalitiesOptions'
 import loadNeighborhoodsOptions from '../../requests/loadOptions/loadNeighborhoodsOptions'
 import loadSchoolLevels from '../../requests/loadOptions/loadSchoolLevels'
 import loadStatesOptions from '../../requests/loadOptions/loadStatesOptions'
 import loadTurnsOptions from '../../requests/loadOptions/loadTurnsOptions'
-import api from '../../services/api'
-import loadNationalitiesOptions from '../../requests/loadOptions/loadNationalitiesOptions'
-import moment from 'moment'
 import loadWagePaymentMethodOptions from '../../requests/loadOptions/loadWagePaymentMethodOptions'
+import getParentsType from '../../requests/parentsType/getParentsType'
+import postWorkersParents from '../../requests/workersParents/postWorkersParents'
+import api from '../../services/api'
+import WorkerDataPrintContent from './WorkerDataPrintContent'
 
 const EditWorkerModal = (props) => {
   const {
@@ -251,6 +257,24 @@ const EditWorkerModal = (props) => {
 
   const [wagePaymentMethodOptions, setWagePaymentMethodOptions] = useState()
 
+  const [parentsData, setParentsData] = useState()
+
+  const [parentsTypeOptions, setParentsTypeOptions] = useState()
+
+  const [selectedParentsType, setSelectedParentsType] = useState()
+
+  const [parentsName, setParentsName] = useState()
+
+  const [parentsCpf, setParentsCpf] = useState()
+
+  const [parentsDatebirth, setParentsDatebirth] = useState()
+
+  const [parentsBooks, setParentsBooks] = useState()
+
+  const [parentsPapers, setParentsPapers] = useState()
+
+  const [newParentsData, setNewParentsData] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -302,7 +326,20 @@ const EditWorkerModal = (props) => {
 
         setNeighborhoodOptions(options)
       })
+
+    getParentsType()
+      .then((response) => {
+        let options = response?.data.map((parentType) => ({ value: parentType.id, label: parentType.name }))
+
+        setParentsTypeOptions(options)
+      })
   }, [])
+
+  useEffect(() => {
+    api
+      .get(`/workers/${selectedWorker?.worker_id}/parents`)
+      .then((response) => setParentsData(response.data))
+  }, [editWorkerModalOpen])
 
   const handleClose = () => {
     api
@@ -335,10 +372,36 @@ const EditWorkerModal = (props) => {
     setEditWorkerModalOpen(false)
   }
 
-  const handleSubmit = () => {
-    console.log(selectedWorker)
-    debugger
+  const handleDeleteWorkerParents = (parent) => {
+    api
+      .delete(`/workers-parents/${parent.id}`)
+      .then(() => {
+        api
+          .get(`/workers/${selectedWorker?.worker_id}/parents`)
+          .then((response) => setParentsData(response.data))
+      })
+  }
 
+  const handleWorkersParents = () => {
+    let formData = {
+      worker_id: selectedWorker?.worker_id,
+      parent_type_id: selectedParentsType?.value,
+      name: parentsName,
+      cpf: parentsCpf,
+      birthdate: parentsDatebirth,
+      books: parentsBooks && parentsBooks,
+      papers: parentsPapers && parentsPapers,
+    }
+
+    postWorkersParents(formData)
+      .then(() => {
+        api
+          .get(`/workers/${selectedWorker?.worker_id}/parents`)
+          .then((response) => setParentsData(response.data))
+      })
+  }
+
+  const handleSubmit = () => {
     let formData = {
       "name": name || selectedWorker?.worker_name,
       "function_id": selectedFunction?.value || selectedWorker?.function_id,
@@ -406,7 +469,7 @@ const EditWorkerModal = (props) => {
       "nocturne_hours": nocturneHours || selectedWorker?.nocturne_hours,
       "dangerousness": dangerousness?.value || selectedWorker?.dangerousness,
       "unhealthy": unhealthy?.value || selectedWorker?.unhealthy,
-      "wage_payment_method": wagePaymentMethod?.value || selectedWorker?.wage_payment_method,
+      "wage_payment_method": wagePaymentMethod?.value || selectedWorker?.wage_payment_method?.id,
       "general_function_code": codeGeneralFunction || selectedWorker?.general_function_code,
       "wage": wage || selectedWorker?.wage,
       "last_function_date": lastFunctionDate || selectedWorker?.last_function_date,
@@ -421,15 +484,34 @@ const EditWorkerModal = (props) => {
       "enterprise_time": enterpriseTime || selectedWorker?.enterprise_time,
     }
 
-    console.log(formData)
-    debugger
-
     api
       .put(`/workers/${selectedWorker.worker_id}`, formData)
       .then(() => handleClose())
   }
 
-  console.log(selectedWorker)
+  const handlePrintWorkerData = () => {
+    console.log(selectedWorker)
+
+    api
+      .get(`/cities/${selectedWorker?.neighborhood?.city_id}`)
+      .then((response) => {
+        let cityData = response?.data
+
+        const printableContent = ReactDOMServer.renderToString(
+          <WorkerDataPrintContent
+            selectedWorker={selectedWorker}
+            cityData={cityData}
+            parentsData={parentsData}
+          />
+        )
+
+        printJS({
+          printable: printableContent,
+          type: 'raw-html',
+          header: null
+        })
+      })
+  }
 
   return (
     <Modal
@@ -444,6 +526,12 @@ const EditWorkerModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
+        <div>
+          <button className="btn btn-light mb-2" onClick={handlePrintWorkerData}>
+            <Printer />
+          </button>
+        </div>
+
         <div>
           <h4>Dados pessoais</h4>
         </div>
@@ -522,7 +610,7 @@ const EditWorkerModal = (props) => {
           <h4>Endereço residencial</h4>
         </div>
 
-        <div className="row">
+        {/* <div className="row">
           <div className="col">
             <Input
               type="text"
@@ -586,13 +674,63 @@ const EditWorkerModal = (props) => {
               </div>
             </div>
           </div>
+        </div> */}
+
+        <div className="row">
+          <div className="col">
+            <Input
+              type="text"
+              label={"Logradouro"}
+              setSelectedValue={setStreet}
+              defaultValue={selectedWorker?.street}
+            />
+          </div>
+
+          <div className="col">
+            <Input
+              type="text"
+              label={"Número"}
+              setSelectedValue={setStreetNumber}
+              defaultValue={selectedWorker?.street_number}
+            />
+          </div>
+
+          <div className="col">
+            <Input
+              type="text"
+              label={"Complemento"}
+              setSelectedValue={setStreetComplement}
+              defaultValue={selectedWorker?.street_complement}
+            />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col">
+            <Input
+              type="text"
+              label={"CEP"}
+              setSelectedValue={setSelectedCep}
+              defaultValue={selectedWorker?.cep}
+            />
+          </div>
+
+          <div className="col">
+            <Select
+              label={"Bairro"}
+              placeholder=""
+              options={neighborhoodOptions}
+              setSelectedValue={setSelectedNeighborhood}
+              defaultValue={neighborhoodOptions?.find((option) => option.value == selectedWorker?.neighborhood?.id)}
+            />
+          </div>
         </div>
 
         <div>
           <h4>Dados pessoais</h4>
         </div>
 
-        <div className="row">
+        {/* <div className="row">
           <div className="col">
             <div className="row">
               <div className="col">
@@ -670,6 +808,66 @@ const EditWorkerModal = (props) => {
               </div>
             </div>
           </div>
+        </div> */}
+
+        <div className="row">
+          <div className="col">
+            <Input
+              type="text"
+              label={"Telefone fixo"}
+              setSelectedValue={setSelectedPhone}
+              defaultValue={selectedWorker?.phone}
+            />
+          </div>
+
+          <div className="col">
+            <Input
+              type="text"
+              label={"Celular"}
+              setSelectedValue={setSelectedMobile}
+              defaultValue={selectedWorker?.mobile}
+            />
+          </div>
+
+          <div className="col">
+            <Input
+              type="email"
+              label={"E-mail"}
+              setSelectedValue={setEmail}
+              defaultValue={selectedWorker?.email}
+            />
+          </div>
+
+          <div className="col">
+            <Select
+              label={"Etnia"}
+              placeholder=""
+              options={ethnicitiesOptions}
+              setSelectedValue={setSelectedEthnicity}
+              defaultValue={ethnicitiesOptions?.find((option) => option.value == selectedWorker?.ethnicity?.id)}
+            />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col">
+            <Input
+              type="date"
+              setSelectedValue={setBirthdate}
+              label={"Data de nascimento"}
+              defaultValue={selectedWorker?.birthdate}
+            />
+          </div>
+
+          <div className="col">
+            <Select
+              placeholder=""
+              label={"Cidade"}
+              options={citiesOptions}
+              setSelectedValue={setSelectedCity}
+              defaultValue={citiesOptions?.find((option) => option.value == selectedWorker?.city?.id)}
+            />
+          </div>
         </div>
 
         <div className="row">
@@ -689,6 +887,86 @@ const EditWorkerModal = (props) => {
               setSelectedValue={setFathername}
               defaultValue={selectedWorker?.fathername}
             />
+          </div>
+        </div>
+
+        {
+          parentsData?.map((parent) => (
+            <div className="row">
+              <div className="col-11">
+                <input
+                  type="text"
+                  className="form-control mb-2"
+                  value={
+                    `${parent?.name} / ${parent.cpf} / ${moment(parent.birthdate).format("DD/MM/YYYY")} / ${parent.books && parent.books || "Não"} / ${parent.papers && parent.papers || "Não"}`
+                  }
+                  disabled={true}
+                />
+              </div>
+
+              <div className="col-1">
+                <button className="btn btn-danger" onClick={() => handleDeleteWorkerParents(parent)}>
+                  <Trash />
+                </button>
+              </div>
+            </div>
+          ))
+        }
+
+        <div className="row">
+          <div className="col">
+            <div className="row">
+              <div className="col-11">
+                <Select
+                  placeholder={""}
+                  options={parentsTypeOptions}
+                  setSelectedValue={setSelectedParentsType}
+                  label={"Tipo de parente"}
+                />
+              </div>
+
+              <div className="col-1">
+                <button className="btn btn-primary mt-4" onClick={handleWorkersParents}>
+                  <Plus />
+                </button>
+              </div>
+            </div>
+
+            <Input
+              type={"text"}
+              label={"Nome"}
+              setSelectedValue={setParentsName}
+            />
+
+            <Input
+              type={"text"}
+              label={"CPF"}
+              setSelectedValue={setParentsCpf}
+            />
+
+            <Input
+              type={"date"}
+              label={"Data de nascimento"}
+              setSelectedValue={setParentsDatebirth}
+            />
+
+            {
+              selectedParentsType?.value == 3 && (
+                <>
+                  <Input
+                    type={"text"}
+                    label={"Livros"}
+                    setSelectedValue={setParentsBooks}
+                  />
+
+                  <Input
+                    type={"text"}
+                    label={"Folhas"}
+                    setSelectedValue={setParentsPapers}
+                  />
+                </>
+              )
+            }
           </div>
         </div>
 
@@ -1030,24 +1308,6 @@ const EditWorkerModal = (props) => {
         <div className="row">
           <div className="col">
             <Input
-              label="Código geral de função"
-              type="text"
-              setSelectedValue={setCodeGeneralFunction}
-              defaultValue={selectedWorker?.general_function_code}
-            />
-          </div>
-
-          <div className="col">
-            <Input
-              label="CBO"
-              type="text"
-              setSelectedValue={setCbo}
-              defaultValue={selectedWorker?.cbo}
-            />
-          </div>
-
-          <div className="col">
-            <Input
               label="Data de última função"
               type="text"
               setSelectedValue={setLastFunctionDate}
@@ -1190,7 +1450,7 @@ const EditWorkerModal = (props) => {
               label="Método de pagamento"
               options={wagePaymentMethodOptions}
               setSelectedValue={setWagePaymentMethod}
-
+              defaultValue={wagePaymentMethodOptions?.find((option) => option.value == selectedWorker?.wage_payment_method?.id)}
             />
           </div>
         </div>

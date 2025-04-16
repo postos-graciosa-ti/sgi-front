@@ -898,6 +898,7 @@ const EditWorkerModal = (props) => {
 
         <div className="row">
           <div className="col">
+            <label><b>CPF</b></label>
             <ReactInputMask
               mask={"999.999.999-99"}
               defaultValue={selectedWorker?.cpf}

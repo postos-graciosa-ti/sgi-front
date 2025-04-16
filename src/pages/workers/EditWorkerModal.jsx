@@ -890,86 +890,6 @@ const EditWorkerModal = (props) => {
           </div>
         </div>
 
-        {
-          parentsData?.map((parent) => (
-            <div className="row">
-              <div className="col-11">
-                <input
-                  type="text"
-                  className="form-control mb-2"
-                  value={
-                    `${parent?.name} / ${parent.cpf} / ${moment(parent.birthdate).format("DD/MM/YYYY")} / ${parent.books && parent.books || "Não"} / ${parent.papers && parent.papers || "Não"}`
-                  }
-                  disabled={true}
-                />
-              </div>
-
-              <div className="col-1">
-                <button className="btn btn-danger" onClick={() => handleDeleteWorkerParents(parent)}>
-                  <Trash />
-                </button>
-              </div>
-            </div>
-          ))
-        }
-
-        <div className="row">
-          <div className="col">
-            <div className="row">
-              <div className="col-11">
-                <Select
-                  placeholder={""}
-                  options={parentsTypeOptions}
-                  setSelectedValue={setSelectedParentsType}
-                  label={"Tipo de parente"}
-                />
-              </div>
-
-              <div className="col-1">
-                <button className="btn btn-primary mt-4" onClick={handleWorkersParents}>
-                  <Plus />
-                </button>
-              </div>
-            </div>
-
-            <Input
-              type={"text"}
-              label={"Nome"}
-              setSelectedValue={setParentsName}
-            />
-
-            <Input
-              type={"text"}
-              label={"CPF"}
-              setSelectedValue={setParentsCpf}
-            />
-
-            <Input
-              type={"date"}
-              label={"Data de nascimento"}
-              setSelectedValue={setParentsDatebirth}
-            />
-
-            {
-              selectedParentsType?.value == 3 && (
-                <>
-                  <Input
-                    type={"text"}
-                    label={"Livros"}
-                    setSelectedValue={setParentsBooks}
-                  />
-
-                  <Input
-                    type={"text"}
-                    label={"Folhas"}
-                    setSelectedValue={setParentsPapers}
-                  />
-                </>
-              )
-            }
-          </div>
-        </div>
-
         <div>
           <h4>Documentos</h4>
         </div>
@@ -1255,6 +1175,88 @@ const EditWorkerModal = (props) => {
           </div>
         </div>
 
+        <h4>Dependentes</h4>
+
+        {
+          parentsData?.map((parent) => (
+            <div className="row">
+              <div className="col-11">
+                <input
+                  type="text"
+                  className="form-control mb-2"
+                  value={
+                    `${parent?.name} / ${parent.cpf} / ${moment(parent.birthdate).format("DD/MM/YYYY")} / ${parent.books && parent.books || "Não"} / ${parent.papers && parent.papers || "Não"}`
+                  }
+                  disabled={true}
+                />
+              </div>
+
+              <div className="col-1">
+                <button className="btn btn-danger" onClick={() => handleDeleteWorkerParents(parent)}>
+                  <Trash />
+                </button>
+              </div>
+            </div>
+          ))
+        }
+
+        <div className="row">
+          <div className="col">
+            <div className="row">
+              <div className="col-11">
+                <Select
+                  placeholder={""}
+                  options={parentsTypeOptions}
+                  setSelectedValue={setSelectedParentsType}
+                  label={"Tipo de parente"}
+                />
+              </div>
+
+              <div className="col-1">
+                <button className="btn btn-primary mt-4" onClick={handleWorkersParents}>
+                  <Plus />
+                </button>
+              </div>
+            </div>
+
+            <Input
+              type={"text"}
+              label={"Nome"}
+              setSelectedValue={setParentsName}
+            />
+
+            <Input
+              type={"text"}
+              label={"CPF"}
+              setSelectedValue={setParentsCpf}
+            />
+
+            <Input
+              type={"date"}
+              label={"Data de nascimento"}
+              setSelectedValue={setParentsDatebirth}
+            />
+
+            {
+              selectedParentsType?.value == 3 && (
+                <>
+                  <Input
+                    type={"text"}
+                    label={"Livros"}
+                    setSelectedValue={setParentsBooks}
+                  />
+
+                  <Input
+                    type={"text"}
+                    label={"Folhas"}
+                    setSelectedValue={setParentsPapers}
+                  />
+                </>
+              )
+            }
+          </div>
+        </div>
+
         <div>
           <h4>Para preenchimento exclusivo da empresa - Dados de contratação</h4>
         </div>
@@ -1530,7 +1532,7 @@ const EditWorkerModal = (props) => {
       <Modal.Footer>
         <Button variant="light" onClick={handleClose}>Fechar</Button>
 
-        <Button variant="success" onClick={handleSubmit}>Editar</Button>
+        <Button variant="success" onClick={handleSubmit}>Salvar</Button>
       </Modal.Footer>
     </Modal>
   )

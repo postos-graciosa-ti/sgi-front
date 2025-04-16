@@ -860,76 +860,6 @@ const CreateWorkerModal = (props) => {
             </div>
           </div>
 
-          {
-            parentsData?.map((parent) => (
-              <input
-                type="text"
-                className="form-control mb-2"
-                disabled="true"
-                value={
-                  `${parent.parentsType?.label} / ${parent?.parentsName} / ${parent.parentsCpf} / ${moment(parent.parentsDatebirth).format("DD/MM/YYYY")} / ${parent.parentsBooks && parent.parentsBooks || "Não"} / ${parent.parentsPapers && parent.parentsPapers || "Não"}`
-                }
-              />
-            ))
-          }
-
-          <div className="row">
-            <div className="col">
-              <div className="row">
-                <div className="col-11">
-                  <Select
-                    placeholder={""}
-                    options={parentsTypeOptions}
-                    setSelectedValue={setSelectedParentsType}
-                    label={"Tipo de parente"}
-                  />
-                </div>
-
-                <div className="col-1">
-                  <button className="btn btn-primary mt-4" onClick={handleWorkersParents}>
-                    <Plus />
-                  </button>
-                </div>
-              </div>
-
-              <Input
-                type={"text"}
-                label={"Nome"}
-                setSelectedValue={setParentsName}
-              />
-
-              <Input
-                type={"text"}
-                label={"CPF"}
-                setSelectedValue={setParentsCpf}
-              />
-
-              <Input
-                type={"date"}
-                label={"Data de nascimento"}
-                setSelectedValue={setParentsDatebirth}
-              />
-
-              {
-                selectedParentsType?.value == 3 && (
-                  <>
-                    <Input
-                      type={"text"}
-                      label={"Livros"}
-                      setSelectedValue={setParentsBooks}
-                    />
-
-                    <Input
-                      type={"text"}
-                      label={"Folhas"}
-                      setSelectedValue={setParentsPapers}
-                    />
-                  </>
-                )
-              }
-            </div>
-          </div>
-
           <div>
             <h4>Documentos</h4>
           </div>
@@ -1187,6 +1117,78 @@ const CreateWorkerModal = (props) => {
                   />
                 </div>
               </div>
+            </div>
+          </div>
+
+          <h4>Dependentes</h4>
+
+          {
+            parentsData?.map((parent) => (
+              <input
+                type="text"
+                className="form-control mb-2"
+                disabled="true"
+                value={
+                  `${parent.parentsType?.label} / ${parent?.parentsName} / ${parent.parentsCpf} / ${moment(parent.parentsDatebirth).format("DD/MM/YYYY")} / ${parent.parentsBooks && parent.parentsBooks || "Não"} / ${parent.parentsPapers && parent.parentsPapers || "Não"}`
+                }
+              />
+            ))
+          }
+
+          <div className="row">
+            <div className="col">
+              <div className="row">
+                <div className="col-11">
+                  <Select
+                    placeholder={""}
+                    options={parentsTypeOptions}
+                    setSelectedValue={setSelectedParentsType}
+                    label={"Tipo de parente"}
+                  />
+                </div>
+
+                <div className="col-1">
+                  <button className="btn btn-primary mt-4" onClick={handleWorkersParents}>
+                    <Plus />
+                  </button>
+                </div>
+              </div>
+
+              <Input
+                type={"text"}
+                label={"Nome"}
+                setSelectedValue={setParentsName}
+              />
+
+              <Input
+                type={"text"}
+                label={"CPF"}
+                setSelectedValue={setParentsCpf}
+              />
+
+              <Input
+                type={"date"}
+                label={"Data de nascimento"}
+                setSelectedValue={setParentsDatebirth}
+              />
+
+              {
+                selectedParentsType?.value == 3 && (
+                  <>
+                    <Input
+                      type={"text"}
+                      label={"Livros"}
+                      setSelectedValue={setParentsBooks}
+                    />
+
+                    <Input
+                      type={"text"}
+                      label={"Folhas"}
+                      setSelectedValue={setParentsPapers}
+                    />
+                  </>
+                )
+              }
             </div>
           </div>
 
@@ -1459,7 +1461,7 @@ const CreateWorkerModal = (props) => {
           </Button>
 
           <Button variant="success" onClick={handleSubmit}>
-            Adicionar
+            Salvar
           </Button>
         </Modal.Footer>
       </Modal>

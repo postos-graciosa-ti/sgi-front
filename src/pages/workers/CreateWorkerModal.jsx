@@ -271,6 +271,8 @@ const CreateWorkerModal = (props) => {
 
   const [birthState, setBirthstate] = useState()
 
+  const [cnhCategoriesOptions, setCnhCategoriesOptions] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -284,6 +286,14 @@ const CreateWorkerModal = (props) => {
     loadBanksOptions(setBanksOptions)
     loadNationalitiesOptions(setNationalityOptions)
     loadWagePaymentMethodOptions(setWagePaymentMethodOptions)
+
+    api
+      .get("/cnh-categories")
+      .then((response) => {
+        let options = response?.data.map((cnhCategory) => ({ value: cnhCategory.id, label: cnhCategory.name }))
+
+        setCnhCategoriesOptions(options)
+      })
 
     api
       .get(`/hierarchy-structure`)
@@ -489,7 +499,7 @@ const CreateWorkerModal = (props) => {
       "ctps_state": ctpsState?.value,
       "ctps_emission_date": ctpsEmissionDate,
       "cnh": cnh,
-      "cnh_category": cnhCategory,
+      "cnh_category": cnhCategory?.value,
       "cnh_emition_date": cnhEmissionDate,
       "cnh_valid_date": cnhValidDate,
       "first_job": firstJob && true,
@@ -1110,9 +1120,16 @@ const CreateWorkerModal = (props) => {
                 </div>
 
                 <div className="col">
-                  <Input
+                  {/* <Input
                     type="text"
                     label="Categoria"
+                    setSelectedValue={setCnhCategory}
+                  /> */}
+
+                  <Select
+                    placeholder={""}
+                    label={"categoria"}
+                    options={cnhCategoriesOptions}
                     setSelectedValue={setCnhCategory}
                   />
                 </div>

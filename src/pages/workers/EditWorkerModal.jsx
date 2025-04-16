@@ -281,6 +281,8 @@ const EditWorkerModal = (props) => {
 
   const [birthState, setBirthstate] = useState()
 
+  const [cnhCategoriesOptions, setCnhCategoriesOptions] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -296,6 +298,14 @@ const EditWorkerModal = (props) => {
     loadCitiesOptions(selectedState, setCitiesOptions)
     loadNeighborhoodsOptions(selectedCity, setNeighborhoodOptions)
     loadWagePaymentMethodOptions(setWagePaymentMethodOptions)
+
+    api
+      .get("/cnh-categories")
+      .then((response) => {
+        let options = response?.data.map((cnhCategory) => ({ value: cnhCategory.id, label: cnhCategory.name }))
+
+        setCnhCategoriesOptions(options)
+      })
 
     api
       .get(`/hierarchy-structure`)
@@ -539,7 +549,7 @@ const EditWorkerModal = (props) => {
       "ctps_state": ctpsState?.value || selectedWorker?.ctps_state?.id,
       "ctps_emission_date": ctpsEmissionDate || selectedWorker?.ctps_emission_date,
       "cnh": cnh || selectedWorker?.cnh,
-      "cnh_category": cnhCategory || selectedWorker?.cnh_category,
+      "cnh_category": cnhCategory?.value || selectedWorker?.cnh_category?.id,
       "cnh_emition_date": cnhEmissionDate || selectedWorker?.cnh_emition_date,
       "cnh_valid_date": cnhValidDate || selectedWorker?.cnh_valid_date,
       "first_job": firstJob?.value || selectedWorker?.first_job,
@@ -601,6 +611,8 @@ const EditWorkerModal = (props) => {
         })
       })
   }
+
+  console.log(selectedWorker)
 
   return (
     <Modal
@@ -1214,11 +1226,19 @@ const EditWorkerModal = (props) => {
               </div>
 
               <div className="col">
-                <Input
+                {/* <Input
                   type="text"
                   label="Categoria"
                   setSelectedValue={setCnhCategory}
                   defaultValue={selectedWorker?.cnh_category}
+                /> */}
+
+                <Select
+                  placeholder={""}
+                  label={"Categoria"}
+                  options={cnhCategoriesOptions}
+                  setSelectedValue={setCnhCategory}
+                  defaultValue={cnhCategoriesOptions?.find((option) => option.value == selectedWorker?.cnh_category?.id)}
                 />
               </div>
             </div>

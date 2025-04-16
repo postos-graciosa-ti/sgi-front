@@ -28,6 +28,48 @@ import postWorkersParents from '../../requests/workersParents/postWorkersParents
 import api from '../../services/api'
 import WorkerDataPrintContent from './WorkerDataPrintContent'
 
+export const PdfViewerList = ({ pdfsIds }) => {
+  const [pdfUrls, setPdfUrls] = useState([])
+
+  useEffect(() => {
+    if (!pdfsIds || pdfsIds.length === 0) return
+
+    const fetchPDFs = async () => {
+      const urls = await Promise.all(
+        pdfsIds.map(async (pdfId) => {
+          try {
+            const response = await api.get(`/workers-files/${pdfId}`, { responseType: 'blob' })
+            const blob = new Blob([response.data], { type: 'application/pdf' })
+            return URL.createObjectURL(blob)
+          } catch (error) {
+            console.error('Erro ao buscar PDF:', error)
+            return null
+          }
+        })
+      )
+
+      setPdfUrls(urls.filter(Boolean)) // Remove valores nulos
+    }
+
+    fetchPDFs()
+  }, [pdfsIds])
+
+  return (
+    <>
+      {pdfUrls.map((url, index) => (
+        <iframe
+          key={index}
+          src={url}
+          width="100%"
+          height="500px"
+          style={{ border: '1px solid #ddd', marginBottom: '1rem' }}
+          title={`PDF ${index + 1}`}
+        />
+      ))}
+    </>
+  )
+}
+
 const EditWorkerModal = (props) => {
   const {
     editWorkerModalOpen,
@@ -275,6 +317,8 @@ const EditWorkerModal = (props) => {
 
   const [newParentsData, setNewParentsData] = useState()
 
+  const [pdfsIds, setPdfsIds] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -336,6 +380,12 @@ const EditWorkerModal = (props) => {
   }, [])
 
   useEffect(() => {
+    api
+      .get(`/workers-files/workers/${selectedWorker?.worker_id}`)
+      .then((response) => {
+        setPdfsIds(response.data)
+      })
+
     api
       .get(`/workers/${selectedWorker?.worker_id}/parents`)
       .then((response) => setParentsData(response.data))
@@ -1525,6 +1575,8 @@ const EditWorkerModal = (props) => {
             />
           </div>
         </div>
+
+        <PdfViewerList pdfsIds={pdfsIds} />
       </Modal.Body>
 
       <Modal.Footer>

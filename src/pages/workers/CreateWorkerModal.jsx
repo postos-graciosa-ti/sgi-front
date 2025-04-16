@@ -4,6 +4,7 @@ import { Plus } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Input from '../../components/form/Input'
+import InputFile from '../../components/form/InputFile'
 import Select from "../../components/form/Select"
 import useUserSessionStore from '../../data/userSession'
 import useWorkersExperienceTimeStore from "../../data/workersExperienceTime"
@@ -266,6 +267,8 @@ const CreateWorkerModal = (props) => {
 
   const [parentsData, setParentsData] = useState()
 
+  const [ctpsFile, setCtpsFile] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -496,7 +499,7 @@ const CreateWorkerModal = (props) => {
 
     api
       .post("/workers", formData)
-      .then((response) => {
+      .then(async (response) => {
         let newWorkerData = response?.data
 
         if (response.status == 200 && parentsData.length > 0) {
@@ -1451,6 +1454,51 @@ const CreateWorkerModal = (props) => {
               />
             </div>
           </div>
+
+          <div>
+            <h4>Anexos</h4>
+          </div>
+
+          <InputFile
+            label={"Carteira de trabalho"}
+            setSelectedValue={setCtpsFile}
+          />
+
+          <InputFile
+            label={"Foto 3x4"}
+          />
+
+          <InputFile
+            label={"Exame médico admissional"}
+          />
+
+          <InputFile
+            label={"Carteira de identidade"}
+          />
+
+          <InputFile
+            label={"CPF"}
+          />
+
+          <InputFile
+            label={"Título eleitoral"}
+          />
+
+          <InputFile
+            label={"Comprovante de residência"}
+          />
+
+          <InputFile
+            label={"CNH"}
+          />
+
+          <InputFile
+            label={"Certidão de casamento"}
+          />
+
+          <InputFile
+            label={"Certificado de reservista"}
+          />
         </Modal.Body>
 
         <Modal.Footer>

@@ -27,6 +27,8 @@ import getParentsType from '../../requests/parentsType/getParentsType'
 import postWorkersParents from '../../requests/workersParents/postWorkersParents'
 import api from '../../services/api'
 import WorkerDataPrintContent from './WorkerDataPrintContent'
+import MaskedInput from "../../components/form/MaskedInput"
+import ReactInputMask from 'react-input-mask'
 
 const EditWorkerModal = (props) => {
   const {
@@ -896,11 +898,11 @@ const EditWorkerModal = (props) => {
 
         <div className="row">
           <div className="col">
-            <Input
-              type="text"
-              label={"CPF"}
-              setSelectedValue={setCpf}
+            <ReactInputMask
+              mask={"999.999.999-99"}
               defaultValue={selectedWorker?.cpf}
+              className="form-control"
+              onChange={(e) => setCpf(e.target.value)}
             />
           </div>
         </div>

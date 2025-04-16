@@ -1314,7 +1314,7 @@ const EditWorkerModal = (props) => {
           <div className="col">
             <Input
               label="Data de última função"
-              type="text"
+              type="date"
               setSelectedValue={setLastFunctionDate}
               defaultValue={selectedWorker?.last_function_date}
             />

@@ -266,6 +266,10 @@ const CreateWorkerModal = (props) => {
 
   const [parentsData, setParentsData] = useState()
 
+  const [residentialCity, setResidentialCity] = useState()
+
+  const [birthState, setBirthstate] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -298,7 +302,7 @@ const CreateWorkerModal = (props) => {
     api
       .get("/neighborhoods")
       .then((response) => {
-        let options = response?.data.map((neighborhood) => ({ value: neighborhood.id, label: neighborhood.name }))
+        let options = response?.data.map((neighborhood) => ({ value: neighborhood.id, label: neighborhood.name, cityId: neighborhood.city_id }))
 
         setNeighborhoodOptions(options)
       })
@@ -306,11 +310,31 @@ const CreateWorkerModal = (props) => {
     api
       .get("/cities")
       .then((response) => {
-        let options = response?.data.map((city) => ({ value: city.id, label: city.name }))
+        let options = response?.data.map((city) => ({ value: city.id, label: city.name, stateId: city.state_id }))
 
         setCitiesOptions(options)
       })
   }, [])
+
+  useEffect(() => {
+    if (selectedNeighborhood) {
+      api
+        .get(`/cities/${selectedNeighborhood?.cityId}`)
+        .then((response) => {
+          setResidentialCity(response.data)
+        })
+    }
+  }, [selectedNeighborhood])
+
+  useEffect(() => {
+    if (birthcity) {
+      api
+        .get(`/states/${birthcity.stateId}`)
+        .then((response) => {
+          setBirthstate(response.data)
+        })
+    }
+  }, [birthcity])
 
   const handleClose = () => {
     api
@@ -368,6 +392,10 @@ const CreateWorkerModal = (props) => {
     setParentsPapers()
 
     setParentsData()
+
+    setResidentialCity()
+
+    setBirthstate()
 
     setCreateWorkerModalOpen(false)
   }
@@ -703,6 +731,15 @@ const CreateWorkerModal = (props) => {
             </div>
 
             <div className="col">
+              <label><b>Cidade</b></label>
+              <input
+                className="form-control"
+                disabled="true"
+                value={residentialCity?.name}
+              />
+            </div>
+
+            <div className="col">
               <Select
                 label={"Bairro"}
                 placeholder=""
@@ -829,6 +866,15 @@ const CreateWorkerModal = (props) => {
                 type="date"
                 setSelectedValue={setBirthdate}
                 label={"Data de nascimento"}
+              />
+            </div>
+
+            <div className="col">
+              <label><b>Estado</b></label>
+              <input
+                className="form-control"
+                disabled="true"
+                value={birthState?.name}
               />
             </div>
 

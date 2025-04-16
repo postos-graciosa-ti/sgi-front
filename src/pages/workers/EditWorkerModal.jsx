@@ -277,6 +277,10 @@ const EditWorkerModal = (props) => {
 
   const [newParentsData, setNewParentsData] = useState()
 
+  const [residentialCity, setResidentialCity] = useState()
+
+  const [birthState, setBirthstate] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -314,7 +318,7 @@ const EditWorkerModal = (props) => {
     api
       .get(`/cities`)
       .then((response) => {
-        let options = response?.data.map((city) => ({ value: city.id, label: city.name }))
+        let options = response?.data.map((city) => ({ value: city.id, label: city.name, stateId: city.state_id }))
 
         setBirthcityOptions(options)
 
@@ -324,7 +328,7 @@ const EditWorkerModal = (props) => {
     api
       .get("/neighborhoods")
       .then((response) => {
-        let options = response?.data.map((city) => ({ value: city.id, label: city.name }))
+        let options = response?.data.map((neighborhood) => ({ value: neighborhood.id, label: neighborhood.name, cityId: neighborhood.city_id }))
 
         setNeighborhoodOptions(options)
       })
@@ -343,13 +347,47 @@ const EditWorkerModal = (props) => {
       .then((response) => setParentsData(response.data))
   }, [editWorkerModalOpen])
 
+  useEffect(() => {
+    if (selectedWorker) {
+      if (selectedWorker.neighborhood.id) {
+        api
+          .get(`/cities/${selectedWorker.neighborhood.city_id}`)
+          .then((response) => setResidentialCity(response.data))
+      }
+
+      if (selectedWorker.city.state_id) {
+        api
+          .get(`/states/${selectedWorker.city.state_id}`)
+          .then((response) => setBirthstate(response.data))
+      }
+    }
+  }, [selectedWorker])
+
+  useEffect(() => {
+    if (selectedNeighborhood) {
+      api
+        .get(`/cities/${selectedNeighborhood.cityId}`)
+        .then((response) => setResidentialCity(response.data))
+    }
+  }, [selectedNeighborhood])
+
+  useEffect(() => {
+    if (selectedCity) {
+      api
+        .get(`/states/${selectedCity.stateId}`)
+        .then((response) => setBirthstate(response.data))
+    }
+  }, [selectedCity])
+
   const handleClose = () => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-first-review`)
       .then((response) => setWorkersFirstReview(response?.data))
+
     api
       .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-second-review`)
       .then((response) => setWorkersSecondReview(response?.data))
+
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
       .then((response) => {
@@ -361,16 +399,65 @@ const EditWorkerModal = (props) => {
 
         setWorkersList(sortStatusWorkers)
       })
+
     setSelectedWorker()
+
     setName()
+
     setSelectedFunction()
+
     setSelectedTurn()
+
     setSelectedCostCenter()
+
     setSelectedDepartment()
+
     setAdmissionDate()
+
     setPicture()
+
     setTimecode()
+
     setEsocial()
+
+    setName()
+
+    setSelectedFunction()
+
+    setSelectedTurn()
+
+    setSelectedTurn()
+
+    setSelectedCostCenter()
+
+    setSelectedDepartment()
+
+    setAdmissionDate()
+
+    setPicture()
+
+    setTimecode()
+
+    setEsocial()
+
+    setHasChildren()
+
+    setSelectedParentsType()
+
+    setParentsName()
+
+    setParentsCpf()
+
+    setParentsDatebirth()
+
+    setParentsBooks()
+
+    setParentsPapers()
+
+    setParentsData()
+
+    setResidentialCity()
+
     setEditWorkerModalOpen(false)
   }
 
@@ -718,6 +805,15 @@ const EditWorkerModal = (props) => {
           </div>
 
           <div className="col">
+            <label><b>Cidade</b></label>
+            <input
+              className="form-control"
+              disabled={"true"}
+              value={residentialCity?.name}
+            />
+          </div>
+
+          <div className="col">
             <Select
               label={"Bairro"}
               placeholder=""
@@ -858,6 +954,15 @@ const EditWorkerModal = (props) => {
               setSelectedValue={setBirthdate}
               label={"Data de nascimento"}
               defaultValue={selectedWorker?.birthdate}
+            />
+          </div>
+
+          <div className="col">
+            <label><b>Estado</b></label>
+            <input
+              className="form-control"
+              disabled={"true"}
+              value={birthState?.name}
             />
           </div>
 

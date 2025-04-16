@@ -349,15 +349,15 @@ const EditWorkerModal = (props) => {
 
   useEffect(() => {
     if (selectedWorker) {
-      if (selectedWorker.neighborhood.id) {
+      if (selectedWorker?.neighborhood?.id) {
         api
-          .get(`/cities/${selectedWorker.neighborhood.city_id}`)
+          .get(`/cities/${selectedWorker?.neighborhood?.city_id}`)
           .then((response) => setResidentialCity(response.data))
       }
 
-      if (selectedWorker.city.state_id) {
+      if (selectedWorker?.city?.state_id) {
         api
-          .get(`/states/${selectedWorker.city.state_id}`)
+          .get(`/states/${selectedWorker?.city?.state_id}`)
           .then((response) => setBirthstate(response.data))
       }
     }
@@ -366,7 +366,7 @@ const EditWorkerModal = (props) => {
   useEffect(() => {
     if (selectedNeighborhood) {
       api
-        .get(`/cities/${selectedNeighborhood.cityId}`)
+        .get(`/cities/${selectedNeighborhood?.cityId}`)
         .then((response) => setResidentialCity(response.data))
     }
   }, [selectedNeighborhood])
@@ -374,7 +374,7 @@ const EditWorkerModal = (props) => {
   useEffect(() => {
     if (selectedCity) {
       api
-        .get(`/states/${selectedCity.stateId}`)
+        .get(`/states/${selectedCity?.stateId}`)
         .then((response) => setBirthstate(response.data))
     }
   }, [selectedCity])

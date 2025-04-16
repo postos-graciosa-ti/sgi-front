@@ -22,6 +22,7 @@ import loadWagePaymentMethodOptions from "../../requests/loadOptions/loadWagePay
 import getParentsType from '../../requests/parentsType/getParentsType'
 import postWorkersParents from '../../requests/workersParents/postWorkersParents'
 import api from '../../services/api'
+import ReactInputMask from 'react-input-mask'
 
 const CreateWorkerModal = (props) => {
   const {
@@ -600,10 +601,17 @@ const CreateWorkerModal = (props) => {
 
           <div className="row">
             <div className="col">
-              <Input
+              {/* <Input
                 label={"Número de emergência"}
                 type="text"
                 setSelectedValue={setEmergencyNumber}
+              /> */}
+
+              <label><b>Número de emergência</b></label>
+              <ReactInputMask
+                mask={"(99) 99999-9999"}
+                className="form-control"
+                onChange={(e) => setEmergencyNumber(e.target.value)}
               />
             </div>
 
@@ -827,18 +835,32 @@ const CreateWorkerModal = (props) => {
 
           <div className="row">
             <div className="col">
-              <Input
+              {/* <Input
                 type="text"
                 label={"Telefone fixo"}
                 setSelectedValue={setSelectedPhone}
+              /> */}
+
+              <label><b>Telefone fixo</b></label>
+              <ReactInputMask
+                mask={"(99) 9999-9999"}
+                className="form-control"
+                onChange={(e) => setSelectedPhone(e.target.value)}
               />
             </div>
 
             <div className="col">
-              <Input
+              {/* <Input
                 type="text"
                 label={"Celular"}
                 setSelectedValue={setSelectedMobile}
+              /> */}
+
+              <label><b>Celular</b></label>
+              <ReactInputMask
+                mask={"(99) 99999-9999"}
+                className="form-control"
+                onChange={(e) => setSelectedMobile(e.target.value)}
               />
             </div>
 
@@ -912,10 +934,17 @@ const CreateWorkerModal = (props) => {
 
           <div className="row">
             <div className="col">
-              <Input
+              {/* <Input
                 type="text"
                 label={"CPF"}
                 setSelectedValue={setCpf}
+              /> */}
+
+              <label><b>CPF</b></label>
+              <ReactInputMask
+                mask={"999.999.999-99"}
+                className="form-control"
+                onChange={(e) => setCpf(e.target.value)}
               />
             </div>
           </div>

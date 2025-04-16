@@ -659,10 +659,18 @@ const EditWorkerModal = (props) => {
 
         <div className="row">
           <div className="col">
-            <Input
+            {/* <Input
               label={"Número de emergência"}
               type="text"
               setSelectedValue={setEmergencyNumber}
+              defaultValue={selectedWorker?.emergency_number}
+            /> */}
+
+            <label><b>Número de emergência</b></label>
+            <ReactInputMask
+              mask={"(99) 99999-9999"}
+              className="form-control"
+              onChange={(e) => setEmergencyNumber(e.target.value)}
               defaultValue={selectedWorker?.emergency_number}
             />
           </div>
@@ -910,19 +918,35 @@ const EditWorkerModal = (props) => {
 
         <div className="row">
           <div className="col">
-            <Input
+            {/* <Input
               type="text"
               label={"Telefone fixo"}
               setSelectedValue={setSelectedPhone}
+              defaultValue={selectedWorker?.phone}
+            /> */}
+
+            <label><b>Telefone fixo</b></label>
+            <ReactInputMask
+              mask={"(99) 99999-9999"}
+              className="form-control"
+              onChange={(e) => setSelectedPhone(e.target.value)}
               defaultValue={selectedWorker?.phone}
             />
           </div>
 
           <div className="col">
-            <Input
+            {/* <Input
               type="text"
               label={"Celular"}
               setSelectedValue={setSelectedMobile}
+              defaultValue={selectedWorker?.mobile}
+            /> */}
+
+            <label><b>Celular</b></label>
+            <ReactInputMask
+              mask={"(99) 99999-9999"}
+              className="form-control"
+              onChange={(e) => setSelectedMobile(e.target.value)}
               defaultValue={selectedWorker?.mobile}
             />
           </div>

@@ -281,6 +281,8 @@ const CreateWorkerModal = (props) => {
 
   const [seeTurn, setSeeTurn] = useState()
 
+  const [hasExperienceTime, setHasExperienceTime] = useState(false)
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -367,7 +369,10 @@ const CreateWorkerModal = (props) => {
     if (selectedTurn) {
       api
         .get(`/turns/${selectedTurn?.value}`)
-        .then((response) => setSeeTurn(response.data))
+        .then((response) => {
+          console.log(response)
+          setSeeTurn(response.data)
+        })
     }
   }, [selectedTurn])
 
@@ -439,6 +444,8 @@ const CreateWorkerModal = (props) => {
     setFunctionCode()
 
     setSeeTurn()
+
+    setHasExperienceTime(false)
 
     setCreateWorkerModalOpen(false)
   }
@@ -565,6 +572,7 @@ const CreateWorkerModal = (props) => {
       "enterprise_time": enterpriseTime,
       "early_payment": earlyPayment?.value,
       "harmfull_exposition": harmfullExposition?.value,
+      "has_experience_time": hasExperienceTime?.value,
     }
 
     api
@@ -1390,14 +1398,62 @@ const CreateWorkerModal = (props) => {
             </div>
 
             <div className="col">
-              <label><b>Semana do turno</b></label>
+              <div className="row">
+                <div className="col">
+                  <label><b>Semana do turno</b></label>
 
-              <input
-                type="text"
-                className="form-control"
-                disabled={"true"}
-                value={seeTurn?.week || ""}
-              />
+                  <input
+                    type="text"
+                    className="form-control"
+                    disabled={"true"}
+                    value={seeTurn?.week || ""}
+                  />
+                </div>
+
+                <div className="col">
+                  <label><b>Início de turno</b></label>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    disabled={"true"}
+                    value={seeTurn?.start_time || ""}
+                  />
+                </div>
+
+                <div className="col">
+                  <label><b>Início de intervalo</b></label>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    disabled={"true"}
+                    value={seeTurn?.start_interval_time || ""}
+                  />
+                </div>
+
+                <div className="col">
+                  <label><b>Fim de intervalo</b></label>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    disabled={"true"}
+                    value={seeTurn?.end_interval_time || ""}
+                  />
+                </div>
+
+                <div className="col">
+                  <label><b>Fim de turno</b></label>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    disabled={"true"}
+                    value={seeTurn?.end_time || ""}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1513,7 +1569,7 @@ const CreateWorkerModal = (props) => {
             </div>
           </div>
 
-          <div className="row">
+          {/* <div className="row">
             <div className="col">
               <Select
                 placeholder={""}
@@ -1521,6 +1577,41 @@ const CreateWorkerModal = (props) => {
                 options={experienceTimeOptions}
                 setSelectedValue={setExperienceTime}
               />
+            </div>
+          </div> */}
+
+          <div className="row">
+            <div className="col">
+              <Select
+                placeholder={""}
+                label={"Haverá experiência?"}
+                options={trueFalseOptions}
+                setSelectedValue={setHasExperienceTime}
+              />
+
+              {
+                hasExperienceTime.value == true && (
+                  <>
+                    <label><b>Primeiro período de experiência</b></label>
+
+                    <input
+                      type="text"
+                      className="form-control mb-2"
+                      disabled={"true"}
+                      value={"30 dias"}
+                    />
+
+                    <label><b>Segundo período de experiência</b></label>
+
+                    <input
+                      type="text"
+                      className="form-control mb-2"
+                      disabled={"true"}
+                      value={"60 dias"}
+                    />
+                  </>
+                )
+              }
             </div>
           </div>
 

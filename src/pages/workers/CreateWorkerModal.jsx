@@ -273,6 +273,12 @@ const CreateWorkerModal = (props) => {
 
   const [cnhCategoriesOptions, setCnhCategoriesOptions] = useState()
 
+  const [earlyPayment, setEarlyPayment] = useState()
+
+  const [harmfullExposition, setHarmfullExposition] = useState()
+
+  const [functionCode, setFunctionCode] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -347,6 +353,14 @@ const CreateWorkerModal = (props) => {
     }
   }, [birthcity])
 
+  useEffect(() => {
+    if (selectedFunction) {
+      api
+        .get(`/functions/${selectedFunction?.value}`)
+        .then((response) => setFunctionCode(response.data))
+    }
+  }, [selectedFunction])
+
   const handleClose = () => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-first-review`)
@@ -407,6 +421,12 @@ const CreateWorkerModal = (props) => {
     setResidentialCity()
 
     setBirthstate()
+
+    setEarlyPayment()
+
+    setHarmfullExposition()
+
+    setFunctionCode()
 
     setCreateWorkerModalOpen(false)
   }
@@ -531,6 +551,8 @@ const CreateWorkerModal = (props) => {
       "cbo": cbo,
       "hierarchy_structure": selectedHierarchyStructure?.value,
       "enterprise_time": enterpriseTime,
+      "early_payment": earlyPayment?.value,
+      "harmfull_exposition": harmfullExposition?.value,
     }
 
     api
@@ -1331,6 +1353,28 @@ const CreateWorkerModal = (props) => {
           </div>
 
           <div className="row">
+            <div className="col">
+              <label><b>Código geral de função</b></label>
+
+              <input
+                className="form-control"
+                disabled={"true"}
+                value={functionCode?.general_function_code || ""}
+              />
+            </div>
+
+            <div className="col">
+              <label><b>CBO</b></label>
+
+              <input
+                className="form-control"
+                disabled={"true"}
+                value={functionCode?.cbo || ""}
+              />
+            </div>
+          </div>
+
+          <div className="row">
             {/* <div className="col">
               <Input
                 label="Código geral de função"
@@ -1542,6 +1586,26 @@ const CreateWorkerModal = (props) => {
                 type={"text"}
                 label={"Tempo de empresa"}
                 setSelectedValue={setEnterpriseTime}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Select
+                placeholder={""}
+                options={trueFalseOptions}
+                label={"Adiantamento salarial"}
+                setSelectedValue={setEarlyPayment}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                placeholder={""}
+                options={trueFalseOptions}
+                label={"Exposição a agente nocivo"}
+                setSelectedValue={setHarmfullExposition}
               />
             </div>
           </div>

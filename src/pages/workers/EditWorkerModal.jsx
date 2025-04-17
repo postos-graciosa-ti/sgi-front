@@ -283,6 +283,12 @@ const EditWorkerModal = (props) => {
 
   const [cnhCategoriesOptions, setCnhCategoriesOptions] = useState()
 
+  const [earlyPayment, setEarlyPayment] = useState()
+
+  const [harmfullExposition, setHarmfullExposition] = useState()
+
+  const [functionCode, setFunctionCode] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -370,6 +376,12 @@ const EditWorkerModal = (props) => {
           .get(`/states/${selectedWorker?.city?.state_id}`)
           .then((response) => setBirthstate(response.data))
       }
+
+      if (selectedWorker?.function_id) {
+        api
+          .get(`/functions/${selectedWorker?.function_id}`)
+          .then((response) => setFunctionCode(response.data))
+      }
     }
   }, [selectedWorker])
 
@@ -388,6 +400,14 @@ const EditWorkerModal = (props) => {
         .then((response) => setBirthstate(response.data))
     }
   }, [selectedCity])
+
+  useEffect(() => {
+    if (selectedFunction) {
+      api
+        .get(`/functions/${selectedFunction?.value}`)
+        .then((response) => setFunctionCode(response.data))
+    }
+  }, [selectedFunction])
 
   const handleClose = () => {
     api
@@ -467,6 +487,12 @@ const EditWorkerModal = (props) => {
     setParentsData()
 
     setResidentialCity()
+
+    setEarlyPayment()
+
+    setHarmfullExposition()
+
+    setFunctionCode()
 
     setEditWorkerModalOpen(false)
   }
@@ -581,6 +607,8 @@ const EditWorkerModal = (props) => {
       "cbo": cbo || selectedWorker?.cbo,
       "hierarchy_structure": selectedHierarchyStructure?.value || selectedWorker?.hierarchy_structure?.id,
       "enterprise_time": enterpriseTime || selectedWorker?.enterprise_time,
+      "early_payment": earlyPayment?.value || selectedWorker?.early_payment,
+      "harmfull_exposition": harmfullExposition?.value || selectedWorker?.harmfull_exposition,
     }
 
     api
@@ -1461,6 +1489,26 @@ const EditWorkerModal = (props) => {
 
         <div className="row">
           <div className="col">
+            <label><b>Código geral de função</b></label>
+            <input
+              className="form-control"
+              disabled={"true"}
+              value={functionCode?.general_function_code || ""}
+            />
+          </div>
+
+          <div className="col">
+            <label><b>CBO</b></label>
+            <input
+              className="form-control"
+              disabled={"true"}
+              value={functionCode?.cbo || ""}
+            />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col">
             <Input
               label="Data de última função"
               type="date"
@@ -1676,6 +1724,28 @@ const EditWorkerModal = (props) => {
               label={"Tempo de empresa"}
               setSelectedValue={setEnterpriseTime}
               defaultValue={selectedWorker?.enterprise_time}
+            />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col">
+            <Select
+              placeholder={""}
+              options={trueFalseOptions}
+              label={"Adiantamento salarial"}
+              setSelectedValue={setEarlyPayment}
+              defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.early_payment)}
+            />
+          </div>
+
+          <div className="col">
+            <Select
+              placeholder={""}
+              options={trueFalseOptions}
+              label={"Exposição a agente nocivo"}
+              setSelectedValue={setHarmfullExposition}
+              defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.harmfull_exposition)}
             />
           </div>
         </div>

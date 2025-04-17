@@ -93,17 +93,21 @@ const Scale = () => {
 
         let functionsOptions = []
 
-        functions && functions.map((func) => {
-          let inScaleFunctions = (
-            func.name == "Operador(a) de Caixa I" ||
-            func.name == "Frentista I" ||
-            func.name == "Frentista / Caixa II" ||
-            func.name == "Trocador de Óleo / Frentista II"
-          )
-
-          if (inScaleFunctions)
-            functionsOptions.push({ "label": func.name, "value": func.id })
+        functions?.map((func) => {
+          functionsOptions.push({ "label": func.name, "value": func.id })
         })
+
+        // functions && functions.map((func) => {
+        //   let inScaleFunctions = (
+        //     func.name == "Operador(a) de Caixa I" ||
+        //     func.name == "Frentista I" ||
+        //     func.name == "Frentista / Caixa II" ||
+        //     func.name == "Trocador de Óleo / Frentista II"
+        //   )
+
+        //   if (inScaleFunctions)
+        //     functionsOptions.push({ "label": func.name, "value": func.id })
+        // })
 
         setFunctionsOptions(functionsOptions)
       })

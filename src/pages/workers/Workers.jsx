@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { ArrowClockwise, Funnel, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX, Question, X } from "react-bootstrap-icons"
+import { ArrowClockwise, FileEarmark, Funnel, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX, Question, X } from "react-bootstrap-icons"
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import Nav from "../../components/Nav"
@@ -22,6 +22,7 @@ import WorkerInfoModal from "./WorkerInfoModal"
 import WorkerNotationModal from "./WorkerNotationModal"
 import WorkerReturnModal from "./WorkerReturnModal"
 import WorkersByTurnModal from "./WorkersByTurnModal"
+import DocsModal from "./DocsModal"
 
 const Workers = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -59,6 +60,8 @@ const Workers = () => {
   const [addWorkersParentsModalOpen, setAddWorkersParentsModalOpen] = useState(false)
 
   const [definitellyWorkerModalOpen, setDefinitellyWorkerModalOpen] = useState(false)
+
+  const [docsModalOpen, setDocsModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -217,6 +220,12 @@ const Workers = () => {
     setDefinitellyWorkerModalOpen(true)
   }
 
+  const handleOpenDocsModal = (worker) => {
+    setSelectedWorker(worker)
+
+    setDocsModalOpen(true)
+  }
+
   return (
     <>
       <Nav />
@@ -316,6 +325,14 @@ const Workers = () => {
                         title="Editar colaborador"
                       >
                         <PersonGear />
+                      </button>
+
+                      <button
+                        className="btn btn-primary me-2 mt-2"
+                        title="Emitir documentos"
+                        onClick={() => handleOpenDocsModal(worker)}
+                      >
+                        <FileEarmark />
                       </button>
 
                       <button
@@ -605,6 +622,12 @@ const Workers = () => {
         selectedWorker={selectedWorker}
         setSelectedWorker={setSelectedWorker}
         setWorkersList={setWorkersList}
+      />
+
+      <DocsModal
+        docsModalOpen={docsModalOpen}
+        setDocsModalOpen={setDocsModalOpen}
+        selectedWorker={selectedWorker}
       />
     </>
   )

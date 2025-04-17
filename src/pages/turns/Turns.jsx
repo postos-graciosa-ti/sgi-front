@@ -78,6 +78,7 @@ const Turns = () => {
             <thead>
               <tr>
                 <th>Nome</th>
+                <th>Semana</th>
                 <th>Início do turno</th>
                 <th>Início do intervalo</th>
                 <th>Fim do intervalo</th>
@@ -90,6 +91,7 @@ const Turns = () => {
                 turnsList && turnsList.map((turn) => (
                   <tr id="turnRow" key={turn.id}>
                     <td>{turn.name}</td>
+                    <td>{turn.week}</td>
                     <td>{turn.start_time.replace(/:\d{2}$/, '')}</td>
                     <td>{turn.start_interval_time.replace(/:\d{2}$/, '')}</td>
                     <td>{turn.end_interval_time.replace(/:\d{2}$/, '')}</td>

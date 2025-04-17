@@ -19,6 +19,8 @@ const AddTurnModal = (props) => {
 
   const [name, setName] = useState('')
 
+  const [week, setWeek] = useState()
+
   const [startTime, setStartTime] = useState('')
 
   const [startIntervalTime, setStartIntervalTime] = useState('')
@@ -34,6 +36,8 @@ const AddTurnModal = (props) => {
 
     setName('')
 
+    setWeek()
+
     setStartTime('')
 
     setStartIntervalTime('')
@@ -48,6 +52,7 @@ const AddTurnModal = (props) => {
   const handleSubmit = () => {
     let formData = {
       "name": name,
+      "week": week,
       "start_time": startTime,
       "start_interval_time": startIntervalTime,
       "end_interval_time": endIntervalTime,
@@ -94,11 +99,24 @@ const AddTurnModal = (props) => {
 
       <Modal.Body>
         <div className="mb-3">
+          <label><b>Nome</b></label>
+
           <input
             type="text"
             className="form-control"
             placeholder="Nome"
             onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label><b>Semana</b></label>
+
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Semana"
+            onChange={(e) => setWeek(e.target.value)}
           />
         </div>
 

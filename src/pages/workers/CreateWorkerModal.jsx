@@ -279,6 +279,8 @@ const CreateWorkerModal = (props) => {
 
   const [functionCode, setFunctionCode] = useState()
 
+  const [seeTurn, setSeeTurn] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -361,6 +363,14 @@ const CreateWorkerModal = (props) => {
     }
   }, [selectedFunction])
 
+  useEffect(() => {
+    if (selectedTurn) {
+      api
+        .get(`/turns/${selectedTurn?.value}`)
+        .then((response) => setSeeTurn(response.data))
+    }
+  }, [selectedTurn])
+
   const handleClose = () => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-first-review`)
@@ -427,6 +437,8 @@ const CreateWorkerModal = (props) => {
     setHarmfullExposition()
 
     setFunctionCode()
+
+    setSeeTurn()
 
     setCreateWorkerModalOpen(false)
   }
@@ -1354,22 +1366,37 @@ const CreateWorkerModal = (props) => {
 
           <div className="row">
             <div className="col">
-              <label><b>Código geral de função</b></label>
+              <div className="row">
+                <div className="col">
+                  <label><b>Código geral de função</b></label>
 
-              <input
-                className="form-control"
-                disabled={"true"}
-                value={functionCode?.general_function_code || ""}
-              />
+                  <input
+                    className="form-control"
+                    disabled={"true"}
+                    value={functionCode?.general_function_code || ""}
+                  />
+                </div>
+
+                <div className="col">
+                  <label><b>CBO</b></label>
+
+                  <input
+                    className="form-control"
+                    disabled={"true"}
+                    value={functionCode?.cbo || ""}
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="col">
-              <label><b>CBO</b></label>
+              <label><b>Semana do turno</b></label>
 
               <input
+                type="text"
                 className="form-control"
                 disabled={"true"}
-                value={functionCode?.cbo || ""}
+                value={seeTurn?.week || ""}
               />
             </div>
           </div>

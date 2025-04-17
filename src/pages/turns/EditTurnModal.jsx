@@ -20,6 +20,8 @@ const EditTurnModal = (props) => {
 
   const [name, setName] = useState('')
 
+  const [week, setWeek] = useState()
+
   const [startTime, setStartTime] = useState('')
 
   const [startIntervalTime, setStartIntervalTime] = useState('')
@@ -37,6 +39,8 @@ const EditTurnModal = (props) => {
 
     setName('')
 
+    setWeek()
+
     setStartTime('')
 
     setStartIntervalTime('')
@@ -51,6 +55,7 @@ const EditTurnModal = (props) => {
   const handleSubmit = () => {
     let formData = {
       "name": name || turnToEdit.name,
+      "week": week || turnToEdit.week,
       "start_time": startTime || turnToEdit.start_time.replace(/:\d{2}$/, ''),
       "start_interval_time": startIntervalTime || turnToEdit.start_interval_time.replace(/:\d{2}$/, ''),
       "end_interval_time": endIntervalTime || turnToEdit.end_interval_time.replace(/:\d{2}$/, ''),
@@ -114,6 +119,17 @@ const EditTurnModal = (props) => {
             placeholder="Nome"
             onChange={(e) => setName(e.target.value)}
             defaultValue={turnToEdit && turnToEdit.name}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label><b>Semana</b></label>
+
+          <input
+            type="text"
+            className="form-control"
+            onChange={(e) => setWeek(e.target.value)}
+            defaultValue={turnToEdit?.week}
           />
         </div>
 

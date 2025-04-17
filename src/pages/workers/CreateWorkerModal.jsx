@@ -538,7 +538,7 @@ const CreateWorkerModal = (props) => {
       .then((response) => {
         let newWorkerData = response?.data
 
-        if (response.status == 200 && parentsData.length > 0) {
+        if (response.status == 200 && parentsData) {
           const promises = parentsData.map((parentData) => {
             let formData = {
               worker_id: newWorkerData?.id,

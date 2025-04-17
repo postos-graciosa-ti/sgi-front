@@ -1,27 +1,27 @@
-import moment from "moment"
 import { useEffect, useState } from "react"
-import { ArrowClockwise, ArrowsCollapse, ArrowsExpand, ArrowsFullscreen, ArrowUpRight, ClipboardData, Clock, Filter, Funnel, HourglassSplit, HouseAdd, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX, Question, SlashCircle } from "react-bootstrap-icons"
+import { ArrowClockwise, Funnel, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX, Question, X } from "react-bootstrap-icons"
 import ReactDOMServer from 'react-dom/server'
+import ReactSelect from "react-select"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import initTour from "../../driverjs/initTour"
 import workersSteps from "../../driverjs/workersSteps"
 import api from "../../services/api"
+import AddWorkerParentsModal from "./AddWorkerParentsModal"
 import CreateWorkerModal from "./CreateWorkerModal"
+import DefinitellyDeleteWorkerModal from "./DefinitellyDeleteWorkerModal"
 import DeleteWorkerModal from "./DeleteWorkerModal"
 import EditWorkerModal from "./EditWorkerModal"
 import ExperienceTimeModal from "./ExperienceTimeModal"
+import NrModal from "./NrModal"
 import PrintBadgeContent from "./PrintBadgeContent"
 import ReactivateWorkerModal from "./ReactivateWorkerModal"
 import ResignationReasonsReportModal from "./ResignationReasonsReportModal"
-import WorkerNotationModal from "./WorkerNotationModal"
-import ReactSelect from "react-select"
-import WorkersByTurnModal from "./WorkersByTurnModal"
-import NrModal from "./NrModal"
-import WorkerInfoModal from "./WorkerInfoModal"
 import WorkerAwayModal from "./WorkerAwayModal"
+import WorkerInfoModal from "./WorkerInfoModal"
+import WorkerNotationModal from "./WorkerNotationModal"
 import WorkerReturnModal from "./WorkerReturnModal"
-import AddWorkerParentsModal from "./AddWorkerParentsModal"
+import WorkersByTurnModal from "./WorkersByTurnModal"
 
 const Workers = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -57,6 +57,8 @@ const Workers = () => {
   const [workerReturnModalOpen, setWorkerReturnModalOpen] = useState(false)
 
   const [addWorkersParentsModalOpen, setAddWorkersParentsModalOpen] = useState(false)
+
+  const [definitellyWorkerModalOpen, setDefinitellyWorkerModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -207,6 +209,12 @@ const Workers = () => {
     setSelectedWorker(worker)
 
     setAddWorkersParentsModalOpen(true)
+  }
+
+  const handleOpenDefinitellyWorkerModalOpen = (worker) => {
+    setSelectedWorker(worker)
+
+    setDefinitellyWorkerModalOpen(true)
   }
 
   return (
@@ -375,13 +383,23 @@ const Workers = () => {
 
                       {
                         !worker.worker_is_active && (
-                          <button
-                            className="btn btn-warning me-2 mt-2"
-                            onClick={() => handleOpenReactivateWorkerModal(worker)}
-                            title="readmitir"
-                          >
-                            <ArrowClockwise />
-                          </button>
+                          <>
+                            <button
+                              className="btn btn-warning me-2 mt-2"
+                              onClick={() => handleOpenReactivateWorkerModal(worker)}
+                              title="readmitir"
+                            >
+                              <ArrowClockwise />
+                            </button>
+
+                            <button
+                              className="btn btn-danger me-2 mt-2"
+                              title="Excluir definitivamente"
+                              onClick={() => handleOpenDefinitellyWorkerModalOpen(worker)}
+                            >
+                              <X />
+                            </button>
+                          </>
                         )
                       }
                     </td>
@@ -579,6 +597,14 @@ const Workers = () => {
         setAddWorkersParentsModalOpen={setAddWorkersParentsModalOpen}
         selectedWorker={selectedWorker}
         setSelectedWorker={setSelectedWorker}
+      />
+
+      <DefinitellyDeleteWorkerModal
+        definitellyWorkerModalOpen={definitellyWorkerModalOpen}
+        setDefinitellyWorkerModalOpen={setDefinitellyWorkerModalOpen}
+        selectedWorker={selectedWorker}
+        setSelectedWorker={setSelectedWorker}
+        setWorkersList={setWorkersList}
       />
     </>
   )

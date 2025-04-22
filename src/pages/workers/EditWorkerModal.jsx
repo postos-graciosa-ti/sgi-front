@@ -652,17 +652,12 @@ const EditWorkerModal = (props) => {
       "has_experience_time": selectedHasExperienceTime.value
     }
 
-    console.log(formData.has_experience_time)
-    debugger
-
     api
       .put(`/workers/${selectedWorker.worker_id}`, formData)
       .then(() => handleClose())
   }
 
   const handlePrintWorkerData = () => {
-    console.log(selectedWorker)
-
     api
       .get(`/cities/${selectedWorker?.neighborhood?.city_id}`)
       .then((response) => {
@@ -683,8 +678,6 @@ const EditWorkerModal = (props) => {
         })
       })
   }
-
-  console.log(selectedWorker)
 
   return (
     <Modal

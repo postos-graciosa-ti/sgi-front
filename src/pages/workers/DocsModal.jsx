@@ -29,9 +29,15 @@ export const EthnicityDoc = ({ selectedWorker, selectedSubsidiarie }) => {
         raça/etnia sendo:
       </p>
 
-      <p>
-        [x] <b>{selectedWorker?.ethnicity?.name}</b>
-      </p>
+      <p>[  ] <b>Branca</b></p>
+
+      <p>[  ] <b>Preta</b></p>
+
+      <p>[  ] <b>Parda</b></p>
+
+      <p>[  ] <b>Amarela</b></p>
+
+      <p>[  ] <b>Indígena</b></p>
 
       <p>
         Esta autodeclaração atende a exigência do art. 39, § 8º, da Lei nº
@@ -145,6 +151,273 @@ export const ResponsabilityDoc = ({ selectedWorker, selectedSubsidiarie }) => {
   )
 }
 
+export const HealthDoc = ({ selectedWorker, selectedSubsidiarie }) => {
+  return (
+    <>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div>
+          <img src="/logo.png" style={{ width: '80px' }} />
+        </div>
+
+        <div style={{ marginLeft: '8px' }}>
+          {selectedSubsidiarie?.label}
+        </div>
+      </div>
+
+      <hr />
+
+      <p>
+        Joinville, {moment().format("DD/MM/YYYY")}
+      </p>
+
+      <p>
+        {selectedSubsidiarie?.label}
+      </p>
+
+      <p>
+        Anexo 01
+      </p>
+
+      <p>
+        TERMO DE CIÊNCIA DO PROTOCOLO DE HOMOLOGAÇÃO DE ATESTADO
+      </p>
+
+      <p>
+        Eu, {selectedWorker?.worker_name}
+      </p>
+
+      <p>
+        fui devidamente orientado a respeito das regras de Homologação de Atestados Médicos, NÃO
+        RESTANDO DÚVIDAS de que o não cumprimento das regras apresentadas no referido documento
+        acarretará nas devidas consequências como falta não justificada.
+      </p>
+
+      <p>
+        Joinville, {moment().format("DD/MM/YYYY")}
+      </p>
+
+      <p>
+        ________________________________________________________________________________________
+      </p>
+
+      <p>Assinatura</p>
+
+      <div style={{ "bottom": "0", "position": "fixed" }}>
+        <hr />
+
+        Posto Graciosa: Rua Florianópolis, 510 – Itaum – Cep: 89210-085 – Joinville – SC <br />
+        Auto Posto Fatima: Rua Fátima, 1730 – Fatima – Cep: 89.229-102 – Joinville – SC <br />
+        Posto Bemer: Rua Boehmerwaldt, 675 – Boehmerwaldt – Cep: 89.232-100 – Joinville – SC <br />
+        Posto Jariva: Rua Monsenhor Gercino, 5085 – Jarivatuba – Cep: 89.231-000 – Joinville – SC <br />
+        Posto Graciosa V: Rua Santa Catarina, 1870 – Floresta – Cep: 89.212-000 – Joinville – SC <br />
+        Auto Posto Pirai: Rua XI de Novembro, 5031 – Vila Nova – Cep: 89.237-000 – Joinville - SC
+      </div>
+    </>
+  )
+}
+
+export const WhatsAppDoc = ({ selectedWorker, selectedSubsidiarie }) => {
+  return (
+    <>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div>
+          <img src="/logo.png" style={{ width: '80px' }} />
+        </div>
+
+        <div style={{ marginLeft: '8px' }}>
+          {selectedSubsidiarie?.label}
+        </div>
+      </div>
+
+      <hr />
+
+      <div style={{ textAlign: "center" }}>
+        <h4>
+          TERMO DE COMPROMISSO PARA UTILIZAÇÃO DO GRUPO DE WHATSAPP
+        </h4>
+      </div>
+
+      <p>
+        Nome da empresa: {selectedSubsidiarie?.label}
+      </p>
+
+      <p>
+        Endereço:
+      </p>
+
+      <p>
+        OBJETIVO: Este termo tem como objetivo estabelecer as normas e responsabilidades para a utilização do grupo de
+        WhatsApp corporativo, destinado à comunicação entre os funcionários da {selectedSubsidiarie?.label}.
+      </p>
+
+      <p>
+        2. REGRAS DE UTILIZAÇÃO: O grupo de WhatsApp deve ser utilizado exclusivamente para assuntos relacionados
+        ao trabalho, comunicação interna, avisos e informações pertinentes à empresa. É vedada a utilização do grupo para
+        assuntos pessoais, correntes, piadas, propagandas, ou qualquer outro conteúdo que não esteja relacionado às
+        atividades profissionais. Os membros do grupo devem manter um comportamento respeitoso e profissional, evitando
+        qualquer forma de ofensa, discriminação ou assédio.
+      </p>
+
+      <p>
+        1. 3. CONFIDENCIALIDADE As informações compartilhadas no grupo são confidenciais e de uso exclusivo dos
+        funcionários do {selectedSubsidiarie?.label}
+      </p>
+
+      <p>
+        É proibido divulgar qualquer conteúdo do grupo a terceiros sem autorização expressa.
+      </p>
+
+      <p>
+        1. 4. RESPONSABILIDADES. Cada funcionário é responsável pelo conteúdo que compartilha no grupo e pelas
+        consequências de suas mensagens. {selectedSubsidiarie?.label} não se responsabiliza por qualquer uso
+        inadequado do grupo que viole este termo de compromisso.
+      </p>
+
+      <p>
+        5. SANÇÕES O descumprimento das regras estabelecidas neste termo poderá resultar em advertências, suspensão
+        do uso do grupo, e, em casos graves, medidas disciplinares conforme o regulamento interno da empresa.
+      </p>
+
+      <p>
+        6. ACEITAÇÃO Ao assinar este termo, o funcionário declara ter lido, compreendido e aceitado todas as condições
+        aqui estabelecidas.
+      </p>
+
+      <p>
+        Joinville, {moment().format("DD/MM/YYYY")}
+      </p>
+
+      <p>
+        Nome do funcionário: {selectedWorker?.worker_name}
+      </p>
+
+      <p>
+        Cargo: {selectedWorker?.function_name}
+      </p>
+
+      <p>
+        Assinatura: ________________________________________________________________________________________
+      </p>
+
+      <p>
+        Assinatura do representante da empresa: ________________________________________________________________________________________
+      </p>
+
+      <div style={{ "bottom": "0", "position": "fixed" }}>
+        <hr />
+
+        Posto Graciosa: Rua Florianópolis, 510 – Itaum – Cep: 89210-085 – Joinville – SC <br />
+        Auto Posto Fatima: Rua Fátima, 1730 – Fatima – Cep: 89.229-102 – Joinville – SC <br />
+        Posto Bemer: Rua Boehmerwaldt, 675 – Boehmerwaldt – Cep: 89.232-100 – Joinville – SC <br />
+        Posto Jariva: Rua Monsenhor Gercino, 5085 – Jarivatuba – Cep: 89.231-000 – Joinville – SC <br />
+        Posto Graciosa V: Rua Santa Catarina, 1870 – Floresta – Cep: 89.212-000 – Joinville – SC <br />
+        Auto Posto Pirai: Rua XI de Novembro, 5031 – Vila Nova – Cep: 89.237-000 – Joinville - SC
+      </div>
+    </>
+  )
+}
+
+export const Integration = ({ selectedWorker, selectedSubsidiarie }) => {
+  return (
+    <>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div>
+          <img src="/logo.png" style={{ width: '80px' }} />
+        </div>
+
+        <div style={{ marginLeft: '8px' }}>
+          {selectedSubsidiarie?.label}
+        </div>
+      </div>
+
+      <hr />
+
+      <div style={{ textAlign: "center" }}>
+        <h4>
+          Termo de Confirmação de Participação na Integração
+        </h4>
+      </div>
+
+      <p>
+        Empresa: {selectedSubsidiarie?.label}
+      </p>
+
+      <p>
+        Colaborador: {selectedWorker?.worker_name}
+      </p>
+
+      <p>
+        Cargo: {selectedWorker?.function_name}
+      </p>
+
+      <p>
+        Data de admissão: {moment(selectedWorker?.admission_date).format("DD/MM/YYYY")}
+      </p>
+
+      <p>
+        Declaro que:
+      </p>
+
+      <p>
+        1. Participei do programa de Integração realizado, onde recebi informações e orientações sobre:
+      </p>
+
+      <ul>
+        <li>Missão, Visão e Valores da Empresa</li>
+        <li>Estrutura Organizacional e Função de Cada Departamento</li>
+        <li>Cultura, Normas e Código de Conduta</li>
+        <li>Benefícios, Premiações e Políticas da Empresa</li>
+        <li>Procedimentos Internos, como registro de ponto e solicitação de equipamentos</li>
+        <li>Utilização das Ferramentas Tecnológicas da Empresa</li>
+        <li>Políticas de Saúde e Segurança no Trabalho</li>
+        <li>Treinamentos Obrigatórios e Oportunidades de Desenvolvimento Profissional</li>
+        <li>Administração de Pessoal</li>
+        <li>Processo de Avaliação de Desempenho e Feedback</li>
+      </ul>
+
+      <p>
+        2. Estou ciente de minhas responsabilidades, direitos e deveres, conforme as políticas e regulamentos
+        apresentados durante a integração.
+      </p>
+
+      <p>
+        3. Recebi todas as orientações necessárias para o desempenho das minhas funções e esclareci
+        quaisquer dúvidas durante o processo de integração.
+      </p>
+
+      <p>
+        4. Comprometo-me a seguir as normas e diretrizes estabelecidas pela empresa, conforme descrito no
+        código de conduta, políticas internas e demais documentos apresentados.
+      </p>
+
+      <p>
+        5. Estou ciente de que este documento confirma minha participação e entendimento sobre os pontos
+        discutidos durante a integração, e que eventuais infrações ou o não cumprimento das políticas da
+        empresa poderão resultar em sanções, conforme as regras internas.
+      </p>
+
+      <p>
+        Assinatura do colaborador: ________________________________________________________________________________________
+      </p>
+
+      <p>
+        Assinatura do Responsável pela Integração: ________________________________________________________________________________________
+      </p>
+
+      <div style={{ "bottom": "0", "position": "fixed" }}>
+        <hr />
+
+        Posto Graciosa: Rua Florianópolis, 510 – Itaum – Cep: 89210-085 – Joinville – SC <br />
+        Auto Posto Fatima: Rua Fátima, 1730 – Fatima – Cep: 89.229-102 – Joinville – SC <br />
+        Posto Bemer: Rua Boehmerwaldt, 675 – Boehmerwaldt – Cep: 89.232-100 – Joinville – SC <br />
+        Posto Jariva: Rua Monsenhor Gercino, 5085 – Jarivatuba – Cep: 89.231-000 – Joinville – SC <br />
+        Posto Graciosa V: Rua Santa Catarina, 1870 – Floresta – Cep: 89.212-000 – Joinville – SC <br />
+        Auto Posto Pirai: Rua XI de Novembro, 5031 – Vila Nova – Cep: 89.237-000 – Joinville - SC
+      </div>
+    </>
+  )
+}
+
 const DocsModal = (props) => {
   const { docsModalOpen, setDocsModalOpen, selectedWorker } = props
 
@@ -177,6 +450,33 @@ const DocsModal = (props) => {
       )
     }
 
+    if (documentType.value == 3) {
+      printableContent = ReactDOMServer.renderToString(
+        <HealthDoc
+          selectedWorker={selectedWorker}
+          selectedSubsidiarie={selectedSubsidiarie}
+        />
+      )
+    }
+
+    if (documentType.value == 4) {
+      printableContent = ReactDOMServer.renderToString(
+        <WhatsAppDoc
+          selectedWorker={selectedWorker}
+          selectedSubsidiarie={selectedSubsidiarie}
+        />
+      )
+    }
+
+    if (documentType.value == 5) {
+      printableContent = ReactDOMServer.renderToString(
+        <Integration
+          selectedWorker={selectedWorker}
+          selectedSubsidiarie={selectedSubsidiarie}
+        />
+      )
+    }
+
     printJS({
       printable: printableContent,
       type: 'raw-html',
@@ -201,7 +501,10 @@ const DocsModal = (props) => {
           placeholder={""}
           options={[
             { value: 1, label: "Autodeclaração étnico-racial" },
-            { value: 2, label: "Termo de responsabilidade" }
+            ...(selectedWorker?.function_name === "Operador(a) de Caixa I" ? [{ value: 2, label: "Termo de responsabilidade" }] : []),
+            { value: 3, label: "Protocolo para Homologação de Atestado Médico Externo" },
+            { value: 4, label: "Termo de compromisso para utilização do grupo de WhatsApp" },
+            { value: 5, label: "Termo de Confirmação de Participação na Integração" },
           ]}
           setSelectedValue={setDocumentType}
         />

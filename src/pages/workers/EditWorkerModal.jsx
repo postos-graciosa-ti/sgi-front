@@ -291,6 +291,14 @@ const EditWorkerModal = (props) => {
 
   const [seeTurn, setSeeTurn] = useState()
 
+  const [seeExperiencePeriods, setSeeExperiencePeriods] = useState()
+
+  const [selectedHasExperienceTime, setSelectedHasExperienceTime] = useState(
+    selectedWorker?.has_experience_time
+      ? trueFalseOptions.find(option => option.value === selectedWorker.has_experience_time)
+      : null
+  );
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -357,7 +365,7 @@ const EditWorkerModal = (props) => {
 
         setParentsTypeOptions(options)
       })
-  }, [])
+  }, [editWorkerModalOpen])
 
   useEffect(() => {
     api
@@ -389,6 +397,10 @@ const EditWorkerModal = (props) => {
         api
           .get(`/turns/${selectedWorker?.turn_id}`)
           .then((response) => setSeeTurn(response.data))
+      }
+
+      if (selectedWorker?.has_experience_time) {
+        setSeeExperiencePeriods(selectedWorker?.has_experience_time)
       }
     }
   }, [selectedWorker])
@@ -424,6 +436,12 @@ const EditWorkerModal = (props) => {
         .then((response) => setSeeTurn(response.data))
     }
   }, [selectedTurn])
+
+  useEffect(() => {
+    if (selectedHasExperienceTime) {
+      setSeeExperiencePeriods(selectedHasExperienceTime.value === true);
+    }
+  }, [selectedHasExperienceTime]);
 
   const handleClose = () => {
     api
@@ -511,6 +529,10 @@ const EditWorkerModal = (props) => {
     setFunctionCode()
 
     setSeeTurn()
+
+    setSelectedHasExperienceTime()
+
+    setSeeExperiencePeriods()
 
     setEditWorkerModalOpen(false)
   }
@@ -627,7 +649,11 @@ const EditWorkerModal = (props) => {
       "enterprise_time": enterpriseTime || selectedWorker?.enterprise_time,
       "early_payment": earlyPayment?.value || selectedWorker?.early_payment,
       "harmfull_exposition": harmfullExposition?.value || selectedWorker?.harmfull_exposition,
+      "has_experience_time": selectedHasExperienceTime.value
     }
+
+    console.log(formData.has_experience_time)
+    debugger
 
     api
       .put(`/workers/${selectedWorker.worker_id}`, formData)
@@ -1040,11 +1066,19 @@ const EditWorkerModal = (props) => {
           </div>
 
           <div className="col">
-            <label><b>Estado</b></label>
+            {/* <label><b>Estado</b></label>
             <input
               className="form-control"
               disabled={"true"}
               value={birthState?.name}
+            /> */}
+
+            <label><b>Estado</b></label>
+
+            <input
+              className="form-control"
+              value={statesOptions?.find((option) => option.value == selectedWorker?.birthcity?.state_id)?.label}
+              disabled={true}
             />
           </div>
 
@@ -1054,7 +1088,7 @@ const EditWorkerModal = (props) => {
               label={"Cidade"}
               options={citiesOptions}
               setSelectedValue={setSelectedCity}
-              defaultValue={citiesOptions?.find((option) => option.value == selectedWorker?.city?.id)}
+              defaultValue={citiesOptions?.find((option) => option.value == selectedWorker?.birthcity?.id)}
             />
           </div>
         </div>
@@ -1651,11 +1685,59 @@ const EditWorkerModal = (props) => {
           <div className="col">
             <Select
               placeholder={""}
-              label="Tempo de experiência"
-              options={experienceTimeOptions}
-              setSelectedValue={setExperienceTime}
-              defaultValue={experienceTimeOptions?.find((option) => option.value == selectedWorker?.experience_time)}
+              label={"Haverá tempo de experiência?"}
+              options={trueFalseOptions}
+              setSelectedValue={setSelectedHasExperienceTime}
+              defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.has_experience_time)}
             />
+
+            {seeExperiencePeriods && (
+              <>
+                <div className="row mt-2">
+                  <div className="col">
+                    <label><b>Primeiro período de experiência</b></label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      disabled={true}
+                      value={"30 dias"}
+                    />
+                  </div>
+
+                  <div className="col">
+                    <label><b>Data final do primeiro período</b></label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      disabled={true}
+                      value={moment(selectedWorker?.admission_date).add(30, 'days').format('YYYY-MM-DD')}
+                    />
+                  </div>
+                </div>
+
+                <div className="row mt-2">
+                  <div className="col">
+                    <label><b>Segundo período de experiência</b></label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      disabled={true}
+                      value={"60 dias"}
+                    />
+                  </div>
+
+                  <div className="col">
+                    <label><b>Data final do segundo período</b></label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      disabled={true}
+                      value={moment(selectedWorker?.admission_date).add(60, 'days').format('YYYY-MM-DD')}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
 

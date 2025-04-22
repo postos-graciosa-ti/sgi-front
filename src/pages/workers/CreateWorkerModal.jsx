@@ -23,6 +23,7 @@ import getParentsType from '../../requests/parentsType/getParentsType'
 import postWorkersParents from '../../requests/workersParents/postWorkersParents'
 import api from '../../services/api'
 import ReactInputMask from 'react-input-mask'
+import CreatableSelect from 'react-select/creatable'
 
 const CreateWorkerModal = (props) => {
   const {
@@ -281,6 +282,8 @@ const CreateWorkerModal = (props) => {
 
   const [seeTurn, setSeeTurn] = useState()
 
+  const [hasExperienceTime, setHasExperienceTime] = useState(false)
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -367,7 +370,10 @@ const CreateWorkerModal = (props) => {
     if (selectedTurn) {
       api
         .get(`/turns/${selectedTurn?.value}`)
-        .then((response) => setSeeTurn(response.data))
+        .then((response) => {
+          console.log(response)
+          setSeeTurn(response.data)
+        })
     }
   }, [selectedTurn])
 
@@ -439,6 +445,8 @@ const CreateWorkerModal = (props) => {
     setFunctionCode()
 
     setSeeTurn()
+
+    setHasExperienceTime(false)
 
     setCreateWorkerModalOpen(false)
   }
@@ -565,7 +573,11 @@ const CreateWorkerModal = (props) => {
       "enterprise_time": enterpriseTime,
       "early_payment": earlyPayment?.value,
       "harmfull_exposition": harmfullExposition?.value,
+      "has_experience_time": hasExperienceTime?.value,
     }
+
+    console.log(formData)
+    debugger
 
     api
       .post("/workers", formData)
@@ -792,11 +804,38 @@ const CreateWorkerModal = (props) => {
             </div>
 
             <div className="col">
-              <Select
+              {/* <Select
                 label={"Bairro"}
                 placeholder=""
                 options={neighborhoodOptions}
                 setSelectedValue={setSelectedNeighborhood}
+              /> */}
+
+              <label><b>Bairro</b></label>
+
+              <CreatableSelect
+                placeholder={""}
+                options={neighborhoodOptions}
+                onChange={(value) => {
+                  if (value.__isNew__) {
+                    console.log(value, "novo")
+
+                    api
+                      .post("/news", { name: value.value })
+                      .then((response) => {
+                        let options = response?.data.map((neighborhood) => ({ value: neighborhood.id, label: neighborhood.name, cityId: neighborhood.city_id }))
+
+                        setNeighborhoodOptions(options)
+
+                        let neighborhood = options.find((option) => option.label == value.value)
+
+                        setSelectedNeighborhood(neighborhood)
+                      })
+
+                  } else {
+                    setSelectedNeighborhood(value)
+                  }
+                }}
               />
             </div>
           </div>
@@ -945,11 +984,40 @@ const CreateWorkerModal = (props) => {
             </div>
 
             <div className="col">
-              <Select
+              {/* <Select
                 placeholder=""
                 label={"Cidade"}
                 options={citiesOptions}
                 setSelectedValue={setBirthcity}
+              /> */}
+
+              <label><b>Cidade</b></label>
+
+              <CreatableSelect
+                placeholder={""}
+                options={citiesOptions}
+                onChange={(value) => {
+                  if (value.__isNew__) {
+                    console.log(value, "novo")
+
+                    api
+                      .post("/cities", { name: value.value })
+                      .then((response) => {
+                        let options = response?.data.map((city) => ({ value: city.id, label: city.name, stateId: city.state_id }))
+
+                        setCitiesOptions(options)
+
+                        let selectedBirthcity = options.find((option) => option.label == value.value)
+
+                        setBirthcity(selectedBirthcity)
+                      })
+
+                  } else {
+                    console.log(value, "já existente")
+
+                    setBirthcity(value)
+                  }
+                }}
               />
             </div>
           </div>
@@ -1390,14 +1458,62 @@ const CreateWorkerModal = (props) => {
             </div>
 
             <div className="col">
-              <label><b>Semana do turno</b></label>
+              <div className="row">
+                <div className="col">
+                  <label><b>Semana do turno</b></label>
 
-              <input
-                type="text"
-                className="form-control"
-                disabled={"true"}
-                value={seeTurn?.week || ""}
-              />
+                  <input
+                    type="text"
+                    className="form-control"
+                    disabled={"true"}
+                    value={seeTurn?.week || ""}
+                  />
+                </div>
+
+                <div className="col">
+                  <label><b>Início de turno</b></label>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    disabled={"true"}
+                    value={seeTurn?.start_time || ""}
+                  />
+                </div>
+
+                <div className="col">
+                  <label><b>Início de intervalo</b></label>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    disabled={"true"}
+                    value={seeTurn?.start_interval_time || ""}
+                  />
+                </div>
+
+                <div className="col">
+                  <label><b>Fim de intervalo</b></label>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    disabled={"true"}
+                    value={seeTurn?.end_interval_time || ""}
+                  />
+                </div>
+
+                <div className="col">
+                  <label><b>Fim de turno</b></label>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    disabled={"true"}
+                    value={seeTurn?.end_time || ""}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1513,7 +1629,7 @@ const CreateWorkerModal = (props) => {
             </div>
           </div>
 
-          <div className="row">
+          {/* <div className="row">
             <div className="col">
               <Select
                 placeholder={""}
@@ -1521,6 +1637,41 @@ const CreateWorkerModal = (props) => {
                 options={experienceTimeOptions}
                 setSelectedValue={setExperienceTime}
               />
+            </div>
+          </div> */}
+
+          <div className="row">
+            <div className="col">
+              <Select
+                placeholder={""}
+                label={"Haverá experiência?"}
+                options={trueFalseOptions}
+                setSelectedValue={setHasExperienceTime}
+              />
+
+              {
+                hasExperienceTime.value == true && (
+                  <>
+                    <label><b>Primeiro período de experiência</b></label>
+
+                    <input
+                      type="text"
+                      className="form-control mb-2"
+                      disabled={"true"}
+                      value={"30 dias"}
+                    />
+
+                    <label><b>Segundo período de experiência</b></label>
+
+                    <input
+                      type="text"
+                      className="form-control mb-2"
+                      disabled={"true"}
+                      value={"60 dias"}
+                    />
+                  </>
+                )
+              }
             </div>
           </div>
 

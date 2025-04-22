@@ -58,7 +58,7 @@ const Steps = () => {
         </div>
 
         {
-          workersWithoutFirstReview.length > 0 && (
+          workersWithoutFirstReview?.length > 0 && (
             <>
               <h4 className="mt-5">Colaboradores sem primeira avaliação de tempo de experiência</h4>
 
@@ -74,7 +74,7 @@ const Steps = () => {
         }
 
         {
-          workersWithoutSecondReview.length > 0 && (
+          workersWithoutSecondReview?.length > 0 && (
             <>
               <h4 className="mt-5">Colaboradores sem segunda avaliação de tempo de experiência</h4>
 

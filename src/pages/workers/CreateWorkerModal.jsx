@@ -23,6 +23,7 @@ import getParentsType from '../../requests/parentsType/getParentsType'
 import postWorkersParents from '../../requests/workersParents/postWorkersParents'
 import api from '../../services/api'
 import ReactInputMask from 'react-input-mask'
+import CreatableSelect from 'react-select/creatable'
 
 const CreateWorkerModal = (props) => {
   const {
@@ -575,6 +576,9 @@ const CreateWorkerModal = (props) => {
       "has_experience_time": hasExperienceTime?.value,
     }
 
+    console.log(formData)
+    debugger
+
     api
       .post("/workers", formData)
       .then((response) => {
@@ -800,11 +804,38 @@ const CreateWorkerModal = (props) => {
             </div>
 
             <div className="col">
-              <Select
+              {/* <Select
                 label={"Bairro"}
                 placeholder=""
                 options={neighborhoodOptions}
                 setSelectedValue={setSelectedNeighborhood}
+              /> */}
+
+              <label><b>Bairro</b></label>
+
+              <CreatableSelect
+                placeholder={""}
+                options={neighborhoodOptions}
+                onChange={(value) => {
+                  if (value.__isNew__) {
+                    console.log(value, "novo")
+
+                    api
+                      .post("/news", { name: value.value })
+                      .then((response) => {
+                        let options = response?.data.map((neighborhood) => ({ value: neighborhood.id, label: neighborhood.name, cityId: neighborhood.city_id }))
+
+                        setNeighborhoodOptions(options)
+
+                        let neighborhood = options.find((option) => option.label == value.value)
+
+                        setSelectedNeighborhood(neighborhood)
+                      })
+
+                  } else {
+                    setSelectedNeighborhood(value)
+                  }
+                }}
               />
             </div>
           </div>
@@ -953,11 +984,40 @@ const CreateWorkerModal = (props) => {
             </div>
 
             <div className="col">
-              <Select
+              {/* <Select
                 placeholder=""
                 label={"Cidade"}
                 options={citiesOptions}
                 setSelectedValue={setBirthcity}
+              /> */}
+
+              <label><b>Cidade</b></label>
+
+              <CreatableSelect
+                placeholder={""}
+                options={citiesOptions}
+                onChange={(value) => {
+                  if (value.__isNew__) {
+                    console.log(value, "novo")
+
+                    api
+                      .post("/cities", { name: value.value })
+                      .then((response) => {
+                        let options = response?.data.map((city) => ({ value: city.id, label: city.name, stateId: city.state_id }))
+
+                        setCitiesOptions(options)
+
+                        let selectedBirthcity = options.find((option) => option.label == value.value)
+
+                        setBirthcity(selectedBirthcity)
+                      })
+
+                  } else {
+                    console.log(value, "já existente")
+
+                    setBirthcity(value)
+                  }
+                }}
               />
             </div>
           </div>

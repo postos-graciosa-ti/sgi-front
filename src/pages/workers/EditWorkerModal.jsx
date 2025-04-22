@@ -365,7 +365,7 @@ const EditWorkerModal = (props) => {
 
         setParentsTypeOptions(options)
       })
-  }, [])
+  }, [editWorkerModalOpen])
 
   useEffect(() => {
     api
@@ -1066,11 +1066,19 @@ const EditWorkerModal = (props) => {
           </div>
 
           <div className="col">
-            <label><b>Estado</b></label>
+            {/* <label><b>Estado</b></label>
             <input
               className="form-control"
               disabled={"true"}
               value={birthState?.name}
+            /> */}
+
+            <label><b>Estado</b></label>
+
+            <input
+              className="form-control"
+              value={statesOptions?.find((option) => option.value == selectedWorker?.birthcity?.state_id)?.label}
+              disabled={true}
             />
           </div>
 
@@ -1080,7 +1088,7 @@ const EditWorkerModal = (props) => {
               label={"Cidade"}
               options={citiesOptions}
               setSelectedValue={setSelectedCity}
-              defaultValue={citiesOptions?.find((option) => option.value == selectedWorker?.city?.id)}
+              defaultValue={citiesOptions?.find((option) => option.value == selectedWorker?.birthcity?.id)}
             />
           </div>
         </div>

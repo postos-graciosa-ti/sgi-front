@@ -370,10 +370,7 @@ const CreateWorkerModal = (props) => {
     if (selectedTurn) {
       api
         .get(`/turns/${selectedTurn?.value}`)
-        .then((response) => {
-          console.log(response)
-          setSeeTurn(response.data)
-        })
+        .then((response) => setSeeTurn(response.data))
     }
   }, [selectedTurn])
 
@@ -575,9 +572,6 @@ const CreateWorkerModal = (props) => {
       "harmfull_exposition": harmfullExposition?.value,
       "has_experience_time": hasExperienceTime?.value,
     }
-
-    console.log(formData)
-    debugger
 
     api
       .post("/workers", formData)
@@ -818,8 +812,6 @@ const CreateWorkerModal = (props) => {
                 options={neighborhoodOptions}
                 onChange={(value) => {
                   if (value.__isNew__) {
-                    console.log(value, "novo")
-
                     api
                       .post("/news", { name: value.value })
                       .then((response) => {
@@ -998,8 +990,6 @@ const CreateWorkerModal = (props) => {
                 options={citiesOptions}
                 onChange={(value) => {
                   if (value.__isNew__) {
-                    console.log(value, "novo")
-
                     api
                       .post("/cities", { name: value.value })
                       .then((response) => {
@@ -1013,8 +1003,6 @@ const CreateWorkerModal = (props) => {
                       })
 
                   } else {
-                    console.log(value, "já existente")
-
                     setBirthcity(value)
                   }
                 }}

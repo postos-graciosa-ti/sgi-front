@@ -1,8 +1,9 @@
+import moment from "moment"
+import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Select from "react-select"
 import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
-import { useEffect } from "react"
 
 const Steps = () => {
   const navigate = useNavigate()
@@ -11,32 +12,18 @@ const Steps = () => {
 
   const setSelectedSubsidiarie = useUserSessionStore(state => state.setSelectedSubsidiarie)
 
-  // const workersFirstReview = useWorkersExperienceTimeStore(state => state.workersFirstReview)
+  const [workersWithoutFirstReview, setWorkersWithoutFirstReview] = useState()
 
-  // const setWorkersFirstReview = useWorkersExperienceTimeStore(state => state.setWorkersFirstReview)
-
-  // const workersSecondReview = useWorkersExperienceTimeStore(state => state.workersSecondReview)
-
-  // const setWorkersSecondReview = useWorkersExperienceTimeStore(state => state.setWorkersSecondReview)
+  const [workersWithoutSecondReview, setWorkersWithoutSecondReview] = useState()
 
   useEffect(() => {
-    let allSubsidiariesIds = [1, 2, 3, 4, 5, 6]
+    api
+      .post("/subsidiaries/workers/experience-time-no-first-review", { subsidiaries_ids: eval(userSession.subsidiaries_id) })
+      .then((response) => setWorkersWithoutFirstReview(response.data))
 
-    allSubsidiariesIds?.map((subsidiarieId) => {
-      api
-        .get(`/subsidiaries/${subsidiarieId}/workers/experience-time-no-first-review`)
-        .then((response) => {
-          console.log(response.data)
-        })
-    })
-
-    // api
-    //   .get(`/subsidiaries/${selectedSubsidiarie?.value}/workers/experience-time-no-first-review`)
-    //   .then((response) => setWorkersFirstReview(response?.data))
-
-    // api
-    //   .get(`/subsidiaries/${selectedSubsidiarie?.value}/workers/experience-time-no-second-review`)
-    //   .then((response) => setWorkersSecondReview(response?.data))
+    api
+      .post("/subsidiaries/workers/experience-time-no-second-review", { subsidiaries_ids: eval(userSession.subsidiaries_id) })
+      .then((response) => setWorkersWithoutSecondReview(response.data))
   }, [])
 
   const handleSubmit = () => {
@@ -53,7 +40,7 @@ const Steps = () => {
         </div>
 
         <h1 className="mt-3">
-          Selecione sua filial
+          Selecione sua filial para prosseguir
         </h1>
 
         <div className="mt-3">
@@ -70,57 +57,37 @@ const Steps = () => {
           </button>
         </div>
 
-        {/* {
-          workersFirstReview.length > 0 && (
-            <div className="container">
-              {
-                workersFirstReview.length > 0 && (
-                  <div><h5>Funcionários que vão expirar o tempo de experiência (1° período)</h5></div>
-                )
-              }
+        {
+          workersWithoutFirstReview.length > 0 && (
+            <>
+              <h4 className="mt-5">Colaboradores sem primeira avaliação de tempo de experiência</h4>
 
-              <div className="d-inline-flex">
-                {
-                  workersFirstReview && (
-                    workersFirstReview.map((worker) => (
-                      <div>
-                        <div className="alert alert-danger me-1">
-                          {worker.name} ({moment(worker.first_review_date).format("DD-MM-YYYY")})
-                        </div>
-                      </div>
-                    ))
-                  )
-                }
-              </div>
-            </div>
+              {
+                workersWithoutFirstReview?.map((data) => (
+                  <div className="alert alert-warning" key={data.worker_id}>
+                    Colaborador {data.worker_name} da filial {data.subsidiarie_name}, admitido em {moment(data.worker_admission_date).format("DD/MM/YYYY")}, tem sua segunda avaliação de tempo de experiência em {moment(data.worker_second_review_date).format("DD/MM/YYYY")}
+                  </div>
+                ))
+              }
+            </>
           )
         }
 
         {
-          workersSecondReview.length > 0 && (
-            <div className="container">
-              {
-                workersSecondReview.length > 0 && (
-                  <div><h5>Funcionários que vão expirar o tempo de experiência (2° período)</h5></div>
-                )
-              }
+          workersWithoutSecondReview.length > 0 && (
+            <>
+              <h4 className="mt-5">Colaboradores sem segunda avaliação de tempo de experiência</h4>
 
-              <div className="d-inline-flex">
-                {
-                  workersSecondReview && (
-                    workersSecondReview.map((worker) => (
-                      <div>
-                        <div className="alert alert-danger me-1">
-                          {worker.name} ({moment(worker.second_review_date).format("DD-MM-YYYY")})
-                        </div>
-                      </div>
-                    ))
-                  )
-                }
-              </div>
-            </div>
+              {
+                workersWithoutSecondReview?.map((data) => (
+                  <div className="alert alert-warning" key={data.worker_id}>
+                    Colaborador {data.worker_name} da filial {data.subsidiarie_name}, admitido em {moment(data.worker_admission_date).format("DD/MM/YYYY")}, tem sua segunda avaliação de tempo de experiência em {moment(data.worker_second_review_date).format("DD/MM/YYYY")}
+                  </div>
+                ))
+              }
+            </>
           )
-        } */}
+        }
       </div>
     </>
   )

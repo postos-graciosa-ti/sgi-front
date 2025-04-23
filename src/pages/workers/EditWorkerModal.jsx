@@ -5,6 +5,8 @@ import { Plus, Printer, Trash } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactDOMServer from 'react-dom/server'
+import ReactInputMask from 'react-input-mask'
+import CreatableSelect from 'react-select/creatable'
 import Input from '../../components/form/Input'
 import Select from "../../components/form/Select"
 import useUserSessionStore from '../../data/userSession'
@@ -27,9 +29,6 @@ import getParentsType from '../../requests/parentsType/getParentsType'
 import postWorkersParents from '../../requests/workersParents/postWorkersParents'
 import api from '../../services/api'
 import WorkerDataPrintContent from './WorkerDataPrintContent'
-import MaskedInput from "../../components/form/MaskedInput"
-import ReactInputMask from 'react-input-mask'
-import CreatableSelect from 'react-select/creatable'
 
 const EditWorkerModal = (props) => {
   const {
@@ -650,7 +649,7 @@ const EditWorkerModal = (props) => {
       "enterprise_time": enterpriseTime || selectedWorker?.enterprise_time,
       "early_payment": earlyPayment?.value || selectedWorker?.early_payment,
       "harmfull_exposition": harmfullExposition?.value || selectedWorker?.harmfull_exposition,
-      "has_experience_time": selectedHasExperienceTime.value
+      "has_experience_time": selectedHasExperienceTime?.value || selectedWorker?.has_experience_time
     }
 
     api
@@ -679,6 +678,8 @@ const EditWorkerModal = (props) => {
         })
       })
   }
+
+  console.log(selectedWorker)
 
   return (
     <Modal
@@ -737,14 +738,8 @@ const EditWorkerModal = (props) => {
 
         <div className="row">
           <div className="col">
-            {/* <Input
-              label={"Número de emergência"}
-              type="text"
-              setSelectedValue={setEmergencyNumber}
-              defaultValue={selectedWorker?.emergency_number}
-            /> */}
-
             <label><b>Número de emergência</b></label>
+
             <ReactInputMask
               mask={"(99) 99999-9999"}
               className="form-control"
@@ -785,72 +780,6 @@ const EditWorkerModal = (props) => {
           <h4>Endereço residencial</h4>
         </div>
 
-        {/* <div className="row">
-          <div className="col">
-            <Input
-              type="text"
-              label={"Logradouro"}
-              setSelectedValue={setStreet}
-              defaultValue={selectedWorker?.street}
-            />
-
-            <Input
-              type="text"
-              label={"CEP"}
-              setSelectedValue={setSelectedCep}
-              defaultValue={selectedWorker?.cep}
-            />
-          </div>
-
-          <div className="col">
-            <Input
-              type="text"
-              label={"Número"}
-              setSelectedValue={setStreetNumber}
-              defaultValue={selectedWorker?.street_number}
-            />
-
-            <Select
-              placeholder=""
-              label={"Estado"}
-              options={statesOptions}
-              setSelectedValue={setSelectedState}
-              defaultValue={statesOptions?.find((option) => option.value == selectedWorker?.state?.id)}
-            />
-          </div>
-
-          <div className="col">
-            <Input
-              type="text"
-              label={"Complemento"}
-              setSelectedValue={setStreetComplement}
-              defaultValue={selectedWorker?.street_complement}
-            />
-
-            <div className="row">
-              <div className="col">
-                <Select
-                  placeholder=""
-                  label={"Cidade"}
-                  options={citiesOptions}
-                  setSelectedValue={setSelectedCity}
-                  defaultValue={citiesOptions?.find((option) => option.value == selectedWorker?.city?.id)}
-                />
-              </div>
-
-              <div className="col">
-                <Select
-                  label={"Bairro"}
-                  placeholder=""
-                  options={neighborhoodOptions}
-                  setSelectedValue={setSelectedNeighborhood}
-                  defaultValue={neighborhoodOptions?.find((option) => option.value == selectedWorker?.neighborhood?.id)}
-                />
-              </div>
-            </div>
-          </div>
-        </div> */}
-
         <div className="row">
           <div className="col">
             <Input
@@ -892,6 +821,7 @@ const EditWorkerModal = (props) => {
 
           <div className="col">
             <label><b>Cidade</b></label>
+
             <input
               className="form-control"
               disabled={"true"}
@@ -900,14 +830,6 @@ const EditWorkerModal = (props) => {
           </div>
 
           <div className="col">
-            {/* <Select
-              label={"Bairro"}
-              placeholder=""
-              options={neighborhoodOptions}
-              setSelectedValue={setSelectedNeighborhood}
-              defaultValue={neighborhoodOptions?.find((option) => option.value == selectedWorker?.neighborhood?.id)}
-            /> */}
-
             <label><b>Bairro</b></label>
 
             <CreatableSelect
@@ -941,95 +863,8 @@ const EditWorkerModal = (props) => {
           <h4>Dados pessoais</h4>
         </div>
 
-        {/* <div className="row">
-          <div className="col">
-            <div className="row">
-              <div className="col">
-                <Input
-                  type="text"
-                  label={"Telefone fixo"}
-                  setSelectedValue={setSelectedPhone}
-                  defaultValue={selectedWorker?.phone}
-                />
-              </div>
-
-              <div className="col">
-                <Input
-                  type="text"
-                  label={"Celular"}
-                  setSelectedValue={setSelectedMobile}
-                  defaultValue={selectedWorker?.mobile}
-                />
-              </div>
-            </div>
-
-            <Input
-              type="date"
-              setSelectedValue={setBirthdate}
-              label={"Data de nascimento"}
-              defaultValue={selectedWorker?.birthdate}
-            />
-          </div>
-
-          <div className="col">
-            <Input
-              type="email"
-              label={"E-mail"}
-              setSelectedValue={setEmail}
-              defaultValue={selectedWorker?.email}
-            />
-
-            <Select
-              label={"Nacionalidade"}
-              placeholder=""
-              options={nationalityOptions}
-              setSelectedValue={setSelectedNationality}
-              defaultValue={nationalityOptions?.find((option) => option.value == selectedWorker?.nationality?.id)}
-            />
-          </div>
-
-          <div className="col">
-            <Select
-              label={"Etnia"}
-              placeholder=""
-              options={ethnicitiesOptions}
-              setSelectedValue={setSelectedEthnicity}
-              defaultValue={ethnicitiesOptions?.find((option) => option.value == selectedWorker?.ethnicity?.id)}
-            />
-
-            <div className="row">
-              <div className="col">
-                <Select
-                  placeholder=""
-                  label={"Estado"}
-                  options={statesOptions}
-                  setSelectedValue={setSelectedState}
-                  defaultValue={statesOptions?.find((option) => option.value == selectedWorker?.state?.id)}
-                />
-              </div>
-
-              <div className="col">
-                <Select
-                  placeholder=""
-                  label={"Cidade"}
-                  options={citiesOptions}
-                  setSelectedValue={setSelectedCity}
-                  defaultValue={citiesOptions?.find((option) => option.value == selectedWorker?.city?.id)}
-                />
-              </div>
-            </div>
-          </div>
-        </div> */}
-
         <div className="row">
           <div className="col">
-            {/* <Input
-              type="text"
-              label={"Telefone fixo"}
-              setSelectedValue={setSelectedPhone}
-              defaultValue={selectedWorker?.phone}
-            /> */}
-
             <label><b>Telefone fixo</b></label>
             <ReactInputMask
               mask={"(99) 99999-9999"}
@@ -1040,14 +875,8 @@ const EditWorkerModal = (props) => {
           </div>
 
           <div className="col">
-            {/* <Input
-              type="text"
-              label={"Celular"}
-              setSelectedValue={setSelectedMobile}
-              defaultValue={selectedWorker?.mobile}
-            /> */}
-
             <label><b>Celular</b></label>
+
             <ReactInputMask
               mask={"(99) 99999-9999"}
               className="form-control"
@@ -1087,31 +916,20 @@ const EditWorkerModal = (props) => {
           </div>
 
           <div className="col">
-            {/* <label><b>Estado</b></label>
-            <input
-              className="form-control"
-              disabled={"true"}
-              value={birthState?.name}
-            /> */}
-
             <label><b>Estado</b></label>
-
             <input
               className="form-control"
-              value={statesOptions?.find((option) => option.value == selectedWorker?.birthcity?.state_id)?.label}
-              disabled={true}
+              value={
+                statesOptions?.find(
+                  (option) => option.value === selectedWorker?.birthcity?.state_id
+                )?.label || ''
+              }
+              disabled
+              readOnly
             />
           </div>
 
           <div className="col">
-            {/* <Select
-              placeholder=""
-              label={"Cidade"}
-              options={citiesOptions}
-              setSelectedValue={setSelectedCity}
-              defaultValue={citiesOptions?.find((option) => option.value == selectedWorker?.birthcity?.id)}
-            /> */}
-
             <label><b>Cidade</b></label>
 
             <CreatableSelect
@@ -1136,6 +954,7 @@ const EditWorkerModal = (props) => {
                   setBirthcity(value)
                 }
               }}
+              defaultValue={citiesOptions?.find((option) => option.value == selectedWorker?.birthcity?.id)}
             />
           </div>
         </div>
@@ -1798,16 +1617,6 @@ const EditWorkerModal = (props) => {
                       value={"30 dias"}
                     />
                   </div>
-
-                  <div className="col">
-                    <label><b>Data final do primeiro período</b></label>
-                    <input
-                      type="date"
-                      className="form-control"
-                      disabled={true}
-                      value={moment(selectedWorker?.admission_date).add(30, 'days').format('YYYY-MM-DD')}
-                    />
-                  </div>
                 </div>
 
                 <div className="row mt-2">
@@ -1818,16 +1627,6 @@ const EditWorkerModal = (props) => {
                       className="form-control"
                       disabled={true}
                       value={"60 dias"}
-                    />
-                  </div>
-
-                  <div className="col">
-                    <label><b>Data final do segundo período</b></label>
-                    <input
-                      type="date"
-                      className="form-control"
-                      disabled={true}
-                      value={moment(selectedWorker?.admission_date).add(60, 'days').format('YYYY-MM-DD')}
                     />
                   </div>
                 </div>

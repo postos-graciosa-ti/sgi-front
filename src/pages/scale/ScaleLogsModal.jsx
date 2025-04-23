@@ -32,7 +32,7 @@ const ScaleLogsModal = (props) => {
       fullscreen={true}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Logs de escala</Modal.Title>
+        <Modal.Title>Histórico de alterações de escala</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>

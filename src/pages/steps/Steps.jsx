@@ -19,7 +19,11 @@ const Steps = () => {
   useEffect(() => {
     api
       .post("/subsidiaries/workers/experience-time-no-first-review", { subsidiaries_ids: eval(userSession.subsidiaries_id) })
-      .then((response) => setWorkersWithoutFirstReview(response.data))
+      .then((response) => {
+        console.log(response.data)
+        
+        setWorkersWithoutFirstReview(response.data)
+      })
 
     api
       .post("/subsidiaries/workers/experience-time-no-second-review", { subsidiaries_ids: eval(userSession.subsidiaries_id) })

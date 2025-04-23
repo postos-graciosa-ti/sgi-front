@@ -1,6 +1,8 @@
 import moment from "moment"
 
-const HollidayScalePrintContent = ({ workersScale, selectedHolliday, onDuty, subsidiarieData, userSession, webAdress }) => {
+const HollidayScalePrintContent = ({ workersScale, selectedHolliday, onDuty, subsidiarieData, userSession, webAdress, working }) => {
+  console.log(working)
+
   return (
     <>
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -19,6 +21,8 @@ const HollidayScalePrintContent = ({ workersScale, selectedHolliday, onDuty, sub
         <thead>
           <tr>
             <th>Funcionários de folga</th>
+
+            <th>Assinatura</th>
           </tr>
         </thead>
 
@@ -27,6 +31,30 @@ const HollidayScalePrintContent = ({ workersScale, selectedHolliday, onDuty, sub
             workersScale?.map((scale) => (
               <tr>
                 <td>{scale?.worker?.name}</td>
+
+                <td>____________________________________________________________</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Funcionários trabalhando</th>
+
+            <th>Assinatura</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {
+            working?.map((worker) => (
+              <tr>
+                <td>{worker.worker_name}</td>
+
+                <td>____________________________________________________________</td>
               </tr>
             ))
           }
@@ -36,16 +64,6 @@ const HollidayScalePrintContent = ({ workersScale, selectedHolliday, onDuty, sub
       <h4>Plantão</h4>
 
       {onDuty}
-
-      <h4>Assinaturas</h4>
-
-      {
-        workersScale?.map((scale) => (
-          <div style={{ "marginBottom": "18px" }}>
-            {scale?.worker?.name} ____________________________________________________________
-          </div>
-        ))
-      }
 
       <div style={{ bottom: "0", position: "fixed", left: "0" }}>
         Documento gerado por <strong>{userSession?.name}</strong> em {moment().format('DD-MM-YYYY')} às {moment().format('HH:mm')} via <strong>{webAdress}</strong>

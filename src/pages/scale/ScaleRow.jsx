@@ -25,23 +25,6 @@ const ScaleRow = ({
     return days[weekday] || "";
   };
 
-  const handleDelete = (scaleId) => {
-    api.delete(`/scales/${scaleId}/subsidiaries/${selectedSubsdiarie.value}`)
-      .then(() => {
-        api.get(`/scales/subsidiaries/${selectedSubsdiarie.value}`)
-          .then((response) => setScalesList(response.data));
-
-        setDaysOff([]);
-
-        api.get(`/scales/subsidiaries/${selectedSubsdiarie.value}/workers/${selectedWorker.value}`)
-          .then((response) => {
-            const scales = response.data;
-            const options = scales.days_off?.map((scale) => scale.date) || [];
-            setDaysOff(options);
-          });
-      });
-  };
-
   const renderScaleRows = () => {
     const filteredScales = scalesList.filter((scale) => scale.worker.function.id === functionId);
 
@@ -89,19 +72,6 @@ const ScaleRow = ({
             ))}
           </div>
         </td>
-
-        <td>
-          <div className="d-inline-flex">
-            <button
-              id="delete-scale"
-              className="btn btn-danger mt-2 me-2"
-              onClick={() => handleDelete(scale.id)}
-              title="Excluir escala"
-            >
-              <Trash />
-            </button>
-          </div>
-        </td>
       </tr>
     ));
   };
@@ -118,7 +88,6 @@ const ScaleRow = ({
                 <th>Colaborador</th>
                 <th>Dias de trabalho</th>
                 <th>Dias de folga</th>
-                <th></th>
               </tr>
             </thead>
 

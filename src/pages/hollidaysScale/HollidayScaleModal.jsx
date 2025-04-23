@@ -107,26 +107,33 @@ const HollidayScaleModal = (props) => {
               .then((response) => {
                 let coordinatorData = response?.data
 
-                const onDuty = managerData
-                  ? `${managerData.name} (Gerente - ${managerData.phone}) / ${coordinatorData.name} (Coordenador - ${coordinatorData.phone})`
-                  : `${coordinatorData.name} (Coordenador - ${coordinatorData.phone})`
+                api
+                  .get(`/workers/subsidiarie/${selectedSubsidiarie?.value}`)
+                  .then((response) => {
+                    let working = response.data
 
-                const printableContent = ReactDOMServer.renderToString(
-                  <HollidayScalePrintContent
-                    workersScale={workersScale}
-                    selectedHolliday={selectedHolliday}
-                    onDuty={onDuty}
-                    subsidiarieData={subsidiarieData}
-                    userSession={userSession}
-                    webAdress={webAdress}
-                  />
-                )
+                    const onDuty = managerData
+                      ? `${managerData.name} (Gerente - ${managerData.phone}) / ${coordinatorData.name} (Coordenador - ${coordinatorData.phone})`
+                      : `${coordinatorData.name} (Coordenador - ${coordinatorData.phone})`
 
-                printJS({
-                  printable: printableContent,
-                  type: 'raw-html',
-                  header: null
-                })
+                    const printableContent = ReactDOMServer.renderToString(
+                      <HollidayScalePrintContent
+                        workersScale={workersScale}
+                        selectedHolliday={selectedHolliday}
+                        onDuty={onDuty}
+                        subsidiarieData={subsidiarieData}
+                        userSession={userSession}
+                        webAdress={webAdress}
+                        working={working}
+                      />
+                    )
+
+                    printJS({
+                      printable: printableContent,
+                      type: 'raw-html',
+                      header: null
+                    })
+                  })
               })
           })
       })

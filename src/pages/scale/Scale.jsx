@@ -186,6 +186,16 @@ const Scale = () => {
     if (view == "month") {
       let isDayOff = daysOff.some((dayOff) => dayOff == moment(date).format("DD-MM-YYYY"))
 
+      const now = moment().startOf("day");
+
+      const tileDate = moment(date).startOf("day");
+
+      const isPastDate = tileDate.isBefore(now);
+
+      if (isPastDate && isDayOff) {
+        return "bg-bloodred text-white"
+      }
+
       return isDayOff && 'bg-danger text-white' || null
     }
 
@@ -439,6 +449,12 @@ const Scale = () => {
   }
 
   const handleTileDisabled = ({ date }) => {
+    const now = moment().startOf("day");
+
+    const tileDate = moment(date).startOf("day");
+
+    const isPastDate = tileDate.isBefore(now);
+
     const isCaixaFunction = selectedFunction?.value == caixasId?.id
 
     const dayOfWeek = moment(date).format("dddd")
@@ -452,6 +468,8 @@ const Scale = () => {
     if (isCaixaFunction && selectedSubsdiarie.value !== 2 && selectedSubsdiarie.value !== 3) {
       return !(dayOfWeek === "Tuesday" || dayOfWeek === "Wednesday");
     }
+
+    if (isPastDate) return true
 
     return false
   }
@@ -570,14 +588,6 @@ const Scale = () => {
           >
             Relatório de dias de folga
           </button>
-
-          {/* <button
-            id="hollidays-button"
-            className="btn btn-primary"
-            onClick={() => setHollidaysModalOpen(true)}
-          >
-            Feriados
-          </button> */}
         </div>
 
         <ScaleRow
@@ -742,6 +752,12 @@ const Scale = () => {
 
             .bg-danger.text-white {
               background: #dc3545 !important;
+              color: white !important;
+              font-weight: bold;
+            }
+
+            .bg-bloodred.text-white {
+              background: #800000 !important;
               color: white !important;
               font-weight: bold;
             }

@@ -29,6 +29,7 @@ import api from '../../services/api'
 import WorkerDataPrintContent from './WorkerDataPrintContent'
 import MaskedInput from "../../components/form/MaskedInput"
 import ReactInputMask from 'react-input-mask'
+import CreatableSelect from 'react-select/creatable'
 
 const EditWorkerModal = (props) => {
   const {
@@ -899,13 +900,40 @@ const EditWorkerModal = (props) => {
           </div>
 
           <div className="col">
-            <Select
+            {/* <Select
               label={"Bairro"}
               placeholder=""
               options={neighborhoodOptions}
               setSelectedValue={setSelectedNeighborhood}
               defaultValue={neighborhoodOptions?.find((option) => option.value == selectedWorker?.neighborhood?.id)}
+            /> */}
+
+            <label><b>Bairro</b></label>
+
+            <CreatableSelect
+              placeholder={""}
+              options={neighborhoodOptions}
+              onChange={(value) => {
+                if (value.__isNew__) {
+                  api
+                    .post("/news", { name: value.value })
+                    .then((response) => {
+                      let options = response?.data.map((neighborhood) => ({ value: neighborhood.id, label: neighborhood.name, cityId: neighborhood.city_id }))
+
+                      setNeighborhoodOptions(options)
+
+                      let neighborhood = options.find((option) => option.label == value.value)
+
+                      setSelectedNeighborhood(neighborhood)
+                    })
+
+                } else {
+                  setSelectedNeighborhood(value)
+                }
+              }}
+              defaultValue={neighborhoodOptions?.find((option) => option.value == selectedWorker?.neighborhood?.id)}
             />
+
           </div>
         </div>
 
@@ -1076,12 +1104,38 @@ const EditWorkerModal = (props) => {
           </div>
 
           <div className="col">
-            <Select
+            {/* <Select
               placeholder=""
               label={"Cidade"}
               options={citiesOptions}
               setSelectedValue={setSelectedCity}
               defaultValue={citiesOptions?.find((option) => option.value == selectedWorker?.birthcity?.id)}
+            /> */}
+
+            <label><b>Cidade</b></label>
+
+            <CreatableSelect
+              placeholder={""}
+              options={citiesOptions}
+              onChange={(value) => {
+                if (value.__isNew__) {
+                  api
+                    .post("/cities", { name: value.value })
+                    .then((response) => {
+                      console.log(response)
+                      let options = response?.data.map((city) => ({ value: city.id, label: city.name, stateId: city.state_id }))
+
+                      setCitiesOptions(options)
+
+                      let selectedBirthcity = options.find((option) => option.label == value.value)
+
+                      setBirthcity(selectedBirthcity)
+                    })
+
+                } else {
+                  setBirthcity(value)
+                }
+              }}
             />
           </div>
         </div>
@@ -1558,13 +1612,61 @@ const EditWorkerModal = (props) => {
           </div>
 
           <div className="col">
-            <label><b>Semana do turno</b></label>
 
-            <input
-              className="form-control"
-              disabled={"true"}
-              value={seeTurn?.week}
-            />
+            <div className="row">
+              <div className="col">
+                <label><b>Semana do turno</b></label>
+
+                <input
+                  className="form-control"
+                  disabled={"true"}
+                  value={seeTurn?.week}
+                />
+              </div>
+
+              <div className="col">
+                <label><b>Início de turno</b></label>
+
+                <input
+                  className="form-control"
+                  disabled={"true"}
+                  value={seeTurn?.start_time}
+                />
+              </div>
+
+              <div className="col">
+                <label><b>Início de intervalo</b></label>
+
+                <input
+                  className="form-control"
+                  disabled={"true"}
+                  value={seeTurn?.start_interval_time}
+                />
+              </div>
+
+              <div className="col">
+                <label><b>Fim de intervalo</b></label>
+
+                <input
+                  type="text"
+                  className="form-control"
+                  disabled={"true"}
+                  value={seeTurn?.end_interval_time || ""}
+                />
+              </div>
+
+              <div className="col">
+                <label><b>Fim de turno</b></label>
+
+                <input
+                  type="text"
+                  className="form-control"
+                  disabled={"true"}
+                  value={seeTurn?.end_time || ""}
+                />
+              </div>
+            </div>
+
           </div>
         </div>
 

@@ -270,18 +270,18 @@ const Nav = () => {
       </div>
 
       {
-        workersFirstReview.length > 0 && (
+        workersFirstReview?.workers?.length > 0 && (
           <div className="container">
             {
-              workersFirstReview.length > 0 && (
-                <div><h5>Funcionários que vão expirar o tempo de experiência (1° período)</h5></div>
+              workersFirstReview?.workers?.length > 0 && (
+                <div><h5>Funcionários que vão expirar o tempo de experiência (1° período) entre {moment(workersFirstReview.start_of_week).format("DD/MM/YYYY")} e {moment(workersFirstReview.end_of_week).format("DD/MM/YYYY")}</h5></div>
               )
             }
 
             <div className="d-inline-flex">
               {
                 workersFirstReview && (
-                  workersFirstReview.map((worker) => (
+                  workersFirstReview?.workers?.map((worker) => (
                     <div>
                       <div className="alert alert-danger me-1">
                         {worker.name} ({moment(worker.first_review_date).format("DD-MM-YYYY")})
@@ -296,18 +296,18 @@ const Nav = () => {
       }
 
       {
-        workersSecondReview.length > 0 && (
+        workersSecondReview?.workers?.length > 0 && (
           <div className="container">
             {
-              workersSecondReview.length > 0 && (
-                <div><h5>Funcionários que vão expirar o tempo de experiência (2° período)</h5></div>
+              workersSecondReview?.workers?.length > 0 && (
+                <div><h5>Funcionários que vão expirar o tempo de experiência (2° período) entre {moment(workersSecondReview.start_of_week).format("DD/MM/YYYY")} e {moment(workersSecondReview.end_of_week).format("DD/MM/YYYY")}</h5></div>
               )
             }
 
             <div className="d-inline-flex">
               {
                 workersSecondReview && (
-                  workersSecondReview.map((worker) => (
+                  workersSecondReview?.workers?.map((worker) => (
                     <div>
                       <div className="alert alert-danger me-1">
                         {worker.name} ({moment(worker.second_review_date).format("DD-MM-YYYY")})

@@ -12,18 +12,20 @@ const Steps = () => {
 
   const setSelectedSubsidiarie = useUserSessionStore(state => state.setSelectedSubsidiarie)
 
+  const [workersAwayEndDate, setWorkersAwayEndDate] = useState()
+
   const [workersWithoutFirstReview, setWorkersWithoutFirstReview] = useState()
 
   const [workersWithoutSecondReview, setWorkersWithoutSecondReview] = useState()
 
   useEffect(() => {
     api
+      .post(`/subsidiaries/away-workers`, { subsidiaries_ids: eval(userSession.subsidiaries_id) })
+      .then((response) => setWorkersAwayEndDate(response.data))
+
+    api
       .post("/subsidiaries/workers/experience-time-no-first-review", { subsidiaries_ids: eval(userSession.subsidiaries_id) })
-      .then((response) => {
-        console.log(response.data)
-        
-        setWorkersWithoutFirstReview(response.data)
-      })
+      .then((response) => setWorkersWithoutFirstReview(response.data))
 
     api
       .post("/subsidiaries/workers/experience-time-no-second-review", { subsidiaries_ids: eval(userSession.subsidiaries_id) })
@@ -62,14 +64,26 @@ const Steps = () => {
         </div>
 
         {
-          workersWithoutFirstReview?.length > 0 && (
+          ((
+            (workersAwayEndDate?.workers?.length > 0) ||
+            (workersWithoutFirstReview?.length > 0) ||
+            (workersWithoutSecondReview?.length > 0)
+          ) && (
+              <div className="mt-5">
+                <h4>Notificações</h4>
+              </div>
+            ))
+        }
+
+        {
+          workersAwayEndDate?.workers?.length > 0 && (
             <>
-              <h4 className="mt-5">Colaboradores sem primeira avaliação de tempo de experiência</h4>
+              <h4>Colaboradores afastados que retornam entre {moment(workersAwayEndDate?.start_of_week).format("DD/MM/YYYY")} e {moment(workersAwayEndDate?.end_of_week).format("DD/MM/YYYY")}</h4>
 
               {
-                workersWithoutFirstReview?.map((data) => (
-                  <div className="alert alert-warning" key={data.worker_id}>
-                    Colaborador {data.worker_name} da filial {data.subsidiarie_name}, admitido em {moment(data.worker_admission_date).format("DD/MM/YYYY")}, tem sua segunda avaliação de tempo de experiência em {moment(data.worker_second_review_date).format("DD/MM/YYYY")}
+                workersAwayEndDate?.workers?.map((worker) => (
+                  <div className="alert alert-warning">
+                    {worker.name} deve retornar em {moment(worker.away_end_date).format("DD/MM/YYYY")}
                   </div>
                 ))
               }
@@ -78,12 +92,28 @@ const Steps = () => {
         }
 
         {
-          workersWithoutSecondReview?.length > 0 && (
+          workersWithoutFirstReview?.workers?.length > 0 && (
             <>
-              <h4 className="mt-5">Colaboradores sem segunda avaliação de tempo de experiência</h4>
+              <h4>Colaboradores com avaliação de primeiro período de experiência entre {moment(workersWithoutFirstReview.start_of_week).format("DD/MM/YYYY")} e {moment(workersWithoutFirstReview.end_of_week).format("DD/MM/YYYY")}</h4>
 
               {
-                workersWithoutSecondReview?.map((data) => (
+                workersWithoutFirstReview?.workers?.map((data) => (
+                  <div className="alert alert-warning" key={data.worker_id}>
+                    Colaborador {data.worker_name} da filial {data.subsidiarie_name}, admitido em {moment(data.worker_admission_date).format("DD/MM/YYYY")}, tem sua primeira avaliação de tempo de experiência em {moment(data.worker_second_review_date).format("DD/MM/YYYY")}
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
+
+        {
+          workersWithoutSecondReview?.workers?.length > 0 && (
+            <>
+              <h4>Colaboradores com avaliação de segundo período de experiência entre {moment(workersWithoutSecondReview.start_of_week).format("DD/MM/YYYY")} e {moment(workersWithoutSecondReview.end_of_week).format("DD/MM/YYYY")}</h4>
+
+              {
+                workersWithoutSecondReview?.workers?.map((data) => (
                   <div className="alert alert-warning" key={data.worker_id}>
                     Colaborador {data.worker_name} da filial {data.subsidiarie_name}, admitido em {moment(data.worker_admission_date).format("DD/MM/YYYY")}, tem sua segunda avaliação de tempo de experiência em {moment(data.worker_second_review_date).format("DD/MM/YYYY")}
                   </div>
@@ -93,6 +123,7 @@ const Steps = () => {
           )
         }
       </div>
+      {/* </div> */}
     </>
   )
 }

@@ -24,6 +24,7 @@ import postWorkersParents from '../../requests/workersParents/postWorkersParents
 import api from '../../services/api'
 import ReactInputMask from 'react-input-mask'
 import CreatableSelect from 'react-select/creatable'
+import axios from 'axios'
 
 const CreateWorkerModal = (props) => {
   const {
@@ -1774,6 +1775,33 @@ const CreateWorkerModal = (props) => {
                 setSelectedValue={setHarmfullExposition}
               />
             </div>
+          </div>
+
+          <div>
+            <input
+              type="file"
+              className="form-control"
+              onChange={(e) => {
+                let file = e.target.files[0]
+
+                console.log(file)
+
+                axios
+                  .post(`http://localhost:8000/upload-pdf/1`,
+                    {
+                      "file": file
+                    },
+                    {
+                      headers: {
+                        'Content-Type': 'multipart/form-data',
+                      },
+                    }
+                  )
+                  .then((response) => {
+                    console.log(response)
+                  })
+              }}
+            />
           </div>
         </Modal.Body>
 

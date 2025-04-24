@@ -679,8 +679,6 @@ const EditWorkerModal = (props) => {
       })
   }
 
-  console.log(selectedWorker)
-
   return (
     <Modal
       show={editWorkerModalOpen}
@@ -940,7 +938,6 @@ const EditWorkerModal = (props) => {
                   api
                     .post("/cities", { name: value.value })
                     .then((response) => {
-                      console.log(response)
                       let options = response?.data.map((city) => ({ value: city.id, label: city.name, stateId: city.state_id }))
 
                       setCitiesOptions(options)
@@ -1493,7 +1490,7 @@ const EditWorkerModal = (props) => {
           <div className="col">
             <Input
               label="Data de última função"
-              type="date"
+              type="text"
               setSelectedValue={setLastFunctionDate}
               defaultValue={selectedWorker?.last_function_date}
             />

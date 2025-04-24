@@ -573,15 +573,9 @@ const CreateWorkerModal = (props) => {
       "has_experience_time": hasExperienceTime?.value,
     }
 
-    console.log(formData)
-    debugger
-
     api
       .post("/workers", formData)
       .then((response) => {
-        console.log(response)
-        debugger
-        
         let newWorkerData = response?.data
 
         if (response.status == 200 && parentsData) {

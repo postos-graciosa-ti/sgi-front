@@ -1,8 +1,6 @@
 import moment from "moment"
 
 const HollidayScalePrintContent = ({ workersScale, selectedHolliday, onDuty, subsidiarieData, userSession, webAdress, working }) => {
-  console.log(working)
-
   return (
     <>
       <div style={{ display: 'flex', alignItems: 'center' }}>

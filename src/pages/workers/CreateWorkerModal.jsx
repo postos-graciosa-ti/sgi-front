@@ -1,6 +1,6 @@
 import moment from 'moment'
 import { useEffect, useState } from 'react'
-import { Plus } from 'react-bootstrap-icons'
+import { Plus, Trash } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Input from '../../components/form/Input'
@@ -24,6 +24,7 @@ import postWorkersParents from '../../requests/workersParents/postWorkersParents
 import api from '../../services/api'
 import ReactInputMask from 'react-input-mask'
 import CreatableSelect from 'react-select/creatable'
+import axios from 'axios'
 
 const CreateWorkerModal = (props) => {
   const {
@@ -284,6 +285,12 @@ const CreateWorkerModal = (props) => {
 
   const [hasExperienceTime, setHasExperienceTime] = useState(false)
 
+  const [doc, setDoc] = useState()
+
+  const [docTitle, setDocTitle] = useState()
+
+  const [workersDocs, setWorkersDocs] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -446,6 +453,20 @@ const CreateWorkerModal = (props) => {
     setHasExperienceTime(false)
 
     setCreateWorkerModalOpen(false)
+
+    setDoc(null)
+
+    setDocTitle(null)
+
+    setWorkersDocs(null)
+  }
+
+  const handleRemoveWorkersParents = (i) => {
+    const updatedParentsData = [...parentsData]
+
+    updatedParentsData.splice(i, 1)
+
+    setParentsData(updatedParentsData)
   }
 
   const handleWorkersParents = () => {
@@ -473,18 +494,6 @@ const CreateWorkerModal = (props) => {
         }]
       }
     })
-
-    setSelectedParentsType()
-
-    setParentsName()
-
-    setParentsCpf()
-
-    setParentsDatebirth()
-
-    setParentsBooks()
-
-    setParentsPapers()
   }
 
   const handleSubmit = () => {
@@ -578,6 +587,27 @@ const CreateWorkerModal = (props) => {
       .then((response) => {
         let newWorkerData = response?.data
 
+        if (response.status == 200 && workersDocs) {
+          const promises = workersDocs.map((doc) => {
+            return axios
+              .post(`${import.meta.env.VITE_API_URL}/upload-pdf/${newWorkerData?.id}`,
+                {
+                  doc_title: doc.docTitle.label,
+                  file: doc.doc,
+                },
+                {
+                  headers: {
+                    'Content-Type': 'multipart/form-data',
+                  },
+                }
+              )
+          })
+
+          Promise.all(promises).then(() => {
+            handleClose()
+          })
+        }
+
         if (response.status == 200 && parentsData) {
           const promises = parentsData.map((parentData) => {
             let formData = {
@@ -600,6 +630,26 @@ const CreateWorkerModal = (props) => {
           handleClose()
         }
       })
+  }
+
+  const handleRemoveDoc = (i) => {
+    const updatedDocs = [...workersDocs]
+
+    updatedDocs.splice(i, 1)
+
+    setWorkersDocs(updatedDocs)
+  }
+
+  const handleOnchangeWorkersDocs = () => {
+    let workerDoc = { docTitle, doc }
+
+    setWorkersDocs((prevValue) => {
+      if (prevValue) {
+        return [...prevValue, workerDoc]
+      } else {
+        return [workerDoc]
+      }
+    })
   }
 
   return (
@@ -1305,15 +1355,30 @@ const CreateWorkerModal = (props) => {
           <h4>Dependentes</h4>
 
           {
-            parentsData?.map((parent) => (
-              <input
-                type="text"
-                className="form-control mb-2"
-                disabled="true"
-                value={
-                  `${parent.parentsType?.label} / ${parent?.parentsName} / ${parent.parentsCpf} / ${moment(parent.parentsDatebirth).format("DD/MM/YYYY")} / ${parent.parentsBooks && parent.parentsBooks || "Não"} / ${parent.parentsPapers && parent.parentsPapers || "Não"}`
-                }
-              />
+            parentsData?.map((parent, i) => (
+              <>
+                <div className="row">
+                  <div className="col-11">
+                    <input
+                      type="text"
+                      className="form-control mb-2"
+                      disabled="true"
+                      value={
+                        `${parent.parentsType?.label} / ${parent?.parentsName} / ${parent.parentsCpf} / ${moment(parent.parentsDatebirth).format("DD/MM/YYYY")} / ${parent.parentsBooks && parent.parentsBooks || "Não"} / ${parent.parentsPapers && parent.parentsPapers || "Não"}`
+                      }
+                    />
+                  </div>
+
+                  <div className="col-1">
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleRemoveWorkersParents(i)}
+                    >
+                      <Trash />
+                    </button>
+                  </div>
+                </div>
+              </>
             ))
           }
 
@@ -1330,7 +1395,7 @@ const CreateWorkerModal = (props) => {
                 </div>
 
                 <div className="col-1">
-                  <button className="btn btn-primary mt-4" onClick={handleWorkersParents}>
+                  <button className="btn btn-warning mt-4" onClick={handleWorkersParents}>
                     <Plus />
                   </button>
                 </div>
@@ -1774,6 +1839,74 @@ const CreateWorkerModal = (props) => {
                 setSelectedValue={setHarmfullExposition}
               />
             </div>
+          </div>
+
+          {
+            workersDocs && (
+              workersDocs.map((doc, i) => (
+                <div className="row">
+                  <div className="col-10">
+                    <input
+                      type="text"
+                      className="form-control mb-3"
+                      value={`${doc.docTitle.label} / ${doc.doc.name}`}
+                      disabled={"true"}
+                    />
+                  </div>
+
+                  <div className="col-2 text-center">
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleRemoveDoc(i)}
+                    >
+                      <Trash />
+                    </button>
+                  </div>
+                </div>
+              ))
+            )
+          }
+
+          <div className="row">
+            <div className="col-10">
+              <Select
+                label={"Título do documento"}
+                placeholder={""}
+                options={[
+                  { value: 1, label: "CTPS" },
+                  { value: 2, label: "Exame médico admissional" },
+                  { value: 3, label: "Identidade" },
+                  { value: 4, label: "CPF" },
+                  { value: 5, label: "Titulo eleitoral" },
+                  { value: 7, label: "Comprovante de residência" },
+                  { value: 8, label: "CNH" },
+                  { value: 9, label: "Certidão de casamento" },
+                  { value: 10, label: "Certificado de reservista" },
+                  { value: 11, label: "Certidão de nascimento (filhos menores de 14)" },
+                  { value: 12, label: "Carteira de vacinação (filhos menores de 5)" },
+                  { value: 13, label: "Comprovante de frequência escolar (filhos entre 7 e 14)" },
+                ]}
+                setSelectedValue={setDocTitle}
+              />
+            </div>
+
+            <div className="col-2 text-center">
+              <button
+                className="btn btn-warning mt-4"
+                title="Adicionar documento"
+                onClick={handleOnchangeWorkersDocs}
+              >
+                <Plus />
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <input
+              type="file"
+              className="form-control"
+              onChange={(e) => setDoc(e.target.files[0])}
+            />
           </div>
         </Modal.Body>
 

@@ -29,6 +29,7 @@ import getParentsType from '../../requests/parentsType/getParentsType'
 import postWorkersParents from '../../requests/workersParents/postWorkersParents'
 import api from '../../services/api'
 import WorkerDataPrintContent from './WorkerDataPrintContent'
+import axios from 'axios'
 
 const EditWorkerModal = (props) => {
   const {
@@ -299,6 +300,12 @@ const EditWorkerModal = (props) => {
       : null
   );
 
+  const [docTitle, setDocTitle] = useState()
+
+  const [doc, setDoc] = useState()
+
+  const [workersDocs, setWorkersDocs] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -535,6 +542,12 @@ const EditWorkerModal = (props) => {
     setSeeExperiencePeriods()
 
     setEditWorkerModalOpen(false)
+
+    setDoc(null)
+
+    setDocTitle(null)
+
+    setWorkersDocs(null)
   }
 
   const handleDeleteWorkerParents = (parent) => {
@@ -654,7 +667,28 @@ const EditWorkerModal = (props) => {
 
     api
       .put(`/workers/${selectedWorker.worker_id}`, formData)
-      .then(() => handleClose())
+      .then((response) => {
+        if (response.status == 200 && workersDocs) {
+          const promises = workersDocs.map((doc) => {
+            return axios
+              .post(`${import.meta.env.VITE_API_URL}/upload-pdf/${selectedWorker.worker_id}`,
+                {
+                  doc_title: doc.docTitle.label,
+                  file: doc.doc,
+                },
+                {
+                  headers: {
+                    'Content-Type': 'multipart/form-data',
+                  },
+                }
+              )
+          })
+
+          Promise.all(promises).then(() => {
+            handleClose()
+          })
+        }
+      })
   }
 
   const handlePrintWorkerData = () => {
@@ -677,6 +711,26 @@ const EditWorkerModal = (props) => {
           header: null
         })
       })
+  }
+
+  const handleRemoveDoc = (i) => {
+    const updatedDocs = [...workersDocs]
+
+    updatedDocs.splice(i, 1)
+
+    setWorkersDocs(updatedDocs)
+  }
+
+  const handleOnchangeWorkersDocs = () => {
+    let workerDoc = { docTitle, doc }
+
+    setWorkersDocs((prevValue) => {
+      if (prevValue) {
+        return [...prevValue, workerDoc]
+      } else {
+        return [workerDoc]
+      }
+    })
   }
 
   return (
@@ -1308,7 +1362,7 @@ const EditWorkerModal = (props) => {
               </div>
 
               <div className="col-1">
-                <button className="btn btn-primary mt-4" onClick={handleWorkersParents}>
+                <button className="btn btn-warning mt-4" onClick={handleWorkersParents}>
                   <Plus />
                 </button>
               </div>
@@ -1755,6 +1809,74 @@ const EditWorkerModal = (props) => {
               defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.harmfull_exposition)}
             />
           </div>
+        </div>
+
+        {
+          workersDocs && (
+            workersDocs.map((doc, i) => (
+              <div className="row">
+                <div className="col-10">
+                  <input
+                    type="text"
+                    className="form-control mb-3"
+                    value={`${doc.docTitle.label} / ${doc.doc.name}`}
+                    disabled={"true"}
+                  />
+                </div>
+
+                <div className="col-2 text-center">
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleRemoveDoc(i)}
+                  >
+                    <Trash />
+                  </button>
+                </div>
+              </div>
+            ))
+          )
+        }
+
+        <div className="row">
+          <div className="col-10">
+            <Select
+              label={"Título do documento"}
+              placeholder={""}
+              options={[
+                { value: 1, label: "CTPS" },
+                { value: 2, label: "Exame médico admissional" },
+                { value: 3, label: "Identidade" },
+                { value: 4, label: "CPF" },
+                { value: 5, label: "Titulo eleitoral" },
+                { value: 7, label: "Comprovante de residência" },
+                { value: 8, label: "CNH" },
+                { value: 9, label: "Certidão de casamento" },
+                { value: 10, label: "Certificado de reservista" },
+                { value: 11, label: "Certidão de nascimento (filhos menores de 14)" },
+                { value: 12, label: "Carteira de vacinação (filhos menores de 5)" },
+                { value: 13, label: "Comprovante de frequência escolar (filhos entre 7 e 14)" },
+              ]}
+              setSelectedValue={setDocTitle}
+            />
+          </div>
+
+          <div className="col-2 text-center">
+            <button
+              className="btn btn-warning mt-4"
+              title="Adicionar documento"
+              onClick={handleOnchangeWorkersDocs}
+            >
+              <Plus />
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <input
+            type="file"
+            className="form-control"
+            onChange={(e) => setDoc(e.target.files[0])}
+          />
         </div>
       </Modal.Body>
 

@@ -343,6 +343,22 @@ const EditWorkerModal = (props) => {
 
   const [timeEnterprise, setTimeEnterprise] = useState()
 
+  const [hasNocturneHours, setHasNocturneHours] = useState()
+
+  const [seeOtherNocturneFields, setSeeOtherNocturneFields] = useState(false)
+
+  const [proportionalPayment, setProportionalPayment] = useState()
+
+  const [totalNocturneWorkjourney, setTotalNocturneWorkjourney] = useState()
+
+  const [twentyFiveWorkjourney, setTwentyFiveWorkjourney] = useState()
+
+  const [twentyTwoToFiveWeekWorkjourney, setTwentyTwoToFiveWeekWorkjourney] = useState()
+
+  const [twentyTwoToFiveMonthWorkjourney, setTwentyTwoToFiveMonthWorkjourney] = useState()
+
+  const [twentyTwoToFiveEffectiveDiaryWorkjourney, setTwentyTwoToFiveEffectiveDiaryWorkjourney] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -452,6 +468,10 @@ const EditWorkerModal = (props) => {
 
         setTimeEnterprise(timeEnterprise)
       }
+
+      if (selectedWorker?.has_nocturne_hours) {
+        setSeeOtherNocturneFields(true)
+      }
     }
   }, [selectedWorker])
 
@@ -500,6 +520,14 @@ const EditWorkerModal = (props) => {
       setTimeEnterprise(timeEnterprise)
     }
   }, [admissionDate])
+
+  useEffect(() => {
+    if (hasNocturneHours?.value) {
+      setSeeOtherNocturneFields(true)
+    } else {
+      setSeeOtherNocturneFields(false)
+    }
+  }, [hasNocturneHours])
 
   const handleClose = () => {
     api
@@ -601,6 +629,22 @@ const EditWorkerModal = (props) => {
     setWorkersDocs(null)
 
     setTimeEnterprise()
+
+    setHasNocturneHours()
+
+    setSeeOtherNocturneFields()
+
+    setProportionalPayment()
+
+    setTotalNocturneWorkjourney()
+
+    setTwentyFiveWorkjourney()
+
+    setTwentyTwoToFiveWeekWorkjourney()
+
+    setTwentyTwoToFiveMonthWorkjourney()
+
+    setTwentyTwoToFiveEffectiveDiaryWorkjourney()
   }
 
   const handleDeleteWorkerParents = (parent) => {
@@ -715,7 +759,14 @@ const EditWorkerModal = (props) => {
       "enterprise_time": enterpriseTime || selectedWorker?.enterprise_time,
       "early_payment": earlyPayment?.value || selectedWorker?.early_payment,
       "harmfull_exposition": harmfullExposition?.value || selectedWorker?.harmfull_exposition,
-      "has_experience_time": selectedHasExperienceTime?.value || selectedWorker?.has_experience_time
+      "has_experience_time": selectedHasExperienceTime?.value || selectedWorker?.has_experience_time,
+      "has_nocturne_hours": hasNocturneHours?.value,
+      "propotional_payment": hasNocturneHours?.value == true && proportionalPayment?.value || null,
+      "total_nocturne_workjourney": hasNocturneHours?.value == true && totalNocturneWorkjourney || null,
+      "twenty_five_workjourney": hasNocturneHours?.value == true && twentyFiveWorkjourney || null,
+      "twenty_two_to_five_week_workjourney": hasNocturneHours?.value == true && twentyTwoToFiveWeekWorkjourney || null,
+      "twenty_two_to_five_month_workjourney": hasNocturneHours?.value == true && twentyTwoToFiveMonthWorkjourney || null,
+      "twenty_two_to_five_effective_diary_workjourney": hasNocturneHours?.value == true && twentyTwoToFiveEffectiveDiaryWorkjourney || null,
     }
 
     api
@@ -1809,15 +1860,94 @@ const EditWorkerModal = (props) => {
           </div>
         </div>
 
+        <div>
+          <Select
+            label={"Horas noturnas?"}
+            placeholder={""}
+            options={trueFalseOptions}
+            setSelectedValue={setHasNocturneHours}
+            defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.has_nocturne_hours)}
+          />
+
+          {
+            seeOtherNocturneFields && (
+              <>
+                <div className="row">
+                  <div className="col">
+                    <Select
+                      label={"Pagamento proporcional?"}
+                      placeholder={""}
+                      options={trueFalseOptions}
+                      setSelectedValue={setProportionalPayment}
+                      defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.propotional_payment)}
+                    />
+                  </div>
+
+                  <div className="col">
+                    <Input
+                      label={"Total de horas noturnas diárias"}
+                      placeholder={""}
+                      setSelectedValue={setTotalNocturneWorkjourney}
+                      defaultValue={selectedWorker?.total_nocturne_workjourney}
+                    />
+                  </div>
+
+                  <div className="col">
+                    <Input
+                      label={"Jornada parcial até 25 horas semanais"}
+                      placeholder={""}
+                      setSelectedValue={setTwentyFiveWorkjourney}
+                      defaultValue={selectedWorker?.twenty_five_workjourney}
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-3">
+                  <h4>Trabalho das 22:00 às 05:00</h4>
+                </div>
+
+                <div className="row">
+                  <div className="col">
+                    <Input
+                      label={"Total de horas por semana"}
+                      placeholder={""}
+                      setSelectedValue={setTwentyTwoToFiveWeekWorkjourney}
+                      defaultValue={selectedWorker?.twenty_two_to_five_week_workjourney}
+                    />
+                  </div>
+
+                  <div className="col">
+                    <Input
+                      label={"Total de horas por mês"}
+                      placeholder={""}
+                      setSelectedValue={setTwentyTwoToFiveMonthWorkjourney}
+                      defaultValue={selectedWorker?.twenty_two_to_five_month_workjourney}
+                    />
+                  </div>
+
+                  <div className="col">
+                    <Input
+                      label={"Carga horária diária efetiva com trabalho noturno"}
+                      placeholder={""}
+                      setSelectedValue={setTwentyTwoToFiveEffectiveDiaryWorkjourney}
+                      defaultValue={selectedWorker?.twenty_two_to_five_effective_diary_workjourney}
+                    />
+                  </div>
+                </div>
+              </>
+            )
+          }
+        </div>
+
         <div className="row">
-          <div className="col">
+          {/* <div className="col">
             <Input
               label="Horas noturnas"
               type="text"
               setSelectedValue={setNocturneHours}
               defaultValue={selectedWorker?.nocturne_hours}
             />
-          </div>
+          </div> */}
 
           <div className="col">
             <Input

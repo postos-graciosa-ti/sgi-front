@@ -31,6 +31,41 @@ import api from '../../services/api'
 import WorkerDataPrintContent from './WorkerDataPrintContent'
 import axios from 'axios'
 
+function calcularTempoDeEmpresa(dataAdmissaoStr) {
+  const dataAdmissao = new Date(dataAdmissaoStr);
+  const hoje = new Date();
+
+  let anos = hoje.getFullYear() - dataAdmissao.getFullYear();
+  let meses = hoje.getMonth() - dataAdmissao.getMonth();
+  let dias = hoje.getDate() - dataAdmissao.getDate();
+
+  if (dias < 0) {
+    meses -= 1;
+
+    // Pega o último dia do mês anterior
+    const ultimoDiaMesAnterior = new Date(hoje.getFullYear(), hoje.getMonth(), 0).getDate();
+    dias += ultimoDiaMesAnterior;
+  }
+
+  if (meses < 0) {
+    anos -= 1;
+    meses += 12;
+  }
+
+  const partes = [];
+  if (anos > 0) {
+    partes.push(`${anos} ${anos === 1 ? 'ano' : 'anos'}`);
+  }
+  if (meses > 0) {
+    partes.push(`${meses} ${meses === 1 ? 'mês' : 'meses'}`);
+  }
+  if (dias > 0) {
+    partes.push(`${dias} ${dias === 1 ? 'dia' : 'dias'}`);
+  }
+
+  return partes.length ? partes.join(" e ") : "Menos de um dia";
+}
+
 const EditWorkerModal = (props) => {
   const {
     editWorkerModalOpen,
@@ -306,6 +341,8 @@ const EditWorkerModal = (props) => {
 
   const [workersDocs, setWorkersDocs] = useState()
 
+  const [timeEnterprise, setTimeEnterprise] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -409,6 +446,12 @@ const EditWorkerModal = (props) => {
       if (selectedWorker?.has_experience_time) {
         setSeeExperiencePeriods(selectedWorker?.has_experience_time)
       }
+
+      if (selectedWorker?.admission_date) {
+        let timeEnterprise = calcularTempoDeEmpresa(selectedWorker?.admission_date)
+
+        setTimeEnterprise(timeEnterprise)
+      }
     }
   }, [selectedWorker])
 
@@ -449,6 +492,14 @@ const EditWorkerModal = (props) => {
       setSeeExperiencePeriods(selectedHasExperienceTime.value === true);
     }
   }, [selectedHasExperienceTime]);
+
+  useEffect(() => {
+    if (admissionDate) {
+      let timeEnterprise = calcularTempoDeEmpresa(admissionDate)
+
+      setTimeEnterprise(timeEnterprise)
+    }
+  }, [admissionDate])
 
   const handleClose = () => {
     api
@@ -548,6 +599,8 @@ const EditWorkerModal = (props) => {
     setDocTitle(null)
 
     setWorkersDocs(null)
+
+    setTimeEnterprise()
   }
 
   const handleDeleteWorkerParents = (parent) => {
@@ -687,6 +740,8 @@ const EditWorkerModal = (props) => {
           Promise.all(promises).then(() => {
             handleClose()
           })
+        } else {
+          handleClose()
         }
       })
   }
@@ -1572,6 +1627,12 @@ const EditWorkerModal = (props) => {
           </div>
 
           <div className="col">
+            <label><b>Tempo de empresa</b></label>
+
+            <input className="form-control" value={timeEnterprise} disabled />
+          </div>
+
+          <div className="col">
             <div className="row">
               <div className="col">
                 <Input
@@ -1779,14 +1840,16 @@ const EditWorkerModal = (props) => {
             />
           </div>
 
-          <div className="col">
+          {/* <div className="col">
+            <label><b>Tempo de empresa</b></label>
+
             <Input
               type={"text"}
               label={"Tempo de empresa"}
               setSelectedValue={setEnterpriseTime}
               defaultValue={selectedWorker?.enterprise_time}
             />
-          </div>
+          </div> */}
         </div>
 
         <div className="row">

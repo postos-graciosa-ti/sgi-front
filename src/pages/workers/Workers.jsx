@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { ArrowClockwise, FileEarmark, FiletypeCsv, Funnel, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX, Question, X } from "react-bootstrap-icons"
+import { ArrowClockwise, FileEarmark, FileEarmarkPdf, FiletypeCsv, FiletypeDoc, FiletypeDocx, Funnel, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX, Question, X } from "react-bootstrap-icons"
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import Nav from "../../components/Nav"
@@ -211,17 +211,17 @@ const Workers = () => {
     setWorkerReturnModalOpen(true)
   }
 
-  const handleOpenAddWorkersParentsModal = (worker) => {
-    setSelectedWorker(worker)
+  // const handleOpenAddWorkersParentsModal = (worker) => {
+  //   setSelectedWorker(worker)
 
-    setAddWorkersParentsModalOpen(true)
-  }
+  //   setAddWorkersParentsModalOpen(true)
+  // }
 
-  const handleOpenDefinitellyWorkerModalOpen = (worker) => {
-    setSelectedWorker(worker)
+  // const handleOpenDefinitellyWorkerModalOpen = (worker) => {
+  //   setSelectedWorker(worker)
 
-    setDefinitellyWorkerModalOpen(true)
-  }
+  //   setDefinitellyWorkerModalOpen(true)
+  // }
 
   const handleOpenDocsModal = (worker) => {
     setSelectedWorker(worker)
@@ -323,7 +323,13 @@ const Workers = () => {
                           : "table-success"
                     }
                   >
-                    <td>{worker.worker_name}</td>
+                    {
+                      worker.worker_enrolment && (
+                        <td>{worker.worker_enrolment} - {worker.worker_name}</td>
+                      ) || (
+                        <td>Código de acesso indisponível - {worker.worker_name}</td>
+                      )
+                    }
 
                     <td>
                       <button
@@ -339,8 +345,9 @@ const Workers = () => {
                       <button
                         className="btn btn-warning me-2 mt-2"
                         onClick={() => handleOpenWorkerDocsModal(worker)}
+                        title="Visualizar documentos"
                       >
-                        <FiletypeCsv />
+                        <FileEarmarkPdf />
                       </button>
 
                       <button
@@ -348,7 +355,7 @@ const Workers = () => {
                         title="Emitir documentos"
                         onClick={() => handleOpenDocsModal(worker)}
                       >
-                        <FileEarmark />
+                        <FiletypeDocx />
                       </button>
 
                       <button
@@ -425,13 +432,13 @@ const Workers = () => {
                               <ArrowClockwise />
                             </button>
 
-                            <button
+                            {/* <button
                               className="btn btn-danger me-2 mt-2"
                               title="Excluir definitivamente"
                               onClick={() => handleOpenDefinitellyWorkerModalOpen(worker)}
                             >
                               <X />
-                            </button>
+                            </button> */}
                           </>
                         )
                       }
@@ -625,20 +632,20 @@ const Workers = () => {
         setWorkersList={setWorkersList}
       />
 
-      <AddWorkerParentsModal
+      {/* <AddWorkerParentsModal
         addWorkersParentsModalOpen={addWorkersParentsModalOpen}
         setAddWorkersParentsModalOpen={setAddWorkersParentsModalOpen}
         selectedWorker={selectedWorker}
         setSelectedWorker={setSelectedWorker}
-      />
+      /> */}
 
-      <DefinitellyDeleteWorkerModal
+      {/* <DefinitellyDeleteWorkerModal
         definitellyWorkerModalOpen={definitellyWorkerModalOpen}
         setDefinitellyWorkerModalOpen={setDefinitellyWorkerModalOpen}
         selectedWorker={selectedWorker}
         setSelectedWorker={setSelectedWorker}
         setWorkersList={setWorkersList}
-      />
+      /> */}
 
       <DocsModal
         docsModalOpen={docsModalOpen}

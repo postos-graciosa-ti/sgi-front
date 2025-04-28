@@ -25,6 +25,42 @@ import api from '../../services/api'
 import ReactInputMask from 'react-input-mask'
 import CreatableSelect from 'react-select/creatable'
 import axios from 'axios'
+import Swal from 'sweetalert2'
+
+function calcularTempoDeEmpresa(dataAdmissaoStr) {
+  const dataAdmissao = new Date(dataAdmissaoStr);
+  const hoje = new Date();
+
+  let anos = hoje.getFullYear() - dataAdmissao.getFullYear();
+  let meses = hoje.getMonth() - dataAdmissao.getMonth();
+  let dias = hoje.getDate() - dataAdmissao.getDate();
+
+  if (dias < 0) {
+    meses -= 1;
+
+    // Pega o último dia do mês anterior
+    const ultimoDiaMesAnterior = new Date(hoje.getFullYear(), hoje.getMonth(), 0).getDate();
+    dias += ultimoDiaMesAnterior;
+  }
+
+  if (meses < 0) {
+    anos -= 1;
+    meses += 12;
+  }
+
+  const partes = [];
+  if (anos > 0) {
+    partes.push(`${anos} ${anos === 1 ? 'ano' : 'anos'}`);
+  }
+  if (meses > 0) {
+    partes.push(`${meses} ${meses === 1 ? 'mês' : 'meses'}`);
+  }
+  if (dias > 0) {
+    partes.push(`${dias} ${dias === 1 ? 'dia' : 'dias'}`);
+  }
+
+  return partes.length ? partes.join(" e ") : "Menos de um dia";
+}
 
 const CreateWorkerModal = (props) => {
   const {
@@ -291,6 +327,8 @@ const CreateWorkerModal = (props) => {
 
   const [workersDocs, setWorkersDocs] = useState()
 
+  const [timeEnterprise, setTimeEnterprise] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -381,6 +419,14 @@ const CreateWorkerModal = (props) => {
     }
   }, [selectedTurn])
 
+  useEffect(() => {
+    if (admissionDate) {
+      let timeEnterprise = calcularTempoDeEmpresa(admissionDate)
+
+      setTimeEnterprise(timeEnterprise)
+    }
+  }, [admissionDate])
+
   const handleClose = () => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-first-review`)
@@ -459,6 +505,8 @@ const CreateWorkerModal = (props) => {
     setDocTitle(null)
 
     setWorkersDocs(null)
+
+    setTimeEnterprise()
   }
 
   const handleRemoveWorkersParents = (i) => {
@@ -497,6 +545,25 @@ const CreateWorkerModal = (props) => {
   }
 
   const handleSubmit = () => {
+    const validations = [
+      { field: name, title: "Nome é um campo obrigatório", text: "Por favor, adicione um nome ao colaborador" },
+      { field: selectedFunction, title: "Função é um campo obrigatório", text: "Por favor, adicione uma função ao colaborador" },
+      { field: selectedTurn, title: "Turno é um campo obrigatório", text: "Por favor, adicione um turno ao colaborador" },
+      { field: selectedCostCenter, title: "Centro de custo é um campo obrigatório", text: "Por favor, adicione um centro de custo ao colaborador" },
+      { field: selectedDepartment, title: "Setor é um campo obrigatório", text: "Por favor, adicione um setor ao colaborador" },
+      { field: admissionDate, title: "Data de admissão é um campo obrigatório", text: "Por favor, adicione uma data de admissão ao colaborador" },
+    ]
+
+    for (const { field, title, text } of validations) {
+      if (!field) {
+        return Swal.fire({
+          title,
+          text,
+          icon: "error"
+        })
+      }
+    }
+
     let formData = {
       "name": name,
       "function_id": selectedFunction.value,
@@ -1615,6 +1682,12 @@ const CreateWorkerModal = (props) => {
             </div>
 
             <div className="col">
+              <label><b>Tempo de empresa</b></label>
+
+              <input className="form-control" disabled value={timeEnterprise} />
+            </div>
+
+            <div className="col">
               <div className="row">
                 <div className="col">
                   <Input
@@ -1812,13 +1885,13 @@ const CreateWorkerModal = (props) => {
               />
             </div>
 
-            <div className="col">
+            {/* <div className="col">
               <Input
                 type={"text"}
                 label={"Tempo de empresa"}
                 setSelectedValue={setEnterpriseTime}
               />
-            </div>
+            </div> */}
           </div>
 
           <div className="row">

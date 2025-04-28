@@ -6,6 +6,7 @@ import ReactSelect from "react-select"
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 import useWorkersExperienceTimeStore from '../../data/workersExperienceTime'
+import { ExclamationTriangle } from 'react-bootstrap-icons'
 
 const DeleteWorkerModal = (props) => {
   const {
@@ -117,6 +118,12 @@ const DeleteWorkerModal = (props) => {
       })
   }
 
+  const handleOpenDefinitellyDeleteWorker = () => {
+    api
+      .delete(`/workers/${selectedWorker?.worker_id}`)
+      .then(() => handleClose())
+  }
+
   return (
     <Modal
       show={deleteWorkerModalOpen}
@@ -175,6 +182,12 @@ const DeleteWorkerModal = (props) => {
             </>
           )
         }
+
+        <div className="text-center mt-4">
+          <Button variant="warning" onClick={handleOpenDefinitellyDeleteWorker}>
+            <ExclamationTriangle />  Apagar definitivamente (irreversível)
+          </Button>
+        </div>
       </Modal.Body>
 
       <Modal.Footer>

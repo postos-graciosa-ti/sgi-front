@@ -2,7 +2,7 @@ import "driver.js/dist/driver.css"
 import moment from "moment"
 import "moment/locale/pt-br"
 import { useEffect, useState } from "react"
-import { CheckAll, FileEarmarkText, PersonPlus, Printer, Question } from "react-bootstrap-icons"
+import { ArrowClockwise, CheckAll, FileEarmarkText, PersonPlus, Printer, Question } from "react-bootstrap-icons"
 import Calendar from "react-calendar"
 import 'react-calendar/dist/Calendar.css'
 import ReactSelect from "react-select"
@@ -20,7 +20,6 @@ import DeleteScaleModal from "./DeleteScaleModal"
 import HollidaysModal from "./HollidaysModal"
 import PrintModal from "./PrintModal"
 import ScaleLogsModal from "./ScaleLogsModal"
-import ScaleRow from "./ScaleRow"
 
 const Scale = () => {
   const firstDayOfMonth = moment().startOf('month')
@@ -65,17 +64,23 @@ const Scale = () => {
 
   const [caixasId, setCaixasId] = useState()
 
-  const [frentistasId, setFrentistasId] = useState()
+  // const [frentistasId, setFrentistasId] = useState()
 
-  const [frentistasCaixaId, setFrentistasCaixaId] = useState()
+  // const [frentistasCaixaId, setFrentistasCaixaId] = useState()
 
-  const [trocadoresId, setTrocadoresId] = useState()
+  // const [trocadoresId, setTrocadoresId] = useState()
 
   const [scaleLogsModalOpen, setScaleLogsModalOpen] = useState()
 
   const [hollidaysModalOpen, setHollidaysModalOpen] = useState(false)
 
   const [allHollidays, setAllHollidays] = useState()
+
+  const [filteredScalesList, setFilteredScalesList] = useState([])
+
+  const [filterStartDate, setFilterStartDate] = useState()
+
+  const [filterEndDate, setFilterEndDate] = useState()
 
   useEffect(() => {
     api
@@ -181,6 +186,16 @@ const Scale = () => {
     }
 
   }, [selectedSubsdiarie, selectedFunction, selectedTurn])
+
+  useEffect(() => {
+    if (filterStartDate && filterEndDate) {
+      api
+        .post(`/subsidiaries/${selectedSubsdiarie?.value}/scales/list`, { start_date: filterStartDate, end_date: filterEndDate })
+        .then((response) => setFilteredScalesList(response.data))
+    } else {
+      setFilteredScalesList(scalesList)
+    }
+  }, [filterStartDate, filterEndDate, scalesList])
 
   const handleTitleClassname = ({ date, view }) => {
     if (view == "month") {
@@ -590,7 +605,108 @@ const Scale = () => {
           </button>
         </div>
 
-        <ScaleRow
+        <div className="d-flex gap-2 mt-5 mb-3">
+          <input
+            type="date"
+            className="form-control"
+            onChange={(e) =>
+              setFilterStartDate(
+                e.target.value ? moment(e.target.value).format("DD-MM-YYYY") : ""
+              )
+            }
+            value={filterStartDate ? moment(filterStartDate, "DD-MM-YYYY").format("YYYY-MM-DD") : ""}
+          />
+
+          <input
+            type="date"
+            className="form-control"
+            onChange={(e) =>
+              setFilterEndDate(
+                e.target.value ? moment(e.target.value).format("DD-MM-YYYY") : ""
+              )
+            }
+            value={filterEndDate ? moment(filterEndDate, "DD-MM-YYYY").format("YYYY-MM-DD") : ""}
+          />
+
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              setFilterStartDate("");
+              setFilterEndDate("");
+              setFilteredScalesList(scalesList);
+            }}
+          >
+            <ArrowClockwise />
+          </button>
+        </div>
+
+        <div className="table-responsive">
+          <table className="table table-hover">
+            <thead>
+              <tr>
+                <th>Nome</th>
+
+                <th>Turno</th>
+
+                <th>Função</th>
+
+                <th>Dias de trabalho</th>
+
+                <th>Dias de folga</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {
+                filteredScalesList.length > 0 ? (
+                  filteredScalesList.map((scale, index) => (
+                    <tr key={index}>
+                      <td>{scale.worker?.name || 'Sem nome'}</td>
+
+                      <td>
+                        {
+                          scale?.worker?.turn
+                            ? `${scale.worker.turn.start_time} ${scale.worker.turn.end_time}`
+                            : scale?.worker_turn
+                              ? `${scale.worker_turn.start_time} ${scale.worker_turn.end_time}`
+                              : 'Sem turno'
+                        }
+                      </td>
+
+                      <td>{scale?.worker?.function?.name || scale?.worker_function?.name || 'Sem função'}</td>
+
+                      <td>
+                        {
+                          (scale.days_on || []).map((dayOn, idx) => (
+                            <span key={idx} className="badge text-bg-danger me-1">
+                              {dayOn.date ? dayOn.date : moment(dayOn).format("DD-MM-YYYY")}
+                            </span>
+                          ))
+                        }
+                      </td>
+
+                      <td>
+                        {
+                          (scale.days_off || []).map((dayOff, idx) => (
+                            <span key={idx} className="badge text-bg-success me-1">
+                              {dayOff.date ? dayOff.date : moment(dayOff).format("DD-MM-YYYY")}
+                            </span>
+                          ))
+                        }
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="text-center">Sem registros de escala</td>
+                  </tr>
+                )
+              }
+            </tbody>
+          </table>
+        </div>
+
+        {/* <ScaleRow
           title="Escala de caixas"
           scalesList={scalesList}
           functionId={caixasId?.id}
@@ -624,7 +740,7 @@ const Scale = () => {
           selectedWorker={selectedWorker}
           setScalesList={setScalesList}
           setDaysOff={setDaysOff}
-        />
+        /> */}
       </div>
 
       <CalendarPopup

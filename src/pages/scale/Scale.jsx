@@ -64,11 +64,11 @@ const Scale = () => {
 
   const [caixasId, setCaixasId] = useState()
 
-  // const [frentistasId, setFrentistasId] = useState()
+  const [frentistasId, setFrentistasId] = useState()
 
-  // const [frentistasCaixaId, setFrentistasCaixaId] = useState()
+  const [frentistasCaixaId, setFrentistasCaixaId] = useState()
 
-  // const [trocadoresId, setTrocadoresId] = useState()
+  const [trocadoresId, setTrocadoresId] = useState()
 
   const [scaleLogsModalOpen, setScaleLogsModalOpen] = useState()
 

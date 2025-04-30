@@ -77,10 +77,12 @@ const HollidayScaleModal = (props) => {
 
     api
       .post("/hollidays-scale", formData)
-      .then(() => {
+      .then((response) => {
         api
           .get(`/subsidiaries/${selectedSubsidiarie?.value}/hollidays-scale/${selectedHolliday?.date}`)
-          .then((response) => setWorkersScale(response?.data))
+          .then((response) => {
+            setWorkersScale(response?.data)
+          })
       })
       .catch((error) => {
         Swal.fire({

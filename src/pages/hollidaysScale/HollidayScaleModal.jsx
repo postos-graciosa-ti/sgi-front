@@ -93,52 +93,37 @@ const HollidayScaleModal = (props) => {
       })
   }
 
-  const handlePrint = () => {
-    api
-      .get(`/subsidiaries/${selectedSubsidiarie?.value}`)
-      .then((response) => {
-        let subsidiarieData = response?.data
+  const handlePrint = async () => {
+    const working = await api.get(`/workers/subsidiarie/${selectedSubsidiarie?.value}`).then((response) => response.data)
 
-        api
-          .get(`/users/${subsidiarieData?.manager}`)
-          .then((response) => {
-            let managerData = response?.data
+    const subsidiarieData = await api.get(`/subsidiaries/${selectedSubsidiarie?.value}`).then((response) => response.data)
 
-            api
-              .get(`/users/${subsidiarieData?.coordinator}`)
-              .then((response) => {
-                let coordinatorData = response?.data
+    const managerData = subsidiarieData.manager && await api.get(`/users/${subsidiarieData.manager}`).then((response) => response.data)
 
-                api
-                  .get(`/workers/subsidiarie/${selectedSubsidiarie?.value}`)
-                  .then((response) => {
-                    let working = response.data
+    const coordinatorData = subsidiarieData.coordinator && await api.get(`/users/${subsidiarieData.coordinator}`).then((response) => response.data)
 
-                    const onDuty = managerData
-                      ? `${managerData.name} (Gerente - ${managerData.phone}) / ${coordinatorData.name} (Coordenador - ${coordinatorData.phone})`
-                      : `${coordinatorData.name} (Coordenador - ${coordinatorData.phone})`
+    const onDuty = (
+      managerData && `${managerData.name} (Gerente - ${managerData.phone}) / ${coordinatorData.name} (Coordenador - ${coordinatorData.phone})` ||
+      `${coordinatorData.name} (Coordenador - ${coordinatorData.phone})`
+    )
 
-                    const printableContent = ReactDOMServer.renderToString(
-                      <HollidayScalePrintContent
-                        workersScale={workersScale}
-                        selectedHolliday={selectedHolliday}
-                        onDuty={onDuty}
-                        subsidiarieData={subsidiarieData}
-                        userSession={userSession}
-                        webAdress={webAdress}
-                        working={working}
-                      />
-                    )
+    const printableContent = ReactDOMServer.renderToString(
+      <HollidayScalePrintContent
+        workersScale={workersScale}
+        selectedHolliday={selectedHolliday}
+        onDuty={onDuty}
+        subsidiarieData={subsidiarieData}
+        userSession={userSession}
+        webAdress={webAdress}
+        working={working}
+      />
+    )
 
-                    printJS({
-                      printable: printableContent,
-                      type: 'raw-html',
-                      header: null
-                    })
-                  })
-              })
-          })
-      })
+    printJS({
+      printable: printableContent,
+      type: 'raw-html',
+      header: null
+    })
   }
 
   const handleDeleteHollidayScale = (scaleId) => {

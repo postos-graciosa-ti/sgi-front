@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { ArrowClockwise, FileEarmark, FileEarmarkPdf, FiletypeCsv, FiletypeDoc, FiletypeDocx, Funnel, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX, Question, X } from "react-bootstrap-icons"
+import { ArrowClockwise, FileEarmarkPdf, FiletypeDocx, Funnel, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX, Printer, Question } from "react-bootstrap-icons"
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import Nav from "../../components/Nav"
@@ -7,10 +7,9 @@ import useUserSessionStore from "../../data/userSession"
 import initTour from "../../driverjs/initTour"
 import workersSteps from "../../driverjs/workersSteps"
 import api from "../../services/api"
-import AddWorkerParentsModal from "./AddWorkerParentsModal"
 import CreateWorkerModal from "./CreateWorkerModal"
-import DefinitellyDeleteWorkerModal from "./DefinitellyDeleteWorkerModal"
 import DeleteWorkerModal from "./DeleteWorkerModal"
+import DocsModal from "./DocsModal"
 import EditWorkerModal from "./EditWorkerModal"
 import ExperienceTimeModal from "./ExperienceTimeModal"
 import NrModal from "./NrModal"
@@ -18,12 +17,12 @@ import PrintBadgeContent from "./PrintBadgeContent"
 import ReactivateWorkerModal from "./ReactivateWorkerModal"
 import ResignationReasonsReportModal from "./ResignationReasonsReportModal"
 import WorkerAwayModal from "./WorkerAwayModal"
+import WorkerDataPrintContent from "./WorkerDataPrintContent"
+import WorkerDocsModal from "./WorkerDocsModal"
 import WorkerInfoModal from "./WorkerInfoModal"
 import WorkerNotationModal from "./WorkerNotationModal"
 import WorkerReturnModal from "./WorkerReturnModal"
 import WorkersByTurnModal from "./WorkersByTurnModal"
-import DocsModal from "./DocsModal"
-import WorkerDocsModal from "./WorkerDocsModal"
 
 const Workers = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -327,7 +326,7 @@ const Workers = () => {
                       worker.worker_enrolment && (
                         <td>{worker.worker_enrolment} - {worker.worker_name}</td>
                       ) || (
-                        <td>Código de acesso indisponível - {worker.worker_name}</td>
+                        <td>{worker.worker_name}</td>
                       )
                     }
 

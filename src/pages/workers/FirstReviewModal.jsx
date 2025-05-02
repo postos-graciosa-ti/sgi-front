@@ -6,10 +6,18 @@ import Modal from 'react-bootstrap/Modal'
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import useUserSessionStore from '../../data/userSession'
+import useWorkersExperienceTimeStore from '../../data/workersExperienceTime'
 import api from '../../services/api'
 import FirstReviewPrintContent from './FirstReviewPrintContent'
 import { approvedOptions, attendanceOptions, cooperationOptions, hierarchyOptions, initiativeOptions, interpersonalRelationshipsOptions, knowledgeOptions, learningOptions, personalPresentationOptions, productivityOptions, punctualityOptions } from "./reviewsOptionsEnum"
-import useWorkersExperienceTimeStore from '../../data/workersExperienceTime'
+
+const hasGoodAvaliation = (criteria) => {
+  if (criteria && criteria.value == 1 || criteria && criteria.value == 2) {
+    return true
+  } else {
+    return false
+  }
+}
 
 const FirstReviewModal = (props) => {
   const { firstReviewModalOpen, setFirstReviewModalOpen, selectedWorker, setSelectedWorker, setExperienceTimeModalOpen } = props
@@ -48,11 +56,93 @@ const FirstReviewModal = (props) => {
 
   const [selectedApproved, setSelectedApproved] = useState()
 
+  const [hasGoodPersonalPresentation, setHasGoodPersonalPresentation] = useState(false)
+
+  const [hasGoodProductivity, setHasGoodProductivity] = useState(false)
+
+  const [hasGoodKnowledge, setHasGoodKnowledge] = useState(false)
+
+  const [hasGoodCooperation, setHasGoodCooperation] = useState(false)
+
+  const [hasGoodInitiative, setHasGoodInitiative] = useState(false)
+
+  const [hasGoodInterpersonalRelationship, setHasGoodInterpersonalRelationship] = useState(false)
+
+  const [hasGoodLearning, setHasGoodLearning] = useState(false)
+
+  const [hasGoodHierarchy, setHasGoodHierarchy] = useState(false)
+
+  const [hasGoodPunctuality, setHasGoodPunctuality] = useState(false)
+
+  const [hasGoodAttendance, setHasGoodAttendance] = useState(false)
+
   useEffect(() => {
     if (firstReviewModalOpen) {
       api
         .get(`/workers/${selectedWorker?.worker_id}/first-review`)
-        .then((response) => setFirstReviewResponses(response.data))
+        .then((response) => {
+          setHasGoodPersonalPresentation(
+            hasGoodAvaliation(
+              personalPresentationOptions.find((option) => option.label == response.data.personal_presentation)
+            )
+          )
+
+          setHasGoodProductivity(
+            hasGoodAvaliation(
+              productivityOptions.find((option) => option.label === response.data.productivity)
+            )
+          )
+
+          setHasGoodKnowledge(
+            hasGoodAvaliation(
+              knowledgeOptions.find((option) => option.label === response.data.knowledge)
+            )
+          )
+
+          setHasGoodCooperation(
+            hasGoodAvaliation(
+              cooperationOptions.find((option) => option.label === response.data.cooperation)
+            )
+          )
+
+          setHasGoodInitiative(
+            hasGoodAvaliation(
+              initiativeOptions.find((option) => option.label === response.data.initiative)
+            )
+          )
+
+          setHasGoodInterpersonalRelationship(
+            hasGoodAvaliation(
+              interpersonalRelationshipsOptions.find((option) => option.label === response.data.interpersonal_relationships)
+            )
+          )
+
+          setHasGoodLearning(
+            hasGoodAvaliation(
+              learningOptions.find((option) => option.label === response.data.learning)
+            )
+          )
+
+          setHasGoodHierarchy(
+            hasGoodAvaliation(
+              hierarchyOptions.find((option) => option.label === response.data.hierarchy)
+            )
+          )
+
+          setHasGoodPunctuality(
+            hasGoodAvaliation(
+              punctualityOptions.find((option) => option.label === response.data.punctuality)
+            )
+          )
+
+          setHasGoodAttendance(
+            hasGoodAvaliation(
+              attendanceOptions.find((option) => option.label === response.data.attendance)
+            )
+          )
+
+          setFirstReviewResponses(response.data)
+        })
     }
 
   }, [firstReviewModalOpen])
@@ -76,6 +166,40 @@ const FirstReviewModal = (props) => {
           })
       })
   }, [])
+
+  useEffect(() => {
+    setHasGoodPersonalPresentation(hasGoodAvaliation(selectedPersonalPresentation))
+
+    setHasGoodProductivity(hasGoodAvaliation(selectedProductivity))
+
+    setHasGoodKnowledge(hasGoodAvaliation(selectedKnowledge))
+
+    setHasGoodCooperation(hasGoodAvaliation(selectedCooperation))
+
+    setHasGoodInitiative(hasGoodAvaliation(selectedInitiative))
+
+    setHasGoodInterpersonalRelationship(hasGoodAvaliation(selectedInterpersonalRelationship))
+
+    setHasGoodLearning(hasGoodAvaliation(selectedLearning))
+
+    setHasGoodHierarchy(hasGoodAvaliation(selectedHierarchy))
+
+    setHasGoodPunctuality(hasGoodAvaliation(selectedPunctuality))
+
+    setHasGoodAttendance(hasGoodAvaliation(selectedAttendance))
+
+  }, [
+    selectedPersonalPresentation,
+    selectedProductivity,
+    selectedKnowledge,
+    selectedCooperation,
+    selectedInitiative,
+    selectedInterpersonalRelationship,
+    selectedLearning,
+    selectedHierarchy,
+    selectedPunctuality,
+    selectedAttendance,
+  ])
 
   const handleClose = () => {
     api
@@ -115,6 +239,26 @@ const FirstReviewModal = (props) => {
     setFirstReviewModalOpen(false)
 
     setExperienceTimeModalOpen(false)
+
+    setHasGoodPersonalPresentation(false)
+
+    setHasGoodProductivity(false)
+
+    setHasGoodKnowledge(false)
+
+    setHasGoodCooperation(false)
+
+    setHasGoodInitiative(false)
+
+    setHasGoodInterpersonalRelationship(false)
+
+    setHasGoodLearning(false)
+
+    setHasGoodHierarchy(false)
+
+    setHasGoodPunctuality(false)
+
+    setHasGoodAttendance(false)
   }
 
   const handleSubmit = () => {
@@ -460,6 +604,56 @@ const FirstReviewModal = (props) => {
               />
             )
           }
+        </div>
+
+        <div className="mt-4 mb-4">
+          <h4>Situação do colaborador</h4>
+
+          <div className="row">
+            <div className="col">
+              <div>
+                <b>Apresentação pessoal</b>: <span className={hasGoodPersonalPresentation ? "text-success fw-bold" : "text-danger fw-bold"}>{hasGoodPersonalPresentation ? "Bom" : "Precisa melhorar"}</span>
+              </div>
+
+              <div>
+                <b>Produtividade</b>: <span className={hasGoodProductivity ? "text-success fw-bold" : "text-danger fw-bold"}>{hasGoodProductivity ? "Bom" : "Precisa melhorar"}</span>
+              </div>
+
+              <div>
+                <b>Conhecimento do trabalho</b>: <span className={hasGoodKnowledge ? "text-success fw-bold" : "text-danger fw-bold"}>{hasGoodKnowledge ? "Bom" : "Precisa melhorar"}</span>
+              </div>
+
+              <div>
+                <b>Cooperação</b>: <span className={hasGoodCooperation ? "text-success fw-bold" : "text-danger fw-bold"}>{hasGoodCooperation ? "Bom" : "Precisa melhorar"}</span>
+              </div>
+
+              <div>
+                <b>Iniciativa</b>: <span className={hasGoodInitiative ? "text-success fw-bold" : "text-danger fw-bold"}>{hasGoodInitiative ? "Bom" : "Precisa melhorar"}</span>
+              </div>
+            </div>
+
+            <div className="col">
+              <div>
+                <b>Relacionamento interpessoal</b>: <span className={hasGoodInterpersonalRelationship ? "text-success fw-bold" : "text-danger fw-bold"}>{hasGoodInterpersonalRelationship ? "Bom" : "Precisa melhorar"}</span>
+              </div>
+
+              <div>
+                <b>Aprendizado</b>: <span className={hasGoodLearning ? "text-success fw-bold" : "text-danger fw-bold"}>{hasGoodLearning ? "Bom" : "Precisa melhorar"}</span>
+              </div>
+
+              <div>
+                <b>Hierarquia e disciplina</b>: <span className={hasGoodHierarchy ? "text-success fw-bold" : "text-danger fw-bold"}>{hasGoodHierarchy ? "Bom" : "Precisa melhorar"}</span>
+              </div>
+
+              <div>
+                <b>Assiduidade e pontualidade</b>: <span className={hasGoodPunctuality ? "text-success fw-bold" : "text-danger fw-bold"}>{hasGoodPunctuality ? "Bom" : "Precisa melhorar"}</span>
+              </div>
+
+              <div>
+                <b>Atendimento ao cliente</b>: <span className={hasGoodAttendance ? "text-success fw-bold" : "text-danger fw-bold"}>{hasGoodAttendance ? "Bom" : "Precisa melhorar"}</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="mb-3">

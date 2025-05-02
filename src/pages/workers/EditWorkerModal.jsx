@@ -1,3 +1,4 @@
+import axios from 'axios'
 import moment from 'moment'
 import printJS from 'print-js'
 import { useEffect, useState } from 'react'
@@ -29,7 +30,6 @@ import getParentsType from '../../requests/parentsType/getParentsType'
 import postWorkersParents from '../../requests/workersParents/postWorkersParents'
 import api from '../../services/api'
 import WorkerDataPrintContent from './WorkerDataPrintContent'
-import axios from 'axios'
 
 function calcularTempoDeEmpresa(dataAdmissaoStr) {
   const dataAdmissao = new Date(dataAdmissaoStr);
@@ -359,6 +359,22 @@ const EditWorkerModal = (props) => {
 
   const [twentyTwoToFiveEffectiveDiaryWorkjourney, setTwentyTwoToFiveEffectiveDiaryWorkjourney] = useState()
 
+  const [healthcarePlan, setHealthcarePlan] = useState()
+
+  const [healthcarePlanDiscount, setHealthcarePlanDiscount] = useState()
+
+  const [lifeInsurance, setLifeInsurance] = useState()
+
+  const [lifeInsuranceDiscount, setLifeInsuranceDiscount] = useState()
+
+  const [ag, setAg] = useState()
+
+  const [cc, setCc] = useState()
+
+  const [earlyPaymentDiscount, setEarlyPaymentDiscount] = useState()
+
+  console.log(selectedWorker)
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -645,6 +661,20 @@ const EditWorkerModal = (props) => {
     setTwentyTwoToFiveMonthWorkjourney()
 
     setTwentyTwoToFiveEffectiveDiaryWorkjourney()
+
+    setHealthcarePlan()
+
+    setHealthcarePlanDiscount()
+
+    setLifeInsurance()
+
+    setLifeInsuranceDiscount()
+
+    setAg()
+
+    setCc()
+
+    setEarlyPaymentDiscount()
   }
 
   const handleDeleteWorkerParents = (parent) => {
@@ -677,6 +707,10 @@ const EditWorkerModal = (props) => {
   }
 
   const handleSubmit = () => {
+    const insur = lifeInsurance ? lifeInsurance.value : selectedWorker?.life_insurance
+
+    const health = healthcarePlan ? healthcarePlan.value : selectedWorker?.healthcare_plan
+
     let formData = {
       "name": name || selectedWorker?.worker_name,
       "function_id": selectedFunction?.value || selectedWorker?.function_id,
@@ -767,6 +801,13 @@ const EditWorkerModal = (props) => {
       "twenty_two_to_five_week_workjourney": hasNocturneHours?.value == true && twentyTwoToFiveWeekWorkjourney || null,
       "twenty_two_to_five_month_workjourney": hasNocturneHours?.value == true && twentyTwoToFiveMonthWorkjourney || null,
       "twenty_two_to_five_effective_diary_workjourney": hasNocturneHours?.value == true && twentyTwoToFiveEffectiveDiaryWorkjourney || null,
+      "healthcare_plan": health,
+      "healthcare_plan_discount": healthcarePlanDiscount || selectedWorker?.healthcare_plan_discount,
+      "life_insurance": insur,
+      "life_insurance_discount": lifeInsuranceDiscount || selectedWorker?.life_insurance_discount,
+      "ag": ag || selectedWorker?.ag,
+      "cc": cc || selectedWorker?.cc,
+      "early_payment_discount": earlyPaymentDiscount,
     }
 
     api
@@ -797,27 +838,27 @@ const EditWorkerModal = (props) => {
       })
   }
 
-  const handlePrintWorkerData = () => {
-    api
-      .get(`/cities/${selectedWorker?.neighborhood?.city_id}`)
-      .then((response) => {
-        let cityData = response?.data
+  // const handlePrintWorkerData = () => {
+  //   api
+  //     .get(`/cities/${selectedWorker?.neighborhood?.city_id}`)
+  //     .then((response) => {
+  //       let cityData = response?.data
 
-        const printableContent = ReactDOMServer.renderToString(
-          <WorkerDataPrintContent
-            selectedWorker={selectedWorker}
-            cityData={cityData}
-            parentsData={parentsData}
-          />
-        )
+  //       const printableContent = ReactDOMServer.renderToString(
+  //         <WorkerDataPrintContent
+  //           selectedWorker={selectedWorker}
+  //           cityData={cityData}
+  //           parentsData={parentsData}
+  //         />
+  //       )
 
-        printJS({
-          printable: printableContent,
-          type: 'raw-html',
-          header: null
-        })
-      })
-  }
+  //       printJS({
+  //         printable: printableContent,
+  //         type: 'raw-html',
+  //         header: null
+  //       })
+  //     })
+  // }
 
   const handleRemoveDoc = (i) => {
     const updatedDocs = [...workersDocs]
@@ -852,11 +893,11 @@ const EditWorkerModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
-        <div>
+        {/* <div>
           <button className="btn btn-light mb-2" onClick={handlePrintWorkerData}>
             <Printer />
           </button>
-        </div>
+        </div> */}
 
         <div>
           <h4>Dados pessoais</h4>
@@ -1994,6 +2035,15 @@ const EditWorkerModal = (props) => {
           </div>
 
           <div className="col">
+            <Input
+              label={"Porcentagem ou valor"}
+              placeholder={""}
+              setSelectedValue={setEarlyPaymentDiscount}
+              defaultValue={selectedWorker?.early_payment_discount}
+            />
+          </div>
+
+          <div className="col">
             <Select
               placeholder={""}
               options={trueFalseOptions}
@@ -2070,6 +2120,99 @@ const EditWorkerModal = (props) => {
             className="form-control"
             onChange={(e) => setDoc(e.target.files[0])}
           />
+        </div>
+
+        <div className='mb-3 mt-3'>
+          <label><b>Local de trabalho</b></label>
+
+          <input
+            type="text"
+            className="form-control"
+            disabled={true}
+            value={`${selectedSubsdiarie?.label} \ Filial N° ${selectedSubsdiarie?.value}`}
+          />
+        </div>
+
+        <div className="row">
+          <div className="col">
+            <Select
+              label={"Plano de saúde"}
+              placeholder={""}
+              options={trueFalseOptions}
+              setSelectedValue={setHealthcarePlan}
+              defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.healthcare_plan)}
+            />
+          </div>
+
+          <div className="col">
+            <Input
+              label={"Desconto em folha"}
+              placeholder={""}
+              setSelectedValue={setHealthcarePlanDiscount}
+              defaultValue={selectedWorker?.healthcare_plan_discount}
+            />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col">
+            <Select
+              label={"Seguro de vida"}
+              placeholder={""}
+              options={trueFalseOptions}
+              setSelectedValue={setLifeInsurance}
+              defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.life_insurance)}
+            />
+          </div>
+
+          <div className="col">
+            <Input
+              label={"Desconto em folha"}
+              placeholder={""}
+              setSelectedValue={setLifeInsuranceDiscount}
+              defaultValue={selectedWorker?.life_insurance_discount}
+            />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col">
+            <Input
+              label={"AG"}
+              placeholder={""}
+              setSelectedValue={setAg}
+              defaultValue={selectedWorker?.ag}
+            />
+          </div>
+
+          <div className="col">
+            <Input
+              label={"CC"}
+              placeholder={""}
+              setSelectedValue={setCc}
+              defaultValue={selectedWorker?.cc}
+            />
+          </div>
+        </div>
+
+        <div>
+          <p>
+            <b>
+              Sugestão de locais para realização de exames médicos (outros locais poderão ser escolhidos, a critério do empregador)
+            </b>
+          </p>
+
+          <p>
+            Clinimed Saúde Ocupacional: R. Conselheiro Mafra, 111 - Centro. Tel. (47) 3025-4970
+          </p>
+
+          <p>
+            Dom Med Gestão em Medicina ST: R. Rio Branco, 202 - Centro. Tel. (47) 3017-5001
+          </p>
+
+          <p>
+            DataMed Saúde Ocupacional: R. Abdon Batista, 314 - Centro. Tel. (47) 3432-8242"
+          </p>
         </div>
       </Modal.Body>
 

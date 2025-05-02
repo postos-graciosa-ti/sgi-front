@@ -235,6 +235,39 @@ const Nav = () => {
                 )
               }
 
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Mais
+                </a>
+
+                <ul className="dropdown-menu dropdown-menu-end">
+                  <li>
+                    <Link id="changeSubsidiarie" to="/steps" className="dropdown-item">
+                      Alterar filial
+                    </Link>
+                  </li>
+
+                  <li>
+                    <button
+                      id="changePassword"
+                      className="dropdown-item"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setChangePasswordModalOpen(true);
+                      }}
+                    >
+                      Alterar minha senha
+                    </button>
+                  </li>
+                </ul>
+              </li>
+
               <li className="nav-item">
                 <Link className="nav-link" to="/" onClick={() => setUserSession({})}>Sair</Link>
               </li>
@@ -243,7 +276,7 @@ const Nav = () => {
         </div>
       </nav>
 
-      <div id="userInfo" className="user-info-container">
+      {/* <div id="userInfo" className="user-info-container">
         <span id="subsidiarie" className="user-info">Filial: {selectedSubsidiarie.label}</span>
 
         <span className="separator"> | </span>
@@ -267,7 +300,7 @@ const Nav = () => {
         <span className="separator"> | </span>
 
         <span id="support" className="user-info">Suporte: postosgraciosati@gmail.com</span>
-      </div>
+      </div> */}
 
       {
         workersFirstReview?.workers?.length > 0 && (

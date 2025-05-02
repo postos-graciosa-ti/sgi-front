@@ -118,12 +118,6 @@ const DeleteWorkerModal = (props) => {
       })
   }
 
-  const handleOpenDefinitellyDeleteWorker = () => {
-    api
-      .delete(`/workers/${selectedWorker?.worker_id}`)
-      .then(() => handleClose())
-  }
-
   return (
     <Modal
       show={deleteWorkerModalOpen}
@@ -182,12 +176,6 @@ const DeleteWorkerModal = (props) => {
             </>
           )
         }
-
-        <div className="text-center mt-4">
-          <Button variant="warning" onClick={handleOpenDefinitellyDeleteWorker}>
-            <ExclamationTriangle />  Apagar definitivamente (irreversível)
-          </Button>
-        </div>
       </Modal.Body>
 
       <Modal.Footer>

@@ -1,8 +1,12 @@
+import axios from 'axios'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Plus, Trash } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import ReactInputMask from 'react-input-mask'
+import CreatableSelect from 'react-select/creatable'
+import Swal from 'sweetalert2'
 import Input from '../../components/form/Input'
 import Select from "../../components/form/Select"
 import useUserSessionStore from '../../data/userSession'
@@ -22,10 +26,6 @@ import loadWagePaymentMethodOptions from "../../requests/loadOptions/loadWagePay
 import getParentsType from '../../requests/parentsType/getParentsType'
 import postWorkersParents from '../../requests/workersParents/postWorkersParents'
 import api from '../../services/api'
-import ReactInputMask from 'react-input-mask'
-import CreatableSelect from 'react-select/creatable'
-import axios from 'axios'
-import Swal from 'sweetalert2'
 
 function calcularTempoDeEmpresa(dataAdmissaoStr) {
   const dataAdmissao = new Date(dataAdmissaoStr);
@@ -345,6 +345,24 @@ const CreateWorkerModal = (props) => {
 
   const [twentyTwoToFiveEffectiveDiaryWorkjourney, setTwentyTwoToFiveEffectiveDiaryWorkjourney] = useState()
 
+  // const [benefits, setBenefits] = useState()
+
+  // const [seeBenefitis, setSeeBenefits] = useState(false)
+
+  const [healthcarePlan, setHealthcarePlan] = useState()
+
+  const [healthcarePlanDiscount, setHealthcarePlanDiscount] = useState()
+
+  const [lifeInsurance, setLifeInsurance] = useState()
+
+  const [lifeInsuranceDiscount, setLifeInsuranceDiscount] = useState()
+
+  const [ag, setAg] = useState()
+
+  const [cc, setCc] = useState()
+
+  const [earlyPaymentDiscount, setEarlyPaymentDiscount] = useState()
+
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)
@@ -451,6 +469,14 @@ const CreateWorkerModal = (props) => {
     }
   }, [hasNocturneHours])
 
+  // useEffect(() => {
+  //   if (benefits?.value == true) {
+  //     setSeeBenefits(true)
+  //   } else {
+  //     setSeeBenefits(false)
+  //   }
+  // }, [benefits])
+
   const handleClose = () => {
     api
       .get(`/subsidiaries/${selectedSubsdiarie?.value}/workers/experience-time-no-first-review`)
@@ -547,6 +573,20 @@ const CreateWorkerModal = (props) => {
     setTwentyTwoToFiveMonthWorkjourney()
 
     setTwentyTwoToFiveEffectiveDiaryWorkjourney()
+
+    setHealthcarePlan()
+
+    setHealthcarePlanDiscount()
+
+    setLifeInsurance()
+
+    setLifeInsuranceDiscount()
+
+    setAg()
+
+    setCc()
+
+    setEarlyPaymentDiscount()
   }
 
   const handleRemoveWorkersParents = (i) => {
@@ -694,6 +734,13 @@ const CreateWorkerModal = (props) => {
       "twenty_two_to_five_week_workjourney": twentyTwoToFiveWeekWorkjourney,
       "twenty_two_to_five_month_workjourney": twentyTwoToFiveMonthWorkjourney,
       "twenty_two_to_five_effective_diary_workjourney": twentyTwoToFiveEffectiveDiaryWorkjourney,
+      "healthcare_plan": healthcarePlan?.value,
+      "healthcare_plan_discount": healthcarePlanDiscount,
+      "life_insurance": lifeInsurance?.value,
+      "life_insurance_discount": lifeInsuranceDiscount,
+      "ag": ag,
+      "cc": cc,
+      "early_payment_discount": earlyPaymentDiscount,
     }
 
     api
@@ -2031,6 +2078,14 @@ const CreateWorkerModal = (props) => {
             </div>
 
             <div className="col">
+              <Input
+                label={"Porcentagem ou valor"}
+                placeholder={""}
+                setSelectedValue={setEarlyPaymentDiscount}
+              />
+            </div>
+
+            <div className="col">
               <Select
                 placeholder={""}
                 options={trueFalseOptions}
@@ -2106,6 +2161,93 @@ const CreateWorkerModal = (props) => {
               className="form-control"
               onChange={(e) => setDoc(e.target.files[0])}
             />
+          </div>
+
+          <div className='mb-3 mt-3'>
+            <label><b>Local de trabalho</b></label>
+
+            <input
+              type="text"
+              className="form-control"
+              disabled={true}
+              value={`${selectedSubsdiarie?.label} \ Filial N° ${selectedSubsdiarie?.value}`}
+            />
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Select
+                label={"Plano de saúde"}
+                placeholder={""}
+                options={trueFalseOptions}
+                setSelectedValue={setHealthcarePlan}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                label={"Desconto em folha"}
+                placeholder={""}
+                setSelectedValue={setHealthcarePlanDiscount}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Select
+                label={"Seguro de vida"}
+                placeholder={""}
+                options={trueFalseOptions}
+                setSelectedValue={setLifeInsurance}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                label={"Desconto em folha"}
+                placeholder={""}
+                setSelectedValue={setLifeInsuranceDiscount}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Input
+                label={"AG"}
+                placeholder={""}
+                setSelectedValue={setAg}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                label={"CC"}
+                placeholder={""}
+                setSelectedValue={setCc}
+              />
+            </div>
+          </div>
+
+          <div>
+            <p>
+              <b>
+                Sugestão de locais para realização de exames médicos (outros locais poderão ser escolhidos, a critério do empregador)
+              </b>
+            </p>
+
+            <p>
+              Clinimed Saúde Ocupacional: R. Conselheiro Mafra, 111 - Centro. Tel. (47) 3025-4970
+            </p>
+
+            <p>
+              Dom Med Gestão em Medicina ST: R. Rio Branco, 202 - Centro. Tel. (47) 3017-5001
+            </p>
+
+            <p>
+              DataMed Saúde Ocupacional: R. Abdon Batista, 314 - Centro. Tel. (47) 3432-8242"
+            </p>
           </div>
         </Modal.Body>
 

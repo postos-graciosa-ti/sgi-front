@@ -33,6 +33,7 @@ import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
 import HollidaysScale from "./pages/hollidaysScale/HollidaysScale"
+import Cities from "./pages/cities/Cities"
 
 const Routes = createBrowserRouter([
   // public routes
@@ -196,6 +197,11 @@ const Routes = createBrowserRouter([
   {
     path: "/hollidays-scale",
     element: <PrivateRoute><HollidaysScale /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/cities",
+    element: <PrivateRoute><Cities /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

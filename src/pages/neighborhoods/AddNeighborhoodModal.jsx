@@ -1,12 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import api from "../../services/api";
+import StateManagedSelect from 'react-select';
 
 const AddNeighborhoodModal = (props) => {
   const { addNeighborhoodModalOpen, setAddNeighborhoodModalOpen, setNeighborhoods } = props
 
+  const [citiesOptions, setCitiesOptions] = useState()
+
+  const [selectedCity, setSelectedCity] = useState()
+
   const [name, setName] = useState()
+
+  useEffect(() => {
+    api
+      .get("/cities")
+      .then((response) => {
+        let options = response.data.map((city) => ({ value: city.id, label: city.name }))
+
+        setCitiesOptions(options)
+      })
+  }, [addNeighborhoodModalOpen])
 
   const handleClose = () => {
     api
@@ -15,6 +30,8 @@ const AddNeighborhoodModal = (props) => {
 
     setName()
 
+    setSelectedCity()
+
     setAddNeighborhoodModalOpen(false)
   }
 
@@ -22,7 +39,8 @@ const AddNeighborhoodModal = (props) => {
     e.preventDefault()
 
     let formData = {
-      "name": name
+      "name": name,
+      "city_id": selectedCity?.value,
     }
 
     api
@@ -52,6 +70,12 @@ const AddNeighborhoodModal = (props) => {
               required
             />
           </div>
+
+          <StateManagedSelect
+            options={citiesOptions}
+            placeholder={"Cidade"}
+            onChange={(value) => setSelectedCity(value)}
+          />
         </Modal.Body>
 
         <Modal.Footer>

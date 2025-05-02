@@ -36,8 +36,10 @@ const HollidaysScale = () => {
 
         {
           hollidaysList?.map((holliday) => (
-            <div className="card mb-2 p-2" onClick={() => handleOpenHollidayScaleModal(holliday)}>
-              <span><b>{moment(holliday.date).format("DD-MM-YYYY")}</b>: {holliday.name}</span>
+            <div className="card mb-2 p-2">
+              <button className="btn btn-light" onClick={() => handleOpenHollidayScaleModal(holliday)}>
+                Criar escala para <b>{moment(holliday.date).format("DD-MM-YYYY")}</b> (<b>{holliday.name}</b>)
+              </button>
             </div>
           ))
         }

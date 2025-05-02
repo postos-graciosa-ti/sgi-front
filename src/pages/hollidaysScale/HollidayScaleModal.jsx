@@ -13,6 +13,12 @@ import loadWorkersByTurnAndFunctionOptions from '../../requests/loadOptions/load
 import api from '../../services/api'
 import HollidayScalePrintContent from './HollidayScalePrintContent'
 
+const getWorkersList = async (setWorkersList, selectedSubsidiarie) => {
+  let workers = await api.get(`/workers/subsidiarie/${selectedSubsidiarie?.value}`).then((response) => response.data)
+
+  setWorkersList(workers)
+}
+
 const HollidayScaleModal = (props) => {
   const { hollidayScaleModalOpen, setHollidayScaleModalOpen, selectedHolliday, setSelectedHolliday } = props
 
@@ -36,7 +42,11 @@ const HollidayScaleModal = (props) => {
 
   const [selectedFunction, setSelectedFunction] = useState()
 
+  const [workersList, setWorkersList] = useState()
+
   useEffect(() => {
+    getWorkersList(setWorkersList, selectedSubsidiarie)
+
     loadTurnsOptions(selectedSubsidiarie, setTurnsOptions)
 
     loadFunctionsOptions(selectedSubsidiarie, setFunctionsOptions)
@@ -49,9 +59,32 @@ const HollidayScaleModal = (props) => {
   }, [selectedTurn, selectedFunction])
 
   useEffect(() => {
-    api
-      .get(`/subsidiaries/${selectedSubsidiarie?.value}/hollidays-scale/${selectedHolliday?.date}`)
-      .then((response) => setWorkersScale(response?.data))
+    if (!hollidayScaleModalOpen) return
+
+    const fetchData = async () => {
+      try {
+        const [scaleResponse, workersResponse] = await Promise.all([
+          api.get(`/subsidiaries/${selectedSubsidiarie?.value}/hollidays-scale/${selectedHolliday?.date}`),
+          api.get(`/workers/subsidiarie/${selectedSubsidiarie?.value}`)
+        ])
+
+        const scaleData = scaleResponse.data
+
+        const allWorkers = workersResponse.data
+
+        const scaledWorkerIds = scaleData.map(scale => scale.worker.id)
+
+        const availableWorkers = allWorkers.filter(worker => !scaledWorkerIds.includes(worker.worker_id))
+
+        setWorkersScale(scaleData)
+
+        setWorkersList(availableWorkers)
+      } catch (error) {
+        console.error("Erro ao carregar escala/trabalhadores:", error)
+      }
+    }
+
+    fetchData()
   }, [hollidayScaleModalOpen])
 
   const handleClose = () => {
@@ -62,6 +95,8 @@ const HollidayScaleModal = (props) => {
     setSelectedTurn()
 
     setSelectedFunction()
+
+    setWorkersOptions()
 
     setHollidayScaleModalOpen(false)
   }
@@ -81,8 +116,15 @@ const HollidayScaleModal = (props) => {
         api
           .get(`/subsidiaries/${selectedSubsidiarie?.value}/hollidays-scale/${selectedHolliday?.date}`)
           .then((response) => {
+            const scaledWorkerIds = response.data.map(scale => scale.worker.id)
+
+            let newWorkersList = workersList?.filter(worker => !scaledWorkerIds.includes(worker.worker_id))
+
+            setWorkersList(newWorkersList)
+
             setWorkersScale(response?.data)
           })
+
       })
       .catch((error) => {
         Swal.fire({
@@ -132,7 +174,23 @@ const HollidayScaleModal = (props) => {
       .then(() => {
         api
           .get(`/subsidiaries/${selectedSubsidiarie?.value}/hollidays-scale/${selectedHolliday?.date}`)
-          .then((response) => setWorkersScale(response?.data))
+          .then((response) => {
+            const newWorkersScale = response?.data
+
+            const scaledWorkerIds = newWorkersScale.map(scale => scale.worker.id)
+
+            api
+              .get(`/workers/subsidiarie/${selectedSubsidiarie?.value}`)
+              .then((res) => {
+                const allWorkers = res.data
+
+                const updatedWorkersList = allWorkers.filter(worker => !scaledWorkerIds.includes(worker.worker_id))
+
+                setWorkersList(updatedWorkersList)
+
+                setWorkersScale(newWorkersScale)
+              })
+          })
       })
   }
 
@@ -216,7 +274,39 @@ const HollidayScaleModal = (props) => {
               </table>
             </div>
 
-            <span><b>Ei, coordenador, lembre-se: em feriados o colaborador recebe 100%</b></span>
+            <div className="accordion accordion-flush" id="accordionFlushExample">
+              <div className="accordion-item">
+                <h2 className="accordion-header">
+                  <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    <b>Funcionários trabalhando</b>
+                  </button>
+                </h2>
+
+                <div id="flush-collapseOne" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                  <div className="accordion-body">
+                    <div className="table-responsive">
+                      <table className="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Colaborador</th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          {
+                            workersList?.map((worker) => (
+                              <tr>
+                                <td>{worker.worker_name}</td>
+                              </tr>
+                            ))
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </Modal.Body>
 

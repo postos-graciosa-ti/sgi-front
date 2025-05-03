@@ -8,6 +8,7 @@ import ReactSelect from "react-select"
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 import printContent from './printContent'
+import Swal from 'sweetalert2'
 
 const PrintModal = (props) => {
   const { printModalOpen, setPrintModalOpen } = props
@@ -176,7 +177,9 @@ const PrintModal = (props) => {
             handleClose()
           })
       })
-      .catch(() => {
+      .catch((error) => {
+        Swal.fire("Erro", `${error.response.data.detail}`, "error")
+
         api
           .post(`/subsidiaries/${selectedSubsdiarie?.value}/scales/print`, formData)
           .then((response) => {

@@ -152,6 +152,10 @@ const Nav = () => {
               </li>
 
               {/* <li className="nav-item">
+                <Link className="nav-link" to="/">Chamados</Link>
+              </li> */}
+
+              {/* <li className="nav-item">
                 <Link className="nav-link" to="/applicants">Processos Seletivos</Link>
               </li> */}
 

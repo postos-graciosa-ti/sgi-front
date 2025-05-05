@@ -37,8 +37,6 @@ const EditNeighborhoodModal = (props) => {
     setEditNeighborhoodModalOpen(false)
   }
 
-  console.log(selectedNeighborhood)
-
   const handleSubmit = (e) => {
     e.preventDefault()
 

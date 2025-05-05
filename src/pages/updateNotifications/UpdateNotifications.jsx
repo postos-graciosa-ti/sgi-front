@@ -40,6 +40,7 @@ const UpdateNotifications = () => {
             "1. Implementação de histórico de atualizações de sistema",
             "2. Tratamento de erro ao cadastrar novo bairro dentro do cadastro de colaboradores",
             "3. Página para criar, editar e excluir cidades",
+            "4. Implementação de sistema de chamados (parte de chamados abertos pelo usuário, funcionalidade experimental)",
           ]}
         />
       </div>

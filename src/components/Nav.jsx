@@ -1,11 +1,11 @@
+import moment from "moment"
 import { useEffect, useState } from "react"
 import { Button, Modal } from 'react-bootstrap'
 import { Link, useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
 import useUserSessionStore from "../data/userSession"
-import api from "../services/api"
-import moment from "moment"
 import useWorkersExperienceTimeStore from "../data/workersExperienceTime"
+import api from "../services/api"
 
 export const ChangePasswordModal = (props) => {
   const { changePasswordModalOpen, setChangePasswordModalOpen } = props
@@ -133,7 +133,7 @@ const Nav = () => {
 
   return (
     <>
-      <nav id="navbar" className="navbar navbar-expand-lg bg-body-tertiary">
+      <nav id="navbar" className="navbar navbar-expand-lg bg-body-tertiary mb-5">
         <div className="container-fluid">
           <a className="navbar-brand" href="#">SGI</a>
 
@@ -147,24 +147,12 @@ const Nav = () => {
                 <Link className="nav-link" to="/home">Início</Link>
               </li>
 
-              {/* <li>
-                <Link className="nav-link" to="/monitoring">Monitoramento</Link>
-              </li> */}
-
-              {/* <li className="nav-item">
-                <Link className="nav-link" to="/candidates">Processos Seletivos</Link>
-              </li> */}
+              <li className="nav-item">
+                <Link className="nav-link" to="/update-notifications">Histórico de atualizações</Link>
+              </li>
 
               {/* <li className="nav-item">
                 <Link className="nav-link" to="/applicants">Processos Seletivos</Link>
-              </li> */}
-
-              {/* <li className="nav-item">
-                <Link className="nav-link" to="/subsidiarie-status">Status</Link>
-              </li> */}
-
-              {/* <li className="nav-item">
-                <Link className="nav-link" to="/scale">Escalas</Link>
               </li> */}
 
               <li className="nav-item dropdown">
@@ -203,7 +191,7 @@ const Nav = () => {
 
                   <li><Link className="dropdown-item" to="/states">Estados</Link></li>
 
-                  <li><Link className="dropdown-item" to="/">Cidades</Link></li>
+                  <li><Link className="dropdown-item" to="/cities">Cidades</Link></li>
 
                   <li><Link className="dropdown-item" to="/neighborhoods">Bairros</Link></li>
                 </ul>
@@ -276,32 +264,6 @@ const Nav = () => {
         </div>
       </nav>
 
-      {/* <div id="userInfo" className="user-info-container">
-        <span id="subsidiarie" className="user-info">Filial: {selectedSubsidiarie.label}</span>
-
-        <span className="separator"> | </span>
-
-        <Link id="changeSubsidiarie" to="/steps" className="user-info">Alterar filial</Link>
-
-        <span className="separator"> | </span>
-
-        <span className="user-info">Usuário: {userSession.name}</span>
-
-        <span className="separator"> | </span>
-
-        <button
-          id="changePassword"
-          onClick={(e) => { e.stopPropagation(); setChangePasswordModalOpen(true); }}
-          className="user-info"
-        >
-          Alterar minha senha
-        </button>
-
-        <span className="separator"> | </span>
-
-        <span id="support" className="user-info">Suporte: postosgraciosati@gmail.com</span>
-      </div> */}
-
       {
         workersFirstReview?.workers?.length > 0 && (
           <div className="container">
@@ -358,45 +320,6 @@ const Nav = () => {
         changePasswordModalOpen={changePasswordModalOpen}
         setChangePasswordModalOpen={setChangePasswordModalOpen}
       />
-
-      <style>
-        {
-          `
-            .user-info-container {
-              margin: 1rem;
-              text-align: end;
-            }
-
-            .user-info {
-              font-size: 1rem;
-              color: #007bff;  /* Ou cor personalizada */
-              text-decoration: none;
-              padding: 0;
-              margin: 0;
-              cursor: pointer;  /* Todos os itens interativos agora têm cursor pointer */
-            }
-
-            .user-info:hover {
-              text-decoration: underline; /* Hover effect */
-            }
-
-            .separator {
-              color: #6c757d;  /* Cor mais suave para a separação */
-            }
-
-            button.user-info {
-              background: none;
-              border: none;
-              padding: 0;
-              cursor: pointer;  /* Garante que o botão também tenha cursor pointer */
-            }
-
-            button.user-info:hover {
-              text-decoration: underline; /* Hover effect */
-            }
-          `
-        }
-      </style>
     </>
   )
 }

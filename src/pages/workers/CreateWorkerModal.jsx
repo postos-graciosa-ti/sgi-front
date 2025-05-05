@@ -28,38 +28,45 @@ import postWorkersParents from '../../requests/workersParents/postWorkersParents
 import api from '../../services/api'
 
 function calcularTempoDeEmpresa(dataAdmissaoStr) {
-  const dataAdmissao = new Date(dataAdmissaoStr);
-  const hoje = new Date();
+  const dataAdmissao = new Date(dataAdmissaoStr)
 
-  let anos = hoje.getFullYear() - dataAdmissao.getFullYear();
-  let meses = hoje.getMonth() - dataAdmissao.getMonth();
-  let dias = hoje.getDate() - dataAdmissao.getDate();
+  const hoje = new Date()
+
+  let anos = hoje.getFullYear() - dataAdmissao.getFullYear()
+
+  let meses = hoje.getMonth() - dataAdmissao.getMonth()
+
+  let dias = hoje.getDate() - dataAdmissao.getDate()
 
   if (dias < 0) {
-    meses -= 1;
+    meses -= 1
 
-    // Pega o último dia do mês anterior
-    const ultimoDiaMesAnterior = new Date(hoje.getFullYear(), hoje.getMonth(), 0).getDate();
-    dias += ultimoDiaMesAnterior;
+    const ultimoDiaMesAnterior = new Date(hoje.getFullYear(), hoje.getMonth(), 0).getDate()
+    
+    dias += ultimoDiaMesAnterior
   }
 
   if (meses < 0) {
-    anos -= 1;
-    meses += 12;
+    anos -= 1
+
+    meses += 12
   }
 
-  const partes = [];
+  const partes = []
+
   if (anos > 0) {
-    partes.push(`${anos} ${anos === 1 ? 'ano' : 'anos'}`);
-  }
-  if (meses > 0) {
-    partes.push(`${meses} ${meses === 1 ? 'mês' : 'meses'}`);
-  }
-  if (dias > 0) {
-    partes.push(`${dias} ${dias === 1 ? 'dia' : 'dias'}`);
+    partes.push(`${anos} ${anos === 1 ? 'ano' : 'anos'}`)
   }
 
-  return partes.length ? partes.join(" e ") : "Menos de um dia";
+  if (meses > 0) {
+    partes.push(`${meses} ${meses === 1 ? 'mês' : 'meses'}`)
+  }
+
+  if (dias > 0) {
+    partes.push(`${dias} ${dias === 1 ? 'dia' : 'dias'}`)
+  }
+
+  return partes.length ? partes.join(" e ") : "Menos de um dia"
 }
 
 const CreateWorkerModal = (props) => {
@@ -862,13 +869,8 @@ const CreateWorkerModal = (props) => {
 
           <div className="row">
             <div className="col">
-              {/* <Input
-                label={"Número de emergência"}
-                type="text"
-                setSelectedValue={setEmergencyNumber}
-              /> */}
-
               <label><b>Número de emergência</b></label>
+
               <ReactInputMask
                 mask={"(99) 99999-9999"}
                 className="form-control"
@@ -905,65 +907,6 @@ const CreateWorkerModal = (props) => {
             <h4>Endereço residencial</h4>
           </div>
 
-          {/* <div className="row">
-            <div className="col">
-              <Input
-                type="text"
-                label={"Logradouro"}
-                setSelectedValue={setStreet}
-              />
-
-              <Input
-                type="text"
-                label={"CEP"}
-                setSelectedValue={setSelectedCep}
-              />
-            </div>
-
-            <div className="col">
-              <Input
-                type="text"
-                label={"Número"}
-                setSelectedValue={setStreetNumber}
-              />
-
-              <Select
-                placeholder=""
-                label={"Estado"}
-                options={statesOptions}
-                setSelectedValue={setSelectedState}
-              />
-            </div>
-
-            <div className="col">
-              <Input
-                type="text"
-                label={"Complemento"}
-                setSelectedValue={setStreetComplement}
-              />
-
-              <div className="row">
-                <div className="col">
-                  <Select
-                    placeholder=""
-                    label={"Cidade"}
-                    options={citiesOptions}
-                    setSelectedValue={setSelectedCity}
-                  />
-                </div>
-
-                <div className="col">
-                  <Select
-                    label={"Bairro"}
-                    placeholder=""
-                    options={neighborhoodOptions}
-                    setSelectedValue={setSelectedNeighborhood}
-                  />
-                </div>
-              </div>
-            </div>
-          </div> */}
-
           <div className="row">
             <div className="col">
               <Input
@@ -1001,6 +944,7 @@ const CreateWorkerModal = (props) => {
 
             <div className="col">
               <label><b>Cidade</b></label>
+
               <input
                 className="form-control"
                 disabled="true"
@@ -1009,32 +953,32 @@ const CreateWorkerModal = (props) => {
             </div>
 
             <div className="col">
-              {/* <Select
-                label={"Bairro"}
-                placeholder=""
-                options={neighborhoodOptions}
-                setSelectedValue={setSelectedNeighborhood}
-              /> */}
-
               <label><b>Bairro</b></label>
 
               <CreatableSelect
                 placeholder={""}
                 options={neighborhoodOptions}
-                onChange={(value) => {
+                onChange={async (value) => {
                   if (value.__isNew__) {
-                    api
-                      .post("/news", { name: value.value })
-                      .then((response) => {
-                        let options = response?.data.map((neighborhood) => ({ value: neighborhood.id, label: neighborhood.name, cityId: neighborhood.city_id }))
+                    try {
+                      const response = await api.post("/news", { name: value.value })
 
-                        setNeighborhoodOptions(options)
+                      const options = response?.data.map((neighborhood) => ({
+                        value: neighborhood.id,
+                        label: neighborhood.name,
+                        cityId: neighborhood.city_id,
+                      }))
 
-                        let neighborhood = options.find((option) => option.label == value.value)
+                      setNeighborhoodOptions(options)
 
-                        setSelectedNeighborhood(neighborhood)
-                      })
+                      const neighborhood = options.find((option) => option.label === value.value)
 
+                      setSelectedNeighborhood(neighborhood)
+                    } catch (error) {
+                      console.error(error)
+
+                      Swal.fire("Não foi possível cadastrar novo bairro", "Verifique a ortografia e tente novamente", "error")
+                    }
                   } else {
                     setSelectedNeighborhood(value)
                   }
@@ -1047,87 +991,10 @@ const CreateWorkerModal = (props) => {
             <h4>Dados pessoais</h4>
           </div>
 
-          {/* <div className="row">
-            <div className="col">
-              <div className="row">
-                <div className="col">
-                  <Input
-                    type="text"
-                    label={"Telefone fixo"}
-                    setSelectedValue={setSelectedPhone}
-                  />
-                </div>
-
-                <div className="col">
-                  <Input
-                    type="text"
-                    label={"Celular"}
-                    setSelectedValue={setSelectedMobile}
-                  />
-                </div>
-              </div>
-
-              <Input
-                type="date"
-                setSelectedValue={setBirthdate}
-                label={"Data de nascimento"}
-              />
-            </div>
-
-            <div className="col">
-              <Input
-                type="email"
-                label={"E-mail"}
-                setSelectedValue={setEmail}
-              />
-
-              <Select
-                label={"Nacionalidade"}
-                placeholder=""
-                options={nationalityOptions}
-                setSelectedValue={setSelectedNationality}
-              />
-            </div>
-
-            <div className="col">
-              <Select
-                label={"Etnia"}
-                placeholder=""
-                options={ethnicitiesOptions}
-                setSelectedValue={setSelectedEthnicity}
-              />
-
-              <div className="row">
-                <div className="col">
-                  <Select
-                    placeholder=""
-                    label={"Estado"}
-                    options={statesOptions}
-                    setSelectedValue={setSelectedBirthstate}
-                  />
-                </div>
-
-                <div className="col">
-                  <Select
-                    placeholder=""
-                    label={"Cidade"}
-                    options={citiesOptions}
-                    setSelectedValue={setBirthcity}
-                  />
-                </div>
-              </div>
-            </div>
-          </div> */}
-
           <div className="row">
             <div className="col">
-              {/* <Input
-                type="text"
-                label={"Telefone fixo"}
-                setSelectedValue={setSelectedPhone}
-              /> */}
-
               <label><b>Telefone fixo</b></label>
+
               <ReactInputMask
                 mask={"(99) 9999-9999"}
                 className="form-control"
@@ -1136,13 +1003,8 @@ const CreateWorkerModal = (props) => {
             </div>
 
             <div className="col">
-              {/* <Input
-                type="text"
-                label={"Celular"}
-                setSelectedValue={setSelectedMobile}
-              /> */}
-
               <label><b>Celular</b></label>
+
               <ReactInputMask
                 mask={"(99) 99999-9999"}
                 className="form-control"
@@ -1179,6 +1041,7 @@ const CreateWorkerModal = (props) => {
 
             <div className="col">
               <label><b>Estado</b></label>
+
               <input
                 className="form-control"
                 disabled="true"
@@ -1187,32 +1050,32 @@ const CreateWorkerModal = (props) => {
             </div>
 
             <div className="col">
-              {/* <Select
-                placeholder=""
-                label={"Cidade"}
-                options={citiesOptions}
-                setSelectedValue={setBirthcity}
-              /> */}
-
               <label><b>Cidade</b></label>
 
               <CreatableSelect
                 placeholder={""}
                 options={citiesOptions}
-                onChange={(value) => {
+                onChange={async (value) => {
                   if (value.__isNew__) {
-                    api
-                      .post("/cities", { name: value.value })
-                      .then((response) => {
-                        let options = response?.data.map((city) => ({ value: city.id, label: city.name, stateId: city.state_id }))
+                    try {
+                      const response = await api.post("/cities", { name: value.value })
 
-                        setCitiesOptions(options)
+                      const options = response?.data.map((city) => ({
+                        value: city.id,
+                        label: city.name,
+                        stateId: city.state_id,
+                      }))
 
-                        let selectedBirthcity = options.find((option) => option.label == value.value)
+                      setCitiesOptions(options)
 
-                        setBirthcity(selectedBirthcity)
-                      })
+                      const selectedBirthcity = options.find((option) => option.label === value.value)
 
+                      setBirthcity(selectedBirthcity)
+                    } catch (error) {
+                      console.error(error)
+
+                      Swal.fire("Não foi possível cadastrar nova cidade", "Verifique a ortografia e tente novamente", "error")
+                    }
                   } else {
                     setBirthcity(value)
                   }
@@ -1245,13 +1108,8 @@ const CreateWorkerModal = (props) => {
 
           <div className="row">
             <div className="col">
-              {/* <Input
-                type="text"
-                label={"CPF"}
-                setSelectedValue={setCpf}
-              /> */}
-
               <label><b>CPF</b></label>
+
               <ReactInputMask
                 mask={"999.999.999-99"}
                 className="form-control"
@@ -1421,12 +1279,6 @@ const CreateWorkerModal = (props) => {
                 </div>
 
                 <div className="col">
-                  {/* <Input
-                    type="text"
-                    label="Categoria"
-                    setSelectedValue={setCnhCategory}
-                  /> */}
-
                   <Select
                     placeholder={""}
                     label={"categoria"}
@@ -1732,22 +1584,6 @@ const CreateWorkerModal = (props) => {
           </div>
 
           <div className="row">
-            {/* <div className="col">
-              <Input
-                label="Código geral de função"
-                type="text"
-                setSelectedValue={setCodeGeneralFunction}
-              />
-            </div>
-
-            <div className="col">
-              <Input
-                label="CBO"
-                type="text"
-                setSelectedValue={setCbo}
-              />
-            </div> */}
-
             <div className="col">
               <Input
                 label="Data de última função"
@@ -1848,17 +1684,6 @@ const CreateWorkerModal = (props) => {
               </div>
             </div>
           </div>
-
-          {/* <div className="row">
-            <div className="col">
-              <Select
-                placeholder={""}
-                label="Tempo de experiência"
-                options={experienceTimeOptions}
-                setSelectedValue={setExperienceTime}
-              />
-            </div>
-          </div> */}
 
           <div className="row">
             <div className="col">
@@ -1972,13 +1797,6 @@ const CreateWorkerModal = (props) => {
                       />
                     </div>
 
-                    {/* <div className="col">
-                      <Input
-                        label={"Total de carga diária"}
-                        placeholder={""}
-                      />
-                    </div> */}
-
                     <div className="col">
                       <Input
                         label={"Total de horas noturnas diárias"}
@@ -2031,14 +1849,6 @@ const CreateWorkerModal = (props) => {
           </div>
 
           <div className="row">
-            {/* <div className="col">
-              <Input
-                label="Horas noturnas"
-                type="text"
-                setSelectedValue={setNocturneHours}
-              />
-            </div> */}
-
             <div className="col">
               <Input
                 label="Salário"
@@ -2057,14 +1867,6 @@ const CreateWorkerModal = (props) => {
                 setSelectedValue={setSelectedHierarchyStructure}
               />
             </div>
-
-            {/* <div className="col">
-              <Input
-                type={"text"}
-                label={"Tempo de empresa"}
-                setSelectedValue={setEnterpriseTime}
-              />
-            </div> */}
           </div>
 
           <div className="row">

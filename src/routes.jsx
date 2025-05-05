@@ -9,9 +9,11 @@ import Candidates from "./pages/candidates/Candidates"
 import FirstInterview from "./pages/candidates/FirstInterview"
 import Jobs from "./pages/candidates/Jobs"
 import RegisterCandidate from "./pages/candidates/RegisterCandidate"
+import Cities from "./pages/cities/Cities"
 import CostCenter from "./pages/costCenter/CostCenter"
 import Department from "./pages/department/Department"
 import Functions from "./pages/functions/Functions"
+import HollidaysScale from "./pages/hollidaysScale/HollidaysScale"
 import Home from "./pages/home/Home"
 import CostCenterLogs from "./pages/logsPages/CostCentersLogs"
 import DepartmentLogs from "./pages/logsPages/DepartmentsLogs"
@@ -29,11 +31,10 @@ import Steps from "./pages/steps/Steps"
 import Subsidiaries from "./pages/subsidiaries/Subsidiaries"
 import SubsidiarieStatus from "./pages/subsidiarieStatus/SubsidiarieStatus"
 import Turns from "./pages/turns/Turns"
+import UpdateNotifications from "./pages/updateNotifications/UpdateNotifications"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
-import HollidaysScale from "./pages/hollidaysScale/HollidaysScale"
-import Cities from "./pages/cities/Cities"
 
 const Routes = createBrowserRouter([
   // public routes
@@ -202,6 +203,11 @@ const Routes = createBrowserRouter([
   {
     path: "/cities",
     element: <PrivateRoute><Cities /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/update-notifications",
+    element: <PrivateRoute><UpdateNotifications /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

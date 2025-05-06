@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
-import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
-import api from '../../services/api'
+import Modal from 'react-bootstrap/Modal'
 import useUserSessionStore from '../../data/userSession'
+import api from '../../services/api'
 
 const RequestingComments = (props) => {
   const { requestingCommentsOpen, setRequestingCommentsOpen, selectedRequestingTicket, setSelectedRequestingTicket } = props
@@ -11,8 +11,11 @@ const RequestingComments = (props) => {
   const userSession = useUserSessionStore((state) => state.userSession)
 
   const [comments, setComments] = useState([])
+
   const [newComment, setNewComment] = useState('')
+
   const [isLoading, setIsLoading] = useState(false)
+
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
@@ -24,6 +27,7 @@ const RequestingComments = (props) => {
   const fetchComments = async () => {
     try {
       const response = await api.get(`/tickets-comments/${selectedRequestingTicket?.ticket_id}`)
+
       setComments(response.data)
     } catch (error) {
       console.error('Error fetching comments:', error)
@@ -32,16 +36,19 @@ const RequestingComments = (props) => {
 
   const handleClose = () => {
     setSelectedRequestingTicket(null)
+
     setRequestingCommentsOpen(false)
+
     setNewComment('')
+
     setIsSubmitting(false)
   }
 
   const handleAddComment = async () => {
     if (!newComment.trim()) return
-    
+
     setIsSubmitting(true)
-    
+
     try {
       const formData = {
         "ticket_id": selectedRequestingTicket?.ticket_id,
@@ -50,7 +57,9 @@ const RequestingComments = (props) => {
       }
 
       await api.post(`/tickets-comments`, formData)
-      setNewComment('') // Limpa o input após enviar
+
+      setNewComment('')
+
       await fetchComments()
     } catch (error) {
       console.error('Error adding comment:', error)
@@ -82,7 +91,7 @@ const RequestingComments = (props) => {
 
         <div className="comments-section">
           <h5 className="mb-3">Comentários ({comments?.length || 0})</h5>
-          
+
           {comments?.length > 0 ? (
             <div className="comments-list">
               {comments.map((comment, index) => (

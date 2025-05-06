@@ -38,6 +38,9 @@ const UpdateNotifications = () => {
           date={"06/05/2025"}
           updates={[
             "1. Implementação de sistema de chamados (parte de chamados atribuídos ao usuário, funcionalidade experimental)",
+            "2. Implementação de sistema de chamados (parte de notificações de chamados atribuídos ao usuário, funcionalidade experimental)",
+            "3. Reestruturação da página de notificações",
+            "4. Notificação de coordenador que realizou avaliação de experiência de colaborador",
           ]}
         />
 

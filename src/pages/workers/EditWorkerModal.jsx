@@ -373,8 +373,6 @@ const EditWorkerModal = (props) => {
 
   const [earlyPaymentDiscount, setEarlyPaymentDiscount] = useState()
 
-  console.log(selectedWorker)
-
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
     loadTurnsOptions(selectedSubsdiarie, setTurnsOptions)

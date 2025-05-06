@@ -30,11 +30,14 @@ import States from "./pages/states/States"
 import Steps from "./pages/steps/Steps"
 import Subsidiaries from "./pages/subsidiaries/Subsidiaries"
 import SubsidiarieStatus from "./pages/subsidiarieStatus/SubsidiarieStatus"
+import Requesting from "./pages/tickets/Requesting"
+import Tickets from "./pages/tickets/Tickets"
 import Turns from "./pages/turns/Turns"
 import UpdateNotifications from "./pages/updateNotifications/UpdateNotifications"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
+import Responsible from "./pages/tickets/Responsible"
 
 const Routes = createBrowserRouter([
   // public routes
@@ -208,6 +211,21 @@ const Routes = createBrowserRouter([
   {
     path: "/update-notifications",
     element: <PrivateRoute><UpdateNotifications /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/tickets",
+    element: <PrivateRoute><Tickets /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/requesting",
+    element: <PrivateRoute><Requesting /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/responsible",
+    element: <PrivateRoute><Responsible /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

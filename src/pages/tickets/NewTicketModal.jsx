@@ -56,7 +56,7 @@ const NewTicketModal = (props) => {
   const handleSubmit = () => {
     let formData = {
       requesting_id: userSession?.id,
-      responsibles_ids: selectedResponsibles?.map((responsible) => responsible.value),
+      responsibles_ids: `[${selectedResponsibles?.map((responsible) => responsible.value).join(",")}]`,
       service: selectedService?.value,
       description: description,
       is_open: true,

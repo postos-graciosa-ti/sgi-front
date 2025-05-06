@@ -38,6 +38,10 @@ const Steps = () => {
 
   const [ticketsNotifications, setTicketsNotifications] = useState()
 
+  const [firstReviewRealizedBy, setFirstReviewRealizedBy] = useState()
+
+  const [secondReviewRealizedBy, setSecondReviewRealizedBy] = useState()
+
   useEffect(() => {
     api
       .post(`/subsidiaries/away-workers`, { subsidiaries_ids: eval(userSession.subsidiaries_id) })
@@ -54,6 +58,14 @@ const Steps = () => {
     api
       .get(`/tickets/responsible/${userSession?.id}/notifications`)
       .then((response) => setTicketsNotifications(response.data))
+
+    api
+      .get(`/workers/first-review/notification`)
+      .then((response) => setFirstReviewRealizedBy(response.data))
+
+    api
+      .get(`/workers/second-review/notification`)
+      .then((response) => setSecondReviewRealizedBy(response.data))
   }, [])
 
   const handleSubmit = () => {
@@ -104,6 +116,22 @@ const Steps = () => {
         }
 
         {
+          firstReviewRealizedBy?.length > 0 && (
+            <>
+              <h5>Avaliações de primeiro período de experiência realizadas</h5>
+
+              {
+                firstReviewRealizedBy?.map((notification) => (
+                  <div className="alert alert-warning">
+                    {notification?.User?.name} realizou a avaliação de primeiro período de experiência para {notification?.Workers?.name} em {moment(notification?.WorkersFirstReview?.realized_in).format("DD-MM-YYYY")}
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
+
+        {
           workersWithoutSecondReview?.workers?.length > 0 && (
             <>
               <h5>Avaliação de segundo período de experiência</h5>
@@ -112,6 +140,22 @@ const Steps = () => {
                 workersWithoutSecondReview?.workers?.map((data) => (
                   <div className="alert alert-warning" key={data.worker_id}>
                     Colaborador {data.worker_name} da filial {data.subsidiarie_name}, admitido em {moment(data.worker_admission_date).format("DD/MM/YYYY")}, tem sua segunda avaliação de tempo de experiência em {moment(data.worker_second_review_date).format("DD/MM/YYYY")}
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
+
+        {
+          secondReviewRealizedBy?.length > 0 && (
+            <>
+              <h5>Avaliações de segundo período de experiência realizadas</h5>
+
+              {
+                secondReviewRealizedBy?.map((notification) => (
+                  <div className="alert alert-warning">
+                    {notification?.User?.name} realizou a avaliação de primeiro período de experiência para {notification?.Workers?.name} em {moment(notification?.WorkersFirstReview?.realized_in).format("DD-MM-YYYY")}
                   </div>
                 ))
               }

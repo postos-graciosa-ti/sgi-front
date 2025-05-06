@@ -41,6 +41,10 @@ const UpdateNotifications = () => {
             "2. Implementação de sistema de chamados (parte de notificações de chamados atribuídos ao usuário, funcionalidade experimental)",
             "3. Reestruturação da página de notificações",
             "4. Notificação de coordenador que realizou avaliação de experiência de colaborador",
+            "5. Correção de erro de sistema em produção: não estava buscando usuários",
+            "6. Correção de erro de sistema em produção: não estava criando chamados",
+            "7. Ordenação de comentários de chamados",
+            "8. Script para alteração de planilhas do RH para contabilidade (parte de API)",
           ]}
         />
 

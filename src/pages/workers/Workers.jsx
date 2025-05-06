@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { ArrowClockwise, FileEarmarkPdf, FiletypeDocx, Funnel, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX, Printer, Question } from "react-bootstrap-icons"
+import { ArrowClockwise, FileEarmarkPdf, FiletypeCsv, FiletypeDocx, FiletypeXlsx, Funnel, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX, Printer, Question } from "react-bootstrap-icons"
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import Nav from "../../components/Nav"
@@ -23,6 +23,7 @@ import WorkerInfoModal from "./WorkerInfoModal"
 import WorkerNotationModal from "./WorkerNotationModal"
 import WorkerReturnModal from "./WorkerReturnModal"
 import WorkersByTurnModal from "./WorkersByTurnModal"
+import ModifyWorkpointModal from "./ModifyWorkpointModal"
 
 const Workers = () => {
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
@@ -64,6 +65,8 @@ const Workers = () => {
   const [docsModalOpen, setDocsModalOpen] = useState(false)
 
   const [workerDocsModalOpen, setWorkerDocsModalOpen] = useState(false)
+
+  const [modifyWorkpointModalOpen, setModifyWorkpointModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -234,6 +237,10 @@ const Workers = () => {
     setWorkerDocsModalOpen(true)
   }
 
+  const handleOpenModifyWorkpointModal = () => {
+    setModifyWorkpointModalOpen(true)
+  }
+
   return (
     <>
       <Nav />
@@ -248,6 +255,10 @@ const Workers = () => {
               onClick={() => initTour(workersSteps)}
             >
               <Question />
+            </button>
+
+            <button className="btn btn-success me-2" title="Adaptar planilha do ponto" onClick={handleOpenModifyWorkpointModal}>
+              <FiletypeXlsx />
             </button>
 
             <button
@@ -657,6 +668,11 @@ const Workers = () => {
         setWorkerDocsModalOpen={setWorkerDocsModalOpen}
         selectedWorker={selectedWorker}
         setSelectedWorker={setSelectedWorker}
+      />
+
+      <ModifyWorkpointModal
+        modifyWorkpointModalOpen={modifyWorkpointModalOpen}
+        setModifyWorkpointModalOpen={setModifyWorkpointModalOpen}
       />
     </>
   )

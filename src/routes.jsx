@@ -37,6 +37,7 @@ import UpdateNotifications from "./pages/updateNotifications/UpdateNotifications
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
+import Responsible from "./pages/tickets/Responsible"
 
 const Routes = createBrowserRouter([
   // public routes
@@ -220,6 +221,11 @@ const Routes = createBrowserRouter([
   {
     path: "/requesting",
     element: <PrivateRoute><Requesting /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/responsible",
+    element: <PrivateRoute><Responsible /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

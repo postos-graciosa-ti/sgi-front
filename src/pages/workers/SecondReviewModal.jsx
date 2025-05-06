@@ -34,6 +34,8 @@ const hasGoodAvaliation = (criteria) => {
 const SecondReviewModal = (props) => {
   const { secondReviewModalOpen, setSecondReviewModalOpen, selectedWorker, setSelectedWorker, setExperienceTimeModalOpen } = props
 
+  const userSession = useUserSessionStore((state) => state.userSession)
+
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const setWorkersFirstReview = useWorkersExperienceTimeStore(state => state.setWorkersFirstReview)
@@ -265,7 +267,9 @@ const SecondReviewModal = (props) => {
       hierarchy: selectedHierarchy?.label,
       punctuality: selectedPunctuality?.label,
       attendance: selectedAttendance?.label,
-      approved: selectedApproved?.label
+      approved: selectedApproved?.label,
+      realized_by: userSession?.id,
+      realized_in: moment().format("YYYY-MM-DD"),
     }
 
     api

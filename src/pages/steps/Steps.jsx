@@ -8,6 +8,24 @@ import api from "../../services/api"
 const Steps = () => {
   const navigate = useNavigate()
 
+  const today = new Date()
+
+  const day = today.getDay()
+
+  const diffToMonday = (day === 0 ? -6 : 1 - day)
+
+  const startOfWeek = new Date(today)
+
+  startOfWeek.setDate(today.getDate() + diffToMonday)
+
+  startOfWeek.setHours(0, 0, 0, 0)
+
+  const endOfWeek = new Date(startOfWeek)
+
+  endOfWeek.setDate(startOfWeek.getDate() + 6)
+
+  endOfWeek.setHours(23, 59, 59, 999)
+
   const userSession = useUserSessionStore(state => state.userSession)
 
   const setSelectedSubsidiarie = useUserSessionStore(state => state.setSelectedSubsidiarie)
@@ -17,6 +35,12 @@ const Steps = () => {
   const [workersWithoutFirstReview, setWorkersWithoutFirstReview] = useState()
 
   const [workersWithoutSecondReview, setWorkersWithoutSecondReview] = useState()
+
+  const [ticketsNotifications, setTicketsNotifications] = useState()
+
+  const [firstReviewRealizedBy, setFirstReviewRealizedBy] = useState()
+
+  const [secondReviewRealizedBy, setSecondReviewRealizedBy] = useState()
 
   useEffect(() => {
     api
@@ -30,6 +54,18 @@ const Steps = () => {
     api
       .post("/subsidiaries/workers/experience-time-no-second-review", { subsidiaries_ids: eval(userSession.subsidiaries_id) })
       .then((response) => setWorkersWithoutSecondReview(response.data))
+
+    api
+      .get(`/tickets/responsible/${userSession?.id}/notifications`)
+      .then((response) => setTicketsNotifications(response.data))
+
+    api
+      .get(`/workers/first-review/notification`)
+      .then((response) => setFirstReviewRealizedBy(response.data))
+
+    api
+      .get(`/workers/second-review/notification`)
+      .then((response) => setSecondReviewRealizedBy(response.data))
   }, [])
 
   const handleSubmit = () => {
@@ -57,44 +93,16 @@ const Steps = () => {
           />
         </div>
 
-        <div className="mt-3 text-end">
+        <div className="mt-3 mb-4 text-end">
           <button type="submit" className="btn btn-primary" onClick={handleSubmit}>
             Próximo
           </button>
         </div>
 
         {
-          ((
-            (workersAwayEndDate?.workers?.length > 0) ||
-            (workersWithoutFirstReview?.length > 0) ||
-            (workersWithoutSecondReview?.length > 0)
-          ) && (
-              <div className="mt-5">
-                <h4>Notificações</h4>
-              </div>
-            ))
-        }
-
-        {
-          workersAwayEndDate?.workers?.length > 0 && (
-            <>
-              <h4>Colaboradores afastados que retornam entre {moment(workersAwayEndDate?.start_of_week).format("DD/MM/YYYY")} e {moment(workersAwayEndDate?.end_of_week).format("DD/MM/YYYY")}</h4>
-
-              {
-                workersAwayEndDate?.workers?.map((worker) => (
-                  <div className="alert alert-warning">
-                    {worker.name} deve retornar em {moment(worker.away_end_date).format("DD/MM/YYYY")}
-                  </div>
-                ))
-              }
-            </>
-          )
-        }
-
-        {
           workersWithoutFirstReview?.workers?.length > 0 && (
             <>
-              <h4>Colaboradores com avaliação de primeiro período de experiência entre {moment(workersWithoutFirstReview.start_of_week).format("DD/MM/YYYY")} e {moment(workersWithoutFirstReview.end_of_week).format("DD/MM/YYYY")}</h4>
+              <h5>Avaliação de primeiro período de experiência</h5>
 
               {
                 workersWithoutFirstReview?.workers?.map((data) => (
@@ -108,9 +116,25 @@ const Steps = () => {
         }
 
         {
+          firstReviewRealizedBy?.length > 0 && (
+            <>
+              <h5>Avaliações de primeiro período de experiência realizadas</h5>
+
+              {
+                firstReviewRealizedBy?.map((notification) => (
+                  <div className="alert alert-warning">
+                    {notification?.User?.name} realizou a avaliação de primeiro período de experiência para {notification?.Workers?.name} em {moment(notification?.WorkersFirstReview?.realized_in).format("DD-MM-YYYY")}
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
+
+        {
           workersWithoutSecondReview?.workers?.length > 0 && (
             <>
-              <h4>Colaboradores com avaliação de segundo período de experiência entre {moment(workersWithoutSecondReview.start_of_week).format("DD/MM/YYYY")} e {moment(workersWithoutSecondReview.end_of_week).format("DD/MM/YYYY")}</h4>
+              <h5>Avaliação de segundo período de experiência</h5>
 
               {
                 workersWithoutSecondReview?.workers?.map((data) => (
@@ -122,8 +146,55 @@ const Steps = () => {
             </>
           )
         }
+
+        {
+          secondReviewRealizedBy?.length > 0 && (
+            <>
+              <h5>Avaliações de segundo período de experiência realizadas</h5>
+
+              {
+                secondReviewRealizedBy?.map((notification) => (
+                  <div className="alert alert-warning">
+                    {notification?.User?.name} realizou a avaliação de primeiro período de experiência para {notification?.Workers?.name} em {moment(notification?.WorkersFirstReview?.realized_in).format("DD-MM-YYYY")}
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
+
+        {
+          workersAwayEndDate?.workers?.length > 0 && (
+            <>
+              <h5>Afastados para retornar</h5>
+
+              {
+                workersAwayEndDate?.workers?.map((worker) => (
+                  <div className="alert alert-warning" key={worker.id}>
+                    {worker.name} deve retornar em {moment(worker.away_end_date).format("DD/MM/YYYY")}
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
+
+        {
+          ticketsNotifications?.length > 0 && (
+            <>
+              <h5>Chamados atribuídos</h5>
+
+              {
+                ticketsNotifications && ticketsNotifications.map((notification) => (
+                  <div className="alert alert-warning" key={notification?.Tickets?.id}>
+                    {notification?.User?.name} abriu um chamado ({notification?.Tickets?.description}, {notification?.Service?.name}) atribuído a {userSession?.name} em {moment(notification?.Tickets?.opened_at).format("DD-MM-YYYY")}
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
       </div>
-      {/* </div> */}
     </>
   )
 }

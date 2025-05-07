@@ -42,6 +42,7 @@ const UpdateNotifications = () => {
             "3. Adaptação de tela de cadastro de turnos para dispositivos móveis",
             "4. Adaptação de tela de cadastro de colaboradores para dispositivos móveis",
             "5. Adaptação de tela de cadastro de centro de custos para dispositivos móveis",
+            "6. Alteração visual da impressão de crachá",
           ]}
         />
 

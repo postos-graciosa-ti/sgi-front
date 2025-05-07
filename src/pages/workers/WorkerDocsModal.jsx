@@ -127,7 +127,7 @@ const WorkerDocsModal = (props) => {
               </div>
 
               <iframe
-                src={`http://localhost:8000/get-pdf/${pdf.doc_id}`}
+                src={`${import.meta.env.VITE_API_URL}/get-pdf/${pdf.doc_id}`}
                 width="100%"
                 height="500px"
                 style={{ border: 'none' }}

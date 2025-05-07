@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Modal, Button, Spinner, Alert } from 'react-bootstrap';
 import axios from 'axios';
+import React, { useState } from 'react';
+import { Alert, Button, Modal, Spinner } from 'react-bootstrap';
 
 const ModifyWorkpointModal = (props) => {
   const { modifyWorkpointModalOpen, setModifyWorkpointModalOpen } = props;
@@ -37,7 +37,7 @@ const ModifyWorkpointModal = (props) => {
     formData.append('file', selectedFile);
 
     try {
-      const response = await axios.post('http://localhost:8000/scripts/rhsheets', formData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/scripts/rhsheets`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -115,13 +115,13 @@ const ModifyWorkpointModal = (props) => {
           </div>
         )}
       </Modal.Body>
-      
+
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose} disabled={isLoading}>
           Fechar
         </Button>
-        <Button 
-          variant="primary" 
+        <Button
+          variant="primary"
           onClick={handleSubmit}
           disabled={isLoading || !selectedFile}
         >

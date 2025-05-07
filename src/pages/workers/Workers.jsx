@@ -141,27 +141,22 @@ const Workers = () => {
   }
 
   const handleIssueBadge = async (worker) => {
+    let subsidiarieData = await api.get(`/subsidiaries/${selectedSubsdiarie?.value}`).then((response) => response.data)
 
-    let subsidiarieData = await api.get()
+    const printableContent = ReactDOMServer.renderToString(
+      <PrintBadgeContent
+        worker={worker}
+        selectedSubsidiarie={subsidiarieData}
+      />
+    )
 
-    api.get(`/subsidiaries/${selectedSubsdiarie?.value}`).then((response) => {
-      const subsidiarieData = response.data;
-
-      const printableContent = ReactDOMServer.renderToString(
-        <PrintBadgeContent
-          worker={worker}
-          selectedSubsidiarie={subsidiarieData}
-        />
-      );
-
-      printJS({
-        printable: printableContent,
-        type: 'raw-html',
-        style: '',
-        scanStyles: false
-      });
-    });
-  };
+    printJS({
+      printable: printableContent,
+      type: 'raw-html',
+      style: '',
+      scanStyles: false
+    })
+  }
 
   const handleOpenDeleteWorkerModal = (worker) => {
     setSelectedWorker(worker)

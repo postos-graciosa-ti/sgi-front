@@ -40,6 +40,7 @@ const UpdateNotifications = () => {
             "1. Correção de erro em produção: Script da planilha do ponto",
             "2. Adaptação da tela inicial para dispositivos móveis",
             "3. Adaptação de tela de cadastro de turnos para dispositivos móveis",
+            "4. Adaptação de tela de cadastro de colaboradores para dispositivos móveis",
           ]}
         />
 

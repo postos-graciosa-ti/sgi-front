@@ -704,7 +704,7 @@ const EditWorkerModal = (props) => {
       })
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let formData = {
       "name": name ?? selectedWorker.worker_name,
       "function_id": selectedFunction?.value || selectedWorker?.function_id,
@@ -804,58 +804,30 @@ const EditWorkerModal = (props) => {
       "early_payment_discount": earlyPaymentDiscount ?? selectedWorker.early_payment_discount,
     }
 
-    console.log(formData)
-    debugger
+    let response = await api.put(`/workers/${selectedWorker.worker_id}`, formData).then((response) => response)
 
-    api
-      .put(`/workers/${selectedWorker.worker_id}`, formData)
-      .then((response) => {
-        if (response.status == 200 && workersDocs) {
-          const promises = workersDocs.map((doc) => {
-            return axios
-              .post(`${import.meta.env.VITE_API_URL}/upload-pdf/${selectedWorker.worker_id}`,
-                {
-                  doc_title: doc.docTitle.label,
-                  file: doc.doc,
-                },
-                {
-                  headers: {
-                    'Content-Type': 'multipart/form-data',
-                  },
-                }
-              )
-          })
-
-          Promise.all(promises).then(() => {
-            handleClose()
-          })
-        } else {
-          handleClose()
-        }
+    if (response.status == 200 && workersDocs) {
+      const promises = workersDocs.map(async (doc) => {
+        return await axios
+          .post(
+            `${import.meta.env.VITE_API_URL}/upload-pdf/${selectedWorker.worker_id}`,
+            {
+              doc_title: doc.docTitle.label,
+              file: doc.doc,
+            },
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            }
+          )
       })
+
+      Promise.all(promises).then(() => handleClose())
+    } else {
+      handleClose()
+    }
   }
-
-  // const handlePrintWorkerData = () => {
-  //   api
-  //     .get(`/cities/${selectedWorker?.neighborhood?.city_id}`)
-  //     .then((response) => {
-  //       let cityData = response?.data
-
-  //       const printableContent = ReactDOMServer.renderToString(
-  //         <WorkerDataPrintContent
-  //           selectedWorker={selectedWorker}
-  //           cityData={cityData}
-  //           parentsData={parentsData}
-  //         />
-  //       )
-
-  //       printJS({
-  //         printable: printableContent,
-  //         type: 'raw-html',
-  //         header: null
-  //       })
-  //     })
-  // }
 
   const handleRemoveDoc = (i) => {
     const updatedDocs = [...workersDocs]

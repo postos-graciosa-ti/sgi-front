@@ -42,7 +42,7 @@ function calcularTempoDeEmpresa(dataAdmissaoStr) {
     meses -= 1
 
     const ultimoDiaMesAnterior = new Date(hoje.getFullYear(), hoje.getMonth(), 0).getDate()
-    
+
     dias += ultimoDiaMesAnterior
   }
 
@@ -418,7 +418,7 @@ const CreateWorkerModal = (props) => {
     api
       .get("/cities")
       .then((response) => {
-        let options = response?.data.map((city) => ({ value: city.id, label: city.name, stateId: city.state_id }))
+        let options = response?.data.map((option) => ({ value: option.Cities.id, label: option.Cities.name, stateId: option.Cities.state_id }))
 
         setCitiesOptions(options)
       })

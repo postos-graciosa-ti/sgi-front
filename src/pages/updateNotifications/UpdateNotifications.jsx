@@ -43,6 +43,9 @@ const UpdateNotifications = () => {
             "4. Adaptação de tela de cadastro de colaboradores para dispositivos móveis",
             "5. Adaptação de tela de cadastro de centro de custos para dispositivos móveis",
             "6. Alteração visual da impressão de crachá",
+            "7. Correção de erros: carregamento de PDF no cadastro de colaboradores em produção (testes Valéria)",
+            "8. Correção de erros: permitir deixar campo vazio na hora de editar (testes Valéria)",
+            "9. Correção de erros: aparecer cidades na hora de editar (testes Valéria)",
           ]}
         />
 

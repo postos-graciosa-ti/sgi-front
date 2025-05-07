@@ -3,12 +3,15 @@ import { Pencil, Plus, Question, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import costCenterSteps from "../../driverjs/costCenterSteps"
 import initTour from "../../driverjs/initTour"
+import { useScreenSize } from "../../hooks/useScreenSize"
 import api from "../../services/api"
 import AddCostCenterModal from "./AddCostCenterModal"
 import DeleteCostCenterModal from "./DeleteCostCenterModal"
 import EditCostCenterModal from "./EditCostCenterModal"
 
 const CostCenter = () => {
+  const { isMobile, isTablet, isDesktop } = useScreenSize()
+
   const [costCenterList, setCostCenterList] = useState([])
 
   const [selectedCostCenter, setSelectedCostCenter] = useState(null)
@@ -69,25 +72,67 @@ const CostCenter = () => {
           </button>
         </div>
 
-        <div className="table-responsive">
-          <table className="table table-hover">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Descrição</th>
-                <th></th>
-              </tr>
-            </thead>
+        {
+          isDesktop && (
+            <div className="table-responsive">
+              <table className="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th></th>
+                  </tr>
+                </thead>
 
-            <tbody>
-              {costCenterList &&
-                costCenterList.map((costCenter) => (
-                  <tr id="costCenterRow" key={costCenter.id}>
-                    <td>{costCenter.name}</td>
+                <tbody>
+                  {costCenterList &&
+                    costCenterList.map((costCenter) => (
+                      <tr id="costCenterRow" key={costCenter.id}>
+                        <td>{costCenter.name}</td>
 
-                    <td>{costCenter.description}</td>
+                        <td>{costCenter.description}</td>
 
-                    <td>
+                        <td>
+                          <button
+                            id="editCostCenter"
+                            type="button"
+                            className="btn btn-warning mt-2 me-2"
+                            onClick={() => handleOpenEditCostCenterModal(costCenter)}
+                            title="Editar centro de custo"
+                          >
+                            <Pencil />
+                          </button>
+
+                          <button
+                            id="deleteCostCenter"
+                            type="button"
+                            className="btn btn-danger mt-2"
+                            onClick={() => handleOpenDeleteCostCenterModal(costCenter)}
+                            title="Apagar centro de custo"
+                          >
+                            <Trash />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          )
+        }
+
+        {
+          isTablet && (
+            <>
+              {
+                costCenterList && costCenterList.map((costCenter) => (
+                  <div class="card mb-4">
+                    <div class="card-body text-center">
+                      <h5 class="card-title">{costCenter.name}</h5>
+                      <p class="card-text">{costCenter.description}</p>
+                    </div>
+
+                    <div class="card-body text-center">
                       <button
                         id="editCostCenter"
                         type="button"
@@ -107,12 +152,52 @@ const CostCenter = () => {
                       >
                         <Trash />
                       </button>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
+                    </div>
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
+
+        {
+          isMobile && (
+            <>
+              {
+                costCenterList && costCenterList.map((costCenter) => (
+                  <div class="card mb-4">
+                    <div class="card-body text-center">
+                      <h5 class="card-title">{costCenter.name}</h5>
+                      <p class="card-text">{costCenter.description}</p>
+                    </div>
+
+                    <div class="card-body text-center">
+                      <button
+                        id="editCostCenter"
+                        type="button"
+                        className="btn btn-warning mt-2 me-2"
+                        onClick={() => handleOpenEditCostCenterModal(costCenter)}
+                        title="Editar centro de custo"
+                      >
+                        <Pencil />
+                      </button>
+
+                      <button
+                        id="deleteCostCenter"
+                        type="button"
+                        className="btn btn-danger mt-2"
+                        onClick={() => handleOpenDeleteCostCenterModal(costCenter)}
+                        title="Apagar centro de custo"
+                      >
+                        <Trash />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
       </div>
 
       <AddCostCenterModal

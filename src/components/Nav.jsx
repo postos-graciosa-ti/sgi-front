@@ -151,9 +151,9 @@ const Nav = () => {
                 <Link className="nav-link" to="/update-notifications">Histórico de atualizações</Link>
               </li>
 
-              {/* <li className="nav-item">
-                <Link className="nav-link" to="/tickets">Chamados</Link>
-              </li> */}
+              <li className="nav-item">
+                <Link className="nav-link" to="/applicants">Processos Seletivos</Link>
+              </li>
 
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -166,10 +166,6 @@ const Nav = () => {
                   <li><Link className="dropdown-item" to="/responsible">Atribuídos a mim</Link></li>
                 </ul>
               </li>
-
-              {/* <li className="nav-item">
-                <Link className="nav-link" to="/applicants">Processos Seletivos</Link>
-              </li> */}
 
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

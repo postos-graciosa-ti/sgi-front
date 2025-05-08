@@ -1,29 +1,60 @@
 import { useEffect, useState } from "react"
-import { Plus, CameraVideo, Clipboard } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
-import AddApplicantsModal from "./AddApplicantsModal"
 import api from "../../services/api"
-import InterviewModal from "./InterviewModal"
+import CoordinatorInterviewModal from "./CoordinatorInterviewModal"
+import InitSelectiveProcessModal from "./InitSelectiveProcessModal"
+import RhInterviewModal from "./RhInterviewModal"
+import RecruitModal from "./RecruitModal"
 
 const Applicants = () => {
-  const [applicants, setApplicants] = useState()
+  const [initSelectiveProcessModalOpen, setInitSelectiveProcessModalOpen] = useState(false)
 
-  const [addApplicantsModalOpen, setAddApplicantsModalOpen] = useState(false)
+  const [applicantsList, setApplicantsList] = useState()
 
-  const [interviewModalOpen, setInterviewModalOpen] = useState(false)
+  const [selectedApplicant, setSelectedApplicant] = useState()
+
+  const [rhInterviewModalOpen, setRhInterviewModalOpen] = useState(false)
+
+  const [coordinatorInterviewModalOpen, setCoordinatorInterviewModalOpen] = useState(false)
+
+  const [recruitModalOpen, setRecruitModalOpen] = useState(false)
 
   useEffect(() => {
     api
       .get("/applicants")
-      .then((response) => setApplicants(response.data))
+      .then((response) => setApplicantsList(response.data))
   }, [])
 
-  const handleOpenAddApplicantModalOpen = () => {
-    setAddApplicantsModalOpen(true)
+  const handleOpenInitSelectiveProcessModal = () => {
+    setInitSelectiveProcessModalOpen(true)
   }
 
-  const handleOpenInterviewModal = () => {
-    setInterviewModalOpen(true)
+  const handleOpenRhInterviewModal = (list) => {
+    setSelectedApplicant(list)
+
+    setRhInterviewModalOpen(true)
+  }
+
+  const handleOpenCoordinatorInterviewModal = (list) => {
+    setSelectedApplicant(list)
+
+    setCoordinatorInterviewModalOpen(true)
+  }
+
+  const handleOpenRecruitModal = (list) => {
+    setSelectedApplicant(list)
+
+    setRecruitModalOpen(true)
+  }
+
+  const handleDeleteApplicants = (list) => {
+    api
+      .delete(`/applicants/${list?.Applicants?.id}`)
+      .then(() => {
+        api
+          .get("/applicants")
+          .then((response) => setApplicantsList(response.data))
+      })
   }
 
   return (
@@ -31,15 +62,9 @@ const Applicants = () => {
       <Nav />
 
       <div className="container">
-        <div>
-          <button className="btn btn-primary mt-4 mb-4 me-2" onClick={handleOpenAddApplicantModalOpen}>
-            <Plus />
-          </button>
-
-          <button className="btn btn-primary">
-            Provas
-          </button>
-        </div>
+        <button className="btn btn-primary mb-4" onClick={handleOpenInitSelectiveProcessModal}>
+          Iniciar processo seletivo
+        </button>
 
         <div className="table-responsive">
           <table className="table table-hover">
@@ -47,19 +72,35 @@ const Applicants = () => {
               <tr>
                 <th>Nome</th>
 
+                <th>Vaga</th>
+
                 <th></th>
               </tr>
             </thead>
 
             <tbody>
               {
-                applicants?.map((applicant) => (
+                applicantsList && applicantsList.map((list) => (
                   <tr>
-                    <td>{applicant.name}</td>
+                    <td>{list.Applicants?.name}</td>
+
+                    <td>{list.Function?.name}</td>
 
                     <td>
-                      <button className="btn btn-primary" onClick={handleOpenInterviewModal}>
-                        <CameraVideo />
+                      <button className="btn btn-sm btn-primary me-3" onClick={() => handleOpenRhInterviewModal(list)}>
+                        Entrevista com RH
+                      </button>
+
+                      <button className="btn btn-sm btn-primary me-3" onClick={() => handleOpenCoordinatorInterviewModal(list)}>
+                        Entrevista com superior imediato
+                      </button>
+
+                      <button className="btn btn-sm btn-warning me-3" onClick={() => handleOpenRecruitModal(list)}>
+                        Efetivar
+                      </button>
+
+                      <button className="btn btn-sm btn-danger me-3" onClick={() => handleDeleteApplicants(list)}>
+                        Excluir
                       </button>
                     </td>
                   </tr>
@@ -70,15 +111,31 @@ const Applicants = () => {
         </div>
       </div>
 
-      <AddApplicantsModal
-        addApplicantsModalOpen={addApplicantsModalOpen}
-        setAddApplicantsModalOpen={setAddApplicantsModalOpen}
-        setApplicants={setApplicants}
+      <InitSelectiveProcessModal
+        initSelectiveProcessModalOpen={initSelectiveProcessModalOpen}
+        setInitSelectiveProcessModalOpen={setInitSelectiveProcessModalOpen}
+        setApplicantsList={setApplicantsList}
       />
 
-      <InterviewModal
-        interviewModalOpen={interviewModalOpen}
-        setInterviewModalOpen={setInterviewModalOpen}
+      <RhInterviewModal
+        rhInterviewModalOpen={rhInterviewModalOpen}
+        setRhInterviewModalOpen={setRhInterviewModalOpen}
+        selectedApplicant={selectedApplicant}
+        setApplicantsList={setApplicantsList}
+        setSelectedApplicant={setSelectedApplicant}
+      />
+
+      <CoordinatorInterviewModal
+        coordinatorInterviewModalOpen={coordinatorInterviewModalOpen}
+        setCoordinatorInterviewModalOpen={setCoordinatorInterviewModalOpen}
+        selectedApplicant={selectedApplicant}
+        setSelectedApplicant={setSelectedApplicant}
+        setApplicantsList={setApplicantsList}
+      />
+
+      <RecruitModal
+        recruitModalOpen={recruitModalOpen}
+        setRecruitModalOpen={setRecruitModalOpen}
       />
     </>
   )

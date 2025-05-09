@@ -35,6 +35,13 @@ const UpdateNotifications = () => {
         </div>
 
         <Notification
+          date={"09/05/2025"}
+          updates={[
+            "1. Funcionalidade de processos seletivos (ainda em desenvolvimento)",
+          ]}
+        />
+
+        <Notification
           date={"08/05/2025"}
           updates={[
             "1. Funcionalidade de processos seletivos (ainda em desenvolvimento)",

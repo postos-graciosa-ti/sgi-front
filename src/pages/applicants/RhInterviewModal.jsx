@@ -4,9 +4,12 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactSelect from "react-select"
 import api from '../../services/api'
+import ExamsCorrectionModal from './ExamsCorrectionModal'
 
 const RhInterviewModal = (props) => {
   const { rhInterviewModalOpen, setRhInterviewModalOpen, selectedApplicant, setApplicantsList, setSelectedApplicant } = props
+
+  const [examsCorrectionModalOpen, setExamsCorrectionModalOpen] = useState(false)
 
   const [usersList, setUsersList] = useState()
 
@@ -59,6 +62,10 @@ const RhInterviewModal = (props) => {
       .then(() => handleClose())
   }
 
+  const handleOpenExamsCorrectionModal = () => {
+    setExamsCorrectionModalOpen(true)
+  }
+
   return (
     <Modal
       show={rhInterviewModalOpen}
@@ -71,6 +78,10 @@ const RhInterviewModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
+        <button className="btn btn-primary mb-3" onClick={handleOpenExamsCorrectionModal}>
+          Corrigir provas
+        </button>
+
         <div className="mb-3">
           <span><b>{moment().format("DD-MM-YYYY")}</b>: <b>{selectedApplicant?.Applicants?.name}</b> concorrendo a vaga para <b>{selectedApplicant?.Function?.name}</b></span>
         </div>
@@ -136,6 +147,11 @@ const RhInterviewModal = (props) => {
           Concluir
         </Button>
       </Modal.Footer>
+
+      <ExamsCorrectionModal
+        examsCorrectionModalOpen={examsCorrectionModalOpen}
+        setExamsCorrectionModalOpen={setExamsCorrectionModalOpen}
+      />
     </Modal>
   )
 }

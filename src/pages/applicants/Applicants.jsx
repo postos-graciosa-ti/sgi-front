@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react"
 import Nav from "../../components/Nav"
+import useUserSessionStore from "../../data/userSession"
+import useWorkersExperienceTimeStore from "../../data/workersExperienceTime"
 import api from "../../services/api"
 import CoordinatorInterviewModal from "./CoordinatorInterviewModal"
 import InitSelectiveProcessModal from "./InitSelectiveProcessModal"
-import RhInterviewModal from "./RhInterviewModal"
 import RecruitModal from "./RecruitModal"
+import RhInterviewModal from "./RhInterviewModal"
 
 const Applicants = () => {
+  const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
   const [initSelectiveProcessModalOpen, setInitSelectiveProcessModalOpen] = useState(false)
+
+  const setWorkersFirstReview = useWorkersExperienceTimeStore(state => state.setWorkersFirstReview)
+
+  const setWorkersSecondReview = useWorkersExperienceTimeStore(state => state.setWorkersSecondReview)
 
   const [applicantsList, setApplicantsList] = useState()
 
@@ -52,6 +60,14 @@ const Applicants = () => {
       .delete(`/applicants/${list?.Applicants?.id}`)
       .then(() => {
         api
+          .get(`/subsidiaries/${selectedSubsidiarie?.value}/workers/experience-time-no-first-review`)
+          .then((response) => setWorkersFirstReview(response?.data))
+
+        api
+          .get(`/subsidiaries/${selectedSubsidiarie?.value}/workers/experience-time-no-second-review`)
+          .then((response) => setWorkersSecondReview(response?.data))
+
+        api
           .get("/applicants")
           .then((response) => setApplicantsList(response.data))
       })
@@ -81,25 +97,25 @@ const Applicants = () => {
             <tbody>
               {
                 applicantsList && applicantsList.map((list) => (
-                  <tr>
+                  <tr key={list.Applicants?.id}>
                     <td>{list.Applicants?.name}</td>
 
                     <td>{list.Function?.name}</td>
 
                     <td>
-                      <button className="btn btn-sm btn-primary me-3" onClick={() => handleOpenRhInterviewModal(list)}>
+                      <button className="btn btn-primary me-3" onClick={() => handleOpenRhInterviewModal(list)}>
                         Entrevista com RH
                       </button>
 
-                      <button className="btn btn-sm btn-primary me-3" onClick={() => handleOpenCoordinatorInterviewModal(list)}>
+                      <button className="btn btn-primary me-3" onClick={() => handleOpenCoordinatorInterviewModal(list)}>
                         Entrevista com superior imediato
                       </button>
 
-                      <button className="btn btn-sm btn-warning me-3" onClick={() => handleOpenRecruitModal(list)}>
+                      <button className="btn btn-primary me-3" onClick={() => handleOpenRecruitModal(list)}>
                         Efetivar
                       </button>
 
-                      <button className="btn btn-sm btn-danger me-3" onClick={() => handleDeleteApplicants(list)}>
+                      <button className="btn btn-primary me-3" onClick={() => handleDeleteApplicants(list)}>
                         Excluir
                       </button>
                     </td>
@@ -136,6 +152,8 @@ const Applicants = () => {
       <RecruitModal
         recruitModalOpen={recruitModalOpen}
         setRecruitModalOpen={setRecruitModalOpen}
+        selectedApplicant={selectedApplicant}
+        setApplicantsList={setApplicantsList}
       />
     </>
   )

@@ -25,8 +25,6 @@ const InitSelectiveProcessModal = (props) => {
     api
       .get(`/subsidiaries/${selectedSubsidiarie?.value}/functions`)
       .then((response) => {
-        console.log(response)
-
         let options = response.data.map((option) => ({ value: option.id, label: option.name }))
 
         setFunctionsOptions(options)

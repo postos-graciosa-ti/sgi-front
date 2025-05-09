@@ -39,6 +39,24 @@ const InitSelectiveProcessModal = (props) => {
         setExams(object)
 
         setSeeExams(true)
+      } else if (selectedFunction.label == "Operador(a) de Caixa I") {
+        let object = { theoryExamPath: "\avaliacao_teorica_operador_de_caixa.pdf", mathExamPath: "\avaliacao_de_matematica_operador_de_caixa.pdf" }
+
+        setExams(object)
+
+        setSeeExams(true)
+      } else if (selectedFunction.label == "Frentista / Caixa II") {
+        let object = { theoryExamPath: "\avaliacao_teorica_operador_de_caixa.pdf", mathExamPath: "\avaliacao_de_matematica_operador_de_caixa.pdf" }
+
+        setExams(object)
+
+        setSeeExams(true)
+      } else if (selectedFunction.label == "Trocador de Óleo / Frentista II") {
+        let object = { theoryExamPath: "\avaliacao_teorica_trocador_de_oleo.pdf", mathExamPath: "\avaliacao_matematica_frentista.pdf" }
+
+        setExams(object)
+
+        setSeeExams(true)
       } else {
         setExams()
 

@@ -144,7 +144,11 @@ const Nav = () => {
           <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <Link className="nav-link" to="/home">Início</Link>
+                <span className="nav-link">{selectedSubsidiarie?.label}</span>
+              </li>
+
+              <li className="nav-item">
+                <Link className="nav-link" to="/home">Área de trabalho</Link>
               </li>
 
               <li className="nav-item">
@@ -276,7 +280,7 @@ const Nav = () => {
         </div>
       </nav>
 
-      {
+      {/* {
         workersFirstReview?.workers?.length > 0 && (
           <div className="container">
             {
@@ -326,7 +330,7 @@ const Nav = () => {
             </div>
           </div>
         )
-      }
+      } */}
 
       <ChangePasswordModal
         changePasswordModalOpen={changePasswordModalOpen}

@@ -8,8 +8,8 @@ const Notification = (props) => {
       <h5>{date && date}</h5>
 
       {
-        updates && updates.map((update) => (
-          <div className="alert alert-secondary" role="alert">
+        updates && updates.map((update, i) => (
+          <div key={`${update}-${i}`} className="alert alert-secondary" role="alert">
             {update}
           </div>
         ))
@@ -38,6 +38,9 @@ const UpdateNotifications = () => {
           date={"09/05/2025"}
           updates={[
             "1. Funcionalidade de processos seletivos (ainda em desenvolvimento)",
+            "2. Adição de corretor de provas em processos seletivos > entrevista com RH",
+            "3. Adição de demais provas em processos seletivos > iniciar processo seletivo",
+            "4. Adaptação para dispositivos móveis",
           ]}
         />
 

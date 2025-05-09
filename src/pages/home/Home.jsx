@@ -1,42 +1,66 @@
+import moment from "moment"
 import { useEffect, useState } from "react"
-import { Question } from "react-bootstrap-icons"
-import PostoBemerIcon from "../../assets/posto-bemer.jpg"
-import PostoFatimaIcon from "../../assets/posto-fatima.jpg"
-import PostoGraciosaVIcon from "../../assets/posto-graciosa-v.jpg"
-import PostoGraciosaIcon from "../../assets/posto-graciosa.jpg"
-import PostoJarivaIcon from "../../assets/posto-jariva.jpg"
-import PostoPiraiIcon from "../../assets/posto-pirai.jpg"
 import Nav from "../../components/Nav.jsx"
 import useUserSessionStore from "../../data/userSession.js"
-import homeSteps from "../../driverjs/homeSteps.js"
-import initTour from "../../driverjs/initTour.js"
 import api from "../../services/api.js"
 
 const Home = () => {
-  const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+  const today = new Date()
 
-  const [selectedSubsidiarieInfo, setSelectedSubsidiarieInfo] = useState()
+  const day = today.getDay()
 
-  const subsidiarieIcon = (
-    selectedSubsdiarie.value == "1" && PostoGraciosaIcon ||
-    selectedSubsdiarie.value == "2" && PostoFatimaIcon ||
-    selectedSubsdiarie.value == "3" && PostoBemerIcon ||
-    selectedSubsdiarie.value == "4" && PostoJarivaIcon ||
-    selectedSubsdiarie.value == "5" && PostoGraciosaVIcon ||
-    selectedSubsdiarie.value == "6" && PostoPiraiIcon ||
-    "none"
-  )
+  const diffToMonday = (day === 0 ? -6 : 1 - day)
 
-  const isGraciosaSecondPhone = selectedSubsdiarie.value == "1" && "/(47) 3436-2202 (RH)"
+  const startOfWeek = new Date(today)
 
-  const isPiraiSecondPhone = selectedSubsdiarie.value == "6" && "/(47) 3433-8225"
+  startOfWeek.setDate(today.getDate() + diffToMonday)
+
+  startOfWeek.setHours(0, 0, 0, 0)
+
+  const endOfWeek = new Date(startOfWeek)
+
+  endOfWeek.setDate(startOfWeek.getDate() + 6)
+
+  endOfWeek.setHours(23, 59, 59, 999)
+
+  const userSession = useUserSessionStore(state => state.userSession)
+
+  const [workersAwayEndDate, setWorkersAwayEndDate] = useState()
+
+  const [workersWithoutFirstReview, setWorkersWithoutFirstReview] = useState()
+
+  const [workersWithoutSecondReview, setWorkersWithoutSecondReview] = useState()
+
+  const [ticketsNotifications, setTicketsNotifications] = useState()
+
+  const [firstReviewRealizedBy, setFirstReviewRealizedBy] = useState()
+
+  const [secondReviewRealizedBy, setSecondReviewRealizedBy] = useState()
 
   useEffect(() => {
     api
-      .get(`/subsidiaries/${selectedSubsdiarie.value}`)
-      .then((response) => {
-        setSelectedSubsidiarieInfo(response.data)
-      })
+      .post(`/subsidiaries/away-workers`, { subsidiaries_ids: eval(userSession.subsidiaries_id) })
+      .then((response) => setWorkersAwayEndDate(response.data))
+
+    api
+      .post("/subsidiaries/workers/experience-time-no-first-review", { subsidiaries_ids: eval(userSession.subsidiaries_id) })
+      .then((response) => setWorkersWithoutFirstReview(response.data))
+
+    api
+      .post("/subsidiaries/workers/experience-time-no-second-review", { subsidiaries_ids: eval(userSession.subsidiaries_id) })
+      .then((response) => setWorkersWithoutSecondReview(response.data))
+
+    api
+      .get(`/tickets/responsible/${userSession?.id}/notifications`)
+      .then((response) => setTicketsNotifications(response.data))
+
+    api
+      .get(`/workers/first-review/notification`)
+      .then((response) => setFirstReviewRealizedBy(response.data))
+
+    api
+      .get(`/workers/second-review/notification`)
+      .then((response) => setSecondReviewRealizedBy(response.data))
   }, [])
 
   return (
@@ -44,34 +68,101 @@ const Home = () => {
       <Nav />
 
       <div className="container mt-4">
-        <div id="subsidiarieInfo">
-          <div className="text-center">
-            <h5>{selectedSubsidiarieInfo?.name}</h5>
-          </div>
+        {
+          workersWithoutFirstReview?.workers?.length > 0 && (
+            <>
+              <h5>Avaliação de primeiro período de experiência</h5>
 
-          <div className="text-center mt-4">
-            <img
-              src={subsidiarieIcon}
-              alt="ícone de posto não disponível"
-              style={{ maxWidth: '100%', height: 'auto' }}
-            />
-          </div>
+              {
+                workersWithoutFirstReview?.workers?.map((data) => (
+                  <div className="alert alert-warning" key={data.worker_id}>
+                    Colaborador {data.worker_name} da filial {data.subsidiarie_name}, admitido em {moment(data.worker_admission_date).format("DD/MM/YYYY")}, tem sua primeira avaliação de tempo de experiência em {moment(data.worker_second_review_date).format("DD/MM/YYYY")}
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
 
-          <div className="text-center mt-3 mb-5">
-            <b>
-              {selectedSubsidiarieInfo && selectedSubsidiarieInfo.email} | {selectedSubsidiarieInfo && selectedSubsidiarieInfo.phone}{isGraciosaSecondPhone}{isPiraiSecondPhone} | {selectedSubsidiarieInfo && selectedSubsidiarieInfo.adress}
-            </b>
-          </div>
-        </div>
+        {
+          firstReviewRealizedBy?.length > 0 && (
+            <>
+              <h5>Avaliações de primeiro período de experiência realizadas</h5>
 
-        <div className="text-end">
-          <button
-            className="btn btn-warning me-2"
-            onClick={() => initTour(homeSteps)}
-          >
-            <Question />
-          </button>
-        </div>
+              {
+                firstReviewRealizedBy?.map((notification) => (
+                  <div className="alert alert-warning">
+                    {notification?.User?.name} realizou a avaliação de primeiro período de experiência para {notification?.Workers?.name} em {moment(notification?.WorkersFirstReview?.realized_in).format("DD-MM-YYYY")}
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
+
+        {
+          workersWithoutSecondReview?.workers?.length > 0 && (
+            <>
+              <h5>Avaliação de segundo período de experiência</h5>
+
+              {
+                workersWithoutSecondReview?.workers?.map((data) => (
+                  <div className="alert alert-warning" key={data.worker_id}>
+                    Colaborador {data.worker_name} da filial {data.subsidiarie_name}, admitido em {moment(data.worker_admission_date).format("DD/MM/YYYY")}, tem sua segunda avaliação de tempo de experiência em {moment(data.worker_second_review_date).format("DD/MM/YYYY")}
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
+
+        {
+          secondReviewRealizedBy?.length > 0 && (
+            <>
+              <h5>Avaliações de segundo período de experiência realizadas</h5>
+
+              {
+                secondReviewRealizedBy?.map((notification) => (
+                  <div className="alert alert-warning">
+                    {notification?.User?.name} realizou a avaliação de primeiro período de experiência para {notification?.Workers?.name} em {moment(notification?.WorkersFirstReview?.realized_in).format("DD-MM-YYYY")}
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
+
+        {
+          workersAwayEndDate?.workers?.length > 0 && (
+            <>
+              <h5>Afastados para retornar</h5>
+
+              {
+                workersAwayEndDate?.workers?.map((worker) => (
+                  <div className="alert alert-warning" key={worker.id}>
+                    {worker.name} deve retornar em {moment(worker.away_end_date).format("DD/MM/YYYY")}
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
+
+        {
+          ticketsNotifications?.length > 0 && (
+            <>
+              <h5>Chamados atribuídos</h5>
+
+              {
+                ticketsNotifications && ticketsNotifications.map((notification) => (
+                  <div className="alert alert-warning" key={notification?.Tickets?.id}>
+                    {notification?.User?.name} abriu um chamado ({notification?.Tickets?.description}, {notification?.Service?.name}) atribuído a {userSession?.name} em {moment(notification?.Tickets?.opened_at).format("DD-MM-YYYY")}
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
       </div>
     </>
   )

@@ -7,8 +7,11 @@ import CoordinatorInterviewModal from "./CoordinatorInterviewModal"
 import InitSelectiveProcessModal from "./InitSelectiveProcessModal"
 import RecruitModal from "./RecruitModal"
 import RhInterviewModal from "./RhInterviewModal"
+import { useScreenSize } from "../../hooks/useScreenSize"
 
 const Applicants = () => {
+  const { isMobile, isTablet, isDesktop } = useScreenSize()
+
   const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const [initSelectiveProcessModalOpen, setInitSelectiveProcessModalOpen] = useState(false)
@@ -32,6 +35,13 @@ const Applicants = () => {
       .get("/applicants")
       .then((response) => setApplicantsList(response.data))
   }, [])
+
+  const handlePrintDocsList = (exam) => {
+    printJS({
+      printable: exam,
+      type: 'pdf',
+    })
+  }
 
   const handleOpenInitSelectiveProcessModal = () => {
     setInitSelectiveProcessModalOpen(true)
@@ -78,53 +88,153 @@ const Applicants = () => {
       <Nav />
 
       <div className="container">
-        <button className="btn btn-primary mb-4" onClick={handleOpenInitSelectiveProcessModal}>
+        <button className="btn btn-primary mb-4 me-2" onClick={() => handlePrintDocsList("/lista_de_documentos.pdf")}>
+          Emitir lista de documentos
+        </button>
+
+        <button className="btn btn-primary mb-4 me-2" onClick={handleOpenInitSelectiveProcessModal}>
           Iniciar processo seletivo
         </button>
 
-        <div className="table-responsive">
-          <table className="table table-hover">
-            <thead>
-              <tr>
-                <th>Nome</th>
+        {
+          isDesktop && (
+            <div className="table-responsive">
+              <table className="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
 
-                <th>Vaga</th>
+                    <th>Vaga</th>
 
-                <th></th>
-              </tr>
-            </thead>
+                    <th></th>
+                  </tr>
+                </thead>
 
-            <tbody>
+                <tbody>
+                  {
+                    applicantsList && applicantsList.map((list) => (
+                      <tr key={list.Applicants?.id}>
+                        <td>{list.Applicants?.name}</td>
+
+                        <td>{list.Function?.name}</td>
+
+                        <td>
+                          <button className="btn btn-primary me-3" onClick={() => handleOpenRhInterviewModal(list)}>
+                            Entrevista com RH
+                          </button>
+
+                          <button className="btn btn-primary me-3" onClick={() => handleOpenCoordinatorInterviewModal(list)}>
+                            Entrevista com superior imediato
+                          </button>
+
+                          <button className="btn btn-primary me-3" onClick={() => handleOpenRecruitModal(list)}>
+                            Efetivar
+                          </button>
+
+                          <button className="btn btn-primary me-3" onClick={() => handleDeleteApplicants(list)}>
+                            Excluir
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </table>
+            </div>
+          )
+        }
+
+        {
+          isTablet && (
+            <>
               {
                 applicantsList && applicantsList.map((list) => (
-                  <tr key={list.Applicants?.id}>
-                    <td>{list.Applicants?.name}</td>
+                  <div className="card">
+                    <div className="card-body">
+                      <h5 className="card-title">{list.Applicants?.name}</h5>
+                    </div>
 
-                    <td>{list.Function?.name}</td>
+                    <ul className="list-group list-group-flush">
+                      <li className="list-group-item">
+                        <b>Vaga</b>: {list.Function?.name}
+                      </li>
 
-                    <td>
-                      <button className="btn btn-primary me-3" onClick={() => handleOpenRhInterviewModal(list)}>
-                        Entrevista com RH
-                      </button>
+                      <li className="list-group-item">
+                        <button className="btn btn-primary me-3" onClick={() => handleOpenRhInterviewModal(list)}>
+                          Entrevista com RH
+                        </button>
+                      </li>
 
-                      <button className="btn btn-primary me-3" onClick={() => handleOpenCoordinatorInterviewModal(list)}>
-                        Entrevista com superior imediato
-                      </button>
+                      <li className="list-group-item">
+                        <button className="btn btn-primary me-3" onClick={() => handleOpenCoordinatorInterviewModal(list)}>
+                          Entrevista com superior imediato
+                        </button>
+                      </li>
 
-                      <button className="btn btn-primary me-3" onClick={() => handleOpenRecruitModal(list)}>
-                        Efetivar
-                      </button>
+                      <li className="list-group-item">
+                        <button className="btn btn-primary me-3" onClick={() => handleOpenRecruitModal(list)}>
+                          Efetivar
+                        </button>
+                      </li>
 
-                      <button className="btn btn-primary me-3" onClick={() => handleDeleteApplicants(list)}>
-                        Excluir
-                      </button>
-                    </td>
-                  </tr>
+                      <li className="list-group-item">
+                        <button className="btn btn-primary me-3" onClick={() => handleDeleteApplicants(list)}>
+                          Excluir
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
                 ))
               }
-            </tbody>
-          </table>
-        </div>
+            </>
+          )
+        }
+
+        {
+          isMobile && (
+            <>
+              {
+                applicantsList && applicantsList.map((list) => (
+                  <div className="card">
+                    <div className="card-body">
+                      <h5 className="card-title">{list.Applicants?.name}</h5>
+                    </div>
+
+                    <ul className="list-group list-group-flush">
+                      <li className="list-group-item">
+                        <b>Vaga</b>: {list.Function?.name}
+                      </li>
+
+                      <li className="list-group-item">
+                        <button className="btn btn-primary me-3" onClick={() => handleOpenRhInterviewModal(list)}>
+                          Entrevista com RH
+                        </button>
+                      </li>
+
+                      <li className="list-group-item">
+                        <button className="btn btn-primary me-3" onClick={() => handleOpenCoordinatorInterviewModal(list)}>
+                          Entrevista com superior imediato
+                        </button>
+                      </li>
+
+                      <li className="list-group-item">
+                        <button className="btn btn-primary me-3" onClick={() => handleOpenRecruitModal(list)}>
+                          Efetivar
+                        </button>
+                      </li>
+
+                      <li className="list-group-item">
+                        <button className="btn btn-primary me-3" onClick={() => handleDeleteApplicants(list)}>
+                          Excluir
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
       </div>
 
       <InitSelectiveProcessModal

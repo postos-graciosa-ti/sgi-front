@@ -241,6 +241,596 @@ const ExamsCorrectionModal = (props) => {
 
         setFieldsExam(fields)
       }
+
+      if (selectedExam.label == "Avaliação matemática operador de caixa") {
+        const fields = [
+          { label: "Um cliente abasteceu R$ 78,50 e pagou com R$ 100,00. Qual será o troco?", response: "21,50", isSelect: false },
+          { label: "Um produto custa R$ 60,00. Durante a promoção, o cliente recebe 10% de desconto. Qual será o valor final?", response: "54,00", isSelect: false },
+          { label: "O cliente quer abastecer R$ 120,00 de gasolina, que custa R$ 6,00 por litro. Quantos litros ele conseguirá abastecer?", response: "20", isSelect: false },
+          { label: "Um cliente comprou um óleo por R$ 50,00 e abasteceu R$ 100,00. Qual é o total a ser pago?", response: "150,00", isSelect: false },
+          { label: "Um cliente pagou R$ 300,00 divididos igualmente em três cartões. Quanto foi cobrado em cada cartão?", response: "100,00", isSelect: false },
+          { label: "O litro do diesel subiu de R$ 4,80 para R$ 5,28. Qual foi o percentual de aumento?", response: "10", isSelect: false },
+          { label: "O caixa começou o turno com R$ 200,00. Durante o dia, foram feitas vendas no valor de R$ 3.000,00, e o troco dado foi de R$ 1.250,00. Qual é o saldo final?", response: "1950,00", isSelect: false },
+          { label: "O troco correto era R$ 12,50, mas o operador devolveu R$ 10,50. Quanto falta devolver?", response: "2,00", isSelect: false },
+          { label: "O operador de caixa recebe 1% de comissão sobre as vendas. Se o total de vendas foi de R$ 4.500,00, qual será a comissão?", response: "45,00", isSelect: false },
+          { label: "Um cliente abasteceu 42 litros de gasolina ao preço de R$ 6,20 por litro. Qual foi o valor total?", response: "260,40", isSelect: false }
+        ]
+
+        setFieldsExam(fields)
+      }
+
+      if (selectedExam.label == "Avaliação teórica operador de caixa") {
+        const fields = [
+          {
+            label: "O que deve ser feito quando faltar troco para o cliente?",
+            options: [
+              { value: 1, label: "Devolver menos dinheiro e informar o cliente." },
+              { value: 2, label: "Pedir ao cliente que procure troco em outro lugar." },
+              { value: 3, label: "Explicar a situação e buscar troco com rapidez." }
+            ],
+            response: "Explicar a situação e buscar troco com rapidez.",
+            isSelect: true
+          },
+          {
+            label: "Qual é a função principal de um caixa?",
+            options: [
+              { value: 1, label: "Repor mercadorias na loja de conveniência." },
+              { value: 2, label: "Registrar vendas e controlar os pagamentos." },
+              { value: 3, label: "Limpar as bombas de combustível." }
+            ],
+            response: "Registrar vendas e controlar os pagamentos.",
+            isSelect: true
+          },
+          {
+            label: "O que fazer se um cliente reclamar de um erro no troco?",
+            options: [
+              { value: 1, label: "Verificar o erro e corrigir imediatamente." },
+              { value: 2, label: "Ignorar a reclamação e continuar atendendo." },
+              { value: 3, label: "Dizer que o caixa está sempre certo." }
+            ],
+            response: "Verificar o erro e corrigir imediatamente.",
+            isSelect: true
+          },
+          {
+            label: "Qual procedimento adotar ao receber uma nota falsa?",
+            options: [
+              { value: 1, label: "Guardar a nota e finalizar a venda." },
+              { value: 2, label: "Recusar a nota e informar a supervisão." },
+              { value: 3, label: "Aceitar a nota e evitar conflitos com o cliente." }
+            ],
+            response: "Recusar a nota e informar a supervisão.",
+            isSelect: true
+          },
+          {
+            label: "Como agir em situações de furto no posto?",
+            options: [
+              { value: 1, label: "Confrontar diretamente o suspeito." },
+              { value: 2, label: "Alertar a segurança ou a gerência do posto." },
+              { value: 3, label: "Ignorar e continuar trabalhando." }
+            ],
+            response: "Alertar a segurança ou a gerência do posto.",
+            isSelect: true
+          },
+          {
+            label: "O que fazer ao identificar um erro no sistema do caixa?",
+            options: [
+              { value: 1, label: "Desligar o sistema e tentar consertar sozinho." },
+              { value: 2, label: "Informar imediatamente o supervisor ou gerente." },
+              { value: 3, label: "Continuar trabalhando sem reportar o erro." }
+            ],
+            response: "Informar imediatamente o supervisor ou gerente.",
+            isSelect: true
+          },
+          {
+            label: "Qual é o procedimento correto para registrar um pagamento com cartão?",
+            options: [
+              { value: 1, label: "Apenas digitar o valor e finalizar a venda." },
+              { value: 2, label: "Solicitar ao cliente que insira o cartão e verifique os dados." },
+              { value: 3, label: "Pedir que o cliente leia as instruções sozinho." }
+            ],
+            response: "Solicitar ao cliente que insira o cartão e verifique os dados.",
+            isSelect: true
+          },
+          {
+            label: "Por que é importante manter o local de trabalho organizado?",
+            options: [
+              { value: 1, label: "Para impressionar a gerência." },
+              { value: 2, label: "Para evitar confusão e melhorar o atendimento." },
+              { value: 3, label: "Porque é obrigatório por lei." }
+            ],
+            response: "Para evitar confusão e melhorar o atendimento.",
+            isSelect: true
+          },
+          {
+            label: "Como o caixa deve agir em caso de divergência no fechamento do caixa?",
+            options: [
+              { value: 1, label: "Relatar a divergência imediatamente." },
+              { value: 2, label: "Guardar o dinheiro excedente para o dia seguinte." },
+              { value: 3, label: "Ajustar os valores para que tudo pareça correto." }
+            ],
+            response: "Relatar a divergência imediatamente.",
+            isSelect: true
+          },
+          {
+            label: "O que significa “prestar um atendimento cordial”?",
+            options: [
+              { value: 1, label: "Ser educado e atencioso com o cliente" },
+              { value: 2, label: "Fazer apenas o mínimo necessário." },
+              { value: 3, label: "Atender rápido, sem se preocupar com a experiência do cliente." }
+            ],
+            response: "Ser educado e atencioso com o cliente",
+            isSelect: true
+          },
+          {
+            label: "Qual é a primeira ação ao abrir o caixa no início do turno?",
+            options: [
+              { value: 1, label: "Conferir o fundo de troco inicial." },
+              { value: 2, label: "Começar a atender imediatamente." },
+              { value: 3, label: "Verificar as bombas de combustível." }
+            ],
+            response: "Conferir o fundo de troco inicial.",
+            isSelect: true
+          },
+          {
+            label: "O que deve ser feito em caso de dúvida sobre um preço?",
+            options: [
+              { value: 1, label: "Informar um preço aproximado ao cliente." },
+              { value: 2, label: "Verificar o preço no sistema ou com um colega." },
+              { value: 3, label: "Pedir ao cliente que descubra sozinho." }
+            ],
+            response: "Verificar o preço no sistema ou com um colega.",
+            isSelect: true
+          },
+          {
+            label: "Por que é importante conhecer os métodos de pagamento aceitos?",
+            options: [
+              { value: 1, label: "Para evitar problemas durante o atendimento." },
+              { value: 2, label: "Para convencer o cliente a pagar em dinheiro." },
+              { value: 3, label: "Para controlar o estoque do posto." }
+            ],
+            response: "Para evitar problemas durante o atendimento.",
+            isSelect: true
+          },
+          {
+            label: "O que fazer se um cliente pedir ajuda para usar a bomba de combustível?",
+            options: [
+              { value: 1, label: "Explicar pacientemente e oferecer ajuda." },
+              { value: 2, label: "Dizer que o cliente deve se virar sozinho." },
+              { value: 3, label: "Informar que essa não é sua função." }
+            ],
+            response: "Explicar pacientemente e oferecer ajuda.",
+            isSelect: true
+          },
+          {
+            label: "Como lidar com um cliente insatisfeito?",
+            options: [
+              { value: 1, label: "Ignorar a insatisfação e continuar atendendo." },
+              { value: 2, label: "Ouvir, buscar entender o problema e oferecer uma solução." },
+              { value: 3, label: "Pedir que ele volte em outro horário." }
+            ],
+            response: "Ouvir, buscar entender o problema e oferecer uma solução.",
+            isSelect: true
+          },
+          {
+            label: "O que é essencial ao contar cédulas no caixa?",
+            options: [
+              { value: 1, label: "Fazer rapidamente, sem verificar os valores." },
+              { value: 2, label: "Contar com calma e atenção para evitar erros." },
+              { value: 3, label: "Delegar a contagem a outro colega." }
+            ],
+            response: "Contar com calma e atenção para evitar erros.",
+            isSelect: true
+          },
+          {
+            label: "Como proceder em caso de pane elétrica no posto?",
+            options: [
+              { value: 1, label: "Tentar resolver sozinho." },
+              { value: 2, label: "Interromper o atendimento e informar o gerente." },
+              { value: 3, label: "Continuar atendendo normalmente." }
+            ],
+            response: "Interromper o atendimento e informar o gerente.",
+            isSelect: true
+          },
+          {
+            label: "Qual é a atitude esperada em relação ao uso do celular no trabalho?",
+            options: [
+              { value: 1, label: "Usar livremente durante o expediente." },
+              { value: 2, label: "Evitar o uso durante o atendimento." },
+              { value: 3, label: "Somente usar para resolver questões pessoais urgentes." }
+            ],
+            response: "Evitar o uso durante o atendimento.",
+            isSelect: true
+          },
+          {
+            label: "Como proceder ao receber um pagamento em cheque?",
+            options: [
+              { value: 1, label: "Aceitar qualquer cheque sem verificar." },
+              { value: 2, label: "Conferir os dados e validar a autenticidade." },
+              { value: 3, label: "Recusar todos os cheques por padrão." }
+            ],
+            response: "Conferir os dados e validar a autenticidade.",
+            isSelect: true
+          },
+          {
+            label: "O que é mais importante ao lidar com grandes valores no caixa?",
+            options: [
+              { value: 1, label: "Ser discreto e seguir os procedimentos de segurança." },
+              { value: 2, label: "Exibir o dinheiro para que outros vejam." },
+              { value: 3, label: "Guardar os valores de forma desorganizada." }
+            ],
+            response: "Ser discreto e seguir os procedimentos de segurança.",
+            isSelect: true
+          }
+        ]
+
+        setFieldsExam(fields)
+      }
+
+      if (selectedExam == "Avaliação teórica frentista caixa") {
+        const fields = [
+          {
+            label: "O que deve ser feito quando faltar troco para o cliente?",
+            options: [
+              { value: 1, label: "Devolver menos dinheiro e informar o cliente." },
+              { value: 2, label: "Pedir ao cliente que procure troco em outro lugar." },
+              { value: 3, label: "Explicar a situação e buscar troco com rapidez." }
+            ],
+            response: "Explicar a situação e buscar troco com rapidez.",
+            isSelect: true
+          },
+          {
+            label: "Qual é a função principal de um caixa?",
+            options: [
+              { value: 1, label: "Repor mercadorias na loja de conveniência." },
+              { value: 2, label: "Registrar vendas e controlar os pagamentos." },
+              { value: 3, label: "Limpar as bombas de combustível." }
+            ],
+            response: "Registrar vendas e controlar os pagamentos.",
+            isSelect: true
+          },
+          {
+            label: "O que fazer se um cliente reclamar de um erro no troco?",
+            options: [
+              { value: 1, label: "Verificar o erro e corrigir imediatamente." },
+              { value: 2, label: "Ignorar a reclamação e continuar atendendo." },
+              { value: 3, label: "Dizer que o caixa está sempre certo." }
+            ],
+            response: "Verificar o erro e corrigir imediatamente.",
+            isSelect: true
+          },
+          {
+            label: "Qual procedimento adotar ao receber uma nota falsa?",
+            options: [
+              { value: 1, label: "Guardar a nota e finalizar a venda." },
+              { value: 2, label: "Recusar a nota e informar a supervisão." },
+              { value: 3, label: "Aceitar a nota e evitar conflitos com o cliente." }
+            ],
+            response: "Recusar a nota e informar a supervisão.",
+            isSelect: true
+          },
+          {
+            label: "Como agir em situações de furto no posto?",
+            options: [
+              { value: 1, label: "Confrontar diretamente o suspeito." },
+              { value: 2, label: "Alertar a segurança ou a gerência do posto." },
+              { value: 3, label: "Ignorar e continuar trabalhando." }
+            ],
+            response: "Alertar a segurança ou a gerência do posto.",
+            isSelect: true
+          },
+          {
+            label: "O que fazer ao identificar um erro no sistema do caixa?",
+            options: [
+              { value: 1, label: "Desligar o sistema e tentar consertar sozinho." },
+              { value: 2, label: "Informar imediatamente o supervisor ou gerente." },
+              { value: 3, label: "Continuar trabalhando sem reportar o erro." }
+            ],
+            response: "Informar imediatamente o supervisor ou gerente.",
+            isSelect: true
+          },
+          {
+            label: "Qual é o procedimento correto para registrar um pagamento com cartão?",
+            options: [
+              { value: 1, label: "Apenas digitar o valor e finalizar a venda." },
+              { value: 2, label: "Solicitar ao cliente que insira o cartão e verifique os dados." },
+              { value: 3, label: "Pedir que o cliente leia as instruções sozinho." }
+            ],
+            response: "Solicitar ao cliente que insira o cartão e verifique os dados.",
+            isSelect: true
+          },
+          {
+            label: "Por que é importante manter o local de trabalho organizado?",
+            options: [
+              { value: 1, label: "Para impressionar a gerência." },
+              { value: 2, label: "Para evitar confusão e melhorar o atendimento." },
+              { value: 3, label: "Porque é obrigatório por lei." }
+            ],
+            response: "Para evitar confusão e melhorar o atendimento.",
+            isSelect: true
+          },
+          {
+            label: "Como o caixa deve agir em caso de divergência no fechamento do caixa?",
+            options: [
+              { value: 1, label: "Relatar a divergência imediatamente." },
+              { value: 2, label: "Guardar o dinheiro excedente para o dia seguinte." },
+              { value: 3, label: "Ajustar os valores para que tudo pareça correto." }
+            ],
+            response: "Relatar a divergência imediatamente.",
+            isSelect: true
+          },
+          {
+            label: "O que significa “prestar um atendimento cordial”?",
+            options: [
+              { value: 1, label: "Ser educado e atencioso com o cliente" },
+              { value: 2, label: "Fazer apenas o mínimo necessário." },
+              { value: 3, label: "Atender rápido, sem se preocupar com a experiência do cliente." }
+            ],
+            response: "Ser educado e atencioso com o cliente",
+            isSelect: true
+          },
+          {
+            label: "Qual é a primeira ação ao abrir o caixa no início do turno?",
+            options: [
+              { value: 1, label: "Conferir o fundo de troco inicial." },
+              { value: 2, label: "Começar a atender imediatamente." },
+              { value: 3, label: "Verificar as bombas de combustível." }
+            ],
+            response: "Conferir o fundo de troco inicial.",
+            isSelect: true
+          },
+          {
+            label: "O que deve ser feito em caso de dúvida sobre um preço?",
+            options: [
+              { value: 1, label: "Informar um preço aproximado ao cliente." },
+              { value: 2, label: "Verificar o preço no sistema ou com um colega." },
+              { value: 3, label: "Pedir ao cliente que descubra sozinho." }
+            ],
+            response: "Verificar o preço no sistema ou com um colega.",
+            isSelect: true
+          },
+          {
+            label: "Por que é importante conhecer os métodos de pagamento aceitos?",
+            options: [
+              { value: 1, label: "Para evitar problemas durante o atendimento." },
+              { value: 2, label: "Para convencer o cliente a pagar em dinheiro." },
+              { value: 3, label: "Para controlar o estoque do posto." }
+            ],
+            response: "Para evitar problemas durante o atendimento.",
+            isSelect: true
+          },
+          {
+            label: "O que fazer se um cliente pedir ajuda para usar a bomba de combustível?",
+            options: [
+              { value: 1, label: "Explicar pacientemente e oferecer ajuda." },
+              { value: 2, label: "Dizer que o cliente deve se virar sozinho." },
+              { value: 3, label: "Informar que essa não é sua função." }
+            ],
+            response: "Explicar pacientemente e oferecer ajuda.",
+            isSelect: true
+          },
+          {
+            label: "Como lidar com um cliente insatisfeito?",
+            options: [
+              { value: 1, label: "Ignorar a insatisfação e continuar atendendo." },
+              { value: 2, label: "Ouvir, buscar entender o problema e oferecer uma solução." },
+              { value: 3, label: "Pedir que ele volte em outro horário." }
+            ],
+            response: "Ouvir, buscar entender o problema e oferecer uma solução.",
+            isSelect: true
+          },
+          {
+            label: "O que é essencial ao contar cédulas no caixa?",
+            options: [
+              { value: 1, label: "Fazer rapidamente, sem verificar os valores." },
+              { value: 2, label: "Contar com calma e atenção para evitar erros." },
+              { value: 3, label: "Delegar a contagem a outro colega." }
+            ],
+            response: "Contar com calma e atenção para evitar erros.",
+            isSelect: true
+          },
+          {
+            label: "Como proceder em caso de pane elétrica no posto?",
+            options: [
+              { value: 1, label: "Tentar resolver sozinho." },
+              { value: 2, label: "Interromper o atendimento e informar o gerente." },
+              { value: 3, label: "Continuar atendendo normalmente." }
+            ],
+            response: "Interromper o atendimento e informar o gerente.",
+            isSelect: true
+          },
+          {
+            label: "Qual é a atitude esperada em relação ao uso do celular no trabalho?",
+            options: [
+              { value: 1, label: "Usar livremente durante o expediente." },
+              { value: 2, label: "Evitar o uso durante o atendimento." },
+              { value: 3, label: "Somente usar para resolver questões pessoais urgentes." }
+            ],
+            response: "Evitar o uso durante o atendimento.",
+            isSelect: true
+          },
+          {
+            label: "Como proceder ao receber um pagamento em cheque?",
+            options: [
+              { value: 1, label: "Aceitar qualquer cheque sem verificar." },
+              { value: 2, label: "Conferir os dados e validar a autenticidade." },
+              { value: 3, label: "Recusar todos os cheques por padrão." }
+            ],
+            response: "Conferir os dados e validar a autenticidade.",
+            isSelect: true
+          },
+          {
+            label: "O que é mais importante ao lidar com grandes valores no caixa?",
+            options: [
+              { value: 1, label: "Ser discreto e seguir os procedimentos de segurança." },
+              { value: 2, label: "Exibir o dinheiro para que outros vejam." },
+              { value: 3, label: "Guardar os valores de forma desorganizada." }
+            ],
+            response: "Ser discreto e seguir os procedimentos de segurança.",
+            isSelect: true
+          }
+        ]
+
+        setFieldsExam(fields)
+      }
+
+      if (selectedExam == "Avaliação matemática frentista caixa") {
+        const fields = [
+          { label: "Um cliente abasteceu R$ 78,50 e pagou com R$ 100,00. Qual será o troco?", response: "21,50", isSelect: false },
+          { label: "Um produto custa R$ 60,00. Durante a promoção, o cliente recebe 10% de desconto. Qual será o valor final?", response: "54,00", isSelect: false },
+          { label: "O cliente quer abastecer R$ 120,00 de gasolina, que custa R$ 6,00 por litro. Quantos litros ele conseguirá abastecer?", response: "20", isSelect: false },
+          { label: "Um cliente comprou um óleo por R$ 50,00 e abasteceu R$ 100,00. Qual é o total a ser pago?", response: "150,00", isSelect: false },
+          { label: "Um cliente pagou R$ 300,00 divididos igualmente em três cartões. Quanto foi cobrado em cada cartão?", response: "100,00", isSelect: false },
+          { label: "O litro do diesel subiu de R$ 4,80 para R$ 5,28. Qual foi o percentual de aumento?", response: "10", isSelect: false },
+          { label: "O caixa começou o turno com R$ 200,00. Durante o dia, foram feitas vendas no valor de R$ 3.000,00, e o troco dado foi de R$ 1.250,00. Qual é o saldo final?", response: "1950,00", isSelect: false },
+          { label: "O troco correto era R$ 12,50, mas o operador devolveu R$ 10,50. Quanto falta devolver?", response: "2,00", isSelect: false },
+          { label: "O operador de caixa recebe 1% de comissão sobre as vendas. Se o total de vendas foi de R$ 4.500,00, qual será a comissão?", response: "45,00", isSelect: false },
+          { label: "Um cliente abasteceu 42 litros de gasolina ao preço de R$ 6,20 por litro. Qual foi o valor total?", response: "260,40", isSelect: false }
+        ]
+
+        setFieldsExam(fields)
+      }
+
+      if (selectedExam == "Avaliação matemática trocador de óleo") {
+        const fields = [
+          { label: "Quanto é 12 + 15?", response: "27", isSelect: false },
+          { label: "Quanto é 50 - 23?", response: "27", isSelect: false },
+          { label: "Quanto é 7 x 8?", response: "56", isSelect: false },
+          { label: "Quanto é 56 / 7?", response: "8", isSelect: false },
+          { label: "Um cliente paga R$50 por uma compra de R$32. Quanto é o troco?", response: "18", isSelect: false },
+          { label: "Um produto custa R$80 e está com 10% de desconto. Qual é o preço com desconto?", response: "72", isSelect: false },
+          { label: "Um cliente compra 3 itens de R$15 cada. Qual é o total?", response: "45", isSelect: false },
+          { label: "Um pacote com 6 latas custa R$18. Qual é o preço de cada lata?", response: "3", isSelect: false },
+        ]
+
+        setFieldsExam(fields)
+      }
+
+      if (selectedExam == "Avaliação teórica trocador de óleo") {
+        const fields = [
+          {
+            label: "Qual é a função do óleo no motor?",
+            options: [
+              { value: 1, label: "Lubrificar as partes móveis do motor e reduzir o atrito." },
+              { value: 2, label: "Lubrificar as partes fixas do motor e reduzir o ruído." },
+              { value: 3, label: "Lubrificar as partes variáveis do motor e reduzir o ruído da cabine." }
+            ],
+            response: "Lubrificar as partes móveis do motor e reduzir o atrito.",
+            isSelect: true
+          },
+          {
+            label: "Com que frequência deve-se trocar o óleo do motor?",
+            options: [
+              { value: 1, label: "Geralmente a cada 8.000 a 12.000 km, dependendo do tipo de óleo e do veículo." },
+              { value: 2, label: "Geralmente quando o motor faz barulho ou o óleo está poluído." },
+              { value: 3, label: "Geralmente a cada 5.000 a 10.000 km, dependendo do tipo de óleo e do veículo ou 6 meses." }
+            ],
+            response: "Geralmente a cada 5.000 a 10.000 km, dependendo do tipo de óleo e do veículo ou 6 meses.",
+            isSelect: true
+          },
+          {
+            label: "O que deve ser verificado antes de trocar o óleo?",
+            options: [
+              { value: 1, label: "Se o veículo é Flex ou GNV." },
+              { value: 2, label: "Nível do óleo, tipo de óleo recomendado pelo fabricante e o filtro de óleo." },
+              { value: 3, label: "KM rodado e mais de 1 ano de uso." }
+            ],
+            response: "Nível do óleo, tipo de óleo recomendado pelo fabricante e o filtro de óleo.",
+            isSelect: true
+          },
+          {
+            label: "Por que é importante trocar o filtro de óleo junto com o óleo?",
+            options: [
+              { value: 1, label: "Para o óleo ter maior tempo de duração." },
+              { value: 2, label: "Para garantir que o motor não vai fazer barulho." },
+              { value: 3, label: "Para garantir que as impurezas não contaminem o novo óleo." }
+            ],
+            response: "Para garantir que as impurezas não contaminem o novo óleo.",
+            isSelect: true
+          },
+          {
+            label: "Quais são os tipos de óleo mais comuns?",
+            options: [
+              { value: 1, label: "Mineral." },
+              { value: 2, label: "Mineral, semissintético e sintético." },
+              { value: 3, label: "Semissintético e sintético." }
+            ],
+            response: "Mineral, semissintético e sintético.",
+            isSelect: true
+          },
+          {
+            label: "Como saber qual tipo de óleo é recomendado para usar no motor do veículo?",
+            options: [
+              { value: 1, label: "Consultar o manual do veículo ou as recomendações do fabricante." },
+              { value: 2, label: "Perguntar para o proprietário do veículo." },
+              { value: 3, label: "Misturar óleo Mineral, semissintético e sintético." }
+            ],
+            response: "Consultar o manual do veículo ou as recomendações do fabricante.",
+            isSelect: true
+          },
+          {
+            label: "O que pode acontecer se o óleo do motor não for trocado regularmente?",
+            options: [
+              { value: 1, label: "Pode causar desgaste prematuro do motor e falhas mecânicas." },
+              { value: 2, label: "Pode aumentar o ruído na cabine." },
+              { value: 3, label: "Nada, é somente para ter óleo novo no motor." }
+            ],
+            response: "Pode causar desgaste prematuro do motor e falhas mecânicas.",
+            isSelect: true
+          },
+          {
+            label: "Qual é a função do filtro de óleo do motor?",
+            options: [
+              { value: 1, label: "Não deixar misturar combustível com óleo." },
+              { value: 2, label: "Reduzir o ruído do motor." },
+              { value: 3, label: "Reter impurezas e partículas que podem danificar o motor." }
+            ],
+            response: "Reter impurezas e partículas que podem danificar o motor.",
+            isSelect: true
+          },
+          {
+            label: "O que é a classificação API?",
+            options: [
+              { value: 1, label: "Informar de quem é o fabricante do óleo." },
+              { value: 2, label: "Sistema de classificação que indica a qualidade e o desempenho do óleo." },
+              { value: 3, label: "Sigla que informa a validade do óleo." }
+            ],
+            response: "Sistema de classificação que indica a qualidade e o desempenho do óleo.",
+            isSelect: true
+          },
+          {
+            label: "O que é um aditivo de óleo?",
+            options: [
+              { value: 1, label: "Substância adicionada ao óleo para melhorar suas propriedades." },
+              { value: 2, label: "Substância adicionada ao radiador para melhorar as propriedades de óleo." },
+              { value: 3, label: "Substância adicionada ao óleo para refrigerar o motor." }
+            ],
+            response: "Substância adicionada ao óleo para melhorar suas propriedades.",
+            isSelect: true
+          },
+          {
+            label: "Qual é a diferença entre óleo sintético e mineral?",
+            options: [
+              { value: 1, label: "Não tem diferença, é questão de escolha do cliente." },
+              { value: 2, label: "O óleo mineral é quimicamente modificado para melhor desempenho, enquanto o sintético é refinado do petróleo bruto." },
+              { value: 3, label: "O óleo sintético é quimicamente modificado para melhor desempenho, enquanto o mineral é refinado do petróleo bruto." }
+            ],
+            response: "O óleo sintético é quimicamente modificado para melhor desempenho, enquanto o mineral é refinado do petróleo bruto.",
+            isSelect: true
+          },
+          {
+            label: "Por que é importante não sobrecarregar o motor com óleo?",
+            options: [
+              { value: 1, label: "Porque pode causar aumento da pressão e vazamentos." },
+              { value: 2, label: "Porque o motor não funciona corretamente." },
+              { value: 3, label: "Nenhuma das alternativas." }
+            ],
+            response: "Porque pode causar aumento da pressão e vazamentos.",
+            isSelect: true
+          }
+        ]
+
+        setFieldsExam(fields)
+      }
     }
   }, [selectedExam])
 
@@ -271,6 +861,12 @@ const ExamsCorrectionModal = (props) => {
           options={[
             { value: 1, label: "Avaliação de matemática frentista" },
             { value: 2, label: "Avaliação teórica frentista" },
+            { value: 3, label: "Avaliação matemática operador de caixa" },
+            { value: 4, label: "Avaliação teórica operador de caixa" },
+            { value: 5, label: "Avaliação matemática frentista caixa" },
+            { value: 6, label: "Avaliação teórica frentista caixa" },
+            { value: 7, label: "Avaliação matemática trocador de óleo" },
+            { value: 8, label: "Avaliação teórica trocador de óleo" },
           ]}
           onChange={(value) => setSelectedExam(value)}
         />

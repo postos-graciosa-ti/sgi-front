@@ -418,8 +418,6 @@ const EditWorkerModal = (props) => {
     api
       .get(`/cities`)
       .then((response) => {
-        console.log(response)
-
         let options = response?.data.map((option) => ({ value: option.Cities.id, label: option.Cities.name, stateId: option.Cities.state_id }))
 
         setBirthcityOptions(options)

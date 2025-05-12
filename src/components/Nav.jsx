@@ -144,16 +144,20 @@ const Nav = () => {
           <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <Link className="nav-link" to="/home">Início</Link>
+                <span className="nav-link">{selectedSubsidiarie?.label}</span>
+              </li>
+
+              <li className="nav-item">
+                <Link className="nav-link" to="/home">Área de trabalho</Link>
               </li>
 
               <li className="nav-item">
                 <Link className="nav-link" to="/update-notifications">Histórico de atualizações</Link>
               </li>
 
-              {/* <li className="nav-item">
-                <Link className="nav-link" to="/tickets">Chamados</Link>
-              </li> */}
+              <li className="nav-item">
+                <Link className="nav-link" to="/applicants">Processos Seletivos</Link>
+              </li>
 
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -166,10 +170,6 @@ const Nav = () => {
                   <li><Link className="dropdown-item" to="/responsible">Atribuídos a mim</Link></li>
                 </ul>
               </li>
-
-              {/* <li className="nav-item">
-                <Link className="nav-link" to="/applicants">Processos Seletivos</Link>
-              </li> */}
 
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -280,7 +280,7 @@ const Nav = () => {
         </div>
       </nav>
 
-      {
+      {/* {
         workersFirstReview?.workers?.length > 0 && (
           <div className="container">
             {
@@ -330,7 +330,7 @@ const Nav = () => {
             </div>
           </div>
         )
-      }
+      } */}
 
       <ChangePasswordModal
         changePasswordModalOpen={changePasswordModalOpen}

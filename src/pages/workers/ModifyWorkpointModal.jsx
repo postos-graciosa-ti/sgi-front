@@ -1,40 +1,103 @@
-import axios from 'axios';
-import React, { useState } from 'react';
-import { Alert, Button, Modal, Spinner } from 'react-bootstrap';
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { Alert, Button, Modal } from 'react-bootstrap'
+import { Plus } from 'react-bootstrap-icons'
+import ReactSelect from "react-select"
+import api from '../../services/api'
 
 const ModifyWorkpointModal = (props) => {
-  const { modifyWorkpointModalOpen, setModifyWorkpointModalOpen } = props;
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const { modifyWorkpointModalOpen, setModifyWorkpointModalOpen } = props
+
+  const [subsidiariesOptions, setSubsidiariesOptions] = useState()
+
+  const [workersOptions, setWorkersOptions] = useState()
+
+  const [selectedSubsidiarie, setSelectedSubsidiarie] = useState()
+
+  const [selectedWorker, setSelectedWorker] = useState()
+
+  const [discountNote, setDiscountNote] = useState()
+
+  const [discountsList, setDiscountsList] = useState()
+
+  const [selectedFile, setSelectedFile] = useState(null)
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  const [error, setError] = useState(null)
+
+  const [success, setSuccess] = useState(false)
+
+  useEffect(() => {
+    api
+      .get(`/subsidiaries`)
+      .then((response) => setSubsidiariesOptions(response.data.map((option) => ({ value: option.id, label: option.name }))))
+  }, [])
+
+  useEffect(() => {
+    if (selectedSubsidiarie) {
+      api
+        .get(`/workers/subsidiarie/${selectedSubsidiarie?.value}`)
+        .then((response) => setWorkersOptions(response.data.map((option) => ({ value: option.worker_id, label: option.worker_name }))))
+    }
+  }, [selectedSubsidiarie])
 
   const handleClose = () => {
-    setModifyWorkpointModalOpen(false);
-    setSelectedFile(null);
-    setError(null);
-    setSuccess(false);
-    setIsLoading(false);
-  };
+    setModifyWorkpointModalOpen(false)
+
+    setSelectedSubsidiarie(null)
+
+    setSelectedFile(null)
+
+    setSelectedWorker(null)
+
+    setDiscountNote(null)
+
+    setDiscountsList(null)
+
+    setError(null)
+
+    setSuccess(false)
+
+    setIsLoading(false)
+  }
+
+  const handleAddDiscount = () => {
+    setDiscountsList((prev) => {
+      if (prev) {
+        return [...prev, { "worker": selectedWorker.label, "discountNote": discountNote }]
+      } else {
+        return [{ "worker": selectedWorker.label, "discountNote": discountNote }]
+      }
+    })
+  }
 
   const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
-    setError(null);
-    setSuccess(false);
-  };
+    setSelectedFile(e.target.files[0])
+
+    setError(null)
+
+    setSuccess(false)
+  }
 
   const handleSubmit = async () => {
     if (!selectedFile) {
-      setError('Por favor, selecione um arquivo Excel antes de enviar.');
-      return;
+      setError('Por favor, selecione um arquivo Excel antes de enviar.')
+
+      return
     }
 
-    setIsLoading(true);
-    setError(null);
-    setSuccess(false);
+    setIsLoading(true)
 
-    const formData = new FormData();
-    formData.append('file', selectedFile);
+    setError(null)
+
+    setSuccess(false)
+
+    const formData = new FormData()
+
+    formData.append('discountList', JSON.stringify(discountsList))
+
+    formData.append('file', selectedFile)
 
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/scripts/rhsheets`, formData, {
@@ -42,39 +105,43 @@ const ModifyWorkpointModal = (props) => {
           'Content-Type': 'multipart/form-data',
         },
         responseType: 'blob',
-      });
+      })
 
-      // Criar link para download
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'planilha_atualizada.xlsx');
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      const url = window.URL.createObjectURL(new Blob([response.data]))
 
-      setSuccess(true);
-      setTimeout(handleClose, 2000); // Fecha o modal após 2 segundos
+      const link = document.createElement('a')
+
+      link.href = url
+
+      link.setAttribute('download', 'planilhas_ponto.xlsx')
+
+      document.body.appendChild(link)
+
+      link.click()
+
+      link.remove()
+
+      setSuccess(true)
+
+      setTimeout(handleClose, 2000)
     } catch (err) {
-      console.error('Erro ao enviar arquivo:', err);
+      console.error('Erro ao enviar arquivo:', err)
+
       if (err.response) {
-        // Se o servidor respondeu com um status de erro
         if (err.response.status === 422) {
-          setError('Formato de arquivo inválido. Por favor, envie um arquivo Excel válido.');
+          setError('Formato de arquivo inválido. Por favor, envie um arquivo Excel válido.')
         } else {
-          setError(`Erro ${err.response.status}: ${err.response.data?.message || 'Erro ao processar arquivo'}`);
+          setError(`Erro ${err.response.status}: ${err.response.data?.message || 'Erro ao processar arquivo'}`)
         }
       } else if (err.request) {
-        // Se a requisição foi feita mas não houve resposta
-        setError('Não foi possível conectar ao servidor. Verifique sua conexão.');
+        setError('Não foi possível conectar ao servidor. Verifique sua conexão.')
       } else {
-        // Outros erros
-        setError('Ocorreu um erro inesperado. Por favor, tente novamente.');
+        setError('Ocorreu um erro inesperado. Por favor, tente novamente.')
       }
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <Modal
@@ -90,10 +157,68 @@ const ModifyWorkpointModal = (props) => {
 
       <Modal.Body>
         {error && <Alert variant="danger" onClose={() => setError(null)} dismissible>{error}</Alert>}
+
         {success && <Alert variant="success">Planilha processada com sucesso! O download começará automaticamente.</Alert>}
 
+        {
+          discountsList && (
+            <>
+              <div className="fw-bold mb-3">Descontos</div>
+            </>
+          )
+        }
+
+        {
+          discountsList && discountsList.map((discount) => (
+            <>
+              <label className="form-label fw-bold">{discount.worker}</label>
+              <input className="form-control mb-3" value={discount.discountNote} disabled />
+            </>
+          ))
+        }
+
         <div className="mb-3">
-          <label className="form-label">Selecione a planilha de ponto:</label>
+          <label className="form-label fw-bold">Filiais:</label>
+
+          <ReactSelect
+            placeholder={""}
+            options={subsidiariesOptions}
+            onChange={(value) => setSelectedSubsidiarie(value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">Colaborador:</label>
+
+          <ReactSelect
+            placeholder={""}
+            options={workersOptions}
+            onChange={(value) => setSelectedWorker(value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">Desconto:</label>
+
+          <div className="row">
+            <div className="col-10">
+              <input
+                className="form-control"
+                onChange={(e) => setDiscountNote(e.target.value)}
+              />
+            </div>
+
+            <div className="col-2">
+              <button className="btn btn-warning" onClick={handleAddDiscount}>
+                <Plus />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">Arquivo:</label>
+
           <input
             type="file"
             className="form-control"
@@ -101,27 +226,14 @@ const ModifyWorkpointModal = (props) => {
             onChange={handleFileChange}
             disabled={isLoading}
           />
-          <div className="form-text">
-            A planilha será processada e retornará com os códigos eSocial atualizados.
-          </div>
         </div>
-
-        {isLoading && (
-          <div className="text-center">
-            <Spinner animation="border" role="status">
-              <span className="visually-hidden">Processando...</span>
-            </Spinner>
-            <p>Processando arquivo, por favor aguarde...</p>
-          </div>
-        )}
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose} disabled={isLoading}>
-          Fechar
-        </Button>
+        <Button variant="light" onClick={handleClose} disabled={isLoading}>Fechar</Button>
+
         <Button
-          variant="primary"
+          variant="success"
           onClick={handleSubmit}
           disabled={isLoading || !selectedFile}
         >
@@ -129,7 +241,7 @@ const ModifyWorkpointModal = (props) => {
         </Button>
       </Modal.Footer>
     </Modal>
-  );
-};
+  )
+}
 
-export default ModifyWorkpointModal;
+export default ModifyWorkpointModal

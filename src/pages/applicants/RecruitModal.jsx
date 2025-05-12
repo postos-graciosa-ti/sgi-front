@@ -116,7 +116,7 @@ const RecruitModal = (props) => {
     }
 
     api
-      .post("/recruit", requestBody)
+      .post("/applicants/hire", requestBody)
       .then(() => {
         api
           .get(`/subsidiaries/${selectedSubsidiarie?.value}/workers/experience-time-no-first-review`)

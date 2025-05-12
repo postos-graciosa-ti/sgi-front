@@ -37,6 +37,8 @@ const Home = () => {
 
   const [secondReviewRealizedBy, setSecondReviewRealizedBy] = useState()
 
+  const [interviewsToDo, setInterviewsToDo] = useState()
+
   useEffect(() => {
     api
       .post(`/subsidiaries/away-workers`, { subsidiaries_ids: eval(userSession.subsidiaries_id) })
@@ -61,6 +63,10 @@ const Home = () => {
     api
       .get(`/workers/second-review/notification`)
       .then((response) => setSecondReviewRealizedBy(response.data))
+
+    api
+      .get(`/users/${userSession?.id}/applicants/notifications`)
+      .then((response) => setInterviewsToDo(response.data))
   }, [])
 
   return (
@@ -68,6 +74,10 @@ const Home = () => {
       <Nav />
 
       <div className="container mt-4">
+        <h3 className="text-danger">
+          Importante
+        </h3>
+
         {
           workersWithoutFirstReview?.workers?.length > 0 && (
             <>
@@ -91,7 +101,7 @@ const Home = () => {
 
               {
                 firstReviewRealizedBy?.map((notification) => (
-                  <div className="alert alert-warning">
+                  <div className="alert alert-warning" key={notification?.Workers?.id}>
                     {notification?.User?.name} realizou a avaliação de primeiro período de experiência para {notification?.Workers?.name} em {moment(notification?.WorkersFirstReview?.realized_in).format("DD-MM-YYYY")}
                   </div>
                 ))
@@ -123,7 +133,7 @@ const Home = () => {
 
               {
                 secondReviewRealizedBy?.map((notification) => (
-                  <div className="alert alert-warning">
+                  <div className="alert alert-warning" key={notification?.User?.id}>
                     {notification?.User?.name} realizou a avaliação de primeiro período de experiência para {notification?.Workers?.name} em {moment(notification?.WorkersFirstReview?.realized_in).format("DD-MM-YYYY")}
                   </div>
                 ))
@@ -157,6 +167,22 @@ const Home = () => {
                 ticketsNotifications && ticketsNotifications.map((notification) => (
                   <div className="alert alert-warning" key={notification?.Tickets?.id}>
                     {notification?.User?.name} abriu um chamado ({notification?.Tickets?.description}, {notification?.Service?.name}) atribuído a {userSession?.name} em {moment(notification?.Tickets?.opened_at).format("DD-MM-YYYY")}
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
+
+        {
+          interviewsToDo?.length > 0 && (
+            <>
+              <h5>Candidatos encaminhados para entrevista com {userSession?.name}</h5>
+
+              {
+                interviewsToDo && interviewsToDo.map((notification) => (
+                  <div className="alert alert-warning" key={notification.id}>
+                    {notification?.name}
                   </div>
                 ))
               }

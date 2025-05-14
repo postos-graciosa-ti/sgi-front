@@ -5,9 +5,10 @@ import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
 import ConfirmApplicantDeleteModal from "./ConfirmApplicantDeleteModal"
 import ExamsCorrectionModal from "./ExamsCorrectionModal"
+import ExamsEmissionModal from "./ExamsEmissionModal"
+import HireApplicantModal from "./HireApplicantModal"
 import NewApplicantModal from "./NewApplicantModal"
 import SelectiveProcessModal from "./SelectiveProcessModal"
-import ExamsEmissionModal from "./ExamsEmissionModal"
 
 const Applicants = () => {
   const userSession = useUserSessionStore((state) => state.userSession)
@@ -23,6 +24,8 @@ const Applicants = () => {
   const [newApplicantModalOpen, setNewApplicantModalOpen] = useState(false)
 
   const [selectiveProcessModalOpen, setSelectiveProcessModalOpen] = useState(false)
+
+  const [hireApplicantModalOpen, setHireApplicantModalOpen] = useState(false)
 
   const [confirmApplicantDeleteModalOpen, setConfirmApplicantDeleteModalOpen] = useState(false)
 
@@ -48,6 +51,12 @@ const Applicants = () => {
     setSelectedApplicant(applicant)
 
     setSelectiveProcessModalOpen(true)
+  }
+
+  const handleOpenHireApplicantModal = (applicant) => {
+    setSelectedApplicant(applicant)
+
+    setHireApplicantModalOpen(true)
   }
 
   const handleOpenConfirmApplicantDeleteModal = (applicant) => {
@@ -106,7 +115,7 @@ const Applicants = () => {
 
                       {
                         applicant.is_aproved && (
-                          <button className="btn btn-primary">
+                          <button className="btn btn-primary" onClick={() => handleOpenHireApplicantModal(applicant)}>
                             Efetivar
                           </button>
                         )
@@ -147,6 +156,13 @@ const Applicants = () => {
       <SelectiveProcessModal
         selectiveProcessModalOpen={selectiveProcessModalOpen}
         setSelectiveProcessModalOpen={setSelectiveProcessModalOpen}
+        selectedApplicant={selectedApplicant}
+        setApplicantsList={setApplicantsList}
+      />
+
+      <HireApplicantModal
+        hireApplicantModalOpen={hireApplicantModalOpen}
+        setHireApplicantModalOpen={setHireApplicantModalOpen}
         selectedApplicant={selectedApplicant}
         setApplicantsList={setApplicantsList}
       />

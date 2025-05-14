@@ -852,7 +852,7 @@ const ExamsCorrectionModal = (props) => {
       keyboard={false}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Corretor de provas</Modal.Title>
+        <Modal.Title>Corrigir provas</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>

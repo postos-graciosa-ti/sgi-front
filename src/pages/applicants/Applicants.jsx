@@ -4,8 +4,10 @@ import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
 import ConfirmApplicantDeleteModal from "./ConfirmApplicantDeleteModal"
+import ExamsCorrectionModal from "./ExamsCorrectionModal"
 import NewApplicantModal from "./NewApplicantModal"
 import SelectiveProcessModal from "./SelectiveProcessModal"
+import ExamsEmissionModal from "./ExamsEmissionModal"
 
 const Applicants = () => {
   const userSession = useUserSessionStore((state) => state.userSession)
@@ -13,6 +15,10 @@ const Applicants = () => {
   const [applicantsList, setApplicantsList] = useState()
 
   const [selectedApplicant, setSelectedApplicant] = useState()
+
+  const [examsEmissionModalOpen, setExamsEmissionModalOpen] = useState(false)
+
+  const [examsCorrectionModalOpen, setExamsCorrectionModalOpen] = useState(false)
 
   const [newApplicantModalOpen, setNewApplicantModalOpen] = useState(false)
 
@@ -25,6 +31,14 @@ const Applicants = () => {
       .get("/applicants")
       .then((response) => setApplicantsList(response.data))
   }, [])
+
+  const handleOpenExamsEmissionModal = () => {
+    setExamsEmissionModalOpen(true)
+  }
+
+  const handleOpenExamsCorrectionModal = () => {
+    setExamsCorrectionModalOpen(true)
+  }
 
   const handleOpenNewApplicantModal = () => {
     setNewApplicantModalOpen(true)
@@ -48,12 +62,12 @@ const Applicants = () => {
 
       <div className="container">
         <div>
-          <button className="btn btn-primary me-1 mb-3">
-            Emissor de provas
+          <button className="btn btn-primary me-1 mb-3" onClick={handleOpenExamsEmissionModal}>
+            Emitir provas
           </button>
 
-          <button className="btn btn-primary me-1 mb-3">
-            Corretor de provas
+          <button className="btn btn-primary me-1 mb-3" onClick={handleOpenExamsCorrectionModal}>
+            Corrigir provas
           </button>
 
           <button className="btn btn-primary mb-3" onClick={handleOpenNewApplicantModal}>
@@ -65,6 +79,8 @@ const Applicants = () => {
           <table className="table table-hover">
             <thead>
               <tr>
+                <th></th>
+
                 <th>Nome</th>
 
                 <th></th>
@@ -73,18 +89,28 @@ const Applicants = () => {
 
             <tbody>
               {
-                applicantsList && applicantsList.map((applicant) => (
-                  <tr key={applicant.id}>
+                applicantsList && applicantsList.map((applicant, i) => (
+                  <tr key={applicant.id} className={applicant.is_aproved == true && "table-success" || "table-light"}>
+                    <td className="text-muted text-center">#0{i + 1}</td>
+
                     <td>{applicant.name}</td>
 
                     <td>
                       <button
-                        className="btn btn-primary"
+                        className="btn btn-primary me-2"
                         disabled={!(userSession?.id === applicant.created_by || userSession?.id === applicant.redirect_to)}
                         onClick={() => handleOpenSelectiveProcessModal(applicant)}
                       >
                         Processo seletivo
                       </button>
+
+                      {
+                        applicant.is_aproved && (
+                          <button className="btn btn-primary">
+                            Efetivar
+                          </button>
+                        )
+                      }
 
                       <button
                         className="btn btn-danger ms-2"
@@ -101,6 +127,16 @@ const Applicants = () => {
           </table>
         </div>
       </div>
+
+      <ExamsEmissionModal
+        examsEmissionModalOpen={examsEmissionModalOpen}
+        setExamsEmissionModalOpen={setExamsEmissionModalOpen}
+      />
+
+      <ExamsCorrectionModal
+        examsCorrectionModalOpen={examsCorrectionModalOpen}
+        setExamsCorrectionModalOpen={setExamsCorrectionModalOpen}
+      />
 
       <NewApplicantModal
         newApplicantModalOpen={newApplicantModalOpen}

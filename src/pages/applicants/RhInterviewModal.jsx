@@ -17,6 +17,12 @@ const RhInterviewModal = (props) => {
   const [usersOptions, setUsersOptions] = useState()
   const [selectedUser, setSelectedUser] = useState()
 
+  const [subsidiariesOptions, setSubsidiariesOptions] = useState()
+
+  const [selectedSubsidiarie, setSelectedSubsidiarie] = useState()
+
+  const [subsidiarieMetrics, setSubsidiarieMetrics] = useState()
+
   const [natural, setNatural] = useState("")
   const [tempo, setTempo] = useState("")
   const [vagaInteresse, setVagaInteresse] = useState("")
@@ -56,9 +62,26 @@ const RhInterviewModal = (props) => {
       .get("/users")
       .then((response) => {
         let options = response.data.map((option) => ({ value: option.user_id, label: option.user_name }))
+
         setUsersOptions(options)
       })
+
+    api
+      .get("/subsidiaries")
+      .then((response) => {
+        let options = response.data.map((option) => ({ value: option.id, label: option.name }))
+
+        setSubsidiariesOptions(options)
+      })
   }, [])
+
+  useEffect(() => {
+    if (selectedSubsidiarie) {
+      api
+        .get(`/subsidiaries/${selectedSubsidiarie.value}/metrics`)
+        .then((response) => setSubsidiarieMetrics(response.data))
+    }
+  }, [selectedSubsidiarie])
 
   const handleClose = () => {
     api
@@ -171,6 +194,30 @@ const RhInterviewModal = (props) => {
         <div className="mb-3">
           <input type="text" className="form-control text-center fw-bold" value={selectedApplicant?.name} disabled />
         </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">Verificar quadro de vagas</label>
+
+          <ReactSelect
+            placeholder={""}
+            options={subsidiariesOptions}
+            onChange={(value) => setSelectedSubsidiarie(value)}
+          />
+        </div>
+
+        {
+          subsidiarieMetrics && (
+            <div className="card text-center p-4 mb-3">
+              <div className={subsidiarieMetrics.has_caixas_ideal_quantity && "text-success fw-bold mb-1" || "text-danger fw-bold mb-1"}>
+                Quantidade atual de caixas: {subsidiarieMetrics.caixas_quantity}/{subsidiarieMetrics.caixas_ideal_quantity}
+              </div>
+
+              <div className={subsidiarieMetrics.has_frentistas_ideal_quantity && "text-success fw-bold mb-1" || "text-danger fw-bold mb-1"}>
+                Quantidade de frentistas: {subsidiarieMetrics.frentistas_quantity}/{subsidiarieMetrics.frentistas_ideal_quantity}
+              </div>
+            </div>
+          )
+        }
 
         <div className="mb-3">
           <label className="form-label fw-bold">Natural:</label>

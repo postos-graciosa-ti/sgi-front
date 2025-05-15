@@ -86,7 +86,7 @@ const CalendarPopup = (props) => {
       <Modal.Body>
         {
           dateEventList && dateEventList.map((event) => (
-            <div className="row mb-3">
+            <div key={event.id} className="row mb-3">
               <div className="col-10">
                 <input
                   type="text"

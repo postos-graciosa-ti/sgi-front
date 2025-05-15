@@ -91,7 +91,7 @@ const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn, sele
 
               {
                 events.map((evt) => (
-                  <div>
+                  <div key={evt.id}>
                     {evt.event_name} ({moment(evt.date).format("DD-MM-YYYY")})
                   </div>
                 ))
@@ -105,13 +105,11 @@ const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn, sele
 
           {
             scalesList?.map((scale) => (
-              <>
-                <div key={scale.worker.id} style={{ fontSize: '11px' }}>
-                  {scale.worker.name} ____________________
+              <div key={scale.worker.id}>
+                <div style={{ fontSize: '11px' }}>
+                  {scale.worker.name} ____________________ <br />
                 </div>
-
-                <br />
-              </>
+              </div>
             ))
           }
         </div>

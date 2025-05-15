@@ -4,26 +4,14 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Calendar from "react-calendar"
 import Select from "react-select"
+import Swal from "sweetalert2"
 import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
 
 const AddSomeWorkersModal = (props) => {
-  const {
-    addSomeWorkersModalOpen,
-    setAddSomeWorkersModalOpen,
-    workersOptions,
-    selectedWorker,
-    selectedWorkerInfo,
-    setScalesList,
-    scalesList,
-    allWorkers
-  } = props
+  const { addSomeWorkersModalOpen, setAddSomeWorkersModalOpen, setScalesList } = props
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
-
-  let monthFirstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-
-  let monthLastDay = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
 
   const [someWorkersDaysOff, setSomeWorkersDaysOff] = useState([])
 
@@ -45,32 +33,23 @@ const AddSomeWorkersModal = (props) => {
 
   useEffect(() => {
     if (selectedTurn) {
-      let options = []
+      api
+        .get(`/workers/turns/${selectedTurn?.value}/subsidiarie/${selectedSubsdiarie?.value}`)
+        .then((response) => {
+          let options = response.data.map((option) => ({ value: option.id, label: option.name }))
 
-      {
-        allWorkers && allWorkers.map((worker) => {
-          if (worker.turn_id == selectedTurn.value)
-            options.push({ "label": `${worker.worker_name} | ${worker.function_name}`, "value": worker.worker_id })
+          setLocalWorkersOptions(options)
         })
-      }
-
-      setLocalWorkersOptions(options)
     }
   }, [selectedTurn])
 
   useEffect(() => {
     api
-      .get("/turns")
+      .get(`/subsidiaries/${selectedSubsdiarie?.value}/turns`)
       .then((response) => {
-        let turns = response.data
+        let options = response.data.map((option) => ({ value: option.id, label: option.name }))
 
-        let turnsOptions = []
-
-        turns && turns.map((turn) => {
-          turnsOptions.push({ "label": turn.name, "value": turn.id })
-        })
-
-        setTurnsOptions(turnsOptions)
+        setTurnsOptions(options)
       })
   }, [])
 
@@ -107,34 +86,7 @@ const AddSomeWorkersModal = (props) => {
       let updatedDaysOff = someWorkersDaysOff.filter((dayOff) => dayOff != moment(date).format("DD-MM-YYYY"))
 
       setSomeWorkersDaysOff(updatedDaysOff)
-
     } else {
-      // let allDaysOff = [...someWorkersDaysOff, moment(date).format("DD-MM-YYYY")]
-
-      // allDaysOff.reduce((prevDayOff, currentDayOff) => {
-      //   const currentDay = moment(currentDayOff, "DD-MM-YYYY")
-
-      //   const previousDay = prevDayOff ? moment(prevDayOff, "DD-MM-YYYY") : moment(monthFirstDay, "DD-MM-YYYY")
-
-      //   const numberToCompare = prevDayOff ? 8 : 7
-
-      //   const dateDifference = currentDay.diff(previousDay, "days")
-
-      //   if (dateDifference >= numberToCompare) {
-      //     // handleClose()
-
-      //     Swal.fire({
-      //       title: "Erro",
-      //       text: "O dia selecionado não pode ter mais de 7 dias de diferença do dia anterior",
-      //       icon: "error"
-      //     })
-
-      //     throw new Error("O dia selecionado não pode ter mais de 7 dias de diferença do dia anterior")
-      //   }
-
-      //   return currentDayOff
-      // }, null)
-
       setSomeWorkersDaysOff((prev) => {
         if (prev) {
           return [...prev, moment(date).format("DD-MM-YYYY")]
@@ -146,6 +98,23 @@ const AddSomeWorkersModal = (props) => {
   }
 
   const handleSubmit = () => {
+    const validations = [
+      { condition: !selectedTurn, message: "Não é possível salvar sem turno selecionado" },
+      { condition: selectedWorkers.length === 0, message: "Não é possível salvar sem colaboradores selecionados" }
+    ]
+
+    for (const { condition, message } of validations) {
+      if (condition) {
+        Swal.fire({
+          icon: "warning",
+          title: "Aviso",
+          text: `_${message}_`,
+        })
+
+        throw new Error(`_${message}_`)
+      }
+    }
+
     const sortedDaysOff = [...someWorkersDaysOff].sort((a, b) => {
       const dataA = new Date(a.split("-").reverse().join("-"))
 
@@ -194,8 +163,6 @@ const AddSomeWorkersModal = (props) => {
       "last_day": formatarData(ultimaData),
       "days_off": `[${someWorkersDaysOff.map(dayOff => `'${dayOff}'`).join(',')}]`,
       "ilegal_dates": `[${someWorkersDaysOff.map(dayOff => `'${dayOff}'`).join(',')}]`,
-      // "worker_turn_id": selectedWorkerInfo.turn_id,
-      // "worker_function_id": selectedWorkerInfo.function_id
     }
 
     api
@@ -211,46 +178,6 @@ const AddSomeWorkersModal = (props) => {
 
   const handleOnChangeWorker = (workers) => {
     setSelectedWorkers(workers)
-
-    // if (workers.length > 1) {
-    //   let allWorkersTurnsIds = []
-
-    //   let allWorkersFunctionsIds = []
-
-    //   const workerPromises = workers.map((worker) =>
-    //     api
-    //       .get(`/workers/${worker.value}`)
-    //       .then((response) => {
-    //         let workerData = response.data
-
-    //         allWorkersTurnsIds.push(workerData.turn_id)
-
-    //         allWorkersFunctionsIds.push(workerData.function_id)
-    //       })
-    //   )
-
-    //   Promise
-    //     .all(workerPromises)
-    //     .then(() => {
-    //       const hasDuplicateFunctionId = allWorkersFunctionsIds.some((id, index) => allWorkersFunctionsIds.indexOf(id) !== index)
-
-    //       if (hasDuplicateFunctionId) {
-    //         Swal.fire({
-    //           title: "Erro",
-    //           text: "Selecione apenas colaboradores de turnos e funções diferentes",
-    //           icon: "error"
-    //         })
-
-    //         handleClose()
-
-    //         return
-    //       }
-
-    //       setSelectedWorkers(workers)
-    //     })
-    // } else {
-    //   setSelectedWorkers(workers)
-    // }
   }
 
   return (
@@ -306,7 +233,7 @@ const AddSomeWorkersModal = (props) => {
         <Button variant="success" onClick={handleSubmit}>Concluir</Button>
       </Modal.Footer>
     </Modal>
-  );
-};
+  )
+}
 
-export default AddSomeWorkersModal;
+export default AddSomeWorkersModal

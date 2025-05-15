@@ -783,12 +783,7 @@ const Scale = () => {
       <AddSomeWorkersModal
         addSomeWorkersModalOpen={addSomeWorkersModalOpen}
         setAddSomeWorkersModalOpen={setAddSomeWorkersModalOpen}
-        workersOptions={workersOptions}
-        selectedWorker={selectedWorker}
-        selectedWorkerInfo={selectedWorkerInfo}
         setScalesList={setScalesList}
-        scalesList={scalesList}
-        allWorkers={allWorkers}
       />
 
       <ScaleLogsModal

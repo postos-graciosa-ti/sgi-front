@@ -140,6 +140,8 @@ const Workers = () => {
     setEditWorkerModalOpen(true)
   }
 
+  //
+
   const handleIssueBadge = async (worker) => {
     let subsidiarieData = await api.get(`/subsidiaries/${selectedSubsdiarie?.value}`).then((response) => response.data)
 

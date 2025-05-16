@@ -595,12 +595,17 @@ const RhInterviewModal = (props) => {
 
         <div className="mb-3">
           <label className="form-label fw-bold">Direcionar para:</label>
+
           <ReactSelect
             placeholder={""}
             options={usersOptions}
             onChange={(value) => setSelectedUser(value)}
-            defaultValue={usersOptions?.find((option) => option.value == selectedApplicant?.redirect_to)}
-            isDisabled={selectedApplicant?.redirect_to && true}
+            defaultValue={
+              selectedApplicant?.redirect_id
+                ? usersOptions?.find(option => option.value === selectedApplicant.redirect_id)
+                : null
+            }
+            isDisabled={!!selectedApplicant?.redirect_id}
           />
         </div>
       </Modal.Body>

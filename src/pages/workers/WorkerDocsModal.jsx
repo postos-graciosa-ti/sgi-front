@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react'
 import { Plus, Trash } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import api from '../../services/api'
 import Select from '../../components/form/Select'
+import api from '../../services/api'
+import Swal from 'sweetalert2'
 
 const WorkerDocsModal = (props) => {
   const { workerDocsModalOpen, setWorkerDocsModalOpen, selectedWorker, setSelectedWorker } = props
@@ -65,6 +66,23 @@ const WorkerDocsModal = (props) => {
       })
   }
 
+  const handleSendEmail = () => {
+    let requestBody = {
+      worker_id: selectedWorker.worker_id,
+      to: selectedWorker.email,
+      subject: "Contrato de Trabalho - Rede de Postos Graciosa",
+      body: `${selectedWorker.worker_name}, seja bem-vindo(a) a Rede de Postos Graciosa. Em anexo, encaminhamos o seu contrato de trabalho.`,
+    }
+
+    api
+      .post("/send-email", requestBody)
+      .then(() => {
+        Swal.fire("Sucesso", `E-mail enviado com sucesso para ${selectedWorker.worker_name}`, "success")
+
+        handleClose()
+      })
+  }
+
   return (
     <Modal
       show={workerDocsModalOpen}
@@ -94,6 +112,7 @@ const WorkerDocsModal = (props) => {
               { value: 11, label: "Certidão de nascimento (filhos menores de 14)" },
               { value: 12, label: "Carteira de vacinação (filhos menores de 5)" },
               { value: 13, label: "Comprovante de frequência escolar (filhos entre 7 e 14)" },
+              { value: 14, label: "Contrato de trabalho" },
             ]}
             setSelectedValue={setDocTitle}
           />
@@ -109,6 +128,11 @@ const WorkerDocsModal = (props) => {
               <Plus />
             </button>
           </div>
+        </div>
+
+
+        <div className='mt-3'>
+          <button className="btn btn-primary" onClick={handleSendEmail}>E-mail</button>
         </div>
 
         {

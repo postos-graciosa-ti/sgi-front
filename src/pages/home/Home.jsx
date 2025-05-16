@@ -5,6 +5,8 @@ import useUserSessionStore from "../../data/userSession.js"
 import api from "../../services/api.js"
 
 const Home = () => {
+  const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
   const today = new Date()
 
   const day = today.getDay()
@@ -57,11 +59,11 @@ const Home = () => {
       .then((response) => setTicketsNotifications(response.data))
 
     api
-      .get(`/workers/first-review/notification`)
+      .get(`/subsidiaries/${selectedSubsidiarie?.value}/workers/first-review/notification`)
       .then((response) => setFirstReviewRealizedBy(response.data))
 
     api
-      .get(`/workers/second-review/notification`)
+      .get(`/subsidiaries/${selectedSubsidiarie?.value}/workers/second-review/notification`)
       .then((response) => setSecondReviewRealizedBy(response.data))
 
     api

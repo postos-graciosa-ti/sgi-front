@@ -1,4 +1,6 @@
 import moment from 'moment'
+import { useEffect, useState } from 'react'
+import { Dash, Plus } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Swal from 'sweetalert2'
@@ -18,6 +20,16 @@ const DeleteScaleModal = (props) => {
   } = props
 
   const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
+  const [dateEventsList, setDateEventsList] = useState()
+
+  const [newDateEvent, setNewDateEvent] = useState()
+
+  useEffect(() => {
+    api
+      .get(`/subsidiaries/${selectedSubsdiarie?.value}/dates/${moment(selectedDate).format("YYYY-MM-DD")}/dates-events`)
+      .then((response) => setDateEventsList(response.data))
+  }, [deleteScaleModalOpen])
 
   const handleRemoveDayOff = () => {
     let updatedDaysOff = daysOff.filter((dayOff) => dayOff != moment(selectedDate).format("DD-MM-YYYY"))
@@ -88,6 +100,31 @@ const DeleteScaleModal = (props) => {
       })
   }
 
+  const handleAddDateEvent = () => {
+    let formData = {
+      event_name: newDateEvent,
+      date: moment(selectedDate).format("YYYY-MM-DD")
+    }
+
+    api
+      .post(`/subsidiaries/${selectedSubsdiarie?.value}/dates-events`, formData)
+      .then(() => {
+        api
+          .get(`/subsidiaries/${selectedSubsdiarie?.value}/dates/${moment(selectedDate).format("YYYY-MM-DD")}/dates-events`)
+          .then((response) => setDateEventsList(response.data))
+      })
+  }
+
+  const handleDeleteDateEvent = (event) => {
+    api
+      .delete(`/subsidiaries/${selectedSubsdiarie?.value}/dates-events/${event.id}`)
+      .then(() => {
+        api
+          .get(`/subsidiaries/${selectedSubsdiarie?.value}/dates/${moment(selectedDate).format("YYYY-MM-DD")}/dates-events`)
+          .then((response) => setDateEventsList(response.data))
+      })
+  }
+
   return (
     <Modal
       show={deleteScaleModalOpen}
@@ -96,11 +133,53 @@ const DeleteScaleModal = (props) => {
       keyboard={false}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Remover <b>{moment(selectedDate).format("DD-MM-YYYY")}</b> da escala?</Modal.Title>
+        <Modal.Title>Remover {moment(selectedDate).format("DD-MM-YYYY")} da escala?</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
-        Deseja realmente remover <b>{moment(selectedDate).format("DD-MM-YYYY")}</b> da escala?
+        {
+          dateEventsList && dateEventsList.map((event) => (
+            <div key={event.id} className="row mb-3">
+              <div className="col-10">
+                <input
+                  type="text"
+                  className="form-control"
+                  value={event.event_name}
+                  disabled
+                />
+              </div>
+
+              <div className="col-2">
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleDeleteDateEvent(event)}
+                >
+                  <Dash />
+                </button>
+              </div>
+            </div>
+          ))
+        }
+
+        <div className="row">
+          <div className="col-10">
+            <input
+              type="text"
+              placeholder="Deseja adicionar um evento? (opcional)"
+              className="form-control"
+              onChange={(e) => setNewDateEvent(e.target.value)}
+            />
+          </div>
+
+          <div className="col-2">
+            <button
+              className="btn btn-warning"
+              onClick={handleAddDateEvent}
+            >
+              <Plus />
+            </button>
+          </div>
+        </div>
       </Modal.Body>
 
       <Modal.Footer>

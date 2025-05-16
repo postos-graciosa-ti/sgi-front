@@ -9,6 +9,7 @@ import ExamsEmissionModal from "./ExamsEmissionModal"
 import HireApplicantModal from "./HireApplicantModal"
 import NewApplicantModal from "./NewApplicantModal"
 import SelectiveProcessModal from "./SelectiveProcessModal"
+import RedirectToModal from "./RedirectToModal"
 
 const Applicants = () => {
   const userSession = useUserSessionStore((state) => state.userSession)
@@ -28,6 +29,8 @@ const Applicants = () => {
   const [hireApplicantModalOpen, setHireApplicantModalOpen] = useState(false)
 
   const [confirmApplicantDeleteModalOpen, setConfirmApplicantDeleteModalOpen] = useState(false)
+
+  const [redirectToModalOpen, setRedirectToModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -65,6 +68,12 @@ const Applicants = () => {
     setConfirmApplicantDeleteModalOpen(true)
   }
 
+  const handleOpenRedirectToModal = () => {
+    setRedirectToModalOpen(true)
+  }
+
+  const handle = () => { }
+
   return (
     <>
       <Nav />
@@ -77,6 +86,14 @@ const Applicants = () => {
 
           <button className="btn btn-primary me-1 mb-3" onClick={handleOpenExamsCorrectionModal}>
             Corrigir provas
+          </button>
+
+          <button className="btn btn-primary me-1 mb-3" onClick={handleOpenRedirectToModal}>
+            Encaminhamento
+          </button>
+
+          <button className="btn btn-primary me-1 mb-3">
+            Lista de documentos
           </button>
 
           <button className="btn btn-primary mb-3" onClick={handleOpenNewApplicantModal}>
@@ -115,7 +132,11 @@ const Applicants = () => {
 
                       {
                         applicant.is_aproved && (
-                          <button className="btn btn-primary" onClick={() => handleOpenHireApplicantModal(applicant)}>
+                          <button
+                            className="btn btn-primary"
+                            onClick={() => handleOpenHireApplicantModal(applicant)}
+                            disabled={!(userSession?.id === applicant.created_by || userSession?.id === applicant.redirect_to)}
+                          >
                             Efetivar
                           </button>
                         )
@@ -172,6 +193,11 @@ const Applicants = () => {
         setConfirmApplicantDeleteModalOpen={setConfirmApplicantDeleteModalOpen}
         selectedApplicant={selectedApplicant}
         setApplicantsList={setApplicantsList}
+      />
+
+      <RedirectToModal
+        redirectToModalOpen={redirectToModalOpen}
+        setRedirectToModalOpen={setRedirectToModalOpen}
       />
     </>
   )

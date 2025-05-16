@@ -72,7 +72,12 @@ const Applicants = () => {
     setRedirectToModalOpen(true)
   }
 
-  const handle = () => { }
+  const handlePrintDocsList = () => {
+    printJS({
+      printable: "/lista_de_documentos.pdf",
+      type: 'pdf',
+    })
+  }
 
   return (
     <>
@@ -92,7 +97,7 @@ const Applicants = () => {
             Encaminhamento
           </button>
 
-          <button className="btn btn-primary me-1 mb-3">
+          <button className="btn btn-primary me-1 mb-3" onClick={handlePrintDocsList}>
             Lista de documentos
           </button>
 

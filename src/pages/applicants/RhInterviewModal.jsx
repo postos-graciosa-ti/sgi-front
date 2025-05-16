@@ -601,11 +601,11 @@ const RhInterviewModal = (props) => {
             options={usersOptions}
             onChange={(value) => setSelectedUser(value)}
             defaultValue={
-              selectedApplicant?.redirect_id
-                ? usersOptions?.find(option => option.value === selectedApplicant.redirect_id)
+              selectedApplicant?.redirect_to
+                ? usersOptions?.find(option => option.value === selectedApplicant.redirect_to)
                 : null
             }
-            isDisabled={!!selectedApplicant?.redirect_id}
+            isDisabled={!!selectedApplicant?.redirect_to}
           />
         </div>
       </Modal.Body>

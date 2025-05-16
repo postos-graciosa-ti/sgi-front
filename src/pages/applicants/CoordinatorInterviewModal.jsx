@@ -1,32 +1,31 @@
 import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import ReactSelect from "react-select"
 import api from '../../services/api'
 
 const CoordinatorInterviewModal = (props) => {
-  const { coordinatorInterviewModalOpen, setCoordinatorInterviewModalOpen, selectedApplicant, setSelectedApplicant, setApplicantsList } = props
+  const { coordinatorInterviewModalOpen, setCoordinatorInterviewModalOpen, selectedApplicant, setSelectiveProcessModalOpen, setApplicantsList } = props
 
-  const [coordinatorObservations, setCoordinatorObservations] = useState()
+  const [isAproved, setIsAproved] = useState(false)
 
   const handleClose = () => {
     api
       .get("/applicants")
       .then((response) => setApplicantsList(response.data))
 
-    setCoordinatorObservations()
-
-    setSelectedApplicant()
+    setSelectiveProcessModalOpen(false)
 
     setCoordinatorInterviewModalOpen(false)
   }
 
   const handleSubmit = () => {
     let requestBody = {
-      coordinator_observation: coordinatorObservations,
+      is_aproved: isAproved
     }
 
     api
-      .patch(`/applicants/${selectedApplicant?.Applicants?.id}`, requestBody)
+      .patch(`/applicants/${selectedApplicant?.id}`, requestBody)
       .then(() => handleClose())
   }
 
@@ -38,49 +37,22 @@ const CoordinatorInterviewModal = (props) => {
       keyboard={false}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Entrevista com superior imediato</Modal.Title>
+        <Modal.Title>Entrevista com coordenador de {selectedApplicant?.name}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <div className="mb-3">
-          <h4>Informações do RH</h4>
-        </div>
+          <label className="form-label fw-bold">
+            Parecer do coordenador:
+          </label>
 
-        <div className="mb-3">
-          <label><b>Nome</b></label>
-
-          <input className="form-control" value={selectedApplicant?.Applicants?.name} disabled={true} />
-        </div>
-
-        <div className="mb-3">
-          <label><b>Natural</b></label>
-
-          <input className="form-control" value={selectedApplicant?.Applicants?.nature} disabled={true} />
-        </div>
-
-        <div className="mb-3">
-          <label><b>Quanto tempo?</b></label>
-
-          <input className="form-control" value={selectedApplicant?.Applicants?.how_long} disabled={true} />
-        </div>
-
-        <div className="mb-3">
-          <label><b>Possui experiência na função?</b></label>
-
-          <input className="form-control" value={selectedApplicant?.Applicants?.experience_function} disabled={true} />
-        </div>
-
-        <div className="mb-3">
-          <h4>Parecer do coordenador</h4>
-        </div>
-
-        <div className="mb-3">
-          <textarea
-            className="form-control"
-            rows={4}
-            onChange={(e) => setCoordinatorObservations(e.target.value)}
-            defaultValue={selectedApplicant?.Applicants?.coordinator_observation}
-            disabled={selectedApplicant?.Applicants?.coordinator_observation && true || false}
+          <ReactSelect
+            placeholder={""}
+            options={[
+              { value: true, label: "Aprovado" },
+              { value: false, label: "Reprovado" },
+            ]}
+            onChange={(option) => setIsAproved(option.value)}
           />
         </div>
       </Modal.Body>
@@ -88,7 +60,7 @@ const CoordinatorInterviewModal = (props) => {
       <Modal.Footer>
         <Button variant="light" onClick={handleClose}>Fechar</Button>
 
-        <Button variant="success" onClick={handleSubmit}>Confirmar</Button>
+        <Button variant="success" onClick={handleSubmit}>Concluir</Button>
       </Modal.Footer>
     </Modal>
   )

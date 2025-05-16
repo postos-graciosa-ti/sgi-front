@@ -5,8 +5,8 @@ import ReactSelect from "react-select"
 import useWorkersExperienceTimeStore from "../../data/workersExperienceTime"
 import api from '../../services/api'
 
-const RecruitModal = (props) => {
-  const { recruitModalOpen, setRecruitModalOpen, selectedApplicant, setApplicantsList } = props
+const HireApplicantModal = (props) => {
+  const { hireApplicantModalOpen, setHireApplicantModalOpen, selectedApplicant, setApplicantsList } = props
 
   const setWorkersFirstReview = useWorkersExperienceTimeStore(state => state.setWorkersFirstReview)
 
@@ -97,14 +97,16 @@ const RecruitModal = (props) => {
 
     setAdmissionDate()
 
-    setRecruitModalOpen(false)
+    setHireApplicantModalOpen(false)
   }
 
   const handleSubmit = () => {
+    debugger
+
     let requestBody = {
-      applicant_id: selectedApplicant?.Applicants?.id,
+      applicant_id: selectedApplicant?.id,
       worker_data: {
-        name: selectedApplicant?.Applicants?.name,
+        name: selectedApplicant?.name,
         subsidiarie_id: selectedSubsidiarie.value,
         function_id: selectedFunction.value,
         turn_id: selectedTurn.value,
@@ -132,7 +134,7 @@ const RecruitModal = (props) => {
 
   return (
     <Modal
-      show={recruitModalOpen}
+      show={hireApplicantModalOpen}
       onHide={handleClose}
       backdrop="static"
       keyboard={false}
@@ -212,4 +214,4 @@ const RecruitModal = (props) => {
   )
 }
 
-export default RecruitModal
+export default HireApplicantModal

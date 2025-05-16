@@ -1,34 +1,36 @@
 import { useEffect, useState } from "react"
+import { Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
-import useWorkersExperienceTimeStore from "../../data/workersExperienceTime"
 import api from "../../services/api"
-import CoordinatorInterviewModal from "./CoordinatorInterviewModal"
-import InitSelectiveProcessModal from "./InitSelectiveProcessModal"
-import RecruitModal from "./RecruitModal"
-import RhInterviewModal from "./RhInterviewModal"
-import { useScreenSize } from "../../hooks/useScreenSize"
+import ConfirmApplicantDeleteModal from "./ConfirmApplicantDeleteModal"
+import ExamsCorrectionModal from "./ExamsCorrectionModal"
+import ExamsEmissionModal from "./ExamsEmissionModal"
+import HireApplicantModal from "./HireApplicantModal"
+import NewApplicantModal from "./NewApplicantModal"
+import SelectiveProcessModal from "./SelectiveProcessModal"
+import RedirectToModal from "./RedirectToModal"
 
 const Applicants = () => {
-  const { isMobile, isTablet, isDesktop } = useScreenSize()
-
-  const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
-
-  const [initSelectiveProcessModalOpen, setInitSelectiveProcessModalOpen] = useState(false)
-
-  const setWorkersFirstReview = useWorkersExperienceTimeStore(state => state.setWorkersFirstReview)
-
-  const setWorkersSecondReview = useWorkersExperienceTimeStore(state => state.setWorkersSecondReview)
+  const userSession = useUserSessionStore((state) => state.userSession)
 
   const [applicantsList, setApplicantsList] = useState()
 
   const [selectedApplicant, setSelectedApplicant] = useState()
 
-  const [rhInterviewModalOpen, setRhInterviewModalOpen] = useState(false)
+  const [examsEmissionModalOpen, setExamsEmissionModalOpen] = useState(false)
 
-  const [coordinatorInterviewModalOpen, setCoordinatorInterviewModalOpen] = useState(false)
+  const [examsCorrectionModalOpen, setExamsCorrectionModalOpen] = useState(false)
 
-  const [recruitModalOpen, setRecruitModalOpen] = useState(false)
+  const [newApplicantModalOpen, setNewApplicantModalOpen] = useState(false)
+
+  const [selectiveProcessModalOpen, setSelectiveProcessModalOpen] = useState(false)
+
+  const [hireApplicantModalOpen, setHireApplicantModalOpen] = useState(false)
+
+  const [confirmApplicantDeleteModalOpen, setConfirmApplicantDeleteModalOpen] = useState(false)
+
+  const [redirectToModalOpen, setRedirectToModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -36,51 +38,45 @@ const Applicants = () => {
       .then((response) => setApplicantsList(response.data))
   }, [])
 
-  const handlePrintDocsList = (exam) => {
+  const handleOpenExamsEmissionModal = () => {
+    setExamsEmissionModalOpen(true)
+  }
+
+  const handleOpenExamsCorrectionModal = () => {
+    setExamsCorrectionModalOpen(true)
+  }
+
+  const handleOpenNewApplicantModal = () => {
+    setNewApplicantModalOpen(true)
+  }
+
+  const handleOpenSelectiveProcessModal = (applicant) => {
+    setSelectedApplicant(applicant)
+
+    setSelectiveProcessModalOpen(true)
+  }
+
+  const handleOpenHireApplicantModal = (applicant) => {
+    setSelectedApplicant(applicant)
+
+    setHireApplicantModalOpen(true)
+  }
+
+  const handleOpenConfirmApplicantDeleteModal = (applicant) => {
+    setSelectedApplicant(applicant)
+
+    setConfirmApplicantDeleteModalOpen(true)
+  }
+
+  const handleOpenRedirectToModal = () => {
+    setRedirectToModalOpen(true)
+  }
+
+  const handlePrintDocsList = () => {
     printJS({
-      printable: exam,
+      printable: "/lista_de_documentos.pdf",
       type: 'pdf',
     })
-  }
-
-  const handleOpenInitSelectiveProcessModal = () => {
-    setInitSelectiveProcessModalOpen(true)
-  }
-
-  const handleOpenRhInterviewModal = (list) => {
-    setSelectedApplicant(list)
-
-    setRhInterviewModalOpen(true)
-  }
-
-  const handleOpenCoordinatorInterviewModal = (list) => {
-    setSelectedApplicant(list)
-
-    setCoordinatorInterviewModalOpen(true)
-  }
-
-  const handleOpenRecruitModal = (list) => {
-    setSelectedApplicant(list)
-
-    setRecruitModalOpen(true)
-  }
-
-  const handleDeleteApplicants = (list) => {
-    api
-      .delete(`/applicants/${list?.Applicants?.id}`)
-      .then(() => {
-        api
-          .get(`/subsidiaries/${selectedSubsidiarie?.value}/workers/experience-time-no-first-review`)
-          .then((response) => setWorkersFirstReview(response?.data))
-
-        api
-          .get(`/subsidiaries/${selectedSubsidiarie?.value}/workers/experience-time-no-second-review`)
-          .then((response) => setWorkersSecondReview(response?.data))
-
-        api
-          .get("/applicants")
-          .then((response) => setApplicantsList(response.data))
-      })
   }
 
   return (
@@ -88,182 +84,125 @@ const Applicants = () => {
       <Nav />
 
       <div className="container">
-        <button className="btn btn-primary mb-4 me-2" onClick={() => handlePrintDocsList("/lista_de_documentos.pdf")}>
-          Emitir lista de documentos
-        </button>
+        <div>
+          <button className="btn btn-primary me-1 mb-3" onClick={handleOpenExamsEmissionModal}>
+            Emitir provas
+          </button>
 
-        <button className="btn btn-primary mb-4 me-2" onClick={handleOpenInitSelectiveProcessModal}>
-          Iniciar processo seletivo
-        </button>
+          <button className="btn btn-primary me-1 mb-3" onClick={handleOpenExamsCorrectionModal}>
+            Corrigir provas
+          </button>
 
-        {
-          isDesktop && (
-            <div className="table-responsive">
-              <table className="table table-hover">
-                <thead>
-                  <tr>
-                    <th>Nome</th>
+          <button className="btn btn-primary me-1 mb-3" onClick={handleOpenRedirectToModal}>
+            Encaminhamento
+          </button>
 
-                    <th>Vaga</th>
+          <button className="btn btn-primary me-1 mb-3" onClick={handlePrintDocsList}>
+            Lista de documentos
+          </button>
 
-                    <th></th>
-                  </tr>
-                </thead>
+          <button className="btn btn-primary mb-3" onClick={handleOpenNewApplicantModal}>
+            Novo candidato
+          </button>
+        </div>
 
-                <tbody>
-                  {
-                    applicantsList && applicantsList.map((list) => (
-                      <tr key={list.Applicants?.id}>
-                        <td>{list.Applicants?.name}</td>
+        <div className="table-responsive">
+          <table className="table table-hover">
+            <thead>
+              <tr>
+                <th></th>
 
-                        <td>{list.Function?.name}</td>
+                <th>Nome</th>
 
-                        <td>
-                          <button className="btn btn-primary me-3" onClick={() => handleOpenRhInterviewModal(list)}>
-                            Entrevista com RH
-                          </button>
+                <th></th>
+              </tr>
+            </thead>
 
-                          <button className="btn btn-primary me-3" onClick={() => handleOpenCoordinatorInterviewModal(list)}>
-                            Entrevista com superior imediato
-                          </button>
+            <tbody>
+              {
+                applicantsList && applicantsList.map((applicant, i) => (
+                  <tr key={applicant.id} className={applicant.is_aproved == true && "table-success" || "table-light"}>
+                    <td className="text-muted text-center">#0{i + 1}</td>
 
-                          <button className="btn btn-primary me-3" onClick={() => handleOpenRecruitModal(list)}>
+                    <td>{applicant.name}</td>
+
+                    <td>
+                      <button
+                        className="btn btn-primary me-2"
+                        disabled={!(userSession?.id === applicant.created_by || userSession?.id === applicant.redirect_to)}
+                        onClick={() => handleOpenSelectiveProcessModal(applicant)}
+                      >
+                        Processo seletivo
+                      </button>
+
+                      {
+                        applicant.is_aproved && (
+                          <button
+                            className="btn btn-primary"
+                            onClick={() => handleOpenHireApplicantModal(applicant)}
+                            disabled={!(userSession?.id === applicant.created_by || userSession?.id === applicant.redirect_to)}
+                          >
                             Efetivar
                           </button>
+                        )
+                      }
 
-                          <button className="btn btn-primary me-3" onClick={() => handleDeleteApplicants(list)}>
-                            Excluir
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  }
-                </tbody>
-              </table>
-            </div>
-          )
-        }
-
-        {
-          isTablet && (
-            <>
-              {
-                applicantsList && applicantsList.map((list) => (
-                  <div className="card">
-                    <div className="card-body">
-                      <h5 className="card-title">{list.Applicants?.name}</h5>
-                    </div>
-
-                    <ul className="list-group list-group-flush">
-                      <li className="list-group-item">
-                        <b>Vaga</b>: {list.Function?.name}
-                      </li>
-
-                      <li className="list-group-item">
-                        <button className="btn btn-primary me-3" onClick={() => handleOpenRhInterviewModal(list)}>
-                          Entrevista com RH
-                        </button>
-                      </li>
-
-                      <li className="list-group-item">
-                        <button className="btn btn-primary me-3" onClick={() => handleOpenCoordinatorInterviewModal(list)}>
-                          Entrevista com superior imediato
-                        </button>
-                      </li>
-
-                      <li className="list-group-item">
-                        <button className="btn btn-primary me-3" onClick={() => handleOpenRecruitModal(list)}>
-                          Efetivar
-                        </button>
-                      </li>
-
-                      <li className="list-group-item">
-                        <button className="btn btn-primary me-3" onClick={() => handleDeleteApplicants(list)}>
-                          Excluir
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
+                      <button
+                        className="btn btn-danger ms-2"
+                        disabled={!(userSession?.id === applicant.created_by || userSession?.id === applicant.redirect_to)}
+                        onClick={() => handleOpenConfirmApplicantDeleteModal(applicant)}
+                      >
+                        <Trash />
+                      </button>
+                    </td>
+                  </tr>
                 ))
               }
-            </>
-          )
-        }
-
-        {
-          isMobile && (
-            <>
-              {
-                applicantsList && applicantsList.map((list) => (
-                  <div className="card">
-                    <div className="card-body">
-                      <h5 className="card-title">{list.Applicants?.name}</h5>
-                    </div>
-
-                    <ul className="list-group list-group-flush">
-                      <li className="list-group-item">
-                        <b>Vaga</b>: {list.Function?.name}
-                      </li>
-
-                      <li className="list-group-item">
-                        <button className="btn btn-primary me-3" onClick={() => handleOpenRhInterviewModal(list)}>
-                          Entrevista com RH
-                        </button>
-                      </li>
-
-                      <li className="list-group-item">
-                        <button className="btn btn-primary me-3" onClick={() => handleOpenCoordinatorInterviewModal(list)}>
-                          Entrevista com superior imediato
-                        </button>
-                      </li>
-
-                      <li className="list-group-item">
-                        <button className="btn btn-primary me-3" onClick={() => handleOpenRecruitModal(list)}>
-                          Efetivar
-                        </button>
-                      </li>
-
-                      <li className="list-group-item">
-                        <button className="btn btn-primary me-3" onClick={() => handleDeleteApplicants(list)}>
-                          Excluir
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                ))
-              }
-            </>
-          )
-        }
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <InitSelectiveProcessModal
-        initSelectiveProcessModalOpen={initSelectiveProcessModalOpen}
-        setInitSelectiveProcessModalOpen={setInitSelectiveProcessModalOpen}
+      <ExamsEmissionModal
+        examsEmissionModalOpen={examsEmissionModalOpen}
+        setExamsEmissionModalOpen={setExamsEmissionModalOpen}
+      />
+
+      <ExamsCorrectionModal
+        examsCorrectionModalOpen={examsCorrectionModalOpen}
+        setExamsCorrectionModalOpen={setExamsCorrectionModalOpen}
+      />
+
+      <NewApplicantModal
+        newApplicantModalOpen={newApplicantModalOpen}
+        setNewApplicantModalOpen={setNewApplicantModalOpen}
         setApplicantsList={setApplicantsList}
       />
 
-      <RhInterviewModal
-        rhInterviewModalOpen={rhInterviewModalOpen}
-        setRhInterviewModalOpen={setRhInterviewModalOpen}
+      <SelectiveProcessModal
+        selectiveProcessModalOpen={selectiveProcessModalOpen}
+        setSelectiveProcessModalOpen={setSelectiveProcessModalOpen}
         selectedApplicant={selectedApplicant}
-        setApplicantsList={setApplicantsList}
-        setSelectedApplicant={setSelectedApplicant}
-      />
-
-      <CoordinatorInterviewModal
-        coordinatorInterviewModalOpen={coordinatorInterviewModalOpen}
-        setCoordinatorInterviewModalOpen={setCoordinatorInterviewModalOpen}
-        selectedApplicant={selectedApplicant}
-        setSelectedApplicant={setSelectedApplicant}
         setApplicantsList={setApplicantsList}
       />
 
-      <RecruitModal
-        recruitModalOpen={recruitModalOpen}
-        setRecruitModalOpen={setRecruitModalOpen}
+      <HireApplicantModal
+        hireApplicantModalOpen={hireApplicantModalOpen}
+        setHireApplicantModalOpen={setHireApplicantModalOpen}
         selectedApplicant={selectedApplicant}
         setApplicantsList={setApplicantsList}
+      />
+
+      <ConfirmApplicantDeleteModal
+        confirmApplicantDeleteModalOpen={confirmApplicantDeleteModalOpen}
+        setConfirmApplicantDeleteModalOpen={setConfirmApplicantDeleteModalOpen}
+        selectedApplicant={selectedApplicant}
+        setApplicantsList={setApplicantsList}
+      />
+
+      <RedirectToModal
+        redirectToModalOpen={redirectToModalOpen}
+        setRedirectToModalOpen={setRedirectToModalOpen}
       />
     </>
   )

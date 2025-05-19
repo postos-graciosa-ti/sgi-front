@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import moment from 'moment'
 import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
@@ -5,8 +6,9 @@ import Modal from 'react-bootstrap/Modal'
 import ReactDOMServer from 'react-dom/server'
 import Select from '../../components/form/Select'
 import useUserSessionStore from '../../data/userSession'
+import api from '../../services/api'
 
-export const EthnicityDoc = ({ selectedWorker, selectedSubsidiarie }) => {
+export const EthnicityDoc = ({ selectedWorker, selectedSubsidiarie, handDate }) => {
   return (
     <>
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -55,7 +57,7 @@ export const EthnicityDoc = ({ selectedWorker, selectedSubsidiarie }) => {
       </p>
 
       <p>
-        Joinville, {moment().format("DD/MM/YYYY")}
+        Joinville, {handDate || dayjs().format("DD/MM/YYYY")}
       </p>
 
       <div style={{ "bottom": "0", "position": "fixed" }}>
@@ -72,7 +74,7 @@ export const EthnicityDoc = ({ selectedWorker, selectedSubsidiarie }) => {
   )
 }
 
-export const ResponsabilityDoc = ({ selectedWorker, selectedSubsidiarie }) => {
+export const ResponsabilityDoc = ({ selectedWorker, selectedSubsidiarie, handDate }) => {
   return (
     <>
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -124,7 +126,7 @@ export const ResponsabilityDoc = ({ selectedWorker, selectedSubsidiarie }) => {
       </p>
 
       <p>
-        Joinville, {moment().format("DD/MM/YYYY")}
+        Joinville, {handDate || dayjs().format("DD/MM/YYYY")}
       </p>
 
       <div>
@@ -151,7 +153,7 @@ export const ResponsabilityDoc = ({ selectedWorker, selectedSubsidiarie }) => {
   )
 }
 
-export const HealthDoc = ({ selectedWorker, selectedSubsidiarie }) => {
+export const HealthDoc = ({ selectedWorker, selectedSubsidiarie, handDate }) => {
   return (
     <>
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -167,7 +169,7 @@ export const HealthDoc = ({ selectedWorker, selectedSubsidiarie }) => {
       <hr />
 
       <p>
-        Joinville, {moment().format("DD/MM/YYYY")}
+        Joinville, {handDate || dayjs().format("DD/MM/YYYY")}
       </p>
 
       <p>
@@ -216,7 +218,7 @@ export const HealthDoc = ({ selectedWorker, selectedSubsidiarie }) => {
   )
 }
 
-export const WhatsAppDoc = ({ selectedWorker, selectedSubsidiarie }) => {
+export const WhatsAppDoc = ({ selectedWorker, selectedSubsidiarie, subsidiarieAddress, handDate }) => {
   return (
     <>
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -242,7 +244,7 @@ export const WhatsAppDoc = ({ selectedWorker, selectedSubsidiarie }) => {
       </p>
 
       <p>
-        Endereço:
+        Endereço: {subsidiarieAddress}
       </p>
 
       <p>
@@ -284,7 +286,7 @@ export const WhatsAppDoc = ({ selectedWorker, selectedSubsidiarie }) => {
       </p>
 
       <p>
-        Joinville, {moment().format("DD/MM/YYYY")}
+        Joinville, {dayjs(handDate).format("DD/MM/YYYY")}
       </p>
 
       <p>
@@ -425,11 +427,17 @@ const DocsModal = (props) => {
 
   const [documentType, setDocumentType] = useState()
 
+  const [handDate, setHandDate] = useState()
+
   const handleClose = () => {
     setDocsModalOpen(false)
+
+    setDocumentType()
+
+    setHandDate()
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let printableContent
 
     if (documentType.value == 1) {
@@ -437,6 +445,7 @@ const DocsModal = (props) => {
         <EthnicityDoc
           selectedWorker={selectedWorker}
           selectedSubsidiarie={selectedSubsidiarie}
+          handDate={dayjs(handDate).format("DD/MM/YYYY")}
         />
       )
     }
@@ -446,6 +455,7 @@ const DocsModal = (props) => {
         <ResponsabilityDoc
           selectedWorker={selectedWorker}
           selectedSubsidiarie={selectedSubsidiarie}
+          handDate={dayjs(handDate).format("DD/MM/YYYY")}
         />
       )
     }
@@ -455,15 +465,20 @@ const DocsModal = (props) => {
         <HealthDoc
           selectedWorker={selectedWorker}
           selectedSubsidiarie={selectedSubsidiarie}
+          handDate={dayjs(handDate).format("DD/MM/YYYY")}
         />
       )
     }
 
     if (documentType.value == 4) {
+      let subsidiarieAddress = await api.get(`/subsidiaries/${selectedSubsidiarie?.value}`).then((response) => response.data.adress)
+
       printableContent = ReactDOMServer.renderToString(
         <WhatsAppDoc
           selectedWorker={selectedWorker}
           selectedSubsidiarie={selectedSubsidiarie}
+          subsidiarieAddress={subsidiarieAddress}
+          handDate={dayjs(handDate).format("DD/MM/YYYY")}
         />
       )
     }
@@ -508,6 +523,17 @@ const DocsModal = (props) => {
           ]}
           setSelectedValue={setDocumentType}
         />
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">Data de entrega (opcional)</label>
+
+          <input
+            type="date"
+            placeholder={""}
+            className="form-control"
+            onChange={(e) => setHandDate(e.target.value)}
+          />
+        </div>
       </Modal.Body>
 
       <Modal.Footer>

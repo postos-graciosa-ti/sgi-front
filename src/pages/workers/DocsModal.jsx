@@ -195,7 +195,7 @@ export const HealthDoc = ({ selectedWorker, selectedSubsidiarie, handDate }) => 
       </p>
 
       <p>
-        Joinville, {moment().format("DD/MM/YYYY")}
+        Joinville, {handDate || dayjs().format("DD/MM/YYYY")}
       </p>
 
       <p>
@@ -286,7 +286,7 @@ export const WhatsAppDoc = ({ selectedWorker, selectedSubsidiarie, subsidiarieAd
       </p>
 
       <p>
-        Joinville, {dayjs(handDate).format("DD/MM/YYYY")}
+        Joinville, {handDate || dayjs().format("DD/MM/YYYY")}
       </p>
 
       <p>
@@ -461,6 +461,7 @@ const DocsModal = (props) => {
     }
 
     if (documentType.value == 3) {
+      console.log()
       printableContent = ReactDOMServer.renderToString(
         <HealthDoc
           selectedWorker={selectedWorker}

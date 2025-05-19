@@ -181,6 +181,7 @@ const RhInterviewModal = (props) => {
       onHide={handleClose}
       backdrop="static"
       keyboard={false}
+      fullscreen={true}
     >
       <Modal.Header closeButton>
         <Modal.Title>Entrevista com recursos humanos de {selectedApplicant?.name}</Modal.Title>

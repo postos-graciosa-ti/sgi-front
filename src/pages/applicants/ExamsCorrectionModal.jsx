@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactSelect from "react-select"
+import api from "../../services/api"
 
 const ExamsCorrectionModal = (props) => {
   const { examsCorrectionModalOpen, setExamsCorrectionModalOpen } = props
@@ -13,6 +14,24 @@ const ExamsCorrectionModal = (props) => {
   const [fieldsExam, setFieldsExam] = useState()
 
   const [count, setCount] = useState()
+
+  const [currentField, setCurrentField] = useState()
+
+  const [allFields, setAllFields] = useState()
+
+  const [applicantsOptions, setApplicantsOptions] = useState()
+
+  const [selectedApplicant, setSelectedApplicant] = useState()
+
+  useEffect(() => {
+    api
+      .get(`/applicants`)
+      .then((response) => {
+        let options = response.data.map((option) => ({ value: option.id, label: option.name }))
+
+        setApplicantsOptions(options)
+      })
+  }, [examsCorrectionModalOpen])
 
   useEffect(() => {
     if (selectedExam) {
@@ -844,6 +863,36 @@ const ExamsCorrectionModal = (props) => {
     setExamsCorrectionModalOpen(false)
   }
 
+  const handleSubmit = () => {
+    const uniqueFields = allFields.reduce((acc, current) => {
+      const existingIndex = acc.findIndex(item => item.question === current.question)
+
+      if (existingIndex >= 0) {
+        acc[existingIndex] = current
+      } else {
+        acc.push(current)
+      }
+
+      return acc
+    }, [])
+
+    let requestBody = {
+      applicant_id: selectedApplicant?.value,
+      exam_label: selectedExam?.label,
+      responses: JSON.stringify(
+        uniqueFields.map(field => ({
+          question: field.question,
+          response: field.response,
+          isCorrect: field.isCorrect,
+        }))
+      )
+    }
+
+    api
+      .post(`/applicants/${selectedApplicant?.value}/exams`, requestBody)
+      .then((response) => console.log(response))
+  }
+
   return (
     <Modal
       show={examsCorrectionModalOpen}
@@ -856,6 +905,18 @@ const ExamsCorrectionModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
+        <div className="mb-3">
+          <label className="form-label fw-bold">Candidato</label>
+
+          <ReactSelect
+            placeholder={""}
+            options={applicantsOptions}
+            onChange={(value) => setSelectedApplicant(value)}
+          />
+        </div>
+
+        <label className="form-label fw-bold">Tipo de avaliação</label>
+
         <ReactSelect
           placeholder={""}
           options={[
@@ -898,6 +959,27 @@ const ExamsCorrectionModal = (props) => {
                               const validCount = document.querySelectorAll("input.is-valid").length
 
                               setCount(`Quantidade de acertos: ${validCount}/${fieldsExam.length}`)
+
+                              setAllFields((prevState) => {
+                                if (prevState) {
+                                  return [
+                                    ...prevState,
+                                    {
+                                      "question": field.label,
+                                      "response": e.target.value,
+                                      "isCorrect": e.target.value === field.response && true || false
+                                    }
+                                  ]
+                                } else {
+                                  return [
+                                    {
+                                      "question": field.label,
+                                      "response": e.target.value,
+                                      "isCorrect": e.target.value === field.response && true || false
+                                    }
+                                  ]
+                                }
+                              })
                             }}
                           />
                         </div>
@@ -918,6 +1000,27 @@ const ExamsCorrectionModal = (props) => {
                               const validCount = document.querySelectorAll("select.is-valid").length
 
                               setCount(`Quantidade de acertos: ${validCount}/${fieldsExam.length}`)
+
+                              setAllFields((prevState) => {
+                                if (prevState) {
+                                  return [
+                                    ...prevState,
+                                    {
+                                      "question": field.label,
+                                      "response": e.target.value,
+                                      "isCorrect": e.target.value === field.response && true || false
+                                    }
+                                  ]
+                                } else {
+                                  return [
+                                    {
+                                      "question": field.label,
+                                      "response": e.target.value,
+                                      "isCorrect": e.target.value === field.response && true || false
+                                    }
+                                  ]
+                                }
+                              })
                             }}
                           >
                             <option value="">Selecione uma opção</option>
@@ -946,7 +1049,9 @@ const ExamsCorrectionModal = (props) => {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="primary" onClick={handleClose}>Fechar</Button>
+        <Button variant="light" onClick={handleClose}>Fechar</Button>
+
+        <Button variant="success" onClick={handleSubmit}>Salvar</Button>
       </Modal.Footer>
     </Modal>
   )

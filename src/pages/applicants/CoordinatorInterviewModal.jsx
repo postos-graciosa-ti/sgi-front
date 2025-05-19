@@ -35,6 +35,7 @@ const CoordinatorInterviewModal = (props) => {
       onHide={handleClose}
       backdrop="static"
       keyboard={false}
+      fullscreen={true}
     >
       <Modal.Header closeButton>
         <Modal.Title>Entrevista com coordenador de {selectedApplicant?.name}</Modal.Title>

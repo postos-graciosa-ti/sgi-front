@@ -8,8 +8,8 @@ import ExamsCorrectionModal from "./ExamsCorrectionModal"
 import ExamsEmissionModal from "./ExamsEmissionModal"
 import HireApplicantModal from "./HireApplicantModal"
 import NewApplicantModal from "./NewApplicantModal"
-import SelectiveProcessModal from "./SelectiveProcessModal"
 import RedirectToModal from "./RedirectToModal"
+import SelectiveProcessModal from "./SelectiveProcessModal"
 
 const Applicants = () => {
   const userSession = useUserSessionStore((state) => state.userSession)
@@ -147,13 +147,13 @@ const Applicants = () => {
                         )
                       }
 
-                      <button
+                      {/* <button
                         className="btn btn-danger ms-2"
                         disabled={!(userSession?.id === applicant.created_by || userSession?.id === applicant.redirect_to)}
                         onClick={() => handleOpenConfirmApplicantDeleteModal(applicant)}
                       >
                         <Trash />
-                      </button>
+                      </button> */}
                     </td>
                   </tr>
                 ))
@@ -184,6 +184,7 @@ const Applicants = () => {
         setSelectiveProcessModalOpen={setSelectiveProcessModalOpen}
         selectedApplicant={selectedApplicant}
         setApplicantsList={setApplicantsList}
+        setSelectedApplicant={setSelectedApplicant}
       />
 
       <HireApplicantModal

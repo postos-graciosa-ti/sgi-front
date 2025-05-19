@@ -40,7 +40,10 @@ const UpdateNotifications = () => {
             "1. Atualização de credenciais de acesso para coordenador Nilson",
             "2. Remoção de acesso para ex-coordenadora Gizele (solicitou desligamento)",
             "3. Adição de endereço de filial em termo de responsabilidade de grupo de WhatsApp",
-            "4. Adição de campo de data em Modal de emissão de documentos"
+            "4. Adição de campo de data em Modal de emissão de documentos",
+            "5. Funcionalidade para salvar provas em processos seletivos",
+            "6. Tela toda na Modal de entrevista",
+            "7. Correção no campo de data na Modal de emissão de documentos",
           ]}
         />
 

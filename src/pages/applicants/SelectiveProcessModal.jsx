@@ -5,11 +5,14 @@ import Modal from 'react-bootstrap/Modal'
 import useUserSessionStore from '../../data/userSession'
 import RhInterviewModal from './RhInterviewModal'
 import CoordinatorInterviewModal from './CoordinatorInterviewModal'
+import SeeApplicantsExamsModal from './SeeApplicantsExamsModal'
 
 const SelectiveProcessModal = (props) => {
-  const { selectiveProcessModalOpen, setSelectiveProcessModalOpen, selectedApplicant, setApplicantsList } = props
+  const { selectiveProcessModalOpen, setSelectiveProcessModalOpen, selectedApplicant, setApplicantsList, setSelectedApplicant } = props
 
   const userSession = useUserSessionStore((state) => state.userSession)
+
+  const [applicantsExamsModalOpen, setApplicantsExamsModalOpen] = useState(false)
 
   const [rhInterviewModalOpen, setRhInterviewModalOpen] = useState(false)
 
@@ -17,6 +20,10 @@ const SelectiveProcessModal = (props) => {
 
   const handleClose = () => {
     setSelectiveProcessModalOpen(false)
+  }
+
+  const handleOpenSeeApplicantsExamsModal = () => {
+    setApplicantsExamsModalOpen(true)
   }
 
   const handleOpenRhInterviewModal = () => {
@@ -39,6 +46,16 @@ const SelectiveProcessModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
+        <div className="card mb-3">
+          <div className="card-body text-center">
+            <div className="mb-2 fw-bold">Avaliações</div>
+
+            <button className="btn btn-primary ms-2" onClick={handleOpenSeeApplicantsExamsModal}>
+              <CaretRightFill />
+            </button>
+          </div>
+        </div>
+
         <div className="card mb-3">
           <div className="card-body text-center">
             <div className="mb-2 fw-bold">Recursos humanos</div>
@@ -79,6 +96,13 @@ const SelectiveProcessModal = (props) => {
 
         <Button variant="success">Concluir</Button>
       </Modal.Footer>
+
+      <SeeApplicantsExamsModal
+        applicantsExamsModalOpen={applicantsExamsModalOpen}
+        setApplicantsExamsModalOpen={setApplicantsExamsModalOpen}
+        selectedApplicant={selectedApplicant}
+        setSelectedApplicant={setSelectedApplicant}
+      />
 
       <RhInterviewModal
         rhInterviewModalOpen={rhInterviewModalOpen}

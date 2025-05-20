@@ -1,9 +1,43 @@
+import dayjs from "dayjs"
 import { useState } from 'react'
+import { Printer } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import api from '../../services/api'
+import ReactDOMServer from 'react-dom/server'
 import useUserSessionStore from '../../data/userSession'
-import { Printer } from 'react-bootstrap-icons'
+import api from '../../services/api'
+
+const AdmissionsReportPrintContent = ({ admissionsReport, firstDay, lastDay }) => {
+  return (
+    <>
+      <div>
+        <img src="/logo.png" style={{ width: '80px' }} />
+      </div>
+
+      <div>
+        <h4>Colaboradores admitidos entre {dayjs(firstDay).format("DD/MM/YYYY")} e {dayjs(lastDay).format("DD/MM/YYYY")}</h4>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {
+            admissionsReport && admissionsReport.map((worker) => (
+              <tr key={worker.id}>
+                <td>{worker.name}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </>
+  )
+}
 
 const AdmissionsReportModal = (props) => {
   const { admissionsReportModalOpen, setAdmissionsReportModalOpen } = props
@@ -31,6 +65,22 @@ const AdmissionsReportModal = (props) => {
     api
       .post(`/subsidiaries/${selectedSubsdiarie?.value}/workers/admissions-report`, requestBody)
       .then((response) => setAdmissionsReport(response.data))
+  }
+
+  const handlePrint = () => {
+    const printableContent = ReactDOMServer.renderToString(
+      <AdmissionsReportPrintContent
+        admissionsReport={admissionsReport}
+        firstDay={firstDay}
+        lastDay={lastDay}
+      />
+    )
+
+    printJS({
+      printable: printableContent,
+      type: 'raw-html',
+      header: null,
+    })
   }
 
   return (
@@ -69,33 +119,35 @@ const AdmissionsReportModal = (props) => {
           />
         </div>
 
-        {/* {
+        {
           admissionsReport && (
-            <button className="btn btn-light">
-              <Printer />
-            </button>
+            <div>
+              <button className="btn btn-light" onClick={handlePrint}>
+                <Printer />
+              </button>
+
+              <div className="table-responsive">
+                <table className="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Nome</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {
+                      admissionsReport && admissionsReport.map((worker) => (
+                        <tr key={worker.id}>
+                          <td>{worker.name}</td>
+                        </tr>
+                      ))
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
           )
-        } */}
-
-        <div className="table-responsive">
-          <table className="table table-hover">
-            <thead>
-              <tr>
-                <th>Nome</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {
-                admissionsReport && admissionsReport.map((worker) => (
-                  <tr key={worker.id}>
-                    <td>{worker.name}</td>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
-        </div>
+        }
       </Modal.Body>
 
       <Modal.Footer>

@@ -304,6 +304,13 @@ const Workers = () => {
                 >
                   NR20
                 </button>
+
+                <button
+                  className="btn btn-primary ms-2"
+                  onClick={handleOpenAdmissionsReportModal}
+                >
+                  Filtro de admitidos
+                </button>
               </div>
 
               <div className="col">
@@ -444,6 +451,13 @@ const Workers = () => {
                   onClick={handleOpenGetNrList}
                 >
                   NR20
+                </button>
+
+                <button
+                  className="btn btn-primary ms-2"
+                  onClick={handleOpenAdmissionsReportModal}
+                >
+                  Filtro de admitidos
                 </button>
               </div>
 

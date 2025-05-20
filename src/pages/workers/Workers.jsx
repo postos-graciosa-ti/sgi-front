@@ -8,6 +8,7 @@ import initTour from "../../driverjs/initTour"
 import workersSteps from "../../driverjs/workersSteps"
 import { useScreenSize } from "../../hooks/useScreenSize"
 import api from "../../services/api"
+import AdmissionsReportModal from "./AdmissionsReportModal"
 import CreateWorkerModal from "./CreateWorkerModal"
 import DeleteWorkerModal from "./DeleteWorkerModal"
 import DocsModal from "./DocsModal"
@@ -69,6 +70,8 @@ const Workers = () => {
   const [workerDocsModalOpen, setWorkerDocsModalOpen] = useState(false)
 
   const [modifyWorkpointModalOpen, setModifyWorkpointModalOpen] = useState(false)
+
+  const [admissionsReportModalOpen, setAdmissionsReportModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -242,6 +245,10 @@ const Workers = () => {
     setModifyWorkpointModalOpen(true)
   }
 
+  const handleOpenAdmissionsReportModal = () => {
+    setAdmissionsReportModalOpen(true)
+  }
+
   return (
     <>
       <Nav />
@@ -363,6 +370,13 @@ const Workers = () => {
                   onClick={handleOpenGetNrList}
                 >
                   NR20
+                </button>
+
+                <button
+                  className="btn btn-primary ms-2"
+                  onClick={handleOpenAdmissionsReportModal}
+                >
+                  Filtro de admitidos
                 </button>
               </div>
 
@@ -976,6 +990,11 @@ const Workers = () => {
       <ModifyWorkpointModal
         modifyWorkpointModalOpen={modifyWorkpointModalOpen}
         setModifyWorkpointModalOpen={setModifyWorkpointModalOpen}
+      />
+
+      <AdmissionsReportModal
+        admissionsReportModalOpen={admissionsReportModalOpen}
+        setAdmissionsReportModalOpen={setAdmissionsReportModalOpen}
       />
     </>
   )

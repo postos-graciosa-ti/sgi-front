@@ -1,12 +1,15 @@
+import moment from 'moment'
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import Table from 'react-bootstrap/Table'
 import ReactSelect from "react-select"
+import useUserSessionStore from '../../data/userSession'
 import api from "../../services/api"
-import moment from 'moment'
-import Table from 'react-bootstrap/Table';
 
 const ResignationReasonsReportModal = (props) => {
+  const selectedSubsdiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
   const { resignationReasonsModal, setResignationReasonsModal } = props
 
   const [initialDate, setInitialDate] = useState()
@@ -55,7 +58,7 @@ const ResignationReasonsReportModal = (props) => {
     }
 
     api
-      .post(`/resignable-reasons/report`, formData)
+      .post(`/subsidiaries/${selectedSubsdiarie?.value}/resignable-reasons/report`, formData)
       .then((response) => {
         setReport(response.data)
       })

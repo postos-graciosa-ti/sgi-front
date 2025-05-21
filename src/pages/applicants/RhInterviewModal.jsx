@@ -5,6 +5,14 @@ import Modal from 'react-bootstrap/Modal'
 import ReactSelect from "react-select"
 import api from '../../services/api'
 
+const yesNoOptions = [{ value: "sim", label: "sim" }, { value: "não", label: "não" }]
+
+const recruitCriteria = [
+  { value: "ruim", label: "ruim" },
+  { value: "médio", label: "médio" },
+  { value: "bom", label: "bom" },
+]
+
 const RhInterviewModal = (props) => {
   const {
     rhInterviewModalOpen,
@@ -82,6 +90,10 @@ const RhInterviewModal = (props) => {
         .then((response) => setSubsidiarieMetrics(response.data))
     }
   }, [selectedSubsidiarie])
+
+  useEffect(() => {
+    if (dataNascimento) {}
+  }, [dataNascimento])
 
   const handleClose = () => {
     api
@@ -257,12 +269,12 @@ const RhInterviewModal = (props) => {
 
         <div className="mb-3">
           <label className="form-label fw-bold">Possui experiência na função:</label>
-          <input
-            type="text"
-            className="form-control"
-            onChange={(e) => setExperienciaFuncao(e.target.value)}
-            defaultValue={selectedApplicant?.experiencia_funcao}
-            disabled={selectedApplicant?.experiencia_funcao && true}
+
+          <ReactSelect
+            options={yesNoOptions}
+            onChange={(option) => setExperienciaFuncao(option.value)}
+            isDisabled={selectedApplicant?.experiencia_funcao && true}
+            defaultValue={yesNoOptions?.find((option) => option.value == selectedApplicant?.experiencia_funcao)}
           />
         </div>
 
@@ -442,45 +454,77 @@ const RhInterviewModal = (props) => {
 
         <div className="mb-3">
           <label className="form-label fw-bold mb-3">Apresentação pessoal:</label>
-          <input
+
+          {/* <input
             type="text"
             className="form-control"
             onChange={(e) => setApresentacaoPessoal(e.target.value)}
             defaultValue={selectedApplicant?.apresentacao_pessoal}
             disabled={selectedApplicant?.apresentacao_pessoal && true}
+          /> */}
+
+          <ReactSelect
+            options={recruitCriteria}
+            onChange={(option) => setApresentacaoPessoal(option.value)}
+            defaultValue={recruitCriteria?.find((option) => option.value == selectedApplicant?.apresentacao_pessoal)}
+            isDisabled={selectedApplicant?.apresentacao_pessoal && true}
           />
         </div>
 
         <div className="mb-3">
           <label className="form-label fw-bold mb-3">Comunicativo:</label>
-          <input
+
+          {/* <input
             type="text"
             className="form-control"
             onChange={(e) => setComunicativo(e.target.value)}
             defaultValue={selectedApplicant?.comunicativo}
             disabled={selectedApplicant?.comunicativo && true}
+          /> */}
+
+          <ReactSelect
+            options={recruitCriteria}
+            onChange={(option) => setComunicativo(option.value)}
+            defaultValue={recruitCriteria?.find((option) => option.value == selectedApplicant?.comunicativo)}
+            isDisabled={selectedApplicant?.comunicativo && true}
           />
         </div>
 
         <div className="mb-3">
           <label className="form-label fw-bold mb-3">Postura:</label>
-          <input
+
+          {/* <input
             type="text"
             className="form-control"
             onChange={(e) => setPostura(e.target.value)}
             defaultValue={selectedApplicant?.postura}
             disabled={selectedApplicant?.postura && true}
+          /> */}
+
+          <ReactSelect
+            options={recruitCriteria}
+            onChange={(option) => setPostura(option.value)}
+            defaultValue={recruitCriteria?.find((option) => option.value == selectedApplicant?.postura)}
+            isDisabled={selectedApplicant?.postura && true}
           />
         </div>
 
         <div className="mb-3">
           <label className="form-label fw-bold mb-3">Simpatia:</label>
-          <input
+
+          {/* <input
             type="text"
             className="form-control"
             onChange={(e) => setSimpatia(e.target.value)}
             defaultValue={selectedApplicant?.simpatia}
             disabled={selectedApplicant?.simpatia && true}
+          /> */}
+
+          <ReactSelect
+            options={recruitCriteria}
+            onChange={(option) => setSimpatia(option.value)}
+            defaultValue={recruitCriteria?.find((option) => option.value == selectedApplicant?.simpatia)}
+            isDisabled={selectedApplicant?.simpatia && true}
           />
         </div>
 

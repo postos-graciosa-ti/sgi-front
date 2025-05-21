@@ -319,7 +319,7 @@ export const WhatsAppDoc = ({ selectedWorker, selectedSubsidiarie, subsidiarieAd
   )
 }
 
-export const Integration = ({ selectedWorker, selectedSubsidiarie }) => {
+export const Integration = ({ selectedWorker, selectedSubsidiarie, handDate }) => {
   return (
     <>
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -339,6 +339,10 @@ export const Integration = ({ selectedWorker, selectedSubsidiarie }) => {
           Termo de Confirmação de Participação na Integração
         </h4>
       </div>
+
+      <p>
+        Joinville, {handDate || dayjs().format("DD/MM/YYYY")}
+      </p>
 
       <p>
         Empresa: {selectedSubsidiarie?.label}
@@ -489,6 +493,7 @@ const DocsModal = (props) => {
         <Integration
           selectedWorker={selectedWorker}
           selectedSubsidiarie={selectedSubsidiarie}
+          handDate={dayjs(handDate).format("DD/MM/YYYY")}
         />
       )
     }

@@ -5,8 +5,9 @@ import Modal from 'react-bootstrap/Modal'
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import api from '../../services/api'
+import dayjs from "dayjs"
 
-const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie }) => {
+const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie, datetime }) => {
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -38,9 +39,9 @@ const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie })
           Nome: {selectedApplicant?.label}
         </p>
 
-        <p>
+        {/* <p>
           E-mail: marciaabigail321@gmail.com
-        </p>
+        </p> */}
 
         <p>
           Currículo: Em Anexo
@@ -51,12 +52,16 @@ const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie })
         </p>
 
         <p>
-          Data: 06/05/2025
+          Data e horário: {dayjs(datetime).format("DD/MM/YYYY [às] HH:mm")}
         </p>
 
-        <p>
+        {/* <p>
+          Data: 06/05/2025
+        </p> */}
+
+        {/* <p>
           Horário: 14:00
-        </p>
+        </p> */}
 
         <p>
           {selectedSubsidiarie?.adress}
@@ -95,6 +100,8 @@ const RedirectToModal = (props) => {
 
   const [selectedSubsidiarie, setSelectedSubsidiarie] = useState()
 
+  const [datetime, setDatetime] = useState()
+
   useEffect(() => {
     api
       .get("/applicants")
@@ -131,6 +138,7 @@ const RedirectToModal = (props) => {
         selectedUser={selectedUser}
         selectedApplicant={selectedApplicant}
         selectedSubsidiarie={selectedSubsidiarie}
+        datetime={datetime}
       />
     )
 
@@ -186,6 +194,18 @@ const RedirectToModal = (props) => {
             placeholder={""}
             options={subsidiariesOptions}
             onChange={(value) => setSelectedSubsidiarie(value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Data e horário:
+          </label>
+
+          <input
+            type="datetime-local"
+            className="form-control"
+            onChange={(e) => setDatetime(e.target.value)}
           />
         </div>
       </Modal.Body>

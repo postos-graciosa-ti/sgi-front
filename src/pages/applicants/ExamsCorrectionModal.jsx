@@ -890,7 +890,7 @@ const ExamsCorrectionModal = (props) => {
 
     api
       .post(`/applicants/${selectedApplicant?.value}/exams`, requestBody)
-      .then((response) => console.log(response))
+      .then((response) => handleClose())
   }
 
   return (

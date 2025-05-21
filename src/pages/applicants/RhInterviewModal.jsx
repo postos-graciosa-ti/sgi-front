@@ -5,6 +5,30 @@ import Modal from 'react-bootstrap/Modal'
 import ReactSelect from "react-select"
 import api from '../../services/api'
 
+function calcularIdade(dataNascimento) {
+  const hoje = new Date()
+
+  const nascimento = new Date(dataNascimento)
+
+  let idade = hoje.getFullYear() - nascimento.getFullYear()
+
+  const mes = hoje.getMonth() - nascimento.getMonth()
+
+  if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+    idade--
+  }
+
+  return idade
+}
+
+const yesNoOptions = [{ value: "sim", label: "sim" }, { value: "não", label: "não" }]
+
+const recruitCriteria = [
+  { value: "ruim", label: "ruim" },
+  { value: "médio", label: "médio" },
+  { value: "bom", label: "bom" },
+]
+
 const RhInterviewModal = (props) => {
   const {
     rhInterviewModalOpen,
@@ -18,6 +42,8 @@ const RhInterviewModal = (props) => {
   const [selectedUser, setSelectedUser] = useState()
 
   const [subsidiariesOptions, setSubsidiariesOptions] = useState()
+
+  const [neighborhoodsOptions, setNeighborhoodsOptions] = useState()
 
   const [selectedSubsidiarie, setSelectedSubsidiarie] = useState()
 
@@ -57,6 +83,16 @@ const RhInterviewModal = (props) => {
   const [filial, setFilial] = useState("")
   const [horario, setHorario] = useState("")
 
+  const [ultimaExperiencia, setUltimaExperiencia] = useState()
+
+  const [penultimaExperiencia, setPenultimaExperiencia] = useState()
+
+  const [antepenultimaExperiencia, setAntepenultimaExperiencia] = useState()
+
+  const [sugestSubsidiaries, setSugestSubsidiaries] = useState()
+
+  const [age, setAge] = useState()
+
   useEffect(() => {
     api
       .get("/users")
@@ -73,6 +109,14 @@ const RhInterviewModal = (props) => {
 
         setSubsidiariesOptions(options)
       })
+
+    api
+      .get("/neighborhoods")
+      .then((response) => {
+        let options = response.data.map((option) => ({ value: option.id, label: option.name }))
+
+        setNeighborhoodsOptions(options)
+      })
   }, [])
 
   useEffect(() => {
@@ -82,6 +126,22 @@ const RhInterviewModal = (props) => {
         .then((response) => setSubsidiarieMetrics(response.data))
     }
   }, [selectedSubsidiarie])
+
+  useEffect(() => {
+    if (dataNascimento) {
+      let age = calcularIdade(dataNascimento)
+
+      setAge(age)
+    }
+  }, [dataNascimento])
+
+  useEffect(() => {
+    if (bairro == "Itaum") {
+      let arr = ["Jariva", "Fátima", "Graciosa"]
+
+      setSugestSubsidiaries(arr)
+    }
+  }, [bairro])
 
   const handleClose = () => {
     api
@@ -127,7 +187,10 @@ const RhInterviewModal = (props) => {
       encaminhado_admissional: encaminhadoAdmissional || selectedApplicant?.encaminhado_admissional,
       data_prevista_admissao: dataPrevistaAdmissao || selectedApplicant?.data_prevista_admissao,
       filial: filial || selectedApplicant?.filial,
-      horario: horario || selectedApplicant?.horario
+      horario: horario || selectedApplicant?.horario,
+      ultima_experiencia: ultimaExperiencia,
+      penultima_experiencia: penultimaExperiencia,
+      antepenultima_experiencia: antepenultimaExperiencia,
     }
 
     api
@@ -257,12 +320,12 @@ const RhInterviewModal = (props) => {
 
         <div className="mb-3">
           <label className="form-label fw-bold">Possui experiência na função:</label>
-          <input
-            type="text"
-            className="form-control"
-            onChange={(e) => setExperienciaFuncao(e.target.value)}
-            defaultValue={selectedApplicant?.experiencia_funcao}
-            disabled={selectedApplicant?.experiencia_funcao && true}
+
+          <ReactSelect
+            options={yesNoOptions}
+            onChange={(option) => setExperienciaFuncao(option.value)}
+            isDisabled={selectedApplicant?.experiencia_funcao && true}
+            defaultValue={yesNoOptions?.find((option) => option.value == selectedApplicant?.experiencia_funcao)}
           />
         </div>
 
@@ -277,10 +340,15 @@ const RhInterviewModal = (props) => {
           />
         </div>
 
-        <div className="mb-3">
-          <label className="form-label fw-bold">Idade:</label>
-          <input className="form-control" value={"idade"} disabled />
-        </div>
+        {
+          age && (
+            <div className="mb-3">
+              <label className="form-label fw-bold">Idade:</label>
+
+              <input className="form-control" value={age || ""} disabled />
+            </div>
+          )
+        }
 
         <div className="mb-3">
           <label className="form-label fw-bold">Nome do pai:</label>
@@ -359,14 +427,44 @@ const RhInterviewModal = (props) => {
           />
         </div>
 
+        {
+          sugestSubsidiaries && (
+            <div className="mb-3">
+              <label className="form-label fw-bold">
+                Postos recomendados
+              </label>
+
+              {
+                sugestSubsidiaries.map((subsidiarie, i) => (
+                  <div key={i} className="mb-3">
+                    <input
+                      className="form-control"
+                      value={subsidiarie}
+                      disabled={true}
+                    />
+                  </div>
+                ))
+              }
+            </div>
+          )
+        }
+
         <div className="mb-3">
           <label className="form-label fw-bold">Bairro que mora:</label>
-          <input
+
+          {/* <input
             type="text"
             className="form-control"
             onChange={(e) => setBairro(e.target.value)}
             defaultValue={selectedApplicant?.bairro}
             disabled={selectedApplicant?.bairro && true}
+          /> */}
+
+          <ReactSelect
+            options={neighborhoodsOptions}
+            onChange={(option) => setBairro(option.label)}
+            defaultValue={neighborhoodsOptions?.find((option) => option.label == selectedApplicant?.bairro)}
+            isDisabled={selectedApplicant?.bairro && true}
           />
         </div>
 
@@ -442,45 +540,77 @@ const RhInterviewModal = (props) => {
 
         <div className="mb-3">
           <label className="form-label fw-bold mb-3">Apresentação pessoal:</label>
-          <input
+
+          {/* <input
             type="text"
             className="form-control"
             onChange={(e) => setApresentacaoPessoal(e.target.value)}
             defaultValue={selectedApplicant?.apresentacao_pessoal}
             disabled={selectedApplicant?.apresentacao_pessoal && true}
+          /> */}
+
+          <ReactSelect
+            options={recruitCriteria}
+            onChange={(option) => setApresentacaoPessoal(option.value)}
+            defaultValue={recruitCriteria?.find((option) => option.value == selectedApplicant?.apresentacao_pessoal)}
+            isDisabled={selectedApplicant?.apresentacao_pessoal && true}
           />
         </div>
 
         <div className="mb-3">
           <label className="form-label fw-bold mb-3">Comunicativo:</label>
-          <input
+
+          {/* <input
             type="text"
             className="form-control"
             onChange={(e) => setComunicativo(e.target.value)}
             defaultValue={selectedApplicant?.comunicativo}
             disabled={selectedApplicant?.comunicativo && true}
+          /> */}
+
+          <ReactSelect
+            options={recruitCriteria}
+            onChange={(option) => setComunicativo(option.value)}
+            defaultValue={recruitCriteria?.find((option) => option.value == selectedApplicant?.comunicativo)}
+            isDisabled={selectedApplicant?.comunicativo && true}
           />
         </div>
 
         <div className="mb-3">
           <label className="form-label fw-bold mb-3">Postura:</label>
-          <input
+
+          {/* <input
             type="text"
             className="form-control"
             onChange={(e) => setPostura(e.target.value)}
             defaultValue={selectedApplicant?.postura}
             disabled={selectedApplicant?.postura && true}
+          /> */}
+
+          <ReactSelect
+            options={recruitCriteria}
+            onChange={(option) => setPostura(option.value)}
+            defaultValue={recruitCriteria?.find((option) => option.value == selectedApplicant?.postura)}
+            isDisabled={selectedApplicant?.postura && true}
           />
         </div>
 
         <div className="mb-3">
           <label className="form-label fw-bold mb-3">Simpatia:</label>
-          <input
+
+          {/* <input
             type="text"
             className="form-control"
             onChange={(e) => setSimpatia(e.target.value)}
             defaultValue={selectedApplicant?.simpatia}
             disabled={selectedApplicant?.simpatia && true}
+          /> */}
+
+          <ReactSelect
+            options={recruitCriteria}
+            onChange={(option) => setSimpatia(option.value)}
+            defaultValue={recruitCriteria?.find((option) => option.value == selectedApplicant?.simpatia)}
+            isDisabled={selectedApplicant?.simpatia && true}
           />
         </div>
 
@@ -591,6 +721,48 @@ const RhInterviewModal = (props) => {
             onChange={(e) => setHorario(e.target.value)}
             defaultValue={selectedApplicant?.horario}
             disabled={selectedApplicant?.horario && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            última experiência
+          </label>
+
+          <input
+            type="text"
+            className="form-control"
+            onChange={(e) => setUltimaExperiencia(e.target.value)}
+            defaultValue={selectedApplicant?.ultima_experiencia}
+            disabled={selectedApplicant?.ultima_experiencia && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Penúltima experiência
+          </label>
+
+          <input
+            type="text"
+            className="form-control"
+            onChange={(e) => setPenultimaExperiencia(e.target.value)}
+            defaultValue={selectedApplicant?.penultima_experiencia}
+            disable={selectedApplicant?.penultima_experiencia && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Antepenúltima experiência
+          </label>
+
+          <input
+            type="text"
+            className="form-control"
+            onChange={(e) => setAntepenultimaExperiencia(e.target.value)}
+            defaultValue={selectedApplicant?.antepenultima_experiencia}
+            disable={selectedApplicant?.antepenultima_experiencia && true}
           />
         </div>
 

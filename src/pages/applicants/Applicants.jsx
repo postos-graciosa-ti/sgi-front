@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Trash } from "react-bootstrap-icons"
+import { ArrowClockwise, CaretRight, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
@@ -13,6 +13,8 @@ import SelectiveProcessModal from "./SelectiveProcessModal"
 
 const Applicants = () => {
   const userSession = useUserSessionStore((state) => state.userSession)
+
+  const [applicantToSearch, setApplicantToSearch] = useState()
 
   const [applicantsList, setApplicantsList] = useState()
 
@@ -37,6 +39,28 @@ const Applicants = () => {
       .get("/applicants")
       .then((response) => setApplicantsList(response.data))
   }, [])
+
+  useEffect(() => {
+    if (applicantToSearch) {
+      api
+        .get("/applicants")
+        .then((response) => {
+          let newApplicantsList = response.data.filter((applicant) => applicant.name.toLowerCase() == applicantToSearch.toLowerCase())
+
+          setApplicantsList(newApplicantsList)
+        })
+    }
+  }, [applicantToSearch])
+
+  const handleReloadApplicantsList = () => {
+    api
+      .get("/applicants")
+      .then((response) => {
+        setApplicantToSearch()
+        
+        setApplicantsList(response.data)
+      })
+  }
 
   const handleOpenExamsEmissionModal = () => {
     setExamsEmissionModalOpen(true)
@@ -104,6 +128,28 @@ const Applicants = () => {
           <button className="btn btn-primary mb-3" onClick={handleOpenNewApplicantModal}>
             Novo candidato
           </button>
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Buscar candidato
+          </label>
+
+          <div className="row">
+            <div className="col-10">
+              <input
+                type="text"
+                className="form-control"
+                onChange={(e) => setApplicantToSearch(e.target.value)}
+              />
+            </div>
+
+            <div className="col-2">
+              <button className="btn btn-primary" onClick={handleReloadApplicantsList}>
+                <ArrowClockwise />
+              </button>
+            </div>
+          </div>
         </div>
 
         <div className="table-responsive">

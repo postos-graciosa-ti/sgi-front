@@ -79,16 +79,6 @@ const SelectiveProcessModal = (props) => {
             </button>
           </div>
         </div>
-
-        {
-          selectedApplicant?.is_aproved == true && (
-            <div className="card text-center text-success fw-bold">
-              <div className="card-body">
-                <h5>Aprovado</h5>
-              </div>
-            </div>
-          )
-        }
       </Modal.Body>
 
       <Modal.Footer>

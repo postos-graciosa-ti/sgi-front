@@ -93,6 +93,10 @@ const RhInterviewModal = (props) => {
 
   const [age, setAge] = useState()
 
+  const [schoolLevelsOptions, setSchoolLevelsOptions] = useState()
+
+  const [selectedSchoolLevel, setSelectedSchoolLevel] = useState()
+
   useEffect(() => {
     api
       .get("/users")
@@ -116,6 +120,14 @@ const RhInterviewModal = (props) => {
         let options = response.data.map((option) => ({ value: option.id, label: option.name }))
 
         setNeighborhoodsOptions(options)
+      })
+
+    api
+      .get("/school-levels")
+      .then((response) => {
+        let options = response.data.map((option) => ({ value: option.id, label: option.name }))
+
+        setSchoolLevelsOptions(options)
       })
   }, [])
 
@@ -191,6 +203,7 @@ const RhInterviewModal = (props) => {
       ultima_experiencia: ultimaExperiencia,
       penultima_experiencia: penultimaExperiencia,
       antepenultima_experiencia: antepenultimaExperiencia,
+      escolaridade: selectedSchoolLevel,
     }
 
     api
@@ -247,7 +260,7 @@ const RhInterviewModal = (props) => {
       fullscreen={true}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Entrevista com recursos humanos de {selectedApplicant?.name}</Modal.Title>
+        <Modal.Title>Entrevista com Recursos Humanos de {selectedApplicant?.name}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -259,7 +272,9 @@ const RhInterviewModal = (props) => {
           <input type="text" className="form-control text-center fw-bold" value={selectedApplicant?.name} disabled />
         </div>
 
-        <div className="mb-3">
+        {/* retomar em outro momento */}
+
+        {/* <div className="mb-3">
           <label className="form-label fw-bold">Verificar quadro de vagas</label>
 
           <ReactSelect
@@ -281,7 +296,7 @@ const RhInterviewModal = (props) => {
               </div>
             </div>
           )
-        }
+        } */}
 
         <div className="mb-3">
           <label className="form-label fw-bold">Natural:</label>
@@ -763,6 +778,19 @@ const RhInterviewModal = (props) => {
             onChange={(e) => setAntepenultimaExperiencia(e.target.value)}
             defaultValue={selectedApplicant?.antepenultima_experiencia}
             disable={selectedApplicant?.antepenultima_experiencia && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Escolaridade
+          </label>
+
+          <ReactSelect
+            options={schoolLevelsOptions}
+            onChange={(option) => setSelectedSchoolLevel(option.value)}
+            defaultValue={schoolLevelsOptions?.find((option) => option.value == selectedApplicant?.escolaridade)}
+            isDisabled={selectedApplicant?.escolaridade && true}
           />
         </div>
 

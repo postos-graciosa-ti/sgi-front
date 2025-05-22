@@ -29,6 +29,52 @@ const recruitCriteria = [
   { value: "bom", label: "bom" },
 ]
 
+const postosPorBairro = {
+  "Adhemar Garcia": ["Jariva", "Bemer"],
+  "América": ["Graciosa"],
+  "Anita Garibaldi": ["Graciosa"],
+  "Atiradores": ["Graciosa"],
+  "Aventureiro": ["Fátima", "Graciosa"],
+  "Boa Vista": ["Graciosa", "Fátima"],
+  "Boehmerwald": ["Bemer", "V"],
+  "Bom Retiro": ["Graciosa"],
+  "Bucarein": ["Graciosa", "V"],
+  "Centro": ["Graciosa"],
+  "Comasa": ["Fátima", "Graciosa"],
+  "Costa e Silva": ["Graciosa"],
+  "Dona Francisca": ["Piraí"],
+  "Espinheiros": ["Jariva"],
+  "Fátima": ["Fátima", "Graciosa"],
+  "Floresta": ["V", "Graciosa"],
+  "Glória": ["Graciosa"],
+  "Guanabara": ["Graciosa", "Fátima"],
+  "Iririú": ["Graciosa", "Fátima"],
+  "Itaum": ["Graciosa", "Fátima", "V"],
+  "Itinga": ["Jariva"],
+  "Jardim Iririú": ["Graciosa", "Fátima"],
+  "Jardim Paraíso": ["Fátima"],
+  "Jardim Sofia": ["Fátima"],
+  "Jarivatuba": ["Jariva"],
+  "João Costa": ["Jariva", "Bemer"],
+  "Morro do Meio": ["Piraí"],
+  "Nova Brasília": ["Fátima", "Jariva"],
+  "Paranaguamirim": ["Jariva", "Bemer"],
+  "Parque Guarani": ["Bemer"],
+  "Petrópolis": ["Fátima", "Bemer"],
+  "Pirabeiraba": ["Piraí"],
+  "Profipo": ["Piraí"],
+  "Rio Bonito": ["Piraí"],
+  "Saguaçu": ["Graciosa"],
+  "Santa Catarina": ["V", "Graciosa"],
+  "Santo Antônio": ["Graciosa"],
+  "São Marcos": ["Piraí"],
+  "Ulysses Guimarães": ["Jariva", "Bemer"],
+  "Vila Cubatão": ["Fátima"],
+  "Vila Nova": ["Piraí"],
+  "Zona Industrial Norte": ["Piraí"],
+  "Zona Industrial Tupy": ["Fátima"],
+}
+
 const RhInterviewModal = (props) => {
   const {
     rhInterviewModalOpen,
@@ -148,10 +194,10 @@ const RhInterviewModal = (props) => {
   }, [dataNascimento])
 
   useEffect(() => {
-    if (bairro == "Itaum") {
-      let arr = ["Jariva", "Fátima", "Graciosa"]
-
-      setSugestSubsidiaries(arr)
+    if (bairro && postosPorBairro[bairro]) {
+      setSugestSubsidiaries(postosPorBairro[bairro])
+    } else {
+      setSugestSubsidiaries([])
     }
   }, [bairro])
 

@@ -1,13 +1,18 @@
 import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import ReactSelect from "react-select"
 import api from '../../services/api'
 
 const CoordinatorInterviewModal = (props) => {
-  const { coordinatorInterviewModalOpen, setCoordinatorInterviewModalOpen, selectedApplicant, setSelectiveProcessModalOpen, setApplicantsList } = props
+  const {
+    coordinatorInterviewModalOpen,
+    setCoordinatorInterviewModalOpen,
+    selectedApplicant,
+    setSelectiveProcessModalOpen,
+    setApplicantsList
+  } = props
 
-  const [isAproved, setIsAproved] = useState(false)
+  const [coordinatorObservation, setCoordinatorObservation] = useState()
 
   const handleClose = () => {
     api
@@ -21,7 +26,7 @@ const CoordinatorInterviewModal = (props) => {
 
   const handleSubmit = () => {
     let requestBody = {
-      is_aproved: isAproved
+      coordinator_observations: coordinatorObservation,
     }
 
     api
@@ -44,6 +49,20 @@ const CoordinatorInterviewModal = (props) => {
       <Modal.Body>
         <div className="mb-3">
           <label className="form-label fw-bold">
+            Observações de coordenador
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setCoordinatorObservation(e.target.value)}
+            defaultValue={selectedApplicant?.coordinator_observations}
+            disabled={selectedApplicant?.coordinator_observations && true}
+          />
+        </div>
+
+        {/* <div className="mb-3">
+          <label className="form-label fw-bold">
             Parecer do coordenador:
           </label>
 
@@ -55,7 +74,7 @@ const CoordinatorInterviewModal = (props) => {
             ]}
             onChange={(option) => setIsAproved(option.value)}
           />
-        </div>
+        </div> */}
       </Modal.Body>
 
       <Modal.Footer>

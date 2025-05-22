@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
-import { ArrowClockwise, CaretRight, Trash } from "react-bootstrap-icons"
+import { Arrow90degRight, ArrowClockwise, CupHot } from "react-bootstrap-icons"
+import ReactSelect from "react-select"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
@@ -10,6 +11,9 @@ import HireApplicantModal from "./HireApplicantModal"
 import NewApplicantModal from "./NewApplicantModal"
 import RedirectToModal from "./RedirectToModal"
 import SelectiveProcessModal from "./SelectiveProcessModal"
+import SpecialNotationModal from "./SpecialNotationModal"
+
+const yesNoOptions = [{ value: "aprovado", label: "aprovado" }, { value: "reprovado", label: "reprovado" }]
 
 const Applicants = () => {
   const userSession = useUserSessionStore((state) => state.userSession)
@@ -34,18 +38,35 @@ const Applicants = () => {
 
   const [redirectToModalOpen, setRedirectToModalOpen] = useState(false)
 
+  const [specialNotatioModalOpen, setSpecialNotatioModalOpen] = useState(false)
+
   useEffect(() => {
     api
       .get("/applicants")
       .then((response) => setApplicantsList(response.data))
   }, [])
 
+  // useEffect(() => {
+  //   if (applicantToSearch) {
+  //     api
+  //       .get("/applicants")
+  //       .then((response) => {
+  //         let newApplicantsList = response.data.filter((applicant) => applicant.name.toLowerCase() == applicantToSearch.toLowerCase())
+
+  //         setApplicantsList(newApplicantsList)
+  //       })
+  //   }
+  // }, [applicantToSearch])
+
   useEffect(() => {
     if (applicantToSearch) {
       api
         .get("/applicants")
         .then((response) => {
-          let newApplicantsList = response.data.filter((applicant) => applicant.name.toLowerCase() == applicantToSearch.toLowerCase())
+          const newApplicantsList = response.data.filter((applicant) => {
+            const firstName = applicant.name.split(" ")[0].toLowerCase()
+            return firstName === applicantToSearch.toLowerCase()
+          })
 
           setApplicantsList(newApplicantsList)
         })
@@ -57,7 +78,7 @@ const Applicants = () => {
       .get("/applicants")
       .then((response) => {
         setApplicantToSearch()
-        
+
         setApplicantsList(response.data)
       })
   }
@@ -101,6 +122,40 @@ const Applicants = () => {
       printable: "/lista_de_documentos.pdf",
       type: 'pdf',
     })
+  }
+
+  const onChangeRhOpinion = (opinion, applicant) => {
+    let requestBody = {
+      rh_opinion: opinion.value,
+    }
+
+    api
+      .patch(`/applicants/${applicant?.id}`, requestBody)
+      .then(() => {
+        api
+          .get("/applicants")
+          .then((response) => setApplicantsList(response.data))
+      })
+  }
+
+  const onChangeCoordinatorOpinion = (opinion, applicant) => {
+    let requestBody = {
+      coordinator_opinion: opinion.value,
+    }
+
+    api
+      .patch(`/applicants/${applicant?.id}`, requestBody)
+      .then(() => {
+        api
+          .get("/applicants")
+          .then((response) => setApplicantsList(response.data))
+      })
+  }
+
+  const handleOpenSpecialNotationMoal = (applicant) => {
+    setSelectedApplicant(applicant)
+
+    setSpecialNotatioModalOpen(true)
   }
 
   return (
@@ -152,11 +207,11 @@ const Applicants = () => {
           </div>
         </div>
 
-        <div className="table-responsive">
-          <table className="table table-hover">
+        <div>
+          <table className="table table-hover align-middle">
             <thead>
               <tr>
-                <th></th>
+                <th>#</th>
 
                 <th>Nome</th>
 
@@ -167,39 +222,154 @@ const Applicants = () => {
             <tbody>
               {
                 applicantsList && applicantsList.map((applicant, i) => (
-                  <tr key={applicant.id} className={applicant.is_aproved == true && "table-success" || "table-light"}>
+                  <tr key={applicant.id}>
                     <td className="text-muted text-center">#0{i + 1}</td>
 
                     <td>{applicant.name}</td>
 
                     <td>
-                      <button
-                        className="btn btn-primary me-2"
-                        disabled={!(userSession?.id === applicant.created_by || userSession?.id === applicant.redirect_to)}
-                        onClick={() => handleOpenSelectiveProcessModal(applicant)}
-                      >
-                        Processo seletivo
-                      </button>
+                      <div className="d-flex flex-wrap gap-3">
+                        <div style={{ minWidth: '180px' }}>
+                          <label className="form-label fw-bold">
+                            Processo seletivo
+                          </label>
 
-                      {
-                        applicant.is_aproved && (
                           <button
-                            className="btn btn-primary"
-                            onClick={() => handleOpenHireApplicantModal(applicant)}
-                            disabled={!(userSession?.id === applicant.created_by || userSession?.id === applicant.redirect_to)}
+                            className="btn btn-primary w-100"
+                            disabled={
+                              !(
+                                userSession?.id === applicant.created_by ||
+                                userSession?.id === applicant.redirect_to
+                              )
+                            }
+                            onClick={() => handleOpenSelectiveProcessModal(applicant)}
                           >
-                            Efetivar
+                            <Arrow90degRight />
                           </button>
-                        )
-                      }
+                        </div>
 
-                      {/* <button
-                        className="btn btn-danger ms-2"
-                        disabled={!(userSession?.id === applicant.created_by || userSession?.id === applicant.redirect_to)}
-                        onClick={() => handleOpenConfirmApplicantDeleteModal(applicant)}
-                      >
-                        <Trash />
-                      </button> */}
+                        <div style={{ minWidth: '200px' }}>
+                          <label className="form-label fw-bold">Parecer RH</label>
+
+                          <ReactSelect
+                            placeholder=""
+                            options={yesNoOptions}
+                            onChange={(opinion) => onChangeRhOpinion(opinion, applicant)}
+                            defaultValue={yesNoOptions.find((option) => option.value === applicant?.rh_opinion)}
+                            isDisabled={!!applicant?.rh_opinion}
+                            className={`react-select ${applicant?.rh_opinion
+                              ? applicant.rh_opinion === "aprovado"
+                                ? "is-valid"
+                                : "is-invalid"
+                              : ""}`}
+                            classNamePrefix="react-select"
+                            styles={
+                              applicant?.rh_opinion
+                                ? applicant.rh_opinion === "aprovado"
+                                  ? {
+                                    control: (base) => ({
+                                      ...base,
+                                      borderColor: 'green',
+                                      boxShadow: '0 0 0 0.25rem rgba(25, 135, 84, 0.25)',
+                                      '&:hover': { borderColor: 'green' },
+                                    }),
+                                  }
+                                  : {
+                                    control: (base) => ({
+                                      ...base,
+                                      borderColor: '#dc3545',
+                                      boxShadow: '0 0 0 0.25rem rgba(220, 53, 69, 0.25)',
+                                      '&:hover': { borderColor: '#dc3545' },
+                                    }),
+                                  }
+                                : {}
+                            }
+                          />
+                        </div>
+
+                        <div style={{ minWidth: '200px' }}>
+                          <label className="form-label fw-bold">Parecer gestor</label>
+
+                          <ReactSelect
+                            placeholder=""
+                            options={yesNoOptions}
+                            onChange={(opinion) => onChangeCoordinatorOpinion(opinion, applicant)}
+                            defaultValue={yesNoOptions.find((option) => option.value === applicant?.coordinator_opinion)}
+                            isDisabled={!!applicant?.coordinator_opinion}
+                            className={`react-select ${applicant?.coordinator_opinion
+                              ? applicant.coordinator_opinion === "aprovado"
+                                ? "is-valid"
+                                : "is-invalid"
+                              : ""}`}
+                            classNamePrefix="react-select"
+                            styles={
+                              applicant?.coordinator_opinion
+                                ? applicant.coordinator_opinion === "aprovado"
+                                  ? {
+                                    control: (base) => ({
+                                      ...base,
+                                      borderColor: 'green',
+                                      boxShadow: '0 0 0 0.25rem rgba(25, 135, 84, 0.25)',
+                                      '&:hover': { borderColor: 'green' },
+                                    }),
+                                  }
+                                  : {
+                                    control: (base) => ({
+                                      ...base,
+                                      borderColor: '#dc3545',
+                                      boxShadow: '0 0 0 0.25rem rgba(220, 53, 69, 0.25)',
+                                      '&:hover': { borderColor: '#dc3545' },
+                                    }),
+                                  }
+                                : {}
+                            }
+                          />
+                        </div>
+
+                        {
+                          applicant?.rh_opinion === "aprovado" &&
+                          applicant?.coordinator_opinion === "aprovado" && (
+                            <div style={{ minWidth: '180px' }}>
+                              <label className="form-label fw-bold">
+                                Efetivar
+                              </label>
+
+                              <button
+                                className="btn btn-success w-100"
+                                onClick={() => handleOpenHireApplicantModal(applicant)}
+                                disabled={
+                                  !(
+                                    userSession?.id === applicant.created_by ||
+                                    userSession?.id === applicant.redirect_to
+                                  )
+                                }
+                              >
+                                <Arrow90degRight />
+                              </button>
+                            </div>
+                          ) || applicant?.rh_opinion === "reprovado" && (
+                            <div style={{ minWidth: '180px' }}>
+                              <label className="form-label fw-bold">
+                                Anotação especial
+                              </label>
+
+                              <button className="btn btn-dark w-100" onClick={() => handleOpenSpecialNotationMoal(applicant)}>
+                                <CupHot />
+                              </button>
+                            </div>
+                          ) || applicant?.coordinator_opinion === "reprovado" && (
+                            <div style={{ minWidth: '180px' }}>
+                              <label className="form-label fw-bold">
+                                Anotação especial
+                              </label>
+
+                              <button className="btn btn-dark w-100" onClick={() => handleOpenSpecialNotationMoal(applicant)}>
+                                <CupHot />
+                              </button>
+                            </div>
+                          )
+                        }
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -250,6 +420,14 @@ const Applicants = () => {
       <RedirectToModal
         redirectToModalOpen={redirectToModalOpen}
         setRedirectToModalOpen={setRedirectToModalOpen}
+      />
+
+      <SpecialNotationModal
+        specialNotatioModalOpen={specialNotatioModalOpen}
+        setSpecialNotatioModalOpen={setSpecialNotatioModalOpen}
+        selectedApplicant={selectedApplicant}
+        setSelectedApplicant={setSelectedApplicant}
+        setApplicantsList={setApplicantsList}
       />
     </>
   )

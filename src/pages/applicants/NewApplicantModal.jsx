@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import api from '../../services/api'
 import useUserSessionStore from '../../data/userSession'
+import dayjs from 'dayjs'
 
 const NewApplicantModal = (props) => {
   const { newApplicantModalOpen, setNewApplicantModalOpen, setApplicantsList } = props
@@ -22,7 +23,8 @@ const NewApplicantModal = (props) => {
   const handleSubmit = () => {
     let requestBody = {
       name: applicantName,
-      created_by: userSession.id
+      created_by: userSession.id,
+      attendance_date: dayjs().format("YYYY-MM-DD"),
     }
 
     api

@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { CaretRightFill } from 'react-bootstrap-icons'
+import { CaretRightFill, Trash } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import useUserSessionStore from '../../data/userSession'
-import RhInterviewModal from './RhInterviewModal'
+import api from '../../services/api'
 import CoordinatorInterviewModal from './CoordinatorInterviewModal'
+import RhInterviewModal from './RhInterviewModal'
 import SeeApplicantsExamsModal from './SeeApplicantsExamsModal'
 
 const SelectiveProcessModal = (props) => {
@@ -19,6 +20,10 @@ const SelectiveProcessModal = (props) => {
   const [coordinatorInterviewModalOpen, setCoordinatorInterviewModalOpen] = useState(false)
 
   const handleClose = () => {
+    api
+      .get("/applicants")
+      .then((response) => setApplicantsList(response.data))
+
     setSelectiveProcessModalOpen(false)
   }
 
@@ -32,6 +37,16 @@ const SelectiveProcessModal = (props) => {
 
   const handleOpenCoordinatorInterviewModal = () => {
     setCoordinatorInterviewModalOpen(true)
+  }
+
+  const handleInactivateApplicant = () => {
+    let requestBody = {
+      is_active: false
+    }
+
+    api
+      .patch(`/applicants/${selectedApplicant?.id}`, requestBody)
+      .then(() => handleClose())
   }
 
   return (
@@ -70,14 +85,20 @@ const SelectiveProcessModal = (props) => {
           <div className="card-body text-center">
             <div className="mb-2 fw-bold">Coordenador/gerente</div>
 
-            <button
-              className="btn btn-primary ms-2"
-              disabled={userSession?.id == selectedApplicant?.redirect_to ? false : true}
-              onClick={handleOpenCoordinatorInterviewModal}
-            >
+            <button className="btn btn-primary ms-2" onClick={handleOpenCoordinatorInterviewModal}>
               <CaretRightFill />
             </button>
           </div>
+        </div>
+
+        <div className="mb-3">
+          <button
+            className="btn btn-danger w-100"
+            onClick={handleInactivateApplicant}
+            disabled={userSession?.id != selectedApplicant?.created_by && true}
+          >
+            <Trash /> Apagar processo seletivo
+          </button>
         </div>
       </Modal.Body>
 
@@ -92,6 +113,7 @@ const SelectiveProcessModal = (props) => {
         setApplicantsExamsModalOpen={setApplicantsExamsModalOpen}
         selectedApplicant={selectedApplicant}
         setSelectedApplicant={setSelectedApplicant}
+        setSelectiveProcessModalOpen={setSelectiveProcessModalOpen}
       />
 
       <RhInterviewModal

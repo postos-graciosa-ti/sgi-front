@@ -7,7 +7,7 @@ import ReactSelect from "react-select"
 import api from '../../services/api'
 import dayjs from "dayjs"
 
-const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie, datetime }) => {
+const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie, datetime, subsidiarieData }) => {
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -64,7 +64,7 @@ const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie, d
         </p> */}
 
         <p>
-          {selectedSubsidiarie?.adress}
+          Endereço: {subsidiarieData?.adress}
         </p>
 
         <p>
@@ -132,13 +132,19 @@ const RedirectToModal = (props) => {
     setRedirectToModalOpen(false)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    let subsidiarieData = await api.get(`/subsidiaries/${selectedSubsidiarie?.value}`).then((response) => response.data)
+
+    console.log(subsidiarieData)
+    debugger
+
     const printableContent = ReactDOMServer.renderToString(
       <RedirectToDoc
         selectedUser={selectedUser}
         selectedApplicant={selectedApplicant}
         selectedSubsidiarie={selectedSubsidiarie}
         datetime={datetime}
+        subsidiarieData={subsidiarieData}
       />
     )
 

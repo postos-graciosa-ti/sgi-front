@@ -1,6 +1,8 @@
 import dayjs from "dayjs"
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore"
 import { useEffect, useState } from "react"
-import { Arrow90degRight, ArrowClockwise, CupHot, Trash } from "react-bootstrap-icons"
+import { Arrow90degRight, ArrowClockwise, CupHot } from "react-bootstrap-icons"
 import ReactSelect from "react-select"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
@@ -20,6 +22,10 @@ const Applicants = () => {
   const userSession = useUserSessionStore((state) => state.userSession)
 
   const [applicantToSearch, setApplicantToSearch] = useState()
+
+  const [startDate, setStartDate] = useState()
+
+  const [endDate, setEndDate] = useState()
 
   const [applicantsList, setApplicantsList] = useState()
 
@@ -73,6 +79,23 @@ const Applicants = () => {
         })
     }
   }, [applicantToSearch])
+
+  useEffect(() => {
+    if (startDate && endDate) {
+      dayjs.extend(isSameOrAfter)
+
+      dayjs.extend(isSameOrBefore)
+
+      const newApplicantsList = applicantsList?.filter((applicant) =>
+        dayjs(applicant.attendance_date).isSameOrAfter(dayjs(startDate)) &&
+        dayjs(applicant.attendance_date).isSameOrBefore(dayjs(endDate))
+      )
+
+      console.log(newApplicantsList)
+
+      setApplicantsList(newApplicantsList)
+    }
+  }, [startDate, endDate])
 
   const handleReloadApplicantsList = () => {
     api
@@ -205,6 +228,22 @@ const Applicants = () => {
                 <ArrowClockwise />
               </button>
             </div>
+          </div>
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Filtrar
+          </label>
+        </div>
+
+        <div className="row mb-3">
+          <div className="col">
+            <input type="date" className="form-control" onChange={(e) => setStartDate(e.target.value)} />
+          </div>
+
+          <div className="col">
+            <input type="date" className="form-control" onChange={(e) => setEndDate(e.target.value)} />
           </div>
         </div>
 

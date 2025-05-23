@@ -133,19 +133,58 @@ const RedirectToModal = (props) => {
   }
 
   const handleSubmit = async () => {
-    let subsidiarieData = await api.get(`/subsidiaries/${selectedSubsidiarie?.value}`).then((response) => response.data)
-
-    console.log(subsidiarieData)
-    debugger
+    const subsidiarieData = await api.get(`/subsidiaries/${selectedSubsidiarie?.value}`).then(res => res.data)
 
     const printableContent = ReactDOMServer.renderToString(
-      <RedirectToDoc
-        selectedUser={selectedUser}
-        selectedApplicant={selectedApplicant}
-        selectedSubsidiarie={selectedSubsidiarie}
-        datetime={datetime}
-        subsidiarieData={subsidiarieData}
-      />
+      <>
+        <style>
+          {`
+          @media print {
+            body {
+              margin: 0;
+              padding: 0;
+              width: 100%;
+              font-size: 12pt;
+            }
+
+            .print-container {
+              width: 100%;
+              padding: 1cm;
+              box-sizing: border-box;
+            }
+
+            table {
+              width: 100%;
+              border-collapse: collapse;
+            }
+
+            th, td {
+              padding: 6px;
+              text-align: left;
+              word-break: break-word;
+            }
+
+            .avoid-break {
+              page-break-inside: avoid;
+            }
+          }
+
+          @page {
+            size: auto;
+            margin: 1cm;
+          }
+        `}
+        </style>
+        <div className="print-container">
+          <RedirectToDoc
+            selectedUser={selectedUser}
+            selectedApplicant={selectedApplicant}
+            selectedSubsidiarie={selectedSubsidiarie}
+            datetime={datetime}
+            subsidiarieData={subsidiarieData}
+          />
+        </div>
+      </>
     )
 
     printJS({

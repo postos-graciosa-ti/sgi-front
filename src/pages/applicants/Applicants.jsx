@@ -1,5 +1,6 @@
+import dayjs from "dayjs"
 import { useEffect, useState } from "react"
-import { Arrow90degRight, ArrowClockwise, CupHot } from "react-bootstrap-icons"
+import { Arrow90degRight, ArrowClockwise, CupHot, Trash } from "react-bootstrap-icons"
 import ReactSelect from "react-select"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
@@ -211,7 +212,7 @@ const Applicants = () => {
           <table className="table table-hover align-middle">
             <thead>
               <tr>
-                <th>#</th>
+                <th>Atendimento</th>
 
                 <th>Nome</th>
 
@@ -223,7 +224,9 @@ const Applicants = () => {
               {
                 applicantsList && applicantsList.map((applicant, i) => (
                   <tr key={applicant.id}>
-                    <td className="text-muted text-center">#0{i + 1}</td>
+                    <td className="text-muted">
+                      {applicant.attendance_date ? dayjs(applicant.attendance_date).format("DD/MM/YYYY") : ""}
+                    </td>
 
                     <td>{applicant.name}</td>
 
@@ -256,7 +259,10 @@ const Applicants = () => {
                             options={yesNoOptions}
                             onChange={(opinion) => onChangeRhOpinion(opinion, applicant)}
                             defaultValue={yesNoOptions.find((option) => option.value === applicant?.rh_opinion)}
-                            isDisabled={!!applicant?.rh_opinion}
+                            // isDisabled={!!applicant?.rh_opinion}
+                            isDisabled={
+                              userSession?.id != applicant.created_by && userSession?.id != applicant.redirect_to && true || !!applicant?.rh_opinion && true
+                            }
                             className={`react-select ${applicant?.rh_opinion
                               ? applicant.rh_opinion === "aprovado"
                                 ? "is-valid"
@@ -295,7 +301,9 @@ const Applicants = () => {
                             options={yesNoOptions}
                             onChange={(opinion) => onChangeCoordinatorOpinion(opinion, applicant)}
                             defaultValue={yesNoOptions.find((option) => option.value === applicant?.coordinator_opinion)}
-                            isDisabled={!!applicant?.coordinator_opinion}
+                            isDisabled={
+                              userSession?.id != applicant.created_by && userSession?.id != applicant.redirect_to && true || !!applicant?.coordinator_opinion && true
+                            }
                             className={`react-select ${applicant?.coordinator_opinion
                               ? applicant.coordinator_opinion === "aprovado"
                                 ? "is-valid"
@@ -353,7 +361,11 @@ const Applicants = () => {
                                 Anotação especial
                               </label>
 
-                              <button className="btn btn-dark w-100" onClick={() => handleOpenSpecialNotationMoal(applicant)}>
+                              <button
+                                className="btn btn-dark w-100"
+                                onClick={() => handleOpenSpecialNotationMoal(applicant)}
+                                disabled={!(userSession?.id === applicant.created_by)}
+                              >
                                 <CupHot />
                               </button>
                             </div>
@@ -363,7 +375,11 @@ const Applicants = () => {
                                 Anotação especial
                               </label>
 
-                              <button className="btn btn-dark w-100" onClick={() => handleOpenSpecialNotationMoal(applicant)}>
+                              <button
+                                className="btn btn-dark w-100"
+                                onClick={() => handleOpenSpecialNotationMoal(applicant)}
+                                disabled={!(userSession?.id === applicant.created_by)}
+                              >
                                 <CupHot />
                               </button>
                             </div>

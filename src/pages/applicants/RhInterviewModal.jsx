@@ -85,6 +85,7 @@ const RhInterviewModal = (props) => {
   } = props
 
   const [usersOptions, setUsersOptions] = useState()
+
   const [selectedUser, setSelectedUser] = useState()
 
   const [subsidiariesOptions, setSubsidiariesOptions] = useState()
@@ -142,6 +143,10 @@ const RhInterviewModal = (props) => {
   const [schoolLevelsOptions, setSchoolLevelsOptions] = useState()
 
   const [selectedSchoolLevel, setSelectedSchoolLevel] = useState()
+
+  const [email, setEmail] = useState()
+
+  // const videoRef = useRef(null)
 
   useEffect(() => {
     api
@@ -250,6 +255,7 @@ const RhInterviewModal = (props) => {
       penultima_experiencia: penultimaExperiencia,
       antepenultima_experiencia: antepenultimaExperiencia,
       escolaridade: selectedSchoolLevel,
+      email: email,
     }
 
     api
@@ -296,6 +302,20 @@ const RhInterviewModal = (props) => {
       !selectedUser
     )
   }
+
+  const handleOpenCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true })
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+      }
+    } catch (err) {
+      console.error('Error accessing camera:', err)
+    }
+  }
+
+  console.log(selectedApplicant)
 
   return (
     <Modal
@@ -344,6 +364,21 @@ const RhInterviewModal = (props) => {
           )
         } */}
 
+        {/* <div className="mb-3">
+          <button className="btn btn-dark" onClick={handleOpenCamera}>
+            <PersonVideo2 />
+          </button>
+        </div>
+
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          width="640"
+          height="480"
+          style={{ display: 'block', marginTop: '1rem' }}
+        /> */}
+
         <div className="mb-3">
           <label className="form-label fw-bold">Natural:</label>
 
@@ -353,6 +388,20 @@ const RhInterviewModal = (props) => {
             onChange={(e) => setNatural(e.target.value)}
             defaultValue={selectedApplicant?.natural}
             disabled={selectedApplicant?.natural && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            E-mail
+          </label>
+
+          <input
+            type="email"
+            className="form-control"
+            onChange={(e) => setEmail(e.target.value)}
+            defaultValue={selectedApplicant?.email}
+            disabled={selectedApplicant?.email && true}
           />
         </div>
 
@@ -809,7 +858,7 @@ const RhInterviewModal = (props) => {
             className="form-control"
             onChange={(e) => setPenultimaExperiencia(e.target.value)}
             defaultValue={selectedApplicant?.penultima_experiencia}
-            disable={selectedApplicant?.penultima_experiencia && true}
+            disabled={selectedApplicant?.penultima_experiencia && true}
           />
         </div>
 
@@ -823,7 +872,7 @@ const RhInterviewModal = (props) => {
             className="form-control"
             onChange={(e) => setAntepenultimaExperiencia(e.target.value)}
             defaultValue={selectedApplicant?.antepenultima_experiencia}
-            disable={selectedApplicant?.antepenultima_experiencia && true}
+            disabled={selectedApplicant?.antepenultima_experiencia && true}
           />
         </div>
 

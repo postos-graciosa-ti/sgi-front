@@ -156,7 +156,7 @@ const Nav = () => {
               </li>
 
               <li className="nav-item">
-                <Link className="nav-link disabled" to="/">Quadro de vagas</Link>
+                <Link className="nav-link" to="/positions-table">Quadro de vagas</Link>
               </li>
 
               <li className="nav-item">

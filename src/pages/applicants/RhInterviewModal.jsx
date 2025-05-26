@@ -1,9 +1,10 @@
 import moment from 'moment'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactSelect from "react-select"
 import api from '../../services/api'
+import { PersonVideo2 } from 'react-bootstrap-icons'
 
 function calcularIdade(dataNascimento) {
   const hoje = new Date()
@@ -146,7 +147,9 @@ const RhInterviewModal = (props) => {
 
   const [email, setEmail] = useState()
 
-  // const videoRef = useRef(null)
+  const videoRef = useRef(null)
+
+  const [openPositionsList, setOpenPositionsList] = useState()
 
   useEffect(() => {
     api
@@ -185,8 +188,8 @@ const RhInterviewModal = (props) => {
   useEffect(() => {
     if (selectedSubsidiarie) {
       api
-        .get(`/subsidiaries/${selectedSubsidiarie.value}/metrics`)
-        .then((response) => setSubsidiarieMetrics(response.data))
+        .get(`/subsidiaries/${selectedSubsidiarie.value}/open-positions`)
+        .then(({ data }) => setOpenPositionsList(data))
     }
   }, [selectedSubsidiarie])
 
@@ -211,7 +214,10 @@ const RhInterviewModal = (props) => {
       .get("/applicants")
       .then((response) => setApplicantsList(response.data))
 
+    setOpenPositionsList()
+
     setRhInterviewModalOpen(false)
+
     setSelectiveProcessModalOpen(false)
   }
 
@@ -315,8 +321,6 @@ const RhInterviewModal = (props) => {
     }
   }
 
-  console.log(selectedApplicant)
-
   return (
     <Modal
       show={rhInterviewModalOpen}
@@ -336,6 +340,41 @@ const RhInterviewModal = (props) => {
 
         <div className="mb-3">
           <input type="text" className="form-control text-center fw-bold" value={selectedApplicant?.name} disabled />
+        </div>
+
+        <div className="mb-3 bg-light p-4 rounded">
+          <label className="form-label fw-bold">Verificar quadro de vagas</label>
+
+          <ReactSelect
+            options={subsidiariesOptions}
+            onChange={(value) => setSelectedSubsidiarie(value)}
+          />
+
+          {
+            openPositionsList?.length > 0 && (
+              <>
+                <div className="fw-bold mt-3 mb-3">
+                  Vagas em {selectedSubsidiarie?.label}
+                </div>
+
+                {
+                  openPositionsList && openPositionsList.map((openPosition, i) => (
+                    <input
+                      className="form-control mb-3 fw-bold"
+                      value={`${i + 1}. Função: ${openPosition?.function?.name} \\ Turno: ${openPosition?.turn?.name}`}
+                      disabled={true}
+                    />
+                  ))
+                }
+              </>
+            )
+            ||
+            <input
+              className="form-control mt-3 fw-bold"
+              disabled={true}
+              value={"Quadro completo para essa filial"}
+            />
+          }
         </div>
 
         {/* retomar em outro momento */}

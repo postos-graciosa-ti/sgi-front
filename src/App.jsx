@@ -1,25 +1,25 @@
 import { useState } from 'react'
 import LoginModal from './LoginModal'
 import RegisterModal from './RegisterModal'
-import UserManualModal from './UserManualModal'
+import RecoveryPasswordModal from './RecoveryPasswordModal'
 
 function App() {
-  const [userManualModalOpen, setUserManualModalOpen] = useState(false)
-  const [loginModalOpen, setLoginModalOpen] = useState(false)
   const [registerModalOpen, setRegisterModalOpen] = useState(false)
 
-  const handleOpenUserManual = () => {
-    setUserManualModalOpen(true)
+  const [loginModalOpen, setLoginModalOpen] = useState(false)
+
+  const [recoveryPasswordModalOpen, setRecoveryPasswordModalOpen] = useState(false)
+
+  const handleOpenRegisterModal = () => {
+    setRegisterModalOpen(true)
   }
-  
-  // test
 
   const handleOpenLoginModal = () => {
     setLoginModalOpen(true)
   }
 
-  const handleOpenRegisterModal = () => {
-    setRegisterModalOpen(true)
+  const handleOpenRecoveryPasswordModal = () => {
+    setRecoveryPasswordModalOpen(true)
   }
 
   return (
@@ -27,6 +27,7 @@ function App() {
       <div className="container min-vh-100 d-flex flex-column">
         <div className="mt-3 mb-3 text-center">
           <h4>SGI</h4>
+
           <span className="text-muted">Sistema de Gestão Integrado</span>
         </div>
 
@@ -36,35 +37,22 @@ function App() {
           </p>
         </div>
 
-        <div className="row mt-auto mb-4">
-          <div className="col-12 mb-3">
-            <div className="d-grid gap-2 d-md-block text-center">
-              <button
-                onClick={handleOpenUserManual}
-                className="btn btn-danger mx-1"
-              >
-                Manual do Usuário
-              </button>
-            </div>
-          </div>
-          
-          <div className="col-12">
-            <div className="d-grid gap-2 d-md-block text-center">
-              <button
-                className="btn btn-primary me-md-2 mb-2 mb-md-0"
-                onClick={handleOpenLoginModal}
-              >
-                Entrar
-              </button>
+        <div>
+          <button className="w-100 btn btn-light mb-3 mt-5" onClick={handleOpenRegisterModal}>
+            Primeiro acesso
+          </button>
+        </div>
 
-              <button
-                className="btn btn-secondary"
-                onClick={handleOpenRegisterModal}
-              >
-                Cadastrar senha
-              </button>
-            </div>
-          </div>
+        <div>
+          <button className="w-100 btn btn-primary mb-3" onClick={handleOpenLoginModal}>
+            Entrar
+          </button>
+        </div>
+
+        <div>
+          <button className="w-100 btn btn-warning mb-3" onClick={handleOpenRecoveryPasswordModal}>
+            Recuperar senha
+          </button>
         </div>
 
         <div className="mt-auto py-3 text-center fw-bold">
@@ -74,9 +62,9 @@ function App() {
         </div>
       </div>
 
-      <UserManualModal
-        userManualModalOpen={userManualModalOpen}
-        setUserManualModalOpen={setUserManualModalOpen}
+      <RegisterModal
+        registerModalOpen={registerModalOpen}
+        setRegisterModalOpen={setRegisterModalOpen}
       />
 
       <LoginModal
@@ -84,9 +72,9 @@ function App() {
         setLoginModalOpen={setLoginModalOpen}
       />
 
-      <RegisterModal
-        registerModalOpen={registerModalOpen}
-        setRegisterModalOpen={setRegisterModalOpen}
+      <RecoveryPasswordModal
+        recoveryPasswordModalOpen={recoveryPasswordModalOpen}
+        setRecoveryPasswordModalOpen={setRecoveryPasswordModalOpen}
       />
     </>
   )

@@ -38,6 +38,7 @@ import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
 import Responsible from "./pages/tickets/Responsible"
+import PositionsTable from "./pages/positionsTable/PositionsTable"
 
 const Routes = createBrowserRouter([
   // public routes
@@ -226,6 +227,11 @@ const Routes = createBrowserRouter([
   {
     path: "/responsible",
     element: <PrivateRoute><Responsible /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/positions-table",
+    element: <PrivateRoute><PositionsTable /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

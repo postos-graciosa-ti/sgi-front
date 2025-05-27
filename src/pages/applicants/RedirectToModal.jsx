@@ -1,17 +1,19 @@
-import dayjs from "dayjs"
 import printJS from "print-js"
 import { useEffect, useRef, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactSelect from "react-select"
 import api from '../../services/api'
+import dayjs from "dayjs"
 
-const RedirectToDoc = ({ selectedUser, selectedApplicant, datetime, subsidiarieData }) => {
+// Componente de conteúdo para impressão
+const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie, datetime, subsidiarieData }) => {
   return (
     <div className="print-container">
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <img src="/logo.png" style={{ width: '80px' }} alt="Logo" />
       </div>
+
       <div>
         <p>Assunto: Encaminhamento de Candidato para Entrevista</p>
         <p>Prezado {selectedUser?.label},</p>
@@ -19,10 +21,12 @@ const RedirectToDoc = ({ selectedUser, selectedApplicant, datetime, subsidiarieD
           Gostaríamos de informar que identificamos um candidato potencial para trabalhar no horário das 14:00 – 22:00 que você solicitou.
         </p>
         <p>Seguem os detalhes do candidato e da entrevista agendada:</p>
-        <p><strong>Nome:</strong> {selectedApplicant?.label}</p>
-        <p><strong>Currículo:</strong> Em Anexo</p>
-        <p><strong>Data e horário:</strong> {dayjs(datetime).format("DD/MM/YYYY [às] HH:mm")}</p>
-        <p><strong>Endereço:</strong> {subsidiarieData?.adress}</p>
+        <p>Detalhes do Candidato:</p>
+        <p>Nome: {selectedApplicant?.label}</p>
+        <p>Currículo: Em Anexo</p>
+        <p>Detalhes da Entrevista:</p>
+        <p>Data e horário: {dayjs(datetime).format("DD/MM/YYYY [às] HH:mm")}</p>
+        <p>Endereço: {subsidiarieData?.adress}</p>
         <p>
           Por favor, revise o currículo anexado e confirme a sua disponibilidade para conduzir a
           entrevista no horário agendado. Caso precise alterar a data ou horário, entre em
@@ -36,6 +40,7 @@ const RedirectToDoc = ({ selectedUser, selectedApplicant, datetime, subsidiarieD
   )
 }
 
+// Componente principal com o modal
 const RedirectToModal = ({ redirectToModalOpen, setRedirectToModalOpen }) => {
   const [applicantsOptions, setApplicantsOptions] = useState()
   const [usersOptions, setUsersOptions] = useState()
@@ -45,9 +50,6 @@ const RedirectToModal = ({ redirectToModalOpen, setRedirectToModalOpen }) => {
   const [selectedSubsidiarie, setSelectedSubsidiarie] = useState()
   const [datetime, setDatetime] = useState()
   const [subsidiarieData, setSubsidiarieData] = useState()
-  const [readyToPrint, setReadyToPrint] = useState(false)
-
-  const printRef = useRef()
 
   useEffect(() => {
     if (!redirectToModalOpen) return
@@ -69,26 +71,20 @@ const RedirectToModal = ({ redirectToModalOpen, setRedirectToModalOpen }) => {
     })
   }, [redirectToModalOpen])
 
-  useEffect(() => {
-    if (readyToPrint) {
-      // Aguarda DOM re-renderizar
-      setTimeout(() => {
-        printJS({
-          printable: 'printable',
-          type: 'html',
-          scanStyles: true
-        })
-        setReadyToPrint(false)
-      }, 200)
-    }
-  }, [readyToPrint])
-
   const handleClose = () => setRedirectToModalOpen(false)
 
   const handleSubmit = async () => {
     const data = await api.get(`/subsidiaries/${selectedSubsidiarie?.value}`).then(res => res.data)
     setSubsidiarieData(data)
-    setReadyToPrint(true)
+
+    // Aguarda atualização do estado
+    setTimeout(() => {
+      printJS({
+        printable: 'printable',
+        type: 'html',
+        scanStyles: true
+      })
+    }, 100)
   }
 
   return (
@@ -126,17 +122,18 @@ const RedirectToModal = ({ redirectToModalOpen, setRedirectToModalOpen }) => {
         </Modal.Footer>
       </Modal>
 
-      <div id="printable" ref={printRef} style={{ display: 'none' }}>
-        {subsidiarieData && (
-          <RedirectToDoc
-            selectedUser={selectedUser}
-            selectedApplicant={selectedApplicant}
-            datetime={datetime}
-            subsidiarieData={subsidiarieData}
-          />
-        )}
+      {/* Conteúdo que será impresso */}
+      <div id="printable" style={{ display: 'none' }}>
+        <RedirectToDoc
+          selectedUser={selectedUser}
+          selectedApplicant={selectedApplicant}
+          selectedSubsidiarie={selectedSubsidiarie}
+          datetime={datetime}
+          subsidiarieData={subsidiarieData}
+        />
       </div>
 
+      {/* Estilos de impressão globais */}
       <style>
         {`
           @media print {
@@ -155,6 +152,7 @@ const RedirectToModal = ({ redirectToModalOpen, setRedirectToModalOpen }) => {
               top: 0;
               width: 100%;
               padding: 1cm;
+              box-sizing: border-box;
               background: white;
             }
 

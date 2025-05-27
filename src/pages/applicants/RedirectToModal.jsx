@@ -1,20 +1,17 @@
+import dayjs from "dayjs"
 import printJS from "print-js"
 import { useEffect, useRef, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactSelect from "react-select"
 import api from '../../services/api'
-import dayjs from "dayjs"
 
-const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie, datetime, subsidiarieData }) => {
+const RedirectToDoc = ({ selectedUser, selectedApplicant, datetime, subsidiarieData }) => {
   return (
     <div className="print-container">
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <div>
-          <img src="/logo.png" style={{ width: '80px' }} />
-        </div>
+        <img src="/logo.png" style={{ width: '80px' }} alt="Logo" />
       </div>
-
       <div>
         <p>Assunto: Encaminhamento de Candidato para Entrevista</p>
         <p>Prezado {selectedUser?.label},</p>
@@ -22,12 +19,10 @@ const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie, d
           Gostaríamos de informar que identificamos um candidato potencial para trabalhar no horário das 14:00 – 22:00 que você solicitou.
         </p>
         <p>Seguem os detalhes do candidato e da entrevista agendada:</p>
-        <p>Detalhes do Candidato:</p>
-        <p>Nome: {selectedApplicant?.label}</p>
-        <p>Currículo: Em Anexo</p>
-        <p>Detalhes da Entrevista:</p>
-        <p>Data e horário: {dayjs(datetime).format("DD/MM/YYYY [às] HH:mm")}</p>
-        <p>Endereço: {subsidiarieData?.adress}</p>
+        <p><strong>Nome:</strong> {selectedApplicant?.label}</p>
+        <p><strong>Currículo:</strong> Em Anexo</p>
+        <p><strong>Data e horário:</strong> {dayjs(datetime).format("DD/MM/YYYY [às] HH:mm")}</p>
+        <p><strong>Endereço:</strong> {subsidiarieData?.adress}</p>
         <p>
           Por favor, revise o currículo anexado e confirme a sua disponibilidade para conduzir a
           entrevista no horário agendado. Caso precise alterar a data ou horário, entre em
@@ -37,43 +32,6 @@ const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie, d
         <p>Atenciosamente,</p>
         <p>Recursos Humanos</p>
       </div>
-
-      <style>
-        {`
-          @media print {
-            body {
-              font-size: 12pt;
-              font-family: Arial, sans-serif;
-              margin: 0;
-              padding: 0;
-            }
-
-            .print-container {
-              padding: 1cm;
-              box-sizing: border-box;
-            }
-
-            table {
-              width: 100%;
-              border-collapse: collapse;
-            }
-
-            th, td {
-              padding: 6px;
-              text-align: left;
-            }
-
-            .avoid-break {
-              page-break-inside: avoid;
-            }
-          }
-
-          @page {
-            size: auto;
-            margin: 1cm;
-          }
-        `}
-      </style>
     </div>
   )
 }
@@ -86,8 +44,10 @@ const RedirectToModal = ({ redirectToModalOpen, setRedirectToModalOpen }) => {
   const [selectedUser, setSelectedUser] = useState()
   const [selectedSubsidiarie, setSelectedSubsidiarie] = useState()
   const [datetime, setDatetime] = useState()
+  const [subsidiarieData, setSubsidiarieData] = useState()
+  const [readyToPrint, setReadyToPrint] = useState(false)
 
-  const subsidiarieDataRef = useRef(null)
+  const printRef = useRef()
 
   useEffect(() => {
     if (!redirectToModalOpen) return
@@ -104,29 +64,35 @@ const RedirectToModal = ({ redirectToModalOpen, setRedirectToModalOpen }) => {
       setSubsidiariesOptions(res.data.map(opt => ({
         value: opt.id,
         label: opt.name,
-        address: opt.adress
+        adress: opt.adress
       })))
     })
   }, [redirectToModalOpen])
 
+  useEffect(() => {
+    if (readyToPrint) {
+      // Aguarda DOM re-renderizar
+      setTimeout(() => {
+        printJS({
+          printable: 'printable',
+          type: 'html',
+          scanStyles: true
+        })
+        setReadyToPrint(false)
+      }, 200)
+    }
+  }, [readyToPrint])
+
   const handleClose = () => setRedirectToModalOpen(false)
 
   const handleSubmit = async () => {
-    const subsidiarieData = await api.get(`/subsidiaries/${selectedSubsidiarie?.value}`).then(res => res.data)
-    subsidiarieDataRef.current = subsidiarieData
-
-    setTimeout(() => {
-      printJS({
-        printable: 'printable',
-        type: 'html',
-        scanStyles: true
-      })
-    }, 0)
+    const data = await api.get(`/subsidiaries/${selectedSubsidiarie?.value}`).then(res => res.data)
+    setSubsidiarieData(data)
+    setReadyToPrint(true)
   }
 
   return (
     <>
-      {/* Modal */}
       <Modal show={redirectToModalOpen} onHide={handleClose} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
           <Modal.Title>Emitir redirecionamento</Modal.Title>
@@ -137,14 +103,17 @@ const RedirectToModal = ({ redirectToModalOpen, setRedirectToModalOpen }) => {
             <label className="form-label fw-bold">Candidato:</label>
             <ReactSelect options={applicantsOptions} onChange={setSelectedApplicant} />
           </div>
+
           <div className="mb-3">
             <label className="form-label fw-bold">Usuário:</label>
             <ReactSelect options={usersOptions} onChange={setSelectedUser} />
           </div>
+
           <div className="mb-3">
             <label className="form-label fw-bold">Filial:</label>
             <ReactSelect options={subsidiariesOptions} onChange={setSelectedSubsidiarie} />
           </div>
+
           <div className="mb-3">
             <label className="form-label fw-bold">Data e horário:</label>
             <input type="datetime-local" className="form-control" onChange={e => setDatetime(e.target.value)} />
@@ -157,24 +126,45 @@ const RedirectToModal = ({ redirectToModalOpen, setRedirectToModalOpen }) => {
         </Modal.Footer>
       </Modal>
 
-      {/* Conteúdo invisível para impressão */}
-      <div
-        id="printable"
-        style={{
-          position: 'absolute',
-          top: '-9999px',
-          left: '-9999px',
-          visibility: 'hidden'
-        }}
-      >
-        <RedirectToDoc
-          selectedUser={selectedUser}
-          selectedApplicant={selectedApplicant}
-          selectedSubsidiarie={selectedSubsidiarie}
-          datetime={datetime}
-          subsidiarieData={subsidiarieDataRef.current}
-        />
+      <div id="printable" ref={printRef} style={{ display: 'none' }}>
+        {subsidiarieData && (
+          <RedirectToDoc
+            selectedUser={selectedUser}
+            selectedApplicant={selectedApplicant}
+            datetime={datetime}
+            subsidiarieData={subsidiarieData}
+          />
+        )}
       </div>
+
+      <style>
+        {`
+          @media print {
+            body * {
+              visibility: hidden !important;
+            }
+
+            #printable, #printable * {
+              visibility: visible !important;
+            }
+
+            #printable {
+              display: block !important;
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 100%;
+              padding: 1cm;
+              background: white;
+            }
+
+            @page {
+              size: auto;
+              margin: 1cm;
+            }
+          }
+        `}
+      </style>
     </>
   )
 }

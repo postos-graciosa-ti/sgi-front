@@ -1,10 +1,10 @@
+import dayjs from "dayjs"
 import printJS from "print-js"
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactSelect from "react-select"
 import api from '../../services/api'
-import dayjs from "dayjs"
 
 // Componente de conteúdo para impressão
 const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie, datetime, subsidiarieData }) => {

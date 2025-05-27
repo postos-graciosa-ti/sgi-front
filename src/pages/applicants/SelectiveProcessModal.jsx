@@ -2,12 +2,12 @@ import { useState } from 'react'
 import { CaretRightFill, Trash } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import Swal from 'sweetalert2'
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 import CoordinatorInterviewModal from './CoordinatorInterviewModal'
 import RhInterviewModal from './RhInterviewModal'
 import SeeApplicantsExamsModal from './SeeApplicantsExamsModal'
-import Swal from 'sweetalert2'
 
 const SelectiveProcessModal = (props) => {
   const { selectiveProcessModalOpen, setSelectiveProcessModalOpen, selectedApplicant, setApplicantsList, setSelectedApplicant } = props
@@ -81,6 +81,7 @@ const SelectiveProcessModal = (props) => {
     )
 
     const requestBody = {
+      id: selectedApplicant.id,
       name: selectedApplicant.name,
       email: selectedApplicant.email,
       message: isRejected ? failMessage : successMessage,
@@ -125,6 +126,8 @@ const SelectiveProcessModal = (props) => {
       .patch(`/applicants/${selectedApplicant?.id}`, requestBody)
       .then(() => handleClose())
   }
+
+  console.log(userSession?.id == selectedApplicant?.created_by)
 
   return (
     <Modal
@@ -177,6 +180,7 @@ const SelectiveProcessModal = (props) => {
                 <button
                   className="btn btn-light w-100 shadow fw-bold"
                   onClick={handleSendEmailFeedback}
+                  disabled={userSession.id !== selectedApplicant?.created_by}
                 >
                   E-mail
                 </button>
@@ -185,6 +189,7 @@ const SelectiveProcessModal = (props) => {
               <div className="col">
                 <button
                   className="btn btn-light w-100 shadow fw-bold"
+                  disabled={userSession.id !== selectedApplicant?.created_by}
                 >
                   WhatsApp
                 </button>
@@ -195,7 +200,7 @@ const SelectiveProcessModal = (props) => {
               <button
                 className="btn btn-danger w-100"
                 onClick={handleInactivateApplicant}
-                disabled={userSession?.id != selectedApplicant?.created_by && true}
+                disabled={userSession.id !== selectedApplicant?.created_by}
               >
                 <Trash />
               </button>

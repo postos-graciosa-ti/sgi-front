@@ -251,6 +251,8 @@ const Applicants = () => {
           <table className="table table-hover align-middle">
             <thead>
               <tr>
+                <th></th>
+
                 <th>Atendimento</th>
 
                 <th>Nome</th>
@@ -263,6 +265,16 @@ const Applicants = () => {
               {
                 applicantsList && applicantsList.map((applicant, i) => (
                   <tr key={applicant.id}>
+                    <td>
+                      {
+                        applicant.feedback_status === "sim" && (
+                          <span className="badge text-bg-success p-2">Retornado</span>
+                        ) || (
+                          <span className="badge text-bg-danger p-2">Não retornado</span>
+                        )
+                      }
+                    </td>
+
                     <td className="text-muted">
                       {applicant.attendance_date ? dayjs(applicant.attendance_date).format("DD/MM/YYYY") : ""}
                     </td>

@@ -30,6 +30,8 @@ import getParentsType from '../../requests/parentsType/getParentsType'
 import postWorkersParents from '../../requests/workersParents/postWorkersParents'
 import api from '../../services/api'
 import WorkerDataPrintContent from './WorkerDataPrintContent'
+import Swal from "sweetalert2"
+import dayjs from "dayjs"
 
 function calcularTempoDeEmpresa(dataAdmissaoStr) {
   const dataAdmissao = new Date(dataAdmissaoStr);
@@ -847,6 +849,32 @@ const EditWorkerModal = (props) => {
         return [workerDoc]
       }
     })
+  }
+
+  const handleSendEmailToMabecon = () => {
+    let requestBody = {
+      subsidiarie: selectedSubsdiarie?.label,
+      worker_name: selectedWorker?.worker_name,
+      worker_admission_date: dayjs(selectedWorker?.admission_date).format("DD/MM/YYYY"),
+    }
+
+    api
+      .post("/send-email-to-mabecon", requestBody)
+      .then((response) => {
+        if (response.status == 200) {
+          Swal.fire({
+            icon: "success",
+            title: "Sucesso :=)",
+            text: "E-mail enviado com sucesso",
+          })
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Erro :=(",
+            text: "Um erro inesperado ocorreu, verifique o cadastro de funcionário e tente novamente",
+          })
+        }
+      })
   }
 
   return (
@@ -2187,6 +2215,8 @@ const EditWorkerModal = (props) => {
 
       <Modal.Footer>
         <Button variant="light" onClick={handleClose}>Fechar</Button>
+
+        <Button variant="primary" onClick={handleSendEmailToMabecon}>Mabecon</Button>
 
         <Button variant="success" onClick={handleSubmit}>Salvar</Button>
       </Modal.Footer>

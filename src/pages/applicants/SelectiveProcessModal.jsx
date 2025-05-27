@@ -7,6 +7,7 @@ import api from '../../services/api'
 import CoordinatorInterviewModal from './CoordinatorInterviewModal'
 import RhInterviewModal from './RhInterviewModal'
 import SeeApplicantsExamsModal from './SeeApplicantsExamsModal'
+import Swal from 'sweetalert2'
 
 const SelectiveProcessModal = (props) => {
   const { selectiveProcessModalOpen, setSelectiveProcessModalOpen, selectedApplicant, setApplicantsList, setSelectedApplicant } = props
@@ -37,6 +38,82 @@ const SelectiveProcessModal = (props) => {
 
   const handleOpenCoordinatorInterviewModal = () => {
     setCoordinatorInterviewModalOpen(true)
+  }
+
+  const handleSendEmailFeedback = () => {
+    console.log(selectedApplicant.email, selectedApplicant.rh_opinion, selectedApplicant.coordinator_opinion)
+
+    let failMessage = `
+      Prezado(a) ${selectedApplicant.name}!
+
+      Agradecemos seu interesse em participar do nosso processo seletivo. 
+      No momento, optamos por não evoluir com a sua candidatura.
+      Vamos manter o seu currículo em nosso banco de talentos para novas
+      oportunidades e encorajamos que se inscreva em processos futuros.
+    
+      Desejamos sucesso em sua jornada profissional!
+      
+      Abraços,
+      
+      Time de RH
+      Postos Graciosa
+    `
+
+    let successMessage = `
+      Prezado(A) ${selectedApplicant.name}!,
+
+      Agradecemos a confiança e gentileza de nos ouvir.
+      Conforme conversamos, estamos muito felizes em lhe
+      informar que você foi aprovado para a próxima etapa do
+      nosso processo seletivo! Agora, vamos para a próxima
+      fase, em breve entraremos em contato passando mais
+      informações.
+
+      Abraços,
+      
+      Time de RH
+      Postos Graciosa
+    `
+
+    const isRejected = (
+      selectedApplicant.rh_opinion == "reprovado" ||
+      selectedApplicant.coordinator_opinion == "reprovado"
+    )
+
+    const requestBody = {
+      name: selectedApplicant.name,
+      email: selectedApplicant.email,
+      message: isRejected ? failMessage : successMessage,
+    }
+
+    if (requestBody.email == null || requestBody.email == undefined) {
+      Swal.fire({
+        icon: "error",
+        title: "Erro",
+        text: "Um erro inesperado ocorreu, verifique sua conexão e tente novamente mais tarde",
+        timer: 2000,
+      })
+    }
+
+    api
+      .post("/send-feedback-email", requestBody)
+      .then((response) => {
+        if (response.status == 200) {
+          Swal.fire({
+            icon: "success",
+            title: "Sucesso",
+            text: "E-mail encaminhado com sucesso",
+            timer: 2000,
+          })
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Erro",
+            text: "Um erro inesperado ocorreu, verifique sua conexão e tente novamente mais tarde",
+            timer: 2000,
+          })
+        }
+      })
   }
 
   const handleInactivateApplicant = () => {
@@ -91,14 +168,39 @@ const SelectiveProcessModal = (props) => {
           </div>
         </div>
 
-        <div className="mb-3">
-          <button
-            className="btn btn-danger w-100"
-            onClick={handleInactivateApplicant}
-            disabled={userSession?.id != selectedApplicant?.created_by && true}
-          >
-            <Trash /> Apagar processo seletivo
-          </button>
+        <div className="card mb-3 p-3">
+          <div className="card-body">
+            <div className="mb-4 fw-bold text-center">Retorno para candidato</div>
+
+            <div className="row">
+              <div className="col">
+                <button
+                  className="btn btn-light w-100 shadow fw-bold"
+                  onClick={handleSendEmailFeedback}
+                >
+                  E-mail
+                </button>
+              </div>
+
+              <div className="col">
+                <button
+                  className="btn btn-light w-100 shadow fw-bold"
+                >
+                  WhatsApp
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <button
+                className="btn btn-danger w-100"
+                onClick={handleInactivateApplicant}
+                disabled={userSession?.id != selectedApplicant?.created_by && true}
+              >
+                <Trash />
+              </button>
+            </div>
+          </div>
         </div>
       </Modal.Body>
 

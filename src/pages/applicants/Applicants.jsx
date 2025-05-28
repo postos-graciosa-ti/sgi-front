@@ -190,21 +190,21 @@ const Applicants = () => {
 
       <div className="container">
         <div>
-          <button className="btn btn-primary me-1 mb-3" onClick={handleOpenExamsEmissionModal}>
+          {/* <button className="btn btn-primary me-1 mb-3" onClick={handleOpenExamsEmissionModal}>
             Emitir provas
-          </button>
+          </button> */}
 
-          <button className="btn btn-primary me-1 mb-3" onClick={handleOpenExamsCorrectionModal}>
+          {/* <button className="btn btn-primary me-1 mb-3" onClick={handleOpenExamsCorrectionModal}>
             Corrigir provas
-          </button>
+          </button> */}
 
           <button className="btn btn-primary me-1 mb-3" onClick={handleOpenRedirectToModal}>
             Encaminhamento
           </button>
 
-          <button className="btn btn-primary me-1 mb-3" onClick={handlePrintDocsList}>
+          {/* <button className="btn btn-primary me-1 mb-3" onClick={handlePrintDocsList}>
             Lista de documentos
-          </button>
+          </button> */}
 
           <button className="btn btn-primary mb-3" onClick={handleOpenNewApplicantModal}>
             Novo candidato

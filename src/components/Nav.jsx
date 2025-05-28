@@ -155,16 +155,28 @@ const Nav = () => {
                 <Link className="nav-link" to="/update-notifications">Histórico de atualizações</Link>
               </li>
 
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link className="nav-link disabled" to="/">Tutoriais</Link>
-              </li>
+              </li> */}
 
-              <li className="nav-item">
-                <Link className="nav-link" to="/positions-table">Quadro de vagas</Link>
-              </li>
+              <li className="nav-item dropdown">
+                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Contratações
+                </a>
 
-              <li className="nav-item">
-                <Link className="nav-link" to="/applicants">Processos Seletivos</Link>
+                <ul className="dropdown-menu">
+                  <li>
+                    <Link className="dropdown-item" to="/positions-table">
+                      Quadro de vagas
+                    </Link>
+                  </li>
+
+                  <li>
+                    <Link className="dropdown-item" to="/applicants">
+                      Processos seletivos
+                    </Link>
+                  </li>
+                </ul>
               </li>
 
               <li className="nav-item dropdown">

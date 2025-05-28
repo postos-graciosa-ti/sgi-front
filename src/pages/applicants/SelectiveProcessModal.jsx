@@ -127,8 +127,6 @@ const SelectiveProcessModal = (props) => {
       .then(() => handleClose())
   }
 
-  console.log(userSession?.id == selectedApplicant?.created_by)
-
   return (
     <Modal
       show={selectiveProcessModalOpen}

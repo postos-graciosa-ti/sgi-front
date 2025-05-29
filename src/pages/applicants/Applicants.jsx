@@ -91,8 +91,6 @@ const Applicants = () => {
         dayjs(applicant.attendance_date).isSameOrBefore(dayjs(endDate))
       )
 
-      console.log(newApplicantsList)
-
       setApplicantsList(newApplicantsList)
     }
   }, [startDate, endDate])

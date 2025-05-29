@@ -465,7 +465,6 @@ const DocsModal = (props) => {
     }
 
     if (documentType.value == 3) {
-      console.log()
       printableContent = ReactDOMServer.renderToString(
         <HealthDoc
           selectedWorker={selectedWorker}

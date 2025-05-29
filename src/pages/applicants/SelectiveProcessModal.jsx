@@ -20,6 +20,67 @@ const SelectiveProcessModal = (props) => {
 
   const [coordinatorInterviewModalOpen, setCoordinatorInterviewModalOpen] = useState(false)
 
+  const [openWhatsapp, setOpenWhatsapp] = useState(false)
+
+  useEffect(() => {
+    if (openWhatsapp) {
+      let failMessage = `
+        Prezado(a) ${selectedApplicant?.name}!
+
+        Agradecemos seu interesse em participar do nosso processo seletivo. 
+        No momento, optamos por não evoluir com a sua candidatura.
+        Vamos manter o seu currículo em nosso banco de talentos para novas
+        oportunidades e encorajamos que se inscreva em processos futuros.
+      
+        Desejamos sucesso em sua jornada profissional!
+        
+        Abraços,
+        
+        Time de RH
+        Postos Graciosa
+      `
+
+      let successMessage = `
+        Prezado(A) ${selectedApplicant?.name}!,
+
+        Agradecemos a confiança e gentileza de nos ouvir.
+        Conforme conversamos, estamos muito felizes em lhe
+        informar que você foi aprovado para a próxima etapa do
+        nosso processo seletivo! Agora, vamos para a próxima
+        fase, em breve entraremos em contato passando mais
+        informações.
+
+        Segue lista de documentações: https://drive.google.com/file/d/1FefOkU4VNQlgBXiSREGngQD8Fr7AmY8n/view?usp=sharing
+
+        Abraços,
+        
+        Time de RH
+        Postos Graciosa
+      `
+
+      let isRejected = (
+        selectedApplicant?.rh_opinion == "reprovado" ||
+        selectedApplicant?.coordinator_opinion == "reprovado"
+      )
+
+      const phone = selectedApplicant?.mobile
+
+      const message = isRejected ? failMessage : successMessage
+
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+
+      window.open(url, '_blank')
+
+      let requestBody = {
+        whatsapp_feedback: "sim"
+      }
+
+      api.patch(`/applicants/${selectedApplicant?.id}`, requestBody)
+
+      setOpenWhatsapp(false)
+    }
+  }, [openWhatsapp])
+
   const handleClose = () => {
     api
       .get("/applicants")
@@ -125,51 +186,6 @@ const SelectiveProcessModal = (props) => {
       .then(() => handleClose())
   }
 
-  let failMessage = `
-      Prezado(a) ${selectedApplicant?.name}!
-
-      Agradecemos seu interesse em participar do nosso processo seletivo. 
-      No momento, optamos por não evoluir com a sua candidatura.
-      Vamos manter o seu currículo em nosso banco de talentos para novas
-      oportunidades e encorajamos que se inscreva em processos futuros.
-    
-      Desejamos sucesso em sua jornada profissional!
-      
-      Abraços,
-      
-      Time de RH
-      Postos Graciosa
-    `
-
-  let successMessage = `
-      Prezado(A) ${selectedApplicant?.name}!,
-
-      Agradecemos a confiança e gentileza de nos ouvir.
-      Conforme conversamos, estamos muito felizes em lhe
-      informar que você foi aprovado para a próxima etapa do
-      nosso processo seletivo! Agora, vamos para a próxima
-      fase, em breve entraremos em contato passando mais
-      informações.
-
-      Segue lista de documentações: https://drive.google.com/file/d/1FefOkU4VNQlgBXiSREGngQD8Fr7AmY8n/view?usp=sharing
-
-      Abraços,
-      
-      Time de RH
-      Postos Graciosa
-    `
-
-  let isRejected = (
-    selectedApplicant?.rh_opinion == "reprovado" ||
-    selectedApplicant?.coordinator_opinion == "reprovado"
-  )
-
-  const phone = selectedApplicant?.mobile
-
-  const message = isRejected ? failMessage : successMessage
-
-  const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
-
   return (
     <Modal
       show={selectiveProcessModalOpen}
@@ -228,7 +244,15 @@ const SelectiveProcessModal = (props) => {
               </div>
 
               <div className="col">
-                <a
+                <button
+                  className="btn btn-light w-100 shadow fw-bold"
+                  onClick={() => setOpenWhatsapp(true)}
+                  disabled={userSession.id !== selectedApplicant?.created_by}
+                >
+                  WhatsApp
+                </button>
+
+                {/* <a
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -236,7 +260,7 @@ const SelectiveProcessModal = (props) => {
                   disabled={userSession.id !== selectedApplicant?.created_by}
                 >
                   WhatsApp
-                </a>
+                </a> */}
               </div>
             </div>
 

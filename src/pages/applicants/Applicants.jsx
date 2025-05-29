@@ -231,189 +231,203 @@ const Applicants = () => {
           </div>
         </div>
 
-        {
-          applicantsList && applicantsList.map((applicant) => (
-            <div className="card mb-3 mt-3 shadow">
-              <div className="card-body">
-                <h5 className="card-title">{applicant.name}</h5>
+        <div className="mt-5">
+          {
+            applicantsList && applicantsList.map((applicant) => (
+              <div className="card mb-3 shadow">
+                <div className="card-body">
+                  <h5 className="card-title">{applicant.name}</h5>
 
-                <div className="text-muted mb-2">
-                  {applicant.attendance_date ? dayjs(applicant.attendance_date).format("DD/MM/YYYY") : ""}
-                </div>
+                  <div className="text-muted mb-2">
+                    {applicant.attendance_date ? dayjs(applicant.attendance_date).format("DD/MM/YYYY") : ""}
+                  </div>
 
-                {
+                  {
+                    applicant.email_feedback === "sim" && (
+                      <span className="badge text-bg-success p-2 me-2">Retorno E-mail</span>
+                    )
+                  }
+
+                  {
+                    applicant.whatsapp_feedback === "sim" && (
+                      <span className="badge text-bg-success p-2 me-2">Retorno WhatsApp</span>
+                    )
+                  }
+
+                  {/* {
                   applicant.feedback_status === "sim" && (
                     <span className="badge text-bg-success p-2">Retornado</span>
                   ) || (
                     <span className="badge text-bg-danger p-2">Não retornado</span>
                   )
-                }
-              </div>
+                } */}
+                </div>
 
-              <ul className="list-group list-group-flush">
-                <li className="list-group-item">
-                  <button
-                    className="btn btn-primary w-100"
-                    disabled={
-                      !(
-                        userSession?.id === applicant.created_by ||
-                        userSession?.id === applicant.redirect_to
+                <ul className="list-group list-group-flush">
+                  <li className="list-group-item">
+                    <button
+                      className="btn btn-primary w-100"
+                      disabled={
+                        !(
+                          userSession?.id === applicant.created_by ||
+                          userSession?.id === applicant.redirect_to
+                        )
+                      }
+                      onClick={() => handleOpenSelectiveProcessModal(applicant)}
+                    >
+                      Processo seletivo
+                    </button>
+                  </li>
+
+                  <li className="list-group-item">
+                    <label className="fw-bold mb-3">
+                      Parecer RH
+                    </label>
+
+                    <ReactSelect
+                      placeholder=""
+                      options={yesNoOptions}
+                      onChange={(opinion) => onChangeRhOpinion(opinion, applicant)}
+                      defaultValue={yesNoOptions.find((option) => option.value === applicant?.rh_opinion)}
+                      // isDisabled={!!applicant?.rh_opinion}
+                      isDisabled={
+                        userSession?.id != applicant.created_by && userSession?.id != applicant.redirect_to && true || !!applicant?.rh_opinion && true
+                      }
+                      className={`react-select ${applicant?.rh_opinion
+                        ? applicant.rh_opinion === "aprovado"
+                          ? "is-valid"
+                          : "is-invalid"
+                        : ""}`}
+                      classNamePrefix="react-select"
+                      styles={
+                        applicant?.rh_opinion
+                          ? applicant.rh_opinion === "aprovado"
+                            ? {
+                              control: (base) => ({
+                                ...base,
+                                borderColor: 'green',
+                                boxShadow: '0 0 0 0.25rem rgba(25, 135, 84, 0.25)',
+                                '&:hover': { borderColor: 'green' },
+                              }),
+                            }
+                            : {
+                              control: (base) => ({
+                                ...base,
+                                borderColor: '#dc3545',
+                                boxShadow: '0 0 0 0.25rem rgba(220, 53, 69, 0.25)',
+                                '&:hover': { borderColor: '#dc3545' },
+                              }),
+                            }
+                          : {}
+                      }
+                    />
+                  </li>
+
+                  <li className="list-group-item">
+                    <label className="fw-bold mb-3">
+                      Parecer gestor
+                    </label>
+
+                    <ReactSelect
+                      placeholder=""
+                      options={yesNoOptions}
+                      onChange={(opinion) => onChangeCoordinatorOpinion(opinion, applicant)}
+                      defaultValue={yesNoOptions.find((option) => option.value === applicant?.coordinator_opinion)}
+                      isDisabled={
+                        userSession?.id != applicant.created_by && userSession?.id != applicant.redirect_to && true || !!applicant?.coordinator_opinion && true
+                      }
+                      className={`react-select ${applicant?.coordinator_opinion
+                        ? applicant.coordinator_opinion === "aprovado"
+                          ? "is-valid"
+                          : "is-invalid"
+                        : ""}`}
+                      classNamePrefix="react-select"
+                      styles={
+                        applicant?.coordinator_opinion
+                          ? applicant.coordinator_opinion === "aprovado"
+                            ? {
+                              control: (base) => ({
+                                ...base,
+                                borderColor: 'green',
+                                boxShadow: '0 0 0 0.25rem rgba(25, 135, 84, 0.25)',
+                                '&:hover': { borderColor: 'green' },
+                              }),
+                            }
+                            : {
+                              control: (base) => ({
+                                ...base,
+                                borderColor: '#dc3545',
+                                boxShadow: '0 0 0 0.25rem rgba(220, 53, 69, 0.25)',
+                                '&:hover': { borderColor: '#dc3545' },
+                              }),
+                            }
+                          : {}
+                      }
+                    />
+                  </li>
+
+                  <li className="list-group-item">
+                    {
+                      applicant?.rh_opinion === "aprovado" &&
+                      applicant?.coordinator_opinion === "aprovado" && (
+                        <div style={{ minWidth: '180px' }}>
+                          {/* <label className="form-label fw-bold">
+                          Efetivar
+                        </label> */}
+
+                          <button
+                            className="btn btn-success w-100"
+                            onClick={() => handleOpenHireApplicantModal(applicant)}
+                            disabled={
+                              !(
+                                userSession?.id === applicant.created_by ||
+                                userSession?.id === applicant.redirect_to
+                              )
+                            }
+                          >
+                            Efetivar
+                          </button>
+                        </div>
+                      ) || applicant?.rh_opinion === "reprovado" && (
+                        <div style={{ minWidth: '180px' }}>
+                          {/* <label className="form-label fw-bold">
+                          Anotação especial
+                        </label> */}
+
+                          <button
+                            className="btn btn-dark w-100"
+                            onClick={() => handleOpenSpecialNotationMoal(applicant)}
+                            disabled={!(userSession?.id === applicant.created_by)}
+                          >
+                            Anotação especial
+                          </button>
+                        </div>
+                      ) || applicant?.coordinator_opinion === "reprovado" && (
+                        <div style={{ minWidth: '180px' }}>
+                          {/* <label className="form-label fw-bold">
+                          Anotação especial
+                        </label> */}
+
+                          <button
+                            className="btn btn-dark w-100"
+                            onClick={() => handleOpenSpecialNotationMoal(applicant)}
+                            disabled={!(userSession?.id === applicant.created_by)}
+                          >
+                            Anotação especial
+                          </button>
+                        </div>
                       )
                     }
-                    onClick={() => handleOpenSelectiveProcessModal(applicant)}
-                  >
-                    Processo seletivo
-                  </button>
-                </li>
+                  </li>
+                </ul>
 
-                <li className="list-group-item">
-                  <label className="fw-bold mb-3">
-                    Parecer RH
-                  </label>
-
-                  <ReactSelect
-                    placeholder=""
-                    options={yesNoOptions}
-                    onChange={(opinion) => onChangeRhOpinion(opinion, applicant)}
-                    defaultValue={yesNoOptions.find((option) => option.value === applicant?.rh_opinion)}
-                    // isDisabled={!!applicant?.rh_opinion}
-                    isDisabled={
-                      userSession?.id != applicant.created_by && userSession?.id != applicant.redirect_to && true || !!applicant?.rh_opinion && true
-                    }
-                    className={`react-select ${applicant?.rh_opinion
-                      ? applicant.rh_opinion === "aprovado"
-                        ? "is-valid"
-                        : "is-invalid"
-                      : ""}`}
-                    classNamePrefix="react-select"
-                    styles={
-                      applicant?.rh_opinion
-                        ? applicant.rh_opinion === "aprovado"
-                          ? {
-                            control: (base) => ({
-                              ...base,
-                              borderColor: 'green',
-                              boxShadow: '0 0 0 0.25rem rgba(25, 135, 84, 0.25)',
-                              '&:hover': { borderColor: 'green' },
-                            }),
-                          }
-                          : {
-                            control: (base) => ({
-                              ...base,
-                              borderColor: '#dc3545',
-                              boxShadow: '0 0 0 0.25rem rgba(220, 53, 69, 0.25)',
-                              '&:hover': { borderColor: '#dc3545' },
-                            }),
-                          }
-                        : {}
-                    }
-                  />
-                </li>
-
-                <li className="list-group-item">
-                  <label className="fw-bold mb-3">
-                    Parecer gestor
-                  </label>
-
-                  <ReactSelect
-                    placeholder=""
-                    options={yesNoOptions}
-                    onChange={(opinion) => onChangeCoordinatorOpinion(opinion, applicant)}
-                    defaultValue={yesNoOptions.find((option) => option.value === applicant?.coordinator_opinion)}
-                    isDisabled={
-                      userSession?.id != applicant.created_by && userSession?.id != applicant.redirect_to && true || !!applicant?.coordinator_opinion && true
-                    }
-                    className={`react-select ${applicant?.coordinator_opinion
-                      ? applicant.coordinator_opinion === "aprovado"
-                        ? "is-valid"
-                        : "is-invalid"
-                      : ""}`}
-                    classNamePrefix="react-select"
-                    styles={
-                      applicant?.coordinator_opinion
-                        ? applicant.coordinator_opinion === "aprovado"
-                          ? {
-                            control: (base) => ({
-                              ...base,
-                              borderColor: 'green',
-                              boxShadow: '0 0 0 0.25rem rgba(25, 135, 84, 0.25)',
-                              '&:hover': { borderColor: 'green' },
-                            }),
-                          }
-                          : {
-                            control: (base) => ({
-                              ...base,
-                              borderColor: '#dc3545',
-                              boxShadow: '0 0 0 0.25rem rgba(220, 53, 69, 0.25)',
-                              '&:hover': { borderColor: '#dc3545' },
-                            }),
-                          }
-                        : {}
-                    }
-                  />
-                </li>
-
-                <li className="list-group-item">
-                  {
-                    applicant?.rh_opinion === "aprovado" &&
-                    applicant?.coordinator_opinion === "aprovado" && (
-                      <div style={{ minWidth: '180px' }}>
-                        {/* <label className="form-label fw-bold">
-                          Efetivar
-                        </label> */}
-
-                        <button
-                          className="btn btn-success w-100"
-                          onClick={() => handleOpenHireApplicantModal(applicant)}
-                          disabled={
-                            !(
-                              userSession?.id === applicant.created_by ||
-                              userSession?.id === applicant.redirect_to
-                            )
-                          }
-                        >
-                          Efetivar
-                        </button>
-                      </div>
-                    ) || applicant?.rh_opinion === "reprovado" && (
-                      <div style={{ minWidth: '180px' }}>
-                        {/* <label className="form-label fw-bold">
-                          Anotação especial
-                        </label> */}
-
-                        <button
-                          className="btn btn-dark w-100"
-                          onClick={() => handleOpenSpecialNotationMoal(applicant)}
-                          disabled={!(userSession?.id === applicant.created_by)}
-                        >
-                          Anotação especial
-                        </button>
-                      </div>
-                    ) || applicant?.coordinator_opinion === "reprovado" && (
-                      <div style={{ minWidth: '180px' }}>
-                        {/* <label className="form-label fw-bold">
-                          Anotação especial
-                        </label> */}
-
-                        <button
-                          className="btn btn-dark w-100"
-                          onClick={() => handleOpenSpecialNotationMoal(applicant)}
-                          disabled={!(userSession?.id === applicant.created_by)}
-                        >
-                          Anotação especial
-                        </button>
-                      </div>
-                    )
-                  }
-                </li>
-              </ul>
-
-              <div className="card-body fw-bold text-center">
-                Não se esqueça de dar retorno ao candidato =)
+                <div className="card-body fw-bold text-center">
+                  Não se esqueça de dar retorno ao candidato =)
+                </div>
               </div>
-            </div>
-          ))
-        }
+            ))
+          }
+        </div>
 
         {/* <div>
           <table className="table table-hover align-middle">

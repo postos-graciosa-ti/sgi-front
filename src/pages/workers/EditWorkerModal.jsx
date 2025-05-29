@@ -1,4 +1,5 @@
 import axios from 'axios'
+import dayjs from "dayjs"
 import moment from 'moment'
 import printJS from 'print-js'
 import { useEffect, useState } from 'react'
@@ -8,6 +9,7 @@ import Modal from 'react-bootstrap/Modal'
 import ReactDOMServer from 'react-dom/server'
 import ReactInputMask from 'react-input-mask'
 import CreatableSelect from 'react-select/creatable'
+import Swal from "sweetalert2"
 import Input from '../../components/form/Input'
 import Select from "../../components/form/Select"
 import useUserSessionStore from '../../data/userSession'
@@ -29,81 +31,7 @@ import loadWagePaymentMethodOptions from '../../requests/loadOptions/loadWagePay
 import getParentsType from '../../requests/parentsType/getParentsType'
 import postWorkersParents from '../../requests/workersParents/postWorkersParents'
 import api from '../../services/api'
-// import WorkerDataPrintContent from './WorkerDataPrintContent'
-import Swal from "sweetalert2"
-import dayjs from "dayjs"
-
-const WorkerDataPrintContent = ({ worker }) => {
-  return (
-    <div className="worker-print-container">
-      <h2>Dados do Colaborador</h2>
-
-      <div className="section-title">Informações Básicas</div>
-      <div className="info-row">
-        <div className="info-label">Nome:</div>
-        <div className="info-value">{worker?.worker_name}</div>
-      </div>
-      <div className="info-row">
-        <div className="info-label">Matrícula:</div>
-        <div className="info-value">{worker?.worker_enrolment}</div>
-      </div>
-      <div className="info-row">
-        <div className="info-label">CPF:</div>
-        <div className="info-value">{worker?.cpf}</div>
-      </div>
-      <div className="info-row">
-        <div className="info-label">Data de Admissão:</div>
-        <div className="info-value">{moment(worker?.admission_date).format('DD/MM/YYYY')}</div>
-      </div>
-
-      <div className="section-title">Dados Pessoais</div>
-      <div className="info-row">
-        <div className="info-label">Data de Nascimento:</div>
-        <div className="info-value">{moment(worker?.birthdate).format('DD/MM/YYYY')}</div>
-      </div>
-      <div className="info-row">
-        <div className="info-label">Gênero:</div>
-        <div className="info-value">{worker?.gender?.name}</div>
-      </div>
-      <div className="info-row">
-        <div className="info-label">Estado Civil:</div>
-        <div className="info-value">{worker?.civil_status?.name}</div>
-      </div>
-
-      <div className="section-title">Contato</div>
-      <div className="info-row">
-        <div className="info-label">Telefone:</div>
-        <div className="info-value">{worker?.phone}</div>
-      </div>
-      <div className="info-row">
-        <div className="info-label">Celular:</div>
-        <div className="info-value">{worker?.mobile}</div>
-      </div>
-      <div className="info-row">
-        <div className="info-label">E-mail:</div>
-        <div className="info-value">{worker?.email}</div>
-      </div>
-
-      <div className="section-title">Dados Profissionais</div>
-      <div className="info-row">
-        <div className="info-label">Função:</div>
-        <div className="info-value">{worker?.function?.name}</div>
-      </div>
-      <div className="info-row">
-        <div className="info-label">Setor:</div>
-        <div className="info-value">{worker?.department?.name}</div>
-      </div>
-      <div className="info-row">
-        <div className="info-label">Centro de Custo:</div>
-        <div className="info-value">{worker?.cost_center?.name}</div>
-      </div>
-      <div className="info-row">
-        <div className="info-label">Salário:</div>
-        <div className="info-value">{worker?.wage}</div>
-      </div>
-    </div>
-  );
-};
+import WorkerDataPrintContent from './WorkerDataPrintContent'
 
 function calcularTempoDeEmpresa(dataAdmissaoStr) {
   const dataAdmissao = new Date(dataAdmissaoStr);
@@ -951,22 +879,17 @@ const EditWorkerModal = (props) => {
 
   const handlePrintWorkerData = () => {
     const printContent = ReactDOMServer.renderToString(
-      <WorkerDataPrintContent worker={selectedWorker} />
-    );
+      <WorkerDataPrintContent
+        selectedWorker={selectedWorker}
+        selectedSubsdiarie={selectedSubsdiarie}
+      />
+    )
 
     printJS({
       printable: printContent,
       type: 'raw-html',
-      style: `
-      body { font-family: Arial, sans-serif; }
-      .worker-info { margin-bottom: 20px; }
-      .section-title { font-weight: bold; margin-bottom: 10px; }
-      .info-row { display: flex; margin-bottom: 5px; }
-      .info-label { width: 200px; font-weight: bold; }
-      .info-value { flex: 1; }
-    `
-    });
-  };
+    })
+  }
 
   return (
     <Modal

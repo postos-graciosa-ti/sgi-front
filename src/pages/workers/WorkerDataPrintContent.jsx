@@ -1,4 +1,4 @@
-import moment from "moment"
+import dayjs from "dayjs"
 
 const WorkerDataPrintContent = ({ selectedWorker, selectedSubsdiarie }) => {
   return (
@@ -13,15 +13,43 @@ const WorkerDataPrintContent = ({ selectedWorker, selectedSubsdiarie }) => {
         </div>
       </div>
 
-      <div>
-        <h4>Dados pessoais</h4>
+      <div style={{ "margin": "20px" }}>
+        <h4>Ficha de colaborador</h4>
       </div>
 
-      <div>
+      <div style={{ "margin": "20px" }}>
         <span><b>Nome</b>: {selectedWorker?.worker_name}</span>
       </div>
 
-      <div>
+      <div style={{ "margin": "20px" }}>
+        <span><b>Data de nascimento</b>: {dayjs(selectedWorker?.birthdate).format("DD/MM/YYYY")}</span>
+      </div>
+
+      <div style={{ "margin": "20px" }}>
+        <span><b>Data de admissão</b>: {dayjs(selectedWorker?.admission_date).format("DD/MM/YYYY")}</span>
+      </div>
+
+      <div style={{ "margin": "20px" }}>
+        <span><b>RG</b>: {selectedWorker?.rg}</span>
+      </div>
+
+      <div style={{ "margin": "20px" }}>
+        <span><b>CTPS</b>: {selectedWorker?.ctps}</span>
+      </div>
+
+      <div style={{ "margin": "20px" }}>
+        <span><b>PIS</b>: {selectedWorker?.pis}</span>
+      </div>
+
+      <div style={{ "margin": "20px" }}>
+        <span><b>CPF</b>: {selectedWorker?.cpf}</span>
+      </div>
+
+      <div style={{ "margin": "20px" }}>
+        <span><b>E-social</b>: {selectedWorker?.esocial}</span>
+      </div>
+
+      {/* <div>
         <span><b>Turno</b>: {selectedWorker?.turn_start_time} - {selectedWorker?.turn_end_time}</span>
       </div>
 
@@ -39,7 +67,7 @@ const WorkerDataPrintContent = ({ selectedWorker, selectedSubsdiarie }) => {
 
       <div>
         <span><b>Setor</b>: {selectedWorker?.department}</span>
-      </div>
+      </div> */}
     </>
   )
 }

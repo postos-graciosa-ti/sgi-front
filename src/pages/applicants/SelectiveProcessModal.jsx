@@ -95,7 +95,7 @@ const SelectiveProcessModal = (props) => {
     }
 
     api
-      .post("/send-feedback-email", requestBody)
+      .post("/applicants/send-feedback-email", requestBody)
       .then((response) => {
         if (response.status == 200) {
           Swal.fire({

@@ -29,9 +29,81 @@ import loadWagePaymentMethodOptions from '../../requests/loadOptions/loadWagePay
 import getParentsType from '../../requests/parentsType/getParentsType'
 import postWorkersParents from '../../requests/workersParents/postWorkersParents'
 import api from '../../services/api'
-import WorkerDataPrintContent from './WorkerDataPrintContent'
+// import WorkerDataPrintContent from './WorkerDataPrintContent'
 import Swal from "sweetalert2"
 import dayjs from "dayjs"
+
+const WorkerDataPrintContent = ({ worker }) => {
+  return (
+    <div className="worker-print-container">
+      <h2>Dados do Colaborador</h2>
+
+      <div className="section-title">Informações Básicas</div>
+      <div className="info-row">
+        <div className="info-label">Nome:</div>
+        <div className="info-value">{worker?.worker_name}</div>
+      </div>
+      <div className="info-row">
+        <div className="info-label">Matrícula:</div>
+        <div className="info-value">{worker?.worker_enrolment}</div>
+      </div>
+      <div className="info-row">
+        <div className="info-label">CPF:</div>
+        <div className="info-value">{worker?.cpf}</div>
+      </div>
+      <div className="info-row">
+        <div className="info-label">Data de Admissão:</div>
+        <div className="info-value">{moment(worker?.admission_date).format('DD/MM/YYYY')}</div>
+      </div>
+
+      <div className="section-title">Dados Pessoais</div>
+      <div className="info-row">
+        <div className="info-label">Data de Nascimento:</div>
+        <div className="info-value">{moment(worker?.birthdate).format('DD/MM/YYYY')}</div>
+      </div>
+      <div className="info-row">
+        <div className="info-label">Gênero:</div>
+        <div className="info-value">{worker?.gender?.name}</div>
+      </div>
+      <div className="info-row">
+        <div className="info-label">Estado Civil:</div>
+        <div className="info-value">{worker?.civil_status?.name}</div>
+      </div>
+
+      <div className="section-title">Contato</div>
+      <div className="info-row">
+        <div className="info-label">Telefone:</div>
+        <div className="info-value">{worker?.phone}</div>
+      </div>
+      <div className="info-row">
+        <div className="info-label">Celular:</div>
+        <div className="info-value">{worker?.mobile}</div>
+      </div>
+      <div className="info-row">
+        <div className="info-label">E-mail:</div>
+        <div className="info-value">{worker?.email}</div>
+      </div>
+
+      <div className="section-title">Dados Profissionais</div>
+      <div className="info-row">
+        <div className="info-label">Função:</div>
+        <div className="info-value">{worker?.function?.name}</div>
+      </div>
+      <div className="info-row">
+        <div className="info-label">Setor:</div>
+        <div className="info-value">{worker?.department?.name}</div>
+      </div>
+      <div className="info-row">
+        <div className="info-label">Centro de Custo:</div>
+        <div className="info-value">{worker?.cost_center?.name}</div>
+      </div>
+      <div className="info-row">
+        <div className="info-label">Salário:</div>
+        <div className="info-value">{worker?.wage}</div>
+      </div>
+    </div>
+  );
+};
 
 function calcularTempoDeEmpresa(dataAdmissaoStr) {
   const dataAdmissao = new Date(dataAdmissaoStr);
@@ -877,6 +949,25 @@ const EditWorkerModal = (props) => {
       })
   }
 
+  const handlePrintWorkerData = () => {
+    const printContent = ReactDOMServer.renderToString(
+      <WorkerDataPrintContent worker={selectedWorker} />
+    );
+
+    printJS({
+      printable: printContent,
+      type: 'raw-html',
+      style: `
+      body { font-family: Arial, sans-serif; }
+      .worker-info { margin-bottom: 20px; }
+      .section-title { font-weight: bold; margin-bottom: 10px; }
+      .info-row { display: flex; margin-bottom: 5px; }
+      .info-label { width: 200px; font-weight: bold; }
+      .info-value { flex: 1; }
+    `
+    });
+  };
+
   return (
     <Modal
       show={editWorkerModalOpen}
@@ -890,11 +981,13 @@ const EditWorkerModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
-        {/* <div>
-          <button className="btn btn-light mb-2" onClick={handlePrintWorkerData}>
-            <Printer />
-          </button>
-        </div> */}
+        <button
+          className="btn btn-light ms-2"
+          onClick={handlePrintWorkerData}
+          title="Imprimir dados do colaborador"
+        >
+          <Printer />
+        </button>
 
         <div>
           <h4>Dados pessoais</h4>

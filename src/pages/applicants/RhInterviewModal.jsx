@@ -185,6 +185,8 @@ const RhInterviewModal = (props) => {
 
   const [redirecToModalOpen, setRedirectToModalOpen] = useState(false)
 
+  const [mobile, setMobile] = useState()
+
   useEffect(() => {
     api
       .get("/users")
@@ -296,6 +298,7 @@ const RhInterviewModal = (props) => {
       antepenultima_experiencia: antepenultimaExperiencia,
       escolaridade: selectedSchoolLevel,
       email: email,
+      mobile: mobile,
     }
 
     api
@@ -480,6 +483,20 @@ const RhInterviewModal = (props) => {
               onChange={(e) => setEmail(e.target.value)}
               defaultValue={selectedApplicant?.email}
               disabled={selectedApplicant?.email && true}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              Celular
+            </label>
+
+            <input
+              type="text"
+              className="form-control"
+              onChange={(e) => setMobile(e.target.value)}
+              defaultValue={selectedApplicant?.mobile}
+              disabled={selectedApplicant?.mobile && true}
             />
           </div>
 

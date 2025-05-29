@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CaretRightFill, Trash } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
@@ -41,8 +41,6 @@ const SelectiveProcessModal = (props) => {
   }
 
   const handleSendEmailFeedback = () => {
-    console.log(selectedApplicant.email, selectedApplicant.rh_opinion, selectedApplicant.coordinator_opinion)
-
     let failMessage = `
       Prezado(a) ${selectedApplicant.name}!
 
@@ -127,6 +125,51 @@ const SelectiveProcessModal = (props) => {
       .then(() => handleClose())
   }
 
+  let failMessage = `
+      Prezado(a) ${selectedApplicant?.name}!
+
+      Agradecemos seu interesse em participar do nosso processo seletivo. 
+      No momento, optamos por não evoluir com a sua candidatura.
+      Vamos manter o seu currículo em nosso banco de talentos para novas
+      oportunidades e encorajamos que se inscreva em processos futuros.
+    
+      Desejamos sucesso em sua jornada profissional!
+      
+      Abraços,
+      
+      Time de RH
+      Postos Graciosa
+    `
+
+  let successMessage = `
+      Prezado(A) ${selectedApplicant?.name}!,
+
+      Agradecemos a confiança e gentileza de nos ouvir.
+      Conforme conversamos, estamos muito felizes em lhe
+      informar que você foi aprovado para a próxima etapa do
+      nosso processo seletivo! Agora, vamos para a próxima
+      fase, em breve entraremos em contato passando mais
+      informações.
+
+      Segue lista de documentações: https://drive.google.com/file/d/1FefOkU4VNQlgBXiSREGngQD8Fr7AmY8n/view?usp=sharing
+
+      Abraços,
+      
+      Time de RH
+      Postos Graciosa
+    `
+
+  let isRejected = (
+    selectedApplicant?.rh_opinion == "reprovado" ||
+    selectedApplicant?.coordinator_opinion == "reprovado"
+  )
+
+  const phone = selectedApplicant?.mobile
+
+  const message = isRejected ? failMessage : successMessage
+
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+
   return (
     <Modal
       show={selectiveProcessModalOpen}
@@ -185,12 +228,15 @@ const SelectiveProcessModal = (props) => {
               </div>
 
               <div className="col">
-                <button
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="btn btn-light w-100 shadow fw-bold"
                   disabled={userSession.id !== selectedApplicant?.created_by}
                 >
                   WhatsApp
-                </button>
+                </a>
               </div>
             </div>
 

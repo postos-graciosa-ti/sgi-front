@@ -481,6 +481,10 @@ const Scale = () => {
 
     const isHoliday = allHollidays?.some(holiday => holiday.date === formattedDate)
 
+    if (selectedWorker?.label == "Maria Luisa de Oliveira") {
+      return false
+    }
+
     if (isHoliday) return true
 
     if (isCaixaFunction && selectedSubsdiarie.value !== 2 && selectedSubsdiarie.value !== 3) {

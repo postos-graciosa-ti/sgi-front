@@ -15,7 +15,7 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
             <div>
               <div><b>Nome:</b></div>
 
-              <div>{worker?.worker_name}</div>
+              <div>{worker?.worker_name?.split(" ")[0]}</div>
 
               <div style={{ marginTop: "15px" }}><b>Função:</b></div>
 

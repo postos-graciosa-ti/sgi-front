@@ -20,6 +20,7 @@ import DeleteScaleModal from "./DeleteScaleModal"
 import HollidaysModal from "./HollidaysModal"
 import PrintModal from "./PrintModal"
 import ScaleLogsModal from "./ScaleLogsModal"
+import EditWorkerModal from "./EditWorkerModal"
 
 const Scale = () => {
   const firstDayOfMonth = moment().startOf('month')
@@ -81,6 +82,8 @@ const Scale = () => {
   const [filterStartDate, setFilterStartDate] = useState()
 
   const [filterEndDate, setFilterEndDate] = useState()
+
+  const [editWorkerModalOpen, setEditWorkerModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -503,11 +506,22 @@ const Scale = () => {
     }
   }
 
+  const handleOpenEditWorkerModal = () => {
+    setEditWorkerModalOpen(true)
+  }
+
   return (
     <>
       <Nav />
 
       <div className="container">
+        <button
+          onClick={handleOpenEditWorkerModal}
+          className="btn btn-primary mt-3 mb-3"
+        >
+          Alterar dados de colaborador
+        </button>
+
         <div id="turn-select" className="mb-3">
           <ReactSelect
             placeholder="Selecione um turno"
@@ -580,9 +594,9 @@ const Scale = () => {
           />
         </div>
 
-        <div className="mb-2 text-end">
+        <div className="mt-5 mb-2 text-end">
           <button
-            className="btn btn-warning me-2"
+            className="btn btn-warning mt-2 me-2"
             onClick={() => initTour(scaleSteps)}
           >
             <Question />
@@ -590,7 +604,7 @@ const Scale = () => {
 
           <button
             id="days-on-report"
-            className="btn btn-primary me-2"
+            className="btn btn-primary me-2 mt-2"
             onClick={() => setScaleHistoryModalOpen(true)}
           >
             Relatório de dias de trabalho
@@ -598,7 +612,7 @@ const Scale = () => {
 
           <button
             id="days-off-report"
-            className="btn btn-primary me-2"
+            className="btn btn-primary me-2 mt-2"
             onClick={() => setDaysOffModalOpen(true)}
           >
             Relatório de dias de folga
@@ -794,6 +808,11 @@ const Scale = () => {
       <HollidaysModal
         hollidaysModalOpen={hollidaysModalOpen}
         setHollidaysModalOpen={setHollidaysModalOpen}
+      />
+
+      <EditWorkerModal
+        editWorkerModalOpen={editWorkerModalOpen}
+        setEditWorkerModalOpen={setEditWorkerModalOpen}
       />
 
       <style>

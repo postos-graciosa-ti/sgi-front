@@ -481,8 +481,8 @@ const Scale = () => {
 
     const isHoliday = allHollidays?.some(holiday => holiday.date === formattedDate)
 
-    if (selectedWorker?.label == "Maria Luisa de Oliveira") {
-      return false
+    if (selectedWorker?.label?.toLowerCase().trim() === "maria luisa de oliveira") {
+      return false;
     }
 
     if (isHoliday) return true

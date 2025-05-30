@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react"
-import { ArrowClockwise, FileEarmarkPdf, FiletypeDocx, FiletypeXlsx, Funnel, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX, Question } from "react-bootstrap-icons"
+import { ArrowClockwise, FileEarmarkPdf, FiletypeDocx, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX } from "react-bootstrap-icons"
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
-import initTour from "../../driverjs/initTour"
-import workersSteps from "../../driverjs/workersSteps"
 import { useScreenSize } from "../../hooks/useScreenSize"
 import api from "../../services/api"
 import AdmissionsReportModal from "./AdmissionsReportModal"
@@ -270,237 +268,244 @@ const Workers = () => {
       <div className="container">
         <h4>Cadastro de colaboradores</h4>
 
-        <>
-          <div className=" mt-4 mb-4">
-            <button
-              className="btn btn-warning me-2"
-              onClick={() => initTour(workersSteps)}
-            >
-              <Question />
+        <div className="d-inline-flex">
+          <button
+            type="button"
+            className="btn btn-primary me-3 mt-3 mb-3"
+            onClick={handleOpenAddWorkerModal}
+            id="addWorker"
+            title="Adicionar colaborador"
+          >
+            <PersonAdd />
+          </button>
+
+          <div className="dropdown mt-3">
+            <button className="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Mais operações
             </button>
 
-            <button className="btn btn-success me-2" title="Adaptar planilha do ponto" onClick={handleOpenModifyWorkpointModal}>
-              <FiletypeXlsx />
-            </button>
-
-            <button
-              id="workerResignation"
-              className="btn btn-danger me-2"
-              onClick={handleOpenResigntaionReasonsReportModal}
-              title="Filtrar demissões"
-            >
-              <Funnel />
-            </button>
-
-            <button
-              className="btn btn-success me-2"
-              onClick={handleOpenWorkerByTurnModal}
-              title="Filtrar colaboradores por turno e por função"
-            >
-              <Funnel />
-            </button>
-
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={handleOpenAddWorkerModal}
-              id="addWorker"
-              title="Adicionar colaborador"
-            >
-              <PersonAdd />
-            </button>
-
-            <button
-              className="btn btn-primary ms-2"
-              onClick={handleOpenGetNrList}
-            >
-              NR20
-            </button>
-
-            <button
-              className="btn btn-primary ms-2"
-              onClick={handleOpenAdmissionsReportModal}
-            >
-              Filtro de admitidos
-            </button>
-          </div>
-
-          <div className="mb-4">
-            <div className="row">
-              <div className="col-5">
-                <ReactSelect
-                  options={workersList?.map((option) => ({
-                    value: option.worker_id,
-                    label: option.worker_name,
-                  }))}
-                  onChange={(option) => {
-                    const selectedWorker = workersList?.find(
-                      (worker) => worker.worker_id === option?.value
-                    )
-                    if (selectedWorker) {
-                      setWorkersList([selectedWorker])
-                    }
-                  }}
-                />
-              </div>
-
-              <div className="col-5">
-                <ReactSelect
-                  options={[
-                    { value: 1, label: "Somente ativos" },
-                    { value: 2, label: "Somente afastados" },
-                    { value: 3, label: "Somente inativos" },
-                    { value: 4, label: "Sem filtros" },
-                  ]}
-                  placeholder="Filtrar colaboradores"
-                  onChange={(value) => setWorkersStatus(value)}
-                  defaultValue={{ value: 1, label: "Somente ativos" }}
-                />
-              </div>
-
-              <div className="col-2 text-center">
+            <ul className="dropdown-menu">
+              <li>
                 <button
-                  className="btn btn-primary"
-                  onClick={handleResetWorkersList}
+                  className="dropdown-item"
+                  onClick={handleOpenModifyWorkpointModal}
                 >
-                  <ArrowClockwise />
+                  Atualizar planilha de ponto
                 </button>
-              </div>
+              </li>
+
+              <li>
+                <button
+                  className="dropdown-item"
+                  onClick={handleOpenResigntaionReasonsReportModal}
+                >
+                  Filtro de demissões
+                </button>
+              </li>
+
+              <li>
+                <button
+                  className="dropdown-item"
+                  onClick={handleOpenWorkerByTurnModal}
+                >
+                  Filtrar colaboradores por turno e por função
+                </button>
+              </li>
+
+              <li>
+                <button
+                  className="dropdown-item"
+                  onClick={handleOpenGetNrList}
+                >
+                  NR-20
+                </button>
+              </li>
+
+              <li>
+                <button
+                  className="dropdown-item"
+                  onClick={handleOpenAdmissionsReportModal}
+                >
+                  Filtro de admitidos
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mb-4">
+          <div className="row">
+            <div className="col-5">
+              <ReactSelect
+                options={workersList?.map((option) => ({
+                  value: option.worker_id,
+                  label: option.worker_name,
+                }))}
+                onChange={(option) => {
+                  const selectedWorker = workersList?.find(
+                    (worker) => worker.worker_id === option?.value
+                  )
+                  if (selectedWorker) {
+                    setWorkersList([selectedWorker])
+                  }
+                }}
+              />
+            </div>
+
+            <div className="col-5">
+              <ReactSelect
+                options={[
+                  { value: 1, label: "Somente ativos" },
+                  { value: 2, label: "Somente afastados" },
+                  { value: 3, label: "Somente inativos" },
+                  { value: 4, label: "Sem filtros" },
+                ]}
+                placeholder="Filtrar colaboradores"
+                onChange={(value) => setWorkersStatus(value)}
+                defaultValue={{ value: 1, label: "Somente ativos" }}
+              />
+            </div>
+
+            <div className="col-2 text-center">
+              <button
+                className="btn btn-primary"
+                onClick={handleResetWorkersList}
+              >
+                <ArrowClockwise />
+              </button>
             </div>
           </div>
-        </>
+        </div>
 
-        <>
-          {
-            workersList && workersList.map((worker) => (
-              <div key={worker.id} className="card mb-4">
-                <div className="card-body">
-                  <h5 className="card-title">{worker.worker_name}</h5>
+        {
+          workersList && workersList.map((worker) => (
+            <div key={worker.id} className="card mb-4">
+              <div className="card-body">
+                <h5 className="card-title">{worker.worker_name}</h5>
+                {
+                  worker.worker_is_active && !worker.is_away && (
+                    <span className="badge text-bg-success p-2">Ativo</span>
+                  )
+                }
+
+                {
+                  !worker.worker_is_active && (
+                    <span className="badge text-bg-danger p-2">Inativo</span>
+                  )
+                }
+
+                {
+                  worker.is_away && (
+                    <span className="badge text-bg-warning p-2">Afastado</span>
+                  )
+                }
+              </div>
+
+              <ul className="list-group list-group-flush">
+                <li className="list-group-item">
+                  <button
+                    className="btn btn-warning me-2 mt-2"
+                    onClick={() => handleOpenEditWorkerModal(worker)}
+                    id="editWorker"
+                    aria-label={`Editar informações de ${worker.worker_name}`}
+                    title="Editar colaborador"
+                  >
+                    <PersonGear />
+                  </button>
+
+                  <button
+                    className="btn btn-warning me-2 mt-2"
+                    onClick={() => handleOpenWorkerDocsModal(worker)}
+                    title="Visualizar documentos"
+                  >
+                    <FileEarmarkPdf />
+                  </button>
+                </li>
+
+                <li className="list-group-item">
+                  <button
+                    className="btn btn-danger me-2 mt-2"
+                    title="Afastar colaborador"
+                    onClick={() => handleOpenWorkerAwayModal(worker)}
+                  >
+                    <PersonSlash />
+                  </button>
+
+                  <button
+                    className="btn btn-danger me-2 mt-2"
+                    onClick={() => handleOpenDeleteWorkerModal(worker)}
+                    id="deleteWorker"
+                    aria-label={`Excluir ${worker.worker_name}`}
+                    title="Demitir colaborador"
+                  >
+                    <PersonX />
+                  </button>
+
                   {
-                    worker.worker_is_active && !worker.is_away && (
-                      <span className="badge text-bg-success p-2">Ativo</span>
+                    worker.is_away && (
+                      <button
+                        className="btn btn-warning me-2 mt-2"
+                        title="Retorno ao trabalho"
+                        onClick={() => handleOpenWorkerReturnModal(worker)}
+                      >
+                        <ArrowClockwise />
+                      </button>
                     )
                   }
 
                   {
                     !worker.worker_is_active && (
-                      <span className="badge text-bg-danger p-2">Inativo</span>
-                    )
-                  }
-
-                  {
-                    worker.is_away && (
-                      <span className="badge text-bg-warning p-2">Afastado</span>
-                    )
-                  }
-                </div>
-
-                <ul className="list-group list-group-flush">
-                  <li className="list-group-item">
-                    <button
-                      className="btn btn-warning me-2 mt-2"
-                      onClick={() => handleOpenEditWorkerModal(worker)}
-                      id="editWorker"
-                      aria-label={`Editar informações de ${worker.worker_name}`}
-                      title="Editar colaborador"
-                    >
-                      <PersonGear />
-                    </button>
-
-                    <button
-                      className="btn btn-warning me-2 mt-2"
-                      onClick={() => handleOpenWorkerDocsModal(worker)}
-                      title="Visualizar documentos"
-                    >
-                      <FileEarmarkPdf />
-                    </button>
-                  </li>
-
-                  <li className="list-group-item">
-                    <button
-                      className="btn btn-danger me-2 mt-2"
-                      title="Afastar colaborador"
-                      onClick={() => handleOpenWorkerAwayModal(worker)}
-                    >
-                      <PersonSlash />
-                    </button>
-
-                    <button
-                      className="btn btn-danger me-2 mt-2"
-                      onClick={() => handleOpenDeleteWorkerModal(worker)}
-                      id="deleteWorker"
-                      aria-label={`Excluir ${worker.worker_name}`}
-                      title="Demitir colaborador"
-                    >
-                      <PersonX />
-                    </button>
-
-                    {
-                      worker.is_away && (
+                      <>
                         <button
                           className="btn btn-warning me-2 mt-2"
-                          title="Retorno ao trabalho"
-                          onClick={() => handleOpenWorkerReturnModal(worker)}
+                          onClick={() => handleOpenReactivateWorkerModal(worker)}
+                          title="readmitir"
                         >
                           <ArrowClockwise />
                         </button>
-                      )
-                    }
+                      </>
+                    )
+                  }
+                </li>
 
-                    {
-                      !worker.worker_is_active && (
-                        <>
-                          <button
-                            className="btn btn-warning me-2 mt-2"
-                            onClick={() => handleOpenReactivateWorkerModal(worker)}
-                            title="readmitir"
-                          >
-                            <ArrowClockwise />
-                          </button>
-                        </>
-                      )
-                    }
-                  </li>
+                <li className="list-group-item">
+                  <button
+                    className="btn btn-primary me-2 mt-2"
+                    title="Emitir documentos"
+                    onClick={() => handleOpenDocsModal(worker)}
+                  >
+                    <FiletypeDocx />
+                  </button>
 
-                  <li className="list-group-item">
-                    <button
-                      className="btn btn-primary me-2 mt-2"
-                      title="Emitir documentos"
-                      onClick={() => handleOpenDocsModal(worker)}
-                    >
-                      <FiletypeDocx />
-                    </button>
+                  <button
+                    className="btn btn-primary me-2 mt-2"
+                    title="Emitir crachá"
+                    onClick={() => handleIssueBadge(worker)}
+                  >
+                    <PersonBadge />
+                  </button>
 
-                    <button
-                      className="btn btn-primary me-2 mt-2"
-                      title="Emitir crachá"
-                      onClick={() => handleIssueBadge(worker)}
-                    >
-                      <PersonBadge />
-                    </button>
+                  <button
+                    className="btn btn-primary me-2 mt-2"
+                    onClick={() => handleOpenWorkerNotation(worker)}
+                    title="Adicionar observação"
+                    id="workerObservation"
+                  >
+                    <Pen />
+                  </button>
 
-                    <button
-                      className="btn btn-primary me-2 mt-2"
-                      onClick={() => handleOpenWorkerNotation(worker)}
-                      title="Adicionar observação"
-                      id="workerObservation"
-                    >
-                      <Pen />
-                    </button>
-
-                    <button
-                      className="btn btn-primary me-2 mt-2"
-                      title="Avaliação de tempo de experiência"
-                      onClick={() => handleOpenExperienceTimeModal(worker)}
-                    >
-                      <HourglassSplit />
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            ))
-          }
-        </>
+                  <button
+                    className="btn btn-primary me-2 mt-2"
+                    title="Avaliação de tempo de experiência"
+                    onClick={() => handleOpenExperienceTimeModal(worker)}
+                  >
+                    <HourglassSplit />
+                  </button>
+                </li>
+              </ul>
+            </div>
+          ))
+        }
       </div>
 
       <CreateWorkerModal

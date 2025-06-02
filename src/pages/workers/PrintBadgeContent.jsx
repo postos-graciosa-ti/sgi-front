@@ -12,51 +12,39 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
           </div>
 
           <div className="center-flex">
-            <div>
-              <div><b>Nome:</b></div>
+            {/* Pode manter essa área vazia se desejar */}
+          </div>
 
-              <div>{worker?.worker_name?.split(" ")[0]}</div>
-
-              <div style={{ marginTop: "15px" }}><b>Função:</b></div>
-
-              <div>{worker?.function_name}</div>
-            </div>
+          <div className="worker-info-bottom">
+            <div><b>{worker?.worker_name}</b></div>
+            <div><b>{worker?.function_name}</b></div>
           </div>
         </div>
 
         <div className="grid-item">
           <div style={{ marginTop: "15px" }}><b>Filial:</b></div>
-
           <div>{selectedSubsidiarie?.name}</div>
 
           <div style={{ marginTop: "15px" }}><b>CNPJ:</b></div>
-
           <div>{selectedSubsidiarie?.cnpj}</div>
 
           <div className="trace"></div>
 
           <div style={{ marginTop: "15px" }}><b>Endereço:</b></div>
-
           <div>{selectedSubsidiarie?.adress}</div>
 
           <div style={{ marginTop: "15px" }}><b>Telefone filial:</b></div>
-
           <div>{selectedSubsidiarie?.phone}</div>
 
           <div style={{ marginTop: "15px" }}><b>Telefone RH:</b></div>
-
           <div>(47) 3436-2202</div>
 
           <div className="trace"></div>
 
           <div style={{ marginTop: "15px" }}><b>{worker?.worker_name}</b></div>
-
           <div style={{ marginTop: "15px" }}><b>{worker?.function_name}</b></div>
-
           <div style={{ marginTop: "15px" }}><b>Matrícula: {worker?.worker_enrolment}</b></div>
-
           <div style={{ marginTop: "15px" }}><b>Cod. vendas: {worker?.worker_sales_code}</b></div>
-
           <div style={{ marginTop: "15px" }}><b>Código de ponto: {worker?.timecode}</b></div>
         </div>
       </div>
@@ -88,14 +76,22 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 200px; /* Ajuste conforme necessário */
+            height: 200px;
             text-align: center;
             flex-direction: column;
+          }
+
+          .worker-info-bottom {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 1.2rem;
           }
         `}
       </style>
     </>
-  )
-}
+  );
+};
 
-export default PrintBadgeContent
+export default PrintBadgeContent;

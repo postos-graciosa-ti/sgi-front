@@ -1028,6 +1028,7 @@ const RhInterviewModal = (props) => {
       <RedirectToModal
         redirectToModalOpen={redirecToModalOpen}
         setRedirectToModalOpen={setRedirectToModalOpen}
+        applicant={selectedApplicant}
       />
     </>
   )

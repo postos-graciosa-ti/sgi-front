@@ -1,11 +1,12 @@
+import dayjs from "dayjs"
 import printJS from "print-js"
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
+import useUserSessionStore from "../../data/userSession"
 import api from '../../services/api'
-import dayjs from "dayjs"
 
 const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie, datetime }) => {
   return (
@@ -52,7 +53,7 @@ const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie, d
         </p>
 
         <p>
-          Data e horário: {dayjs(datetime).format("DD/MM/YYYY [às] hh:mm")}
+          Data e horário: {dayjs(datetime).format("DD/MM/YYYY [às] HH:mm")}
         </p>
 
         <p>
@@ -78,7 +79,9 @@ const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie, d
 }
 
 const RedirectToModal = (props) => {
-  const { redirectToModalOpen, setRedirectToModalOpen } = props
+  const { redirectToModalOpen, setRedirectToModalOpen, applicant } = props
+
+  const userSession = useUserSessionStore((state) => state.userSession)
 
   const [applicantsOptions, setApplicantsOptions] = useState()
 
@@ -93,6 +96,8 @@ const RedirectToModal = (props) => {
   const [selectedSubsidiarie, setSelectedSubsidiarie] = useState()
 
   const [datetime, setDatetime] = useState()
+
+  const [redirected, setRedirected] = useState()
 
   useEffect(() => {
     api
@@ -118,6 +123,12 @@ const RedirectToModal = (props) => {
 
         setSubsidiariesOptions(options)
       })
+
+    api
+      .get(`/applicants/${applicant?.id}/redirected-to`)
+      .then((response) => {
+        setRedirected(response.data)
+      })
   }, [redirectToModalOpen])
 
   const handleClose = () => {
@@ -125,22 +136,34 @@ const RedirectToModal = (props) => {
   }
 
   const handleSubmit = () => {
-    const printableContent = ReactDOMServer.renderToString(
-      <RedirectToDoc
-        selectedUser={selectedUser}
-        selectedApplicant={selectedApplicant}
-        selectedSubsidiarie={selectedSubsidiarie}
-        datetime={datetime}
-      />
-    )
+    let requestBody = {
+      applicant_id: selectedApplicant.value,
+      user_id: selectedUser.value,
+      redirected_by: userSession.id,
+      subsidiarie_id: selectedSubsidiarie?.value,
+      datetime: datetime,
+    }
 
-    printJS({
-      printable: printableContent,
-      type: 'raw-html',
-      header: null,
-    })
+    api
+      .post("/applicants/redirected-to", requestBody)
+      .then(() => {
+        const printableContent = ReactDOMServer.renderToString(
+          <RedirectToDoc
+            selectedUser={selectedUser}
+            selectedApplicant={selectedApplicant}
+            selectedSubsidiarie={selectedSubsidiarie}
+            datetime={datetime}
+          />
+        )
 
-    handleClose()
+        printJS({
+          printable: printableContent,
+          type: 'raw-html',
+          header: null,
+        })
+
+        handleClose()
+      })
   }
 
   return (
@@ -165,6 +188,8 @@ const RedirectToModal = (props) => {
             placeholder={""}
             options={applicantsOptions}
             onChange={(value) => setSelectedApplicant(value)}
+            defaultValue={applicantsOptions?.find((option) => option.value == redirected?.applicant_id)}
+            isDisabled={redirected?.applicant_id && true}
           />
         </div>
 
@@ -177,6 +202,8 @@ const RedirectToModal = (props) => {
             placeholder={""}
             options={usersOptions}
             onChange={(value) => setSelectedUser(value)}
+            defaultValue={usersOptions?.find((option) => option.value == redirected?.user_id)}
+            isDisabled={redirected?.user_id && true}
           />
         </div>
 
@@ -189,6 +216,8 @@ const RedirectToModal = (props) => {
             placeholder={""}
             options={subsidiariesOptions}
             onChange={(value) => setSelectedSubsidiarie(value)}
+            defaultValue={subsidiariesOptions?.find((option) => option.value == redirected?.subsidiarie_id)}
+            isDisabled={redirected?.subsidiarie_id && true}
           />
         </div>
 
@@ -201,6 +230,8 @@ const RedirectToModal = (props) => {
             type="datetime-local"
             className="form-control"
             onChange={(e) => setDatetime(e.target.value)}
+            defaultValue={redirected?.datetime}
+            disabled={redirected?.datetime && true}
           />
         </div>
       </Modal.Body>

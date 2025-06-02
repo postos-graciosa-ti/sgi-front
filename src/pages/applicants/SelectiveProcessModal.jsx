@@ -8,6 +8,7 @@ import api from '../../services/api'
 import CoordinatorInterviewModal from './CoordinatorInterviewModal'
 import RhInterviewModal from './RhInterviewModal'
 import SeeApplicantsExamsModal from './SeeApplicantsExamsModal'
+import IdentityModal from './IdentityModal'
 
 const SelectiveProcessModal = (props) => {
   const { selectiveProcessModalOpen, setSelectiveProcessModalOpen, selectedApplicant, setApplicantsList, setSelectedApplicant } = props
@@ -21,6 +22,8 @@ const SelectiveProcessModal = (props) => {
   const [coordinatorInterviewModalOpen, setCoordinatorInterviewModalOpen] = useState(false)
 
   const [openWhatsapp, setOpenWhatsapp] = useState(false)
+
+  const [identityModalOpen, setIdentityModalOpen] = useState(false)
 
   useEffect(() => {
     if (openWhatsapp) {
@@ -186,6 +189,10 @@ const SelectiveProcessModal = (props) => {
       .then(() => handleClose())
   }
 
+  const handleOpenIdentityModal = () => {
+    setIdentityModalOpen(true)
+  }
+
   return (
     <Modal
       show={selectiveProcessModalOpen}
@@ -203,6 +210,16 @@ const SelectiveProcessModal = (props) => {
             <div className="mb-2 fw-bold">Avaliações</div>
 
             <button className="btn btn-primary ms-2" onClick={handleOpenSeeApplicantsExamsModal}>
+              <CaretRightFill />
+            </button>
+          </div>
+        </div>
+
+        <div className="card mb-3">
+          <div className="card-body text-center">
+            <div className="mb-2 fw-bold">Identificação</div>
+
+            <button className="btn btn-primary ms-2" onClick={handleOpenIdentityModal}>
               <CaretRightFill />
             </button>
           </div>
@@ -305,6 +322,11 @@ const SelectiveProcessModal = (props) => {
         selectedApplicant={selectedApplicant}
         setSelectiveProcessModalOpen={setSelectiveProcessModalOpen}
         setApplicantsList={setApplicantsList}
+      />
+
+      <IdentityModal
+        identityModalOpen={identityModalOpen}
+        setIdentityModalOpen={setIdentityModalOpen}
       />
     </Modal>
   )

@@ -306,7 +306,6 @@ const RhInterviewModal = (props) => {
       .then(() => handleClose())
   }
 
-  // Function to check if all fields have their default values (no new input)
   const areAllFieldsDefault = () => {
     return (
       (!natural || natural === selectedApplicant?.natural) &&
@@ -841,7 +840,7 @@ const RhInterviewModal = (props) => {
             />
           </div>
 
-          <div className="mb-3">
+          {/* <div className="mb-3">
             <label className="form-label fw-bold mb-3">Contato:</label>
             <input
               type="text"
@@ -850,9 +849,9 @@ const RhInterviewModal = (props) => {
               defaultValue={selectedApplicant?.contato}
               disabled={selectedApplicant?.contato && true}
             />
-          </div>
+          </div> */}
 
-          <div className="mb-3">
+          {/* <div className="mb-3">
             <label className="form-label fw-bold mb-3">Retorno pelo WhatsApp:</label>
             <input
               type="text"
@@ -861,7 +860,7 @@ const RhInterviewModal = (props) => {
               defaultValue={selectedApplicant?.retorno_whatsapp}
               disabled={selectedApplicant?.retorno_whatsapp && true}
             />
-          </div>
+          </div> */}
 
           <div className="mb-3">
             <label className="form-label fw-bold mb-3">1° Entrevista:</label>

@@ -1,4 +1,6 @@
 const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
+  const safeUpper = (text) => (text ? text.toString().toUpperCase() : "");
+
   return (
     <>
       <div className="grid-container">
@@ -8,7 +10,7 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
           </div>
 
           <div className="text-center">
-            <b>{selectedSubsidiarie?.name}</b>
+            <b>{safeUpper(selectedSubsidiarie?.name)}</b>
           </div>
 
           <div className="center-flex">
@@ -16,36 +18,36 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
           </div>
 
           <div className="worker-info-bottom">
-            <div><b>{worker?.worker_name}</b></div>
-            <div><b>{worker?.function_name}</b></div>
+            <div><b>{safeUpper(worker?.worker_name?.split(" ")[0])}</b></div>
+            <div><b>{safeUpper(worker?.function_name)}</b></div>
           </div>
         </div>
 
         <div className="grid-item">
-          <div style={{ marginTop: "15px" }}><b>Filial:</b></div>
-          <div>{selectedSubsidiarie?.name}</div>
+          <div style={{ marginTop: "15px" }}><b>FILIAL:</b></div>
+          <div>{safeUpper(selectedSubsidiarie?.name)}</div>
 
           <div style={{ marginTop: "15px" }}><b>CNPJ:</b></div>
-          <div>{selectedSubsidiarie?.cnpj}</div>
+          <div>{safeUpper(selectedSubsidiarie?.cnpj)}</div>
 
           <div className="trace"></div>
 
-          <div style={{ marginTop: "15px" }}><b>Endereço:</b></div>
-          <div>{selectedSubsidiarie?.adress}</div>
+          <div style={{ marginTop: "15px" }}><b>ENDEREÇO:</b></div>
+          <div>{safeUpper(selectedSubsidiarie?.adress)}</div>
 
-          <div style={{ marginTop: "15px" }}><b>Telefone filial:</b></div>
-          <div>{selectedSubsidiarie?.phone}</div>
+          <div style={{ marginTop: "15px" }}><b>TELEFONE FILIAL:</b></div>
+          <div>{safeUpper(selectedSubsidiarie?.phone)}</div>
 
-          <div style={{ marginTop: "15px" }}><b>Telefone RH:</b></div>
+          <div style={{ marginTop: "15px" }}><b>TELEFONE RH:</b></div>
           <div>(47) 3436-2202</div>
 
           <div className="trace"></div>
 
-          <div style={{ marginTop: "15px" }}><b>{worker?.worker_name}</b></div>
-          <div style={{ marginTop: "15px" }}><b>{worker?.function_name}</b></div>
-          <div style={{ marginTop: "15px" }}><b>Matrícula: {worker?.worker_enrolment}</b></div>
-          <div style={{ marginTop: "15px" }}><b>Cod. vendas: {worker?.worker_sales_code}</b></div>
-          <div style={{ marginTop: "15px" }}><b>Código de ponto: {worker?.timecode}</b></div>
+          <div style={{ marginTop: "15px" }}><b>{safeUpper(worker?.worker_name)}</b></div>
+          <div style={{ marginTop: "15px" }}><b>{safeUpper(worker?.function_name)}</b></div>
+          <div style={{ marginTop: "15px" }}><b>{`MATRÍCULA: ${safeUpper(worker?.worker_enrolment)}`}</b></div>
+          <div style={{ marginTop: "15px" }}><b>{`COD. VENDAS: ${safeUpper(worker?.worker_sales_code)}`}</b></div>
+          <div style={{ marginTop: "15px" }}><b>{`CÓDIGO DE PONTO: ${safeUpper(worker?.timecode)}`}</b></div>
         </div>
       </div>
 
@@ -86,7 +88,7 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
             bottom: 10px;
             width: 100%;
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
           }
         `}
       </style>

@@ -65,11 +65,11 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
           }
 
           .grid-item {
-            padding: 10px;
+            padding: 30px;
             border: 1px solid #ccc;
             position: relative;
           }
-
+          
           .text-center {
             text-align: center;
           }

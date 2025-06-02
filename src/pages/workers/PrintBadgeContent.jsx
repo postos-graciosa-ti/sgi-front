@@ -13,8 +13,11 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie, workerPicture }) => {
             <b>{safeUpper(selectedSubsidiarie?.name)}</b>
           </div>
 
-          <div className="center-flex">
-            <img src={`${workerPicture.picture_url || "https://res.cloudinary.com/drvzslkwn/image/upload/v1743692323/qtgm9fevvkfi09p4vczt.svg"}`} style={{ width: "200px" }} />
+          <div className="center-flex" style={{ "marginTop": "15px" }}>
+            <img
+              src={`${workerPicture.picture_url || "https://res.cloudinary.com/drvzslkwn/image/upload/v1743692323/qtgm9fevvkfi09p4vczt.svg"}`}
+              style={{ width: "150px" }}
+            />
           </div>
 
           <div className="worker-info-bottom">

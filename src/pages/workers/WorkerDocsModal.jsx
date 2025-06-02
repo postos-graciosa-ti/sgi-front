@@ -12,6 +12,8 @@ const WorkerDocsModal = (props) => {
 
   const [docsList, setDocsList] = useState()
 
+  const [workerPicture, setWorkerPicture] = useState()
+
   const [docTitle, setDocTitle] = useState()
 
   const [doc, setDoc] = useState()
@@ -22,10 +24,18 @@ const WorkerDocsModal = (props) => {
       .then((response) => {
         setDocsList(response.data)
       })
+
+    api
+      .get(`/workers-pictures/${selectedWorker?.worker_id}`)
+      .then((response) => {
+        setWorkerPicture(response.data)
+      })
   }, [workerDocsModalOpen])
 
   const handleClose = () => {
     setDoc()
+
+    setWorkerPicture()
 
     setSelectedWorker()
 
@@ -48,12 +58,10 @@ const WorkerDocsModal = (props) => {
             picture_url: response.data.secure_url
           }
 
-          console.log(requestBody)
-
           api
             .post("/workers-pictures", requestBody)
             .then((response) => {
-              console.log(response)
+              setWorkerPicture(response.data)
             })
         })
     } else {
@@ -106,6 +114,12 @@ const WorkerDocsModal = (props) => {
 
         handleClose()
       })
+  }
+
+  const handleDeleteWorkerPicture = () => {
+    api
+      .delete(`/workers-pictures/${selectedWorker?.worker_id}`)
+      .then(() => setWorkerPicture())
   }
 
   return (
@@ -185,6 +199,26 @@ const WorkerDocsModal = (props) => {
               />
             </div>
           ))
+        }
+
+        {
+          workerPicture && (
+            <div>
+              <div className="row mb-3">
+                <div className="col-10">
+                  <h4>Foto</h4>
+                </div>
+
+                <div className="col-2">
+                  <button className="btn btn-danger" onClick={handleDeleteWorkerPicture}>
+                    <Trash />
+                  </button>
+                </div>
+              </div>
+
+              <img src={workerPicture?.picture_url} className='w-100' />
+            </div>
+          )
         }
       </Modal.Body>
 

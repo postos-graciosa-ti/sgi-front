@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { ArrowClockwise, FileEarmarkPdf, FiletypeDocx, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX } from "react-bootstrap-icons"
+import { ArrowClockwise, CameraVideo, FileEarmarkPdf, FiletypeDocx, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX } from "react-bootstrap-icons"
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import Nav from "../../components/Nav"

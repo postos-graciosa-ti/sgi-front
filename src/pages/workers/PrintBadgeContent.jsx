@@ -18,11 +18,11 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
           <div className="worker-info-bottom">
             <div><b>NOME</b></div>
 
-            <div><b>{safeUpper(worker?.worker_name?.split(" ")[0])}</b></div>
+            <div>{safeUpper(worker?.worker_name?.split(" ")[0])}</div>
 
             <div><b>CARGO</b></div>
 
-            <div><b>{safeUpper(worker?.function_name)}</b></div>
+            <div>{safeUpper(worker?.function_name)}</div>
           </div>
         </div>
 

@@ -33,25 +33,50 @@ const WorkerDocsModal = (props) => {
   }
 
   const handleSubmit = () => {
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/upload-pdf/${selectedWorker?.worker_id}`,
-        {
-          "file": doc,
-          "doc_title": docTitle.label
-        },
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
+    if (docTitle.label == "Foto") {
+      const formData = new FormData()
+
+      formData.append("file", doc)
+
+      formData.append("upload_preset", "sef26f5y")
+
+      axios
+        .post("https://api.cloudinary.com/v1_1/drvzslkwn/image/upload", formData)
+        .then((response) => {
+          let requestBody = {
+            worker_id: selectedWorker?.worker_id,
+            picture_url: response.data.secure_url
+          }
+
+          console.log(requestBody)
+
+          api
+            .post("/workers-pictures", requestBody)
+            .then((response) => {
+              console.log(response)
+            })
+        })
+    } else {
+      axios
+        .post(`${import.meta.env.VITE_API_URL}/upload-pdf/${selectedWorker?.worker_id}`,
+          {
+            "file": doc,
+            "doc_title": docTitle.label
           },
-        }
-      )
-      .then(() => {
-        api
-          .get(`/worker-pdfs/${selectedWorker?.worker_id}`)
-          .then((response) => {
-            setDocsList(response.data)
-          })
-      })
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        )
+        .then(() => {
+          api
+            .get(`/worker-pdfs/${selectedWorker?.worker_id}`)
+            .then((response) => {
+              setDocsList(response.data)
+            })
+        })
+    }
   }
 
   const handleDelete = (docId) => {
@@ -113,6 +138,7 @@ const WorkerDocsModal = (props) => {
               { value: 12, label: "Carteira de vacinação (filhos menores de 5)" },
               { value: 13, label: "Comprovante de frequência escolar (filhos entre 7 e 14)" },
               { value: 14, label: "Contrato de trabalho" },
+              { value: 15, label: "Foto" },
             ]}
             setSelectedValue={setDocTitle}
           />

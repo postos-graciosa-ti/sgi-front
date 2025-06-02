@@ -155,11 +155,19 @@ const Nav = () => {
                 <Link className="nav-link" to="/update-notifications">Histórico de atualizações</Link>
               </li>
 
-              {/* <li className="nav-item">
-                <Link className="nav-link disabled" to="/">Tutoriais</Link>
-              </li> */}
+              <li className="nav-item">
+                <Link className="nav-link" to="/positions-table">
+                  Quadro de vagas
+                </Link>
+              </li>
 
-              <li className="nav-item dropdown">
+              <li className="nav-item">
+                <Link className="nav-link" to="/applicants">
+                  Processos seletivos
+                </Link>
+              </li>
+
+              {/* <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Contratações
                 </a>
@@ -177,7 +185,7 @@ const Nav = () => {
                     </Link>
                   </li>
                 </ul>
-              </li>
+              </li> */}
 
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

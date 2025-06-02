@@ -155,15 +155,24 @@ const Workers = () => {
     setEditWorkerModalOpen(true)
   }
 
-  //
-
   const handleIssueBadge = async (worker) => {
     let subsidiarieData = await api.get(`/subsidiaries/${selectedSubsdiarie?.value}`).then((response) => response.data)
+
+    let workerPicture
+
+    try {
+      const response = await api.get(`/workers-pictures/${worker.worker_id}`)
+
+      workerPicture = response.data || { picture_url: "https://res.cloudinary.com/drvzslkwn/image/upload/v1743692323/qtgm9fevvkfi09p4vczt.svg" }
+    } catch (error) {
+      workerPicture = { picture_url: "https://res.cloudinary.com/drvzslkwn/image/upload/v1743692323/qtgm9fevvkfi09p4vczt.svg" }
+    }
 
     const printableContent = ReactDOMServer.renderToString(
       <PrintBadgeContent
         worker={worker}
         selectedSubsidiarie={subsidiarieData}
+        workerPicture={workerPicture}
       />
     )
 

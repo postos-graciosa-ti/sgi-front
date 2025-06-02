@@ -1,4 +1,4 @@
-const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
+const PrintBadgeContent = ({ worker, selectedSubsidiarie, workerPicture }) => {
   const safeUpper = (text) => (text ? text.toString().toUpperCase() : "")
 
   return (
@@ -13,7 +13,9 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
             <b>{safeUpper(selectedSubsidiarie?.name)}</b>
           </div>
 
-          <div className="center-flex"></div>
+          <div className="center-flex">
+            <img src={`${workerPicture.picture_url || "https://res.cloudinary.com/drvzslkwn/image/upload/v1743692323/qtgm9fevvkfi09p4vczt.svg"}`} style={{ width: "200px" }} />
+          </div>
 
           <div className="worker-info-bottom">
             <div><b>NOME</b></div>

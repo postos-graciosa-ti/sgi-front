@@ -1,5 +1,5 @@
 const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
-  const safeUpper = (text) => (text ? text.toString().toUpperCase() : "");
+  const safeUpper = (text) => (text ? text.toString().toUpperCase() : "")
 
   return (
     <>
@@ -13,40 +13,52 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
             <b>{safeUpper(selectedSubsidiarie?.name)}</b>
           </div>
 
-          <div className="center-flex">
-            {/* Pode manter essa área vazia se desejar */}
-          </div>
+          <div className="center-flex"></div>
 
           <div className="worker-info-bottom">
+            <div><b>NOME</b></div>
+
             <div><b>{safeUpper(worker?.worker_name?.split(" ")[0])}</b></div>
+
+            <div><b>CARGO</b></div>
+
             <div><b>{safeUpper(worker?.function_name)}</b></div>
           </div>
         </div>
 
         <div className="grid-item">
           <div style={{ marginTop: "15px" }}><b>FILIAL:</b></div>
+
           <div>{safeUpper(selectedSubsidiarie?.name)}</div>
 
           <div style={{ marginTop: "15px" }}><b>CNPJ:</b></div>
+
           <div>{safeUpper(selectedSubsidiarie?.cnpj)}</div>
 
           <div className="trace"></div>
 
           <div style={{ marginTop: "15px" }}><b>ENDEREÇO:</b></div>
+
           <div>{safeUpper(selectedSubsidiarie?.adress)}</div>
 
           <div style={{ marginTop: "15px" }}><b>TELEFONE FILIAL:</b></div>
+
           <div>{safeUpper(selectedSubsidiarie?.phone)}</div>
 
           <div style={{ marginTop: "15px" }}><b>TELEFONE RH:</b></div>
+
           <div>(47) 3436-2202</div>
 
           <div className="trace"></div>
 
           <div style={{ marginTop: "15px" }}><b>{safeUpper(worker?.worker_name)}</b></div>
+
           <div style={{ marginTop: "15px" }}><b>{safeUpper(worker?.function_name)}</b></div>
+
           <div style={{ marginTop: "15px" }}><b>{`MATRÍCULA: ${safeUpper(worker?.worker_enrolment)}`}</b></div>
+
           <div style={{ marginTop: "15px" }}><b>{`COD. VENDAS: ${safeUpper(worker?.worker_sales_code)}`}</b></div>
+
           <div style={{ marginTop: "15px" }}><b>{`CÓDIGO DE PONTO: ${safeUpper(worker?.timecode)}`}</b></div>
         </div>
       </div>
@@ -65,11 +77,11 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
           }
 
           .grid-item {
-            padding: 30px;
+            padding: 10px;
             border: 1px solid #ccc;
             position: relative;
           }
-          
+
           .text-center {
             text-align: center;
           }
@@ -87,13 +99,16 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
             position: absolute;
             bottom: 10px;
             width: 100%;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             font-size: 1.4rem;
           }
         `}
       </style>
     </>
-  );
-};
+  )
+}
 
-export default PrintBadgeContent;
+export default PrintBadgeContent

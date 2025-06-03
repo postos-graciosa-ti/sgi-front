@@ -1,3 +1,4 @@
+import dayjs from "dayjs"
 import moment from "moment"
 import { useEffect, useState } from "react"
 import Nav from "../../components/Nav.jsx"
@@ -26,6 +27,8 @@ const Home = () => {
   endOfWeek.setHours(23, 59, 59, 999)
 
   const userSession = useUserSessionStore(state => state.userSession)
+
+  const [monthBirthdays, setMonthBirthdays] = useState()
 
   const [workersAwayEndDate, setWorkersAwayEndDate] = useState()
 
@@ -69,6 +72,10 @@ const Home = () => {
     api
       .get(`/users/${userSession?.id}/applicants/notifications`)
       .then((response) => setInterviewsToDo(response.data))
+
+    api
+      .get("/another-route-yet")
+      .then((response) => setMonthBirthdays(response.data))
   }, [])
 
   return (
@@ -76,9 +83,15 @@ const Home = () => {
       <Nav />
 
       <div className="container mt-4">
+        <button className="btn btn-dark mt-4 mb-4">Manual do usuário</button>
+
         <h3 className="text-danger">
           Importante
         </h3>
+
+        <div className="text-muted mb-3">
+          Essa página contém as notificações relacionadas as filiais de seu interesse
+        </div>
 
         {
           workersWithoutFirstReview?.workers?.length > 0 && (
@@ -92,6 +105,14 @@ const Home = () => {
                   </div>
                 ))
               }
+            </>
+          ) || (
+            <>
+              <h5>Avaliação de primeiro período de experiência</h5>
+
+              <div className="alert alert-success mt-3">
+                Não há avaliações de primeiro período de experiência
+              </div>
             </>
           )
         }
@@ -109,6 +130,14 @@ const Home = () => {
                 ))
               }
             </>
+          ) || (
+            <>
+              <h5>Avaliações de primeiro período de experiência realizadas</h5>
+
+              <div className="alert alert-success mt-3">
+                Não há avaliações de primeiro período de experiência realizadas
+              </div>
+            </>
           )
         }
 
@@ -124,6 +153,14 @@ const Home = () => {
                   </div>
                 ))
               }
+            </>
+          ) || (
+            <>
+              <h5>Avaliação de segundo período de experiência</h5>
+
+              <div className="alert alert-success mt-3">
+                Não há avaliações de segundo período de experiência
+              </div>
             </>
           )
         }
@@ -141,6 +178,14 @@ const Home = () => {
                 ))
               }
             </>
+          ) || (
+            <>
+              <h5>Avaliações de segundo período de experiência realizadas</h5>
+
+              <div className="alert alert-success mt-3">
+                Não há avaliações de segundo período de experiência realizadas
+              </div>
+            </>
           )
         }
 
@@ -156,6 +201,14 @@ const Home = () => {
                   </div>
                 ))
               }
+            </>
+          ) || (
+            <>
+              <h5>Afastados para retornar</h5>
+
+              <div className="alert alert-success mt-3">
+                Não há afastados para retornar
+              </div>
             </>
           )
         }
@@ -173,6 +226,14 @@ const Home = () => {
                 ))
               }
             </>
+          ) || (
+            <>
+              <h5>Chamados atribuídos</h5>
+
+              <div className="alert alert-success mt-3">
+                Não há chamados atribuídos
+              </div>
+            </>
           )
         }
 
@@ -188,6 +249,38 @@ const Home = () => {
                   </div>
                 ))
               }
+            </>
+          ) || (
+            <>
+              <h5>Candidatos encaminhados para entrevista com {userSession?.name}</h5>
+
+              <div className="alert alert-success mt-3">
+                Não há candidatos encaminhados para entrevista com {userSession?.name}
+              </div>
+            </>
+          )
+        }
+
+        {
+          monthBirthdays?.length > 0 && (
+            <>
+              <h5>Aniversariantes do mês</h5>
+
+              {
+                monthBirthdays?.map((data) => (
+                  <div className="alert alert-primary" key={data.worker_id}>
+                    {data.name} ({dayjs(data.birthdate).format("DD-MM-YYYY")})
+                  </div>
+                ))
+              }
+            </>
+          ) || (
+            <>
+              <h5>Aniversariantes do mês</h5>
+
+              <div className="alert alert-primary mt-3">
+                Não há aniversariantes do mês
+              </div>
             </>
           )
         }

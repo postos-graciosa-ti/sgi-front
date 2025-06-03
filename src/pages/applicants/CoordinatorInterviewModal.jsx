@@ -14,6 +14,40 @@ const CoordinatorInterviewModal = (props) => {
 
   const [coordinatorObservation, setCoordinatorObservation] = useState()
 
+  const [personalLife, setPersonalLife] = useState()
+
+  const [gasStationExperience, setGasStationExperience] = useState()
+
+  const [lifeStructure, setLifeStructure] = useState()
+
+  const [workingHereObjectives, setWorkingHereObjectives] = useState()
+
+  const [expectWorkingHere, setExpectWorkingHere] = useState()
+
+  const [applicantCriteria, setApplicantCriteria] = useState()
+
+  const [wageInfo, setWageInfo] = useState()
+
+  const [targetGoals, setTargetGoals] = useState()
+
+  const [claimedGoals, setClaimedGoals] = useState()
+
+  const [clientFidelity, setClientFidelity] = useState()
+
+  const [hardSituations, setHardSituations] = useState()
+
+  const [badReputation, setBadReputation] = useState()
+
+  const [boringConsumer, setBoringConsumer] = useState()
+
+  const [rageAtWorkplace, setRageAtWorkplace] = useState()
+
+  const [ecorpChanges, setEcorpChanges] = useState()
+
+  const [teamWork, setTeamWork] = useState()
+
+  const [workRelationships, setWorkRelationships] = useState()
+
   const handleClose = () => {
     api
       .get("/applicants")
@@ -26,6 +60,24 @@ const CoordinatorInterviewModal = (props) => {
 
   const handleSubmit = () => {
     let requestBody = {
+      personal_life: personalLife,
+      gas_station_experience: gasStationExperience,
+      life_structure: lifeStructure,
+      working_here_objectives: workingHereObjectives,
+      expect_working_here: expectWorkingHere,
+      applicant_criteria: applicantCriteria,
+      wage_info: wageInfo,
+      target_goals: targetGoals,
+      claimed_goals: claimedGoals,
+      client_fidelity: clientFidelity,
+      hard_situations: hardSituations,
+      bad_reputation: badReputation,
+      boring_consumer: boringConsumer,
+      rage_at_workplace: rageAtWorkplace,
+      ecorp_changes: ecorpChanges,
+      team_work: teamWork,
+      work_relationships: workRelationships,
+
       coordinator_observations: coordinatorObservation,
     }
 
@@ -48,6 +100,108 @@ const CoordinatorInterviewModal = (props) => {
 
       <Modal.Body>
         <div className="mb-3">
+          <h4>Perguntas para gerente fazer aos candidatos</h4>
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Conte-me um pouco sobre sua vida (pessoal e profissional), o que achar importante eu saber
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setPersonalLife(e.target.value)}
+            defaultValue={selectedApplicant?.personal_life}
+            disabled={selectedApplicant?.personal_life && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Já possui experiência com postos de gasolina?
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setGasStationExperience(e.target.value)}
+            defaultValue={selectedApplicant?.gas_station_experience}
+            disabled={selectedApplicant?.gas_station_experience && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Como sua vida está estruturada hoje? É casado? Tem filhos? Mora onde?
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setLifeStructure(e.target.value)}
+            defaultValue={selectedApplicant?.life_structure}
+            disabled={selectedApplicant?.life_structure && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Quais seus planos e objetivos trabalhando aqui?
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setWorkingHereObjectives(e.target.value)}
+            defaultValue={selectedApplicant?.working_here_objectives}
+            disabled={selectedApplicant?.working_here_objectives && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            O que você espera trabalhando aqui?
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setExpectWorkingHere(e.target.value)}
+            defaultValue={selectedApplicant?.expect_working_here}
+            disabled={selectedApplicant?.expect_working_here && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Quando você se inscreveu para a vaga, quais foram os critérios que você considerou para continuar no processo de seleção e fazer a segunda entrevista?
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setApplicantCriteria(e.target.value)}
+            defaultValue={selectedApplicant?.applicant_criteria}
+            disabled={selectedApplicant?.applicant_criteria && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Você tem alguma dúvida em relação ao pacote de remuneração? Quais informações você possui?
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setWageInfo(e.target.value)}
+            defaultValue={selectedApplicant?.wage_info}
+            disabled={selectedApplicant?.wage_info && true}
+          />
+        </div>
+
+        <div className="mb-3">
           <label className="form-label fw-bold">
             Observações de coordenador
           </label>
@@ -61,20 +215,149 @@ const CoordinatorInterviewModal = (props) => {
           />
         </div>
 
-        {/* <div className="mb-3">
+        <div className="mb-3">
+          <h4>Perguntas situacionais</h4>
+        </div>
+
+        <div className="mb-3">
           <label className="form-label fw-bold">
-            Parecer do coordenador:
+            Você lida bem com a cobrança de metas? Por que nós trabalhamos com vendas e isso faz parte da nossa rotina, vender!
           </label>
 
-          <ReactSelect
-            placeholder={""}
-            options={[
-              { value: true, label: "Aprovado" },
-              { value: false, label: "Reprovado" },
-            ]}
-            onChange={(option) => setIsAproved(option.value)}
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setTargetGoals(e.target.value)}
+            defaultValue={selectedApplicant?.target_goals}
+            disabled={selectedApplicant?.target_goals && true}
           />
-        </div> */}
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Me descreva um momento em que você atingiu as metas que foram estipuladas e como você trabalhou para que isso acontecesse?
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setClaimedGoals(e.target.value)}
+            defaultValue={selectedApplicant?.claimed_goals}
+            disabled={selectedApplicant?.claimed_goals && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            De um exemplo de quando você conseguiu fidelizar um cliente e como você fez isso?
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setClientFidelity(e.target.value)}
+            defaultValue={selectedApplicant?.client_fidelity}
+            disabled={selectedApplicant?.client_fidelity && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Qual o cliente mais difícil você já teve que lidar? O que você fazia para contornar as situações dificeís?
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setHardSituations(e.target.value)}
+            defaultValue={selectedApplicant?.hard_situations}
+            disabled={selectedApplicant?.hard_situations && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Você já ajudou a reverter uma má impressão que o cliente tinha da empresa? Conte como foi
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setBadReputation(e.target.value)}
+            defaultValue={selectedApplicant?.bad_reputation}
+            disabled={selectedApplicant?.bad_reputation && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Descreva uma situação em que você teve que lidar com um cliente insatisfeito
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setBoringConsumer(e.target.value)}
+            defaultValue={selectedApplicant?.boring_consumer}
+            disabled={selectedApplicant?.boring_consumer && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            O que te deixa com raiva no ambiente profissional
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setRageAtWorkplace(e.target.value)}
+            defaultValue={selectedApplicant?.rage_at_workplace}
+            disabled={selectedApplicant?.rage_at_workplace && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Como você reage a mudanças repentinas na empresa? Cite um exemplo
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setEcorpChanges(e.target.value)}
+            defaultValue={selectedApplicant?.ecorp_changes}
+            disabled={selectedApplicant?.ecorp_changes && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Conte uma experiência positiva que você teve trabalhando em equipe?
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setTeamWork(e.target.value)}
+            defaultValue={selectedApplicant?.team_work}
+            disabled={selectedApplicant?.team_work && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Nas suas últimas experiências, como era o seu relacionamento com os superiores e os colegas de tabalho?
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setWorkRelationships(e.target.value)}
+            defaultValue={selectedApplicant?.work_relationships}
+            disabled={selectedApplicant?.work_relationships && true}
+          />
+        </div>
       </Modal.Body>
 
       <Modal.Footer>

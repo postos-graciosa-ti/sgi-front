@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Pen, Plus, Question, Trash } from "react-bootstrap-icons"
+import ReactSelect from "react-select"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import initTour from "../../driverjs/initTour"
@@ -22,6 +23,8 @@ const Users = () => {
 
   const [editUserModalOpen, setEditUserModalOpen] = useState(false)
 
+  const [usersListStatus, setUsersListStatus] = useState()
+
   useEffect(() => {
     api
       .get("/users")
@@ -29,6 +32,14 @@ const Users = () => {
         setUserList(response.data)
       })
   }, [])
+
+  useEffect(() => {
+    api
+      .get(`/users/status/${usersListStatus}`)
+      .then((response) => {
+        setUserList(response.data)
+      })
+  }, [usersListStatus])
 
   const handleOpenAddUserModal = () => {
     setModalOpen(true)
@@ -71,74 +82,89 @@ const Users = () => {
           </button>
         </div>
 
-        <div className="table-responsive mt-3">
-          <table className="table table-hover">
-            <thead>
-              <tr>
-                <th>Email,</th>
-
-                <th>Nome</th>
-
-                <th>Tipo</th>
-
-                <th>Filiais</th>
-
-                <th></th>
-              </tr>
-            </thead>
-
-            <tbody id="users-table">
-              {
-                userList?.map((user) => (
-                  <tr
-                    key={user.user_id}
-                    id="userRow"
-                  >
-                    <td>{user.user_email}</td>
-
-                    <td>{user.user_name}</td>
-
-                    <td>{user.role_name}</td>
-
-                    <td>
-                      {
-                        user.user_subsidiaries?.map((subsidiarie, i) => (
-                          <span key={`${subsidiarie.id}-${i}`}>
-                            <span className="badge text-bg-primary me-1">
-                              {subsidiarie.name}
-                            </span>
-
-                            {(i + 1) % 2 === 0 && <br />}
-                          </span>
-                        ))
-                      }
-                    </td>
-
-                    <td>
-                      <button
-                        id="editUser"
-                        className="btn btn-warning mt-2 me-2"
-                        onClick={() => handleOpenEditUserModal(user)}
-                        title="Editar usuário"
-                      >
-                        <Pen />
-                      </button>
-
-                      <button
-                        id="deleteUser"
-                        className="btn btn-danger mt-2 me-2"
-                        onClick={() => handleOpenDeleteUserModal(user)}
-                        title="Apagar usuário"
-                      >
-                        <Trash />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
+        <div className="mb-3">
+          <ReactSelect
+            options={[
+              { "value": "active", "label": "Ativo" },
+              { "value": "inactive", "label": "Inativo" },
+              { "value": "no-filters", "label": "Sem filtros" },
+            ]}
+            defaultValue={[{ "value": 1, "label": "Ativo" }]}
+            onChange={(option) => setUsersListStatus(option.value)}
+          />
         </div>
+
+        {
+          userList && userList.map((user) => (
+            <div key={user.user_id} className="card mb-3">
+              <div className="card-body">
+                <h5 className="card-title">
+                  {user.user_name}
+                </h5>
+
+                <p className="card-text">
+                  {
+                    user.user_is_active && (
+                      <span class="badge text-bg-success">Ativo</span>
+                    ) || (
+                      <span class="badge text-bg-danger">Inativo</span>
+                    )
+                  }
+                </p>
+              </div>
+
+              <ul className="list-group list-group-flush">
+                <li className="list-group-item">
+                  <div><b>E-mail</b></div>
+
+                  <div>{user.user_email}</div>
+                </li>
+
+                <li className="list-group-item">
+                  <div><b>Permissões</b></div>
+
+                  <div>{user.role_name}</div>
+                </li>
+
+                <li className="list-group-item">
+                  <div><b>Filiais</b></div>
+
+                  <div>
+                    {
+                      user.user_subsidiaries?.map((subsidiarie, i) => (
+                        <span key={`${subsidiarie.id}-${i}`}>
+                          <span className="badge text-bg-primary me-1">
+                            {subsidiarie.name}
+                          </span>
+                        </span>
+                      ))
+                    }
+                  </div>
+                </li>
+
+                <li className="list-group-item">
+                  <button
+                    id="editUser"
+                    className="btn btn-warning mt-2 me-2"
+                    onClick={() => handleOpenEditUserModal(user)}
+                    title="Editar usuário"
+                  >
+                    <Pen />
+                  </button>
+
+                  <button
+                    id="deleteUser"
+                    className="btn btn-danger mt-2 me-2"
+                    onClick={() => handleOpenDeleteUserModal(user)}
+                    title="Apagar usuário"
+                  >
+                    <Trash />
+                  </button>
+                </li>
+              </ul>
+            </div>
+          ))
+        }
       </div>
 
       <AddUserModal

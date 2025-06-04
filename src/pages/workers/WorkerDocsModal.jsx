@@ -158,21 +158,14 @@ const WorkerDocsModal = (props) => {
           />
         </div>
 
-        <div className="row">
-          <div className="col-10">
-            <input type="file" className="form-control" onChange={(e) => setDoc(e.target.files[0])} />
-          </div>
-
-          <div className="col-2">
-            <button className="btn btn-warning" onClick={handleSubmit}>
-              <Plus />
-            </button>
-          </div>
+        <div className="mb-3">
+          <input type="file" className="form-control" onChange={(e) => setDoc(e.target.files[0])} />
         </div>
 
-
-        <div className='mt-3'>
-          <button className="btn btn-primary" onClick={handleSendEmail}>E-mail</button>
+        <div>
+          <button className="btn btn-success w-100" onClick={handleSubmit}>
+            Adicionar
+          </button>
         </div>
 
         {
@@ -180,7 +173,7 @@ const WorkerDocsModal = (props) => {
             <div key={pdf.doc_id} className="mt-5 mb-5">
               <div className="row mb-2">
                 <div className="col-10">
-                  <h4> {`${pdf.doc_title}` || `Documento #${pdf.doc_id}`}</h4>
+                  <h4>{`${pdf.doc_title}` || `Documento #${pdf.doc_id}`}</h4>
                 </div>
 
                 <div className="col-2">
@@ -197,6 +190,14 @@ const WorkerDocsModal = (props) => {
                 style={{ border: 'none' }}
                 title={`PDF-${pdf.doc_id}`}
               />
+
+              {
+                pdf.doc_title == "Contrato de trabalho" && (
+                  <div className='mt-3'>
+                    <button className="btn btn-primary w-100" onClick={handleSendEmail}>Enviar contrato por e-mail</button>
+                  </div>
+                )
+              }
             </div>
           ))
         }
@@ -223,7 +224,7 @@ const WorkerDocsModal = (props) => {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="primary" onClick={handleClose}>Entendido</Button>
+        <Button variant="light" onClick={handleClose}>Fechar</Button>
       </Modal.Footer>
     </Modal>
   )

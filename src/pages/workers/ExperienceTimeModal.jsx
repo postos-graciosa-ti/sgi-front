@@ -4,6 +4,7 @@ import { ArrowRightShort } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import FirstReviewModal from './FirstReviewModal'
+import PeriodicReviewsModal from './PeriodicReviewsModal'
 import SecondReviewModal from "./SecondReviewModal"
 
 const ExperienceTimeModal = (props) => {
@@ -18,16 +19,18 @@ const ExperienceTimeModal = (props) => {
 
   const [secondReviewModalOpen, setSecondReviewModalOpen] = useState(false)
 
+  const [periodicReviewsModalOpen, setPeriodicReviewsModalOpen] = useState(false)
+
   let today = moment()
 
   let oneWeekBeforeFirstReview = moment(selectedWorker?.first_review_date).subtract(7, 'days')
-  
+
   let oneWeekBeforeSecondReview = moment(selectedWorker?.second_review_date).subtract(7, 'days')
-  
+
   let disableFirstReviewModal = today < oneWeekBeforeFirstReview
 
   let disableSecondReviewModal = today < oneWeekBeforeSecondReview
-  
+
 
   const handleClose = () => {
     setExperienceTimeModalOpen(false)
@@ -39,6 +42,10 @@ const ExperienceTimeModal = (props) => {
 
   const handleOpenSecondReviewModal = () => {
     setSecondReviewModalOpen(true)
+  }
+
+  const handleOpenSecondReview = () => {
+    setPeriodicReviewsModalOpen(true)
   }
 
   return (
@@ -87,6 +94,20 @@ const ExperienceTimeModal = (props) => {
               </button>
             </div>
           </div>
+
+          <div className="card p-3 mb-3">
+            <div className="d-inline-flex justify-content-between align-items-center">
+              <span><b>Avaliações periódicas</b></span>
+
+              <button
+                className="btn btn-primary"
+                onClick={handleOpenSecondReview}
+                disabled={disableSecondReviewModal}
+              >
+                Ir <ArrowRightShort />
+              </button>
+            </div>
+          </div>
         </Modal.Body>
 
         <Modal.Footer>
@@ -110,6 +131,12 @@ const ExperienceTimeModal = (props) => {
         selectedWorker={selectedWorker}
         setSelectedWorker={setSelectedWorker}
         setExperienceTimeModalOpen={setExperienceTimeModalOpen}
+      />
+
+      <PeriodicReviewsModal
+        periodicReviewsModalOpen={periodicReviewsModalOpen}
+        setPeriodicReviewsModalOpen={setPeriodicReviewsModalOpen}
+        selectedWorker={selectedWorker}
       />
     </>
   )

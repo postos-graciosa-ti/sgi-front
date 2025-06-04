@@ -8,7 +8,7 @@ import ReactSelect from "react-select"
 import useUserSessionStore from "../../data/userSession"
 import api from '../../services/api'
 
-const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie, datetime }) => {
+const RedirectToDoc = ({ selectedUser, selectedSubsidiarie, datetime, applicant }) => {
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -37,11 +37,11 @@ const RedirectToDoc = ({ selectedUser, selectedApplicant, selectedSubsidiarie, d
         </p>
 
         <p>
-          Nome: {selectedApplicant?.label}
+          Nome: {applicant.name}
         </p>
 
         <p>
-          E-mail: marciaabigail321@gmail.com
+          E-mail: {applicant.email}
         </p>
 
         <p>
@@ -83,13 +83,9 @@ const RedirectToModal = (props) => {
 
   const userSession = useUserSessionStore((state) => state.userSession)
 
-  const [applicantsOptions, setApplicantsOptions] = useState()
-
   const [usersOptions, setUsersOptions] = useState()
 
   const [subsidiariesOptions, setSubsidiariesOptions] = useState()
-
-  const [selectedApplicant, setSelectedApplicant] = useState()
 
   const [selectedUser, setSelectedUser] = useState()
 
@@ -100,14 +96,6 @@ const RedirectToModal = (props) => {
   const [redirected, setRedirected] = useState()
 
   useEffect(() => {
-    api
-      .get("/applicants")
-      .then((response) => {
-        let options = response.data.map((option) => ({ value: option.id, label: option.name }))
-
-        setApplicantsOptions(options)
-      })
-
     api
       .get("/users")
       .then((response) => {
@@ -137,7 +125,7 @@ const RedirectToModal = (props) => {
 
   const handleSubmit = () => {
     let requestBody = {
-      applicant_id: selectedApplicant.value,
+      applicant_id: applicant.id,
       user_id: selectedUser.value,
       redirected_by: userSession.id,
       subsidiarie_id: selectedSubsidiarie?.value,
@@ -150,9 +138,9 @@ const RedirectToModal = (props) => {
         const printableContent = ReactDOMServer.renderToString(
           <RedirectToDoc
             selectedUser={selectedUser}
-            selectedApplicant={selectedApplicant}
             selectedSubsidiarie={selectedSubsidiarie}
             datetime={datetime}
+            applicant={applicant}
           />
         )
 
@@ -175,11 +163,11 @@ const RedirectToModal = (props) => {
       fullscreen={true}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Emitir redirecionamento</Modal.Title>
+        <Modal.Title>Emitir redirecionamento para {applicant?.name}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <label className="form-label fw-bold">
             Candidato:
           </label>
@@ -191,7 +179,7 @@ const RedirectToModal = (props) => {
             defaultValue={applicantsOptions?.find((option) => option.value == redirected?.applicant_id)}
             isDisabled={redirected?.applicant_id && true}
           />
-        </div>
+        </div> */}
 
         <div className="mb-3">
           <label className="form-label fw-bold">

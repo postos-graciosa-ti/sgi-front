@@ -223,11 +223,11 @@ const Applicants = () => {
 
         <div className="row mb-3">
           <div className="col">
-            <input type="date" className="form-control" onChange={(e) => setStartDate(e.target.value)} />
+            <input type="date" className="form-control mb-2" onChange={(e) => setStartDate(e.target.value)} />
           </div>
 
           <div className="col">
-            <input type="date" className="form-control" onChange={(e) => setEndDate(e.target.value)} />
+            <input type="date" className="form-control mb-2" onChange={(e) => setEndDate(e.target.value)} />
           </div>
         </div>
 

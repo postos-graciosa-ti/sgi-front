@@ -187,6 +187,18 @@ const RhInterviewModal = (props) => {
 
   const [mobile, setMobile] = useState()
 
+  const [showNewExperience, setShowNewExperience] = useState(false)
+
+  const [newExperienceEnterprise, setNewExperienceEnterprise] = useState()
+
+  const [newExperienceInitialDate, setNewExperienceInitialDate] = useState()
+
+  const [newExperienceFinalDate, setNewExperienceFinalDate] = useState()
+
+  const [newExperienceWage, setNewExperienceWage] = useState()
+
+  const [existExperiences, setExistExperiences] = useState(JSON.parse(selectedApplicant?.work_experiences))
+
   useEffect(() => {
     api
       .get("/users")
@@ -245,12 +257,31 @@ const RhInterviewModal = (props) => {
     }
   }, [bairro])
 
+  // useEffect(() => {
+  //   if (rhInterviewModalOpen) {
+  //     api
+  //     .get("")
+  //   }
+  // }, [rhInterviewModalOpen])
+
   const handleClose = () => {
     api
       .get("/applicants")
       .then((response) => setApplicantsList(response.data))
 
     setOpenPositionsList()
+
+    setShowNewExperience()
+
+    setNewExperienceEnterprise()
+
+    setNewExperienceInitialDate()
+
+    setNewExperienceFinalDate()
+
+    setNewExperienceWage()
+
+    setExistExperiences()
 
     setRhInterviewModalOpen(false)
 
@@ -299,11 +330,16 @@ const RhInterviewModal = (props) => {
       escolaridade: selectedSchoolLevel,
       email: email,
       mobile: mobile,
+      work_experiences: JSON.stringify(existExperiences),
     }
 
     api
       .patch(`/applicants/${selectedApplicant?.id}`, requestBody)
-      .then(() => handleClose())
+      .then((response) => {
+        console.log(response)
+
+        handleClose()
+      })
   }
 
   const areAllFieldsDefault = () => {
@@ -345,20 +381,45 @@ const RhInterviewModal = (props) => {
     )
   }
 
-  const handleOpenCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true })
-
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream
-      }
-    } catch (err) {
-      console.error('Error accessing camera:', err)
-    }
-  }
-
   const hendleOpenRedirectToModal = () => {
     setRedirectToModalOpen(true)
+  }
+
+  console.log(existExperiences)
+
+  const handleAddNewExperience = () => {
+    setExistExperiences((prev) => {
+      if (prev) {
+        return [
+          ...prev,
+          {
+            "enterprise": newExperienceEnterprise,
+            "initial_date": newExperienceInitialDate,
+            "final_date": newExperienceFinalDate,
+            "wage": newExperienceWage,
+          }
+        ]
+      } else {
+        return [
+          {
+            "enterprise": newExperienceEnterprise,
+            "initial_date": newExperienceInitialDate,
+            "final_date": newExperienceFinalDate,
+            "wage": newExperienceWage,
+          }
+        ]
+      }
+    })
+
+    setShowNewExperience()
+
+    setNewExperienceEnterprise()
+
+    setNewExperienceInitialDate()
+
+    setNewExperienceFinalDate()
+
+    setNewExperienceWage()
   }
 
   return (
@@ -928,7 +989,127 @@ const RhInterviewModal = (props) => {
             />
           </div>
 
+          {
+            existExperiences && (
+              existExperiences && existExperiences.map((experience) => (
+                <div className="mb-3 mt-3 bg-light p-3 rounded">
+                  <label className="form-label fw-bold mt-3">Empresa</label>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={experience?.enterprise}
+                    disabled
+                  />
+
+                  <label className="form-label fw-bold mt-3">Data inicial</label>
+
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={experience?.initial_date}
+                    disabled
+                  />
+
+                  <label className="form-label fw-bold mt-3">Data final</label>
+
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={experience?.final_date}
+                    disabled
+                  />
+
+                  <label className="form-label fw-bold mt-3">Salário</label>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={experience?.wage}
+                    disabled
+                  />
+                </div>
+              ))
+            )
+          }
+
           <div className="mb-3">
+            <button
+              className="btn btn-primary w-100"
+              onClick={() => setShowNewExperience(true)}
+            >
+              Adicionar Experiência
+            </button>
+
+            {
+              showNewExperience && (
+                <div className="mb-3 mt-3 bg-light p-3 rounded">
+                  <h4>Nova experiência</h4>
+
+                  <label
+                    className="form-label fw-bold mt-3"
+                  >
+                    Empresa
+                  </label>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    onChange={(e) => setNewExperienceEnterprise(e.target.value)}
+                    value={newExperienceEnterprise}
+                  />
+
+                  <label
+                    className="form-label fw-bold mt-3"
+                  >
+                    Data inicial
+                  </label>
+
+                  <input
+                    type="date"
+                    className="form-control"
+                    onChange={(e) => setNewExperienceInitialDate(e.target.value)}
+                    value={newExperienceInitialDate}
+                  />
+
+                  <label
+                    className="form-label fw-bold mt-3"
+                  >
+                    Data final
+                  </label>
+
+                  <input
+                    type="date"
+                    className="form-control"
+                    onChange={(e) => setNewExperienceFinalDate(e.target.value)}
+                    value={newExperienceFinalDate}
+                  />
+
+                  <label
+                    className="form-label fw-bold mt-3"
+                  >
+                    Salário
+                  </label>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    onChange={(e) => setNewExperienceWage(e.target.value)}
+                    value={newExperienceWage}
+                  />
+
+                  <button
+                    className="btn btn-success mt-3"
+                    onClick={handleAddNewExperience}
+                  >
+                    Salvar
+                  </button>
+                </div>
+              )
+            }
+          </div>
+
+          {/* <div className="mb-3">
             <label className="form-label fw-bold">
               última experiência
             </label>
@@ -968,7 +1149,7 @@ const RhInterviewModal = (props) => {
               defaultValue={selectedApplicant?.antepenultima_experiencia}
               disabled={selectedApplicant?.antepenultima_experiencia && true}
             />
-          </div>
+          </div> */}
 
           <div className="mb-3">
             <label className="form-label fw-bold">

@@ -1,4 +1,3 @@
-import moment from "moment"
 import { useEffect, useState } from "react"
 import { Button, Modal } from 'react-bootstrap'
 import { Link, useNavigate } from "react-router-dom"
@@ -151,9 +150,9 @@ const Nav = () => {
                 <Link className="nav-link" to="/home">Início</Link>
               </li>
 
-              {/* <li className="nav-item">
+              <li className="nav-item">
                 <Link className="nav-link" to="/update-notifications">Histórico de atualizações</Link>
-              </li> */}
+              </li>
 
               <li className="nav-item">
                 <Link className="nav-link" to="/positions-table">

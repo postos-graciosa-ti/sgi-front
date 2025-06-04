@@ -39,6 +39,9 @@ const UpdateNotifications = () => {
           updates={[
             "0. Padrão: Funcionalidade sendo alterada(Partes que estão sendo alteradas)",
             "1. Processo seletivo(Correção de e-mail na emissão de redirecionamento, Adição de experiências anteriores na entrevista de RH)",
+            "2. Contrato de trabalho via e-mail(Correção)",
+            "3. Edição de colaboradores(Correção em campos sim/não)",
+            "4. Crachá de colaboradores(Colocar as duas grids do crachá juntas/sem gap)"
           ]}
         />
 

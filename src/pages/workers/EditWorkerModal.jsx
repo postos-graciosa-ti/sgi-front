@@ -716,7 +716,6 @@ const EditWorkerModal = (props) => {
       "cost_center_id": selectedCostCenter?.value || selectedWorker?.cost_center_id,
       "department_id": selectedDepartment?.value || selectedWorker?.department_id,
       "admission_date": admissionDate ?? selectedWorker.admission_date,
-      // "resignation_date": admissionDate || selectedWorker?.admission_date,
       "enrolment": enrolment ?? selectedWorker.worker_enrolment,
       "timecode": timecode ?? selectedWorker.timecode,
       "esocial": esocial ?? selectedWorker.esocial,
@@ -758,22 +757,73 @@ const EditWorkerModal = (props) => {
       "cnh_category": cnhCategory?.value || selectedWorker?.cnh_category?.id,
       "cnh_emition_date": cnhEmissionDate ?? selectedWorker.cnh_emition_date,
       "cnh_valid_date": cnhValidDate ?? selectedWorker.cnh_valid_date,
-      "first_job": firstJob?.value || selectedWorker?.first_job,
-      "was_employee": wasEmployee?.value || selectedWorker?.was_employee,
-      "union_contribute_current_year": unionContributeCurrentYear?.value || selectedWorker?.union_contribute_current_year,
-      "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value || selectedWorker?.receiving_unemployment_insurance,
-      "previous_experience": previousExperience?.value || selectedWorker?.previous_experience,
+
+      "first_job": (
+        firstJob?.value !== undefined ?
+          firstJob.value
+          :
+          selectedWorker?.first_job
+      ),
+
+      "was_employee": (
+        wasEmployee?.value !== undefined ?
+          wasEmployee?.value
+          :
+          selectedWorker?.was_employee
+      ),
+
+      "union_contribute_current_year": (
+        unionContributeCurrentYear?.value !== undefined ?
+          unionContributeCurrentYear?.value
+          :
+          selectedWorker?.union_contribute_current_year
+      ),
+
+      "receiving_unemployment_insurance": (
+        receivingUnemploymentInsurance?.value !== undefined ?
+          receivingUnemploymentInsurance?.value
+          :
+          selectedWorker?.receiving_unemployment_insurance
+      ),
+
+      "previous_experience": (
+        previousExperience?.value !== undefined ?
+          previousExperience?.value
+          :
+          selectedWorker?.previous_experience
+      ),
+
       "month_wage": monthWage ?? selectedWorker.month_wage,
       "hour_wage": hourWage ?? selectedWorker.hour_wage,
       "journey_wage": journeyWage ?? selectedWorker.journey_wage,
-      "transport_voucher": transportVoucher?.value || selectedWorker?.transport_voucher,
+
+      "transport_voucher": (
+        transportVoucher?.value !== undefined ?
+          transportVoucher?.value
+          :
+          selectedWorker?.transport_voucher
+      ),
+
       "diary_workjourney": diaryWorkJourney ?? selectedWorker.diary_workjourney,
       "week_workjourney": weekWorkJourney ?? selectedWorker?.week_workjourney,
       "month_workjourney": monthWorkJourney ?? selectedWorker?.month_workjourney,
       "experience_time": experienceTime?.value || selectedWorker?.experienceTime,
       "nocturne_hours": nocturneHours || selectedWorker?.nocturne_hours,
-      "dangerousness": dangerousness?.value || selectedWorker?.dangerousness,
-      "unhealthy": unhealthy?.value || selectedWorker?.unhealthy,
+
+      "dangerousness": (
+        dangerousness?.value !== undefined ?
+          dangerousness?.value
+          :
+          selectedWorker?.dangerousness
+      ),
+
+      "unhealthy": (
+        unhealthy?.value !== undefined ?
+          unhealthy?.value
+          :
+          selectedWorker?.unhealthy
+      ),
+
       "wage_payment_method": wagePaymentMethod?.value || selectedWorker?.wage_payment_method?.id,
       "general_function_code": codeGeneralFunction ?? selectedWorker.general_function_code,
       "wage": wage ?? selectedWorker.wage,
@@ -786,20 +836,60 @@ const EditWorkerModal = (props) => {
       "bank_account": bankAccount ?? selectedWorker.bankAccount,
       "cbo": cbo ?? selectedWorker.cbo,
       "hierarchy_structure": selectedHierarchyStructure?.value || selectedWorker?.hierarchy_structure?.id,
-      // "enterprise_time": enterpriseTime || selectedWorker?.enterprise_time,
-      "early_payment": earlyPayment?.value || selectedWorker?.early_payment,
-      "harmfull_exposition": harmfullExposition?.value || selectedWorker?.harmfull_exposition,
-      "has_experience_time": selectedHasExperienceTime?.value || selectedWorker?.has_experience_time,
-      "has_nocturne_hours": hasNocturneHours?.value,
+
+      "early_payment": (
+        earlyPayment?.value !== undefined ?
+          earlyPayment?.value
+          :
+          selectedWorker?.early_payment
+      ),
+
+      "harmfull_exposition": (
+        harmfullExposition?.value !== undefined ?
+          harmfullExposition?.value
+          :
+          selectedWorker?.harmfull_exposition
+      ),
+
+      "has_experience_time": (
+        selectedHasExperienceTime?.value !== undefined ?
+          selectedHasExperienceTime?.value
+          :
+          selectedWorker?.has_experience_time
+      ),
+
+      "has_nocturne_hours": (
+        hasNocturneHours?.value !== undefined ?
+          hasNocturneHours?.value
+          :
+          selectedWorker?.has_nocturne_hours
+      ),
+
       "propotional_payment": hasNocturneHours?.value == true && proportionalPayment?.value || null,
       "total_nocturne_workjourney": hasNocturneHours?.value == true && totalNocturneWorkjourney || null,
       "twenty_five_workjourney": hasNocturneHours?.value == true && twentyFiveWorkjourney || null,
       "twenty_two_to_five_week_workjourney": hasNocturneHours?.value == true && twentyTwoToFiveWeekWorkjourney || null,
       "twenty_two_to_five_month_workjourney": hasNocturneHours?.value == true && twentyTwoToFiveMonthWorkjourney || null,
       "twenty_two_to_five_effective_diary_workjourney": hasNocturneHours?.value == true && twentyTwoToFiveEffectiveDiaryWorkjourney || null,
-      "healthcare_plan": healthcarePlan?.value || selectedWorker?.healthcare_plan,
+
+      "healthcare_plan": (
+        healthcarePlan?.value !== undefined ?
+          healthcarePlan?.value
+          :
+          selectedWorker?.healthcare_plan
+      ),
+
       "healthcare_plan_discount": healthcarePlanDiscount ?? selectedWorker.healthcare_plan_discount,
+
       "life_insurance": lifeInsurance?.value || selectedWorker?.life_insurance,
+
+      "life_insurance": (
+        lifeInsurance?.value !== undefined ?
+          lifeInsurance?.value
+          :
+          selectedWorker?.life_insurance
+      ),
+
       "life_insurance_discount": lifeInsuranceDiscount ?? selectedWorker.life_insurance_discount,
       "ag": ag ?? selectedWorker.ag,
       "cc": cc ?? selectedWorker.cc,
@@ -2230,11 +2320,17 @@ const EditWorkerModal = (props) => {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="light" onClick={handleClose}>Fechar</Button>
+        <Button variant="success" className="w-100" onClick={handleSubmit}>Salvar</Button>
 
-        <Button variant="primary" onClick={handleSendEmailToMabecon}>Mabecon</Button>
+        <Button variant="primary" className="w-100" onClick={handleSendEmailToMabecon}>Solicitar admissão via e-mail</Button>
 
-        <Button variant="success" onClick={handleSubmit}>Salvar</Button>
+        {/* <Button variant="primary" className="w-100" onClick={handleSendEmailToMabecon}>Nova estado</Button>
+
+        <Button variant="primary" className="w-100" onClick={handleSendEmailToMabecon}>Nova cidade</Button>
+
+        <Button variant="primary" className="w-100" onClick={handleSendEmailToMabecon}>Novo bairro</Button> */}
+
+        <Button variant="light" className="w-100" onClick={handleClose}>Fechar</Button>
       </Modal.Footer>
     </Modal>
   )

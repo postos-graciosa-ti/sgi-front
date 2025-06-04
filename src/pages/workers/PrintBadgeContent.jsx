@@ -78,7 +78,6 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie, workerPicture }) => {
           .grid-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
           }
 
           .grid-item {

@@ -1,6 +1,6 @@
-import moment from 'moment'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import Swal from 'sweetalert2'
 import useUserSessionStore from "../../data/userSession"
 import api from '../../services/api'
 
@@ -57,8 +57,11 @@ const DeleteUserModal = (props) => {
     //   })
 
     api
-      .patch(`/users/${selectedUser.user_id}/deactivate`)
+      .patch(`/users/${selectedUser?.user_id}/created_by/${userSession?.id}/deactivate`)
       .then(() => handleClose())
+      .catch((error) => {
+        Swal.fire("Erro", error.response.data.detail, "error")
+      })
   }
 
   return (

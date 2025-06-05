@@ -5,7 +5,6 @@ import { Plus, Trash } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactInputMask from 'react-input-mask'
-import CreatableSelect from 'react-select/creatable'
 import Swal from 'sweetalert2'
 import Input from '../../components/form/Input'
 import Select from "../../components/form/Select"
@@ -26,6 +25,10 @@ import loadWagePaymentMethodOptions from "../../requests/loadOptions/loadWagePay
 import getParentsType from '../../requests/parentsType/getParentsType'
 import postWorkersParents from '../../requests/workersParents/postWorkersParents'
 import api from '../../services/api'
+import NewCityModal from './NewCityModal'
+import NewNationalityModal from './NewNationalityModal'
+import NewNeighborhoodModal from './NewNeighborhoodModal'
+import NewStateModal from './NewStateModal'
 
 function calcularTempoDeEmpresa(dataAdmissaoStr) {
   const dataAdmissao = new Date(dataAdmissaoStr)
@@ -369,6 +372,14 @@ const CreateWorkerModal = (props) => {
   const [cc, setCc] = useState()
 
   const [earlyPaymentDiscount, setEarlyPaymentDiscount] = useState()
+
+  const [newStateModalOpen, setNewStateModalOpen] = useState(false)
+
+  const [newNationalityModalOpen, setNewNationalityModalOpen] = useState(false)
+
+  const [newCityModalOpen, setNewCityModalOpen] = useState(false)
+
+  const [newNeighborhoodModalOpen, setNewNeighborhoodModalOpen] = useState(false)
 
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
@@ -953,36 +964,11 @@ const CreateWorkerModal = (props) => {
             </div>
 
             <div className="col">
-              <label><b>Bairro</b></label>
-
-              <CreatableSelect
+              <Select
                 placeholder={""}
+                label={"Bairro"}
                 options={neighborhoodOptions}
-                onChange={async (value) => {
-                  if (value.__isNew__) {
-                    try {
-                      const response = await api.post("/news", { name: value.value })
-
-                      const options = response?.data.map((neighborhood) => ({
-                        value: neighborhood.id,
-                        label: neighborhood.name,
-                        cityId: neighborhood.city_id,
-                      }))
-
-                      setNeighborhoodOptions(options)
-
-                      const neighborhood = options.find((option) => option.label === value.value)
-
-                      setSelectedNeighborhood(neighborhood)
-                    } catch (error) {
-                      console.error(error)
-
-                      Swal.fire("Não foi possível cadastrar novo bairro", "Verifique a ortografia e tente novamente", "error")
-                    }
-                  } else {
-                    setSelectedNeighborhood(value)
-                  }
-                }}
+                setSelectedValue={setSelectedNeighborhood}
               />
             </div>
           </div>
@@ -1050,36 +1036,11 @@ const CreateWorkerModal = (props) => {
             </div>
 
             <div className="col">
-              <label><b>Cidade</b></label>
-
-              <CreatableSelect
+              <Select
                 placeholder={""}
+                label={"Cidade"}
                 options={citiesOptions}
-                onChange={async (value) => {
-                  if (value.__isNew__) {
-                    try {
-                      const response = await api.post("/cities", { name: value.value })
-
-                      const options = response?.data.map((city) => ({
-                        value: city.id,
-                        label: city.name,
-                        stateId: city.state_id,
-                      }))
-
-                      setCitiesOptions(options)
-
-                      const selectedBirthcity = options.find((option) => option.label === value.value)
-
-                      setBirthcity(selectedBirthcity)
-                    } catch (error) {
-                      console.error(error)
-
-                      Swal.fire("Não foi possível cadastrar nova cidade", "Verifique a ortografia e tente novamente", "error")
-                    }
-                  } else {
-                    setBirthcity(value)
-                  }
-                }}
+                setSelectedValue={setBirthcity}
               />
             </div>
           </div>
@@ -2054,15 +2015,60 @@ const CreateWorkerModal = (props) => {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="light" onClick={handleClose}>
-            Fechar
-          </Button>
+          <div className="w-100 d-grid gap-2">
+            <Button variant="success" onClick={handleSubmit}>
+              Salvar
+            </Button>
+          </div>
 
-          <Button variant="success" onClick={handleSubmit}>
-            Salvar
-          </Button>
+          <div className="w-100 d-flex flex-wrap gap-2 mt-2">
+            <Button variant="primary" className="flex-fill" onClick={() => setNewNationalityModalOpen(true)}>
+              Nova nacionalidade
+            </Button>
+
+            <Button variant="primary" className="flex-fill" onClick={() => setNewStateModalOpen(true)}>
+              Novo estado
+            </Button>
+
+            <Button variant="primary" className="flex-fill" onClick={() => setNewCityModalOpen(true)}>
+              Nova cidade
+            </Button>
+
+            <Button variant="primary" className="flex-fill" onClick={() => setNewNeighborhoodModalOpen(true)}>
+              Novo bairro
+            </Button>
+          </div>
+
+          <div className="w-100 d-grid gap-2 mt-3">
+            <Button variant="light" onClick={handleClose}>
+              Fechar
+            </Button>
+          </div>
         </Modal.Footer>
       </Modal>
+
+      <NewNationalityModal
+        newNationalityModalOpen={newNationalityModalOpen}
+        setNewNationalityModalOpen={setNewNationalityModalOpen}
+      />
+
+      <NewStateModal
+        newStateModalOpen={newStateModalOpen}
+        setNewStateModalOpen={setNewStateModalOpen}
+        setStatesOptions={setStatesOptions}
+      />
+
+      <NewCityModal
+        newCityModalOpen={newCityModalOpen}
+        setNewCityModalOpen={setNewCityModalOpen}
+        setCitiesOptions={setCitiesOptions}
+      />
+
+      <NewNeighborhoodModal
+        newNeighborhoodModalOpen={newNeighborhoodModalOpen}
+        setNewNeighborhoodModalOpen={setNewNeighborhoodModalOpen}
+        setNeighborhoodOptions={setNeighborhoodOptions}
+      />
     </>
   )
 }

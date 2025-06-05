@@ -150,9 +150,9 @@ const Nav = () => {
                 <Link className="nav-link" to="/home">Início</Link>
               </li>
 
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link className="nav-link" to="/update-notifications">Histórico de atualizações</Link>
-              </li>
+              </li> */}
 
               <li className="nav-item">
                 <Link className="nav-link" to="/positions-table">

@@ -44,6 +44,8 @@ const Cities = () => {
       <Nav />
 
       <div className="container">
+        <h4>Cadastro de cidades</h4>
+
         <div>
           <button className="btn btn-primary mb-3" onClick={handleOpenAddCitiesModal}>
             <Plus />

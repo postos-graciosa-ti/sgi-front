@@ -31,6 +31,10 @@ import loadWagePaymentMethodOptions from '../../requests/loadOptions/loadWagePay
 import getParentsType from '../../requests/parentsType/getParentsType'
 import postWorkersParents from '../../requests/workersParents/postWorkersParents'
 import api from '../../services/api'
+import NewCityModal from './NewCityModal'
+import NewNationalityModal from './NewNationalityModal'
+import NewNeighborhoodModal from './NewNeighborhoodModal'
+import NewStateModal from './NewStateModal'
 import WorkerDataPrintContent from './WorkerDataPrintContent'
 
 function calcularTempoDeEmpresa(dataAdmissaoStr) {
@@ -374,6 +378,14 @@ const EditWorkerModal = (props) => {
   const [cc, setCc] = useState()
 
   const [earlyPaymentDiscount, setEarlyPaymentDiscount] = useState()
+
+  const [newStateModalOpen, setNewStateModalOpen] = useState(false)
+
+  const [newNationalityModalOpen, setNewNationalityModalOpen] = useState(false)
+
+  const [newCityModalOpen, setNewCityModalOpen] = useState(false)
+
+  const [newNeighborhoodModalOpen, setNewNeighborhoodModalOpen] = useState(false)
 
   useEffect(() => {
     loadFunctionsOptions(selectedSubsdiarie, setFunctionsOptions)
@@ -982,1109 +994,1110 @@ const EditWorkerModal = (props) => {
   }
 
   return (
-    <Modal
-      show={editWorkerModalOpen}
-      onHide={handleClose}
-      backdrop="static"
-      keyboard={false}
-      fullscreen={true}
-    >
-      <Modal.Header closeButton>
-        <Modal.Title>Editar colaborador</Modal.Title>
-      </Modal.Header>
+    <>
+      <Modal
+        show={editWorkerModalOpen}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+        fullscreen={true}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Editar colaborador</Modal.Title>
+        </Modal.Header>
 
-      <Modal.Body>
-        <button
-          className="btn btn-light ms-2"
-          onClick={handlePrintWorkerData}
-          title="Imprimir dados do colaborador"
-        >
-          <Printer />
-        </button>
+        <Modal.Body>
+          <button
+            className="btn btn-light ms-2"
+            onClick={handlePrintWorkerData}
+            title="Imprimir dados do colaborador"
+          >
+            <Printer />
+          </button>
 
-        <div>
-          <h4>Dados pessoais</h4>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <Input
-              type="text"
-              label={"Nome"}
-              setSelectedValue={setName}
-              required={true}
-              defaultValue={selectedWorker?.worker_name}
-            />
+          <div>
+            <h4>Dados pessoais</h4>
           </div>
 
-          <div className="col">
-            <Select
-              placeholder=""
-              label={"Gênero"}
-              options={gendersOptions}
-              setSelectedValue={setSelectedGender}
-              defaultValue={gendersOptions?.find((option) => option.value == selectedWorker?.gender?.id)}
-            />
+          <div className="row">
+            <div className="col">
+              <Input
+                type="text"
+                label={"Nome"}
+                setSelectedValue={setName}
+                required={true}
+                defaultValue={selectedWorker?.worker_name}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                placeholder=""
+                label={"Gênero"}
+                options={gendersOptions}
+                setSelectedValue={setSelectedGender}
+                defaultValue={gendersOptions?.find((option) => option.value == selectedWorker?.gender?.id)}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                label={"Estado civil"}
+                placeholder=""
+                options={civilStatusOptions}
+                setSelectedValue={setSelectedCivilStatus}
+                defaultValue={civilStatusOptions?.find((option) => option.value == selectedWorker?.civil_status?.id)}
+              />
+            </div>
           </div>
 
-          <div className="col">
-            <Select
-              label={"Estado civil"}
-              placeholder=""
-              options={civilStatusOptions}
-              setSelectedValue={setSelectedCivilStatus}
-              defaultValue={civilStatusOptions?.find((option) => option.value == selectedWorker?.civil_status?.id)}
-            />
-          </div>
-        </div>
+          <div className="row">
+            <div className="col">
+              <label><b>Número de emergência</b></label>
 
-        <div className="row">
-          <div className="col">
-            <label><b>Número de emergência</b></label>
+              <ReactInputMask
+                mask={"(99) 99999-9999"}
+                className="form-control"
+                onChange={(e) => setEmergencyNumber(e.target.value)}
+                defaultValue={selectedWorker?.emergency_number}
+              />
+            </div>
 
-            <ReactInputMask
-              mask={"(99) 99999-9999"}
-              className="form-control"
-              onChange={(e) => setEmergencyNumber(e.target.value)}
-              defaultValue={selectedWorker?.emergency_number}
-            />
-          </div>
+            <div className="col">
+              <Input
+                type="text"
+                label={"E-social"}
+                setSelectedValue={setEsocial}
+                defaultValue={selectedWorker?.esocial}
+              />
+            </div>
 
-          <div className="col">
-            <Input
-              type="text"
-              label={"E-social"}
-              setSelectedValue={setEsocial}
-              defaultValue={selectedWorker?.esocial}
-            />
-          </div>
+            <div className="col">
+              <Input
+                type="text"
+                label={"Código de acesso"}
+                setSelectedValue={setEnrolment}
+                defaultValue={selectedWorker?.worker_enrolment}
+              />
+            </div>
 
-          <div className="col">
-            <Input
-              type="text"
-              label={"Código de acesso"}
-              setSelectedValue={setEnrolment}
-              defaultValue={selectedWorker?.worker_enrolment}
-            />
-          </div>
-
-          <div className="col">
-            <Input
-              type="text"
-              label={"Código de ponto"}
-              setSelectedValue={setTimecode}
-              defaultValue={selectedWorker?.timecode}
-            />
-          </div>
-        </div>
-
-        <div>
-          <h4>Endereço residencial</h4>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <Input
-              type="text"
-              label={"Logradouro"}
-              setSelectedValue={setStreet}
-              defaultValue={selectedWorker?.street}
-            />
+            <div className="col">
+              <Input
+                type="text"
+                label={"Código de ponto"}
+                setSelectedValue={setTimecode}
+                defaultValue={selectedWorker?.timecode}
+              />
+            </div>
           </div>
 
-          <div className="col">
-            <Input
-              type="text"
-              label={"Número"}
-              setSelectedValue={setStreetNumber}
-              defaultValue={selectedWorker?.street_number}
-            />
+          <div>
+            <h4>Endereço residencial</h4>
           </div>
 
-          <div className="col">
-            <Input
-              type="text"
-              label={"Complemento"}
-              setSelectedValue={setStreetComplement}
-              defaultValue={selectedWorker?.street_complement}
-            />
+          <div className="row">
+            <div className="col">
+              <Input
+                type="text"
+                label={"Logradouro"}
+                setSelectedValue={setStreet}
+                defaultValue={selectedWorker?.street}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                type="text"
+                label={"Número"}
+                setSelectedValue={setStreetNumber}
+                defaultValue={selectedWorker?.street_number}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                type="text"
+                label={"Complemento"}
+                setSelectedValue={setStreetComplement}
+                defaultValue={selectedWorker?.street_complement}
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="row">
-          <div className="col">
-            <Input
-              type="text"
-              label={"CEP"}
-              setSelectedValue={setSelectedCep}
-              defaultValue={selectedWorker?.cep}
-            />
+          <div className="row">
+            <div className="col">
+              <Input
+                type="text"
+                label={"CEP"}
+                setSelectedValue={setSelectedCep}
+                defaultValue={selectedWorker?.cep}
+              />
+            </div>
+
+            <div className="col">
+              <label><b>Cidade</b></label>
+
+              <input
+                className="form-control"
+                disabled={"true"}
+                value={residentialCity?.name}
+              />
+            </div>
+
+            <div className="col">
+              <label><b>Bairro</b></label>
+
+              <CreatableSelect
+                placeholder={""}
+                options={neighborhoodOptions}
+                onChange={(value) => {
+                  if (value.__isNew__) {
+                    api
+                      .post("/news", { name: value.value })
+                      .then((response) => {
+                        let options = response?.data.map((neighborhood) => ({ value: neighborhood.id, label: neighborhood.name, cityId: neighborhood.city_id }))
+
+                        setNeighborhoodOptions(options)
+
+                        let neighborhood = options.find((option) => option.label == value.value)
+
+                        setSelectedNeighborhood(neighborhood)
+                      })
+
+                  } else {
+                    setSelectedNeighborhood(value)
+                  }
+                }}
+                defaultValue={neighborhoodOptions?.find((option) => option.value == selectedWorker?.neighborhood?.id)}
+              />
+
+            </div>
           </div>
 
-          <div className="col">
-            <label><b>Cidade</b></label>
-
-            <input
-              className="form-control"
-              disabled={"true"}
-              value={residentialCity?.name}
-            />
+          <div>
+            <h4>Dados pessoais</h4>
           </div>
 
-          <div className="col">
-            <label><b>Bairro</b></label>
+          <div className="row">
+            <div className="col">
+              <label><b>Telefone fixo</b></label>
+              <ReactInputMask
+                mask={"(99) 99999-9999"}
+                className="form-control"
+                onChange={(e) => setSelectedPhone(e.target.value)}
+                defaultValue={selectedWorker?.phone}
+              />
+            </div>
 
-            <CreatableSelect
-              placeholder={""}
-              options={neighborhoodOptions}
-              onChange={(value) => {
-                if (value.__isNew__) {
-                  api
-                    .post("/news", { name: value.value })
-                    .then((response) => {
-                      let options = response?.data.map((neighborhood) => ({ value: neighborhood.id, label: neighborhood.name, cityId: neighborhood.city_id }))
+            <div className="col">
+              <label><b>Celular</b></label>
 
-                      setNeighborhoodOptions(options)
+              <ReactInputMask
+                mask={"(99) 99999-9999"}
+                className="form-control"
+                onChange={(e) => setSelectedMobile(e.target.value)}
+                defaultValue={selectedWorker?.mobile}
+              />
+            </div>
 
-                      let neighborhood = options.find((option) => option.label == value.value)
+            <div className="col">
+              <Input
+                type="email"
+                label={"E-mail"}
+                setSelectedValue={setEmail}
+                defaultValue={selectedWorker?.email}
+              />
+            </div>
 
-                      setSelectedNeighborhood(neighborhood)
-                    })
+            <div className="col">
+              <Select
+                label={"Etnia"}
+                placeholder=""
+                options={ethnicitiesOptions}
+                setSelectedValue={setSelectedEthnicity}
+                defaultValue={ethnicitiesOptions?.find((option) => option.value == selectedWorker?.ethnicity?.id)}
+              />
+            </div>
+          </div>
 
-                } else {
-                  setSelectedNeighborhood(value)
+          <div className="row">
+            <div className="col">
+              <Input
+                type="date"
+                setSelectedValue={setBirthdate}
+                label={"Data de nascimento"}
+                defaultValue={selectedWorker?.birthdate}
+              />
+            </div>
+
+            <div className="col">
+              <label><b>Estado</b></label>
+              <input
+                className="form-control"
+                value={
+                  statesOptions?.find(
+                    (option) => option.value === selectedWorker?.birthcity?.state_id
+                  )?.label || ''
                 }
-              }}
-              defaultValue={neighborhoodOptions?.find((option) => option.value == selectedWorker?.neighborhood?.id)}
-            />
+                disabled
+                readOnly
+              />
+            </div>
 
-          </div>
-        </div>
+            <div className="col">
+              <label><b>Cidade</b></label>
 
-        <div>
-          <h4>Dados pessoais</h4>
-        </div>
+              <CreatableSelect
+                placeholder={""}
+                options={citiesOptions}
+                onChange={(value) => {
+                  if (value.__isNew__) {
+                    api
+                      .post("/cities", { name: value.value })
+                      .then((response) => {
+                        let options = response?.data.map((city) => ({ value: city.id, label: city.name, stateId: city.state_id }))
 
-        <div className="row">
-          <div className="col">
-            <label><b>Telefone fixo</b></label>
-            <ReactInputMask
-              mask={"(99) 99999-9999"}
-              className="form-control"
-              onChange={(e) => setSelectedPhone(e.target.value)}
-              defaultValue={selectedWorker?.phone}
-            />
-          </div>
+                        setCitiesOptions(options)
 
-          <div className="col">
-            <label><b>Celular</b></label>
+                        let selectedBirthcity = options.find((option) => option.label == value.value)
 
-            <ReactInputMask
-              mask={"(99) 99999-9999"}
-              className="form-control"
-              onChange={(e) => setSelectedMobile(e.target.value)}
-              defaultValue={selectedWorker?.mobile}
-            />
-          </div>
+                        setBirthcity(selectedBirthcity)
+                      })
 
-          <div className="col">
-            <Input
-              type="email"
-              label={"E-mail"}
-              setSelectedValue={setEmail}
-              defaultValue={selectedWorker?.email}
-            />
+                  } else {
+                    setBirthcity(value)
+                  }
+                }}
+                defaultValue={citiesOptions?.find((option) => option.value == selectedWorker?.birthcity?.id)}
+              />
+            </div>
           </div>
 
-          <div className="col">
-            <Select
-              label={"Etnia"}
-              placeholder=""
-              options={ethnicitiesOptions}
-              setSelectedValue={setSelectedEthnicity}
-              defaultValue={ethnicitiesOptions?.find((option) => option.value == selectedWorker?.ethnicity?.id)}
-            />
-          </div>
-        </div>
+          <div className="row">
+            <div className="col">
+              <Input
+                type="text"
+                label={"Nome da mãe"}
+                setSelectedValue={setMothername}
+                defaultValue={selectedWorker?.mothername}
+              />
+            </div>
 
-        <div className="row">
-          <div className="col">
-            <Input
-              type="date"
-              setSelectedValue={setBirthdate}
-              label={"Data de nascimento"}
-              defaultValue={selectedWorker?.birthdate}
-            />
-          </div>
-
-          <div className="col">
-            <label><b>Estado</b></label>
-            <input
-              className="form-control"
-              value={
-                statesOptions?.find(
-                  (option) => option.value === selectedWorker?.birthcity?.state_id
-                )?.label || ''
-              }
-              disabled
-              readOnly
-            />
+            <div className="col">
+              <Input
+                type="text"
+                label={"Nome do pai"}
+                setSelectedValue={setFathername}
+                defaultValue={selectedWorker?.fathername}
+              />
+            </div>
           </div>
 
-          <div className="col">
-            <label><b>Cidade</b></label>
-
-            <CreatableSelect
-              placeholder={""}
-              options={citiesOptions}
-              onChange={(value) => {
-                if (value.__isNew__) {
-                  api
-                    .post("/cities", { name: value.value })
-                    .then((response) => {
-                      let options = response?.data.map((city) => ({ value: city.id, label: city.name, stateId: city.state_id }))
-
-                      setCitiesOptions(options)
-
-                      let selectedBirthcity = options.find((option) => option.label == value.value)
-
-                      setBirthcity(selectedBirthcity)
-                    })
-
-                } else {
-                  setBirthcity(value)
-                }
-              }}
-              defaultValue={citiesOptions?.find((option) => option.value == selectedWorker?.birthcity?.id)}
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <Input
-              type="text"
-              label={"Nome da mãe"}
-              setSelectedValue={setMothername}
-              defaultValue={selectedWorker?.mothername}
-            />
+          <div>
+            <h4>Documentos</h4>
           </div>
 
-          <div className="col">
-            <Input
-              type="text"
-              label={"Nome do pai"}
-              setSelectedValue={setFathername}
-              defaultValue={selectedWorker?.fathername}
-            />
+          <div className="row">
+            <div className="col">
+              <label><b>CPF</b></label>
+              <ReactInputMask
+                mask={"999.999.999-99"}
+                defaultValue={selectedWorker?.cpf}
+                className="form-control"
+                onChange={(e) => setCpf(e.target.value)}
+              />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <h4>Documentos</h4>
-        </div>
+          <div className="row">
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Input
+                    type="text"
+                    label={"RG"}
+                    setSelectedValue={setRg}
+                    defaultValue={selectedWorker?.rg}
+                  />
+                </div>
 
-        <div className="row">
-          <div className="col">
-            <label><b>CPF</b></label>
-            <ReactInputMask
-              mask={"999.999.999-99"}
-              defaultValue={selectedWorker?.cpf}
-              className="form-control"
-              onChange={(e) => setCpf(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <div className="row">
-              <div className="col">
-                <Input
-                  type="text"
-                  label={"RG"}
-                  setSelectedValue={setRg}
-                  defaultValue={selectedWorker?.rg}
-                />
+                <div className="col">
+                  <Input
+                    type="text"
+                    label={"Órgão emissor"}
+                    setSelectedValue={setRgIssuingAgency}
+                    defaultValue={selectedWorker?.rg_issuing_agency}
+                  />
+                </div>
               </div>
+            </div>
 
-              <div className="col">
-                <Input
-                  type="text"
-                  label={"Órgão emissor"}
-                  setSelectedValue={setRgIssuingAgency}
-                  defaultValue={selectedWorker?.rg_issuing_agency}
-                />
+            <div className="col">
+              <Select
+                placeholder=""
+                label={"Estado"}
+                options={statesOptions}
+                setSelectedValue={setRgState}
+                defaultValue={statesOptions?.find((option) => option.value == selectedWorker?.rg_state?.id)}
+              />
+            </div>
+
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Input
+                    type="date"
+                    setSelectedValue={setRgExpeditionDate}
+                    label={"Data de expedição"}
+                    defaultValue={selectedWorker?.rg_expedition_date}
+                  />
+                </div>
+
+                <div className="col">
+                  <Select
+                    placeholder=""
+                    label={"Escolaridade"}
+                    options={schoolLevelsOptions}
+                    setSelectedValue={setSelectedSchoolLevel}
+                    defaultValue={schoolLevelsOptions?.find((option) => option.value == selectedWorker?.school_level?.id)}
+                  />
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="col">
-            <Select
-              placeholder=""
-              label={"Estado"}
-              options={statesOptions}
-              setSelectedValue={setRgState}
-              defaultValue={statesOptions?.find((option) => option.value == selectedWorker?.rg_state?.id)}
-            />
-          </div>
-
-          <div className="col">
-            <div className="row">
-              <div className="col">
-                <Input
-                  type="date"
-                  setSelectedValue={setRgExpeditionDate}
-                  label={"Data de expedição"}
-                  defaultValue={selectedWorker?.rg_expedition_date}
-                />
-              </div>
-
-              <div className="col">
-                <Select
-                  placeholder=""
-                  label={"Escolaridade"}
-                  options={schoolLevelsOptions}
-                  setSelectedValue={setSelectedSchoolLevel}
-                  defaultValue={schoolLevelsOptions?.find((option) => option.value == selectedWorker?.school_level?.id)}
-                />
-              </div>
+          <div className="row">
+            <div className="col">
+              <Input
+                type="text"
+                label="Certificado de reservista"
+                setSelectedValue={setMilitaryCertNumber}
+                defaultValue={selectedWorker?.military_cert_number}
+              />
             </div>
           </div>
-        </div>
 
-        <div className="row">
-          <div className="col">
-            <Input
-              type="text"
-              label="Certificado de reservista"
-              setSelectedValue={setMilitaryCertNumber}
-              defaultValue={selectedWorker?.military_cert_number}
-            />
-          </div>
-        </div>
+          <div className="row">
+            <div className="col">
+              <Input
+                type="text"
+                setSelectedValue={setPis}
+                label={"PIS"}
+                defaultValue={selectedWorker?.pis}
+              />
+            </div>
 
-        <div className="row">
-          <div className="col">
-            <Input
-              type="text"
-              setSelectedValue={setPis}
-              label={"PIS"}
-              defaultValue={selectedWorker?.pis}
-            />
+            <div className="col">
+              <Input
+                type={"date"}
+                setSelectedValue={setPisRegisterDate}
+                label={"Data de cadastro"}
+                defaultValue={selectedWorker?.pis_register_date}
+              />
+            </div>
           </div>
 
-          <div className="col">
-            <Input
-              type={"date"}
-              setSelectedValue={setPisRegisterDate}
-              label={"Data de cadastro"}
-              defaultValue={selectedWorker?.pis_register_date}
-            />
-          </div>
-        </div>
+          <div className="row">
+            <div className="col">
+              <Input
+                type="text"
+                label='Título de eleitor'
+                setSelectedValue={setVotantTitle}
+                defaultValue={selectedWorker?.votant_title}
+              />
+            </div>
 
-        <div className="row">
-          <div className="col">
-            <Input
-              type="text"
-              label='Título de eleitor'
-              setSelectedValue={setVotantTitle}
-              defaultValue={selectedWorker?.votant_title}
-            />
+            <div className="col">
+              <Input
+                type="text"
+                label='Zona'
+                setSelectedValue={setVotantZone}
+                defaultValue={selectedWorker?.votant_zone}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                type="text"
+                setSelectedValue={setVotantSession}
+                label="Sessão"
+                defaultValue={selectedWorker?.votant_session}
+              />
+            </div>
           </div>
 
-          <div className="col">
-            <Input
-              type="text"
-              label='Zona'
-              setSelectedValue={setVotantZone}
-              defaultValue={selectedWorker?.votant_zone}
-            />
-          </div>
+          <div className="row">
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Input
+                    type="text"
+                    label={"CTPS"}
+                    setSelectedValue={setCtps}
+                    defaultValue={selectedWorker?.ctps}
+                  />
+                </div>
 
-          <div className="col">
-            <Input
-              type="text"
-              setSelectedValue={setVotantSession}
-              label="Sessão"
-              defaultValue={selectedWorker?.votant_session}
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <div className="row">
-              <div className="col">
-                <Input
-                  type="text"
-                  label={"CTPS"}
-                  setSelectedValue={setCtps}
-                  defaultValue={selectedWorker?.ctps}
-                />
+                <div className="col">
+                  <Input
+                    type="text"
+                    label={"Série"}
+                    setSelectedValue={setCtpsSerie}
+                    defaultValue={selectedWorker?.ctps_serie}
+                  />
+                </div>
               </div>
+            </div>
 
-              <div className="col">
-                <Input
-                  type="text"
-                  label={"Série"}
-                  setSelectedValue={setCtpsSerie}
-                  defaultValue={selectedWorker?.ctps_serie}
-                />
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Select
+                    placeholder=""
+                    label={"UF"}
+                    options={statesOptions}
+                    setSelectedValue={setCtpsState}
+                    defaultValue={statesOptions?.find((option) => option.value == selectedWorker?.ctps_state?.id)}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    type="date"
+                    label="Data de emissão"
+                    setSelectedValue={setCtpsEmissionDate}
+                    defaultValue={selectedWorker?.ctps_emission_date}
+                  />
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="col">
-            <div className="row">
-              <div className="col">
-                <Select
-                  placeholder=""
-                  label={"UF"}
-                  options={statesOptions}
-                  setSelectedValue={setCtpsState}
-                  defaultValue={statesOptions?.find((option) => option.value == selectedWorker?.ctps_state?.id)}
-                />
-              </div>
+          <div className="row">
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Input
+                    type="text"
+                    label="CNH"
+                    setSelectedValue={setCnh}
+                    defaultValue={selectedWorker?.cnh}
+                  />
+                </div>
 
-              <div className="col">
-                <Input
-                  type="date"
-                  label="Data de emissão"
-                  setSelectedValue={setCtpsEmissionDate}
-                  defaultValue={selectedWorker?.ctps_emission_date}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <div className="row">
-              <div className="col">
-                <Input
-                  type="text"
-                  label="CNH"
-                  setSelectedValue={setCnh}
-                  defaultValue={selectedWorker?.cnh}
-                />
-              </div>
-
-              <div className="col">
-                {/* <Input
+                <div className="col">
+                  {/* <Input
                   type="text"
                   label="Categoria"
                   setSelectedValue={setCnhCategory}
                   defaultValue={selectedWorker?.cnh_category}
                 /> */}
 
-                <Select
-                  placeholder={""}
-                  label={"Categoria"}
-                  options={cnhCategoriesOptions}
-                  setSelectedValue={setCnhCategory}
-                  defaultValue={cnhCategoriesOptions?.find((option) => option.value == selectedWorker?.cnh_category?.id)}
-                />
+                  <Select
+                    placeholder={""}
+                    label={"Categoria"}
+                    options={cnhCategoriesOptions}
+                    setSelectedValue={setCnhCategory}
+                    defaultValue={cnhCategoriesOptions?.find((option) => option.value == selectedWorker?.cnh_category?.id)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Input
+                    type="date"
+                    label="Data de emissão"
+                    setSelectedValue={setCnhEmissionDate}
+                    defaultValue={selectedWorker?.cnh_emition_date}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    type="date"
+                    label="Validade"
+                    setSelectedValue={setCnhValidDate}
+                    defaultValue={selectedWorker?.cnh_valid_date}
+                  />
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="col">
-            <div className="row">
-              <div className="col">
-                <Input
-                  type="date"
-                  label="Data de emissão"
-                  setSelectedValue={setCnhEmissionDate}
-                  defaultValue={selectedWorker?.cnh_emition_date}
-                />
-              </div>
+          <div className="row">
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Select
+                    placeholder={""}
+                    label="Primeiro emprego?"
+                    options={trueFalseOptions}
+                    setSelectedValue={setFirstJob}
+                    defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.first_job)}
+                  />
+                </div>
 
-              <div className="col">
-                <Input
-                  type="date"
-                  label="Validade"
-                  setSelectedValue={setCnhValidDate}
-                  defaultValue={selectedWorker?.cnh_valid_date}
-                />
+                <div className="col">
+                  <Select
+                    placeholder={""}
+                    label="Já foi empregado da empresa?"
+                    options={trueFalseOptions}
+                    setSelectedValue={setWasEmployee}
+                    defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.was_employee)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="col">
+              <Select
+                placeholder={""}
+                label="Contribuição sindical nesse ano?"
+                options={trueFalseOptions}
+                setSelectedValue={setUnionContributeCurrentYear}
+                defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.union_contribute_current_year)}
+              />
+            </div>
+
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Select
+                    placeholder={""}
+                    label="Recebendo seguro-desemprego?"
+                    options={trueFalseOptions}
+                    setSelectedValue={setReceivingUnemploymentInsurance}
+                    defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.receiving_unemployment_insurance)}
+                  />
+                </div>
+
+                <div className="col">
+                  <Select
+                    placeholder={""}
+                    label="Experiência prévia na função?"
+                    options={trueFalseOptions}
+                    setSelectedValue={setPreviousExperience}
+                    defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.previous_experience)}
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="row">
-          <div className="col">
-            <div className="row">
-              <div className="col">
-                <Select
-                  placeholder={""}
-                  label="Primeiro emprego?"
-                  options={trueFalseOptions}
-                  setSelectedValue={setFirstJob}
-                  defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.first_job)}
-                />
+          <h4>Dependentes</h4>
+
+          {
+            parentsData?.map((parent) => (
+              <div className="row">
+                <div className="col-11">
+                  <input
+                    type="text"
+                    className="form-control mb-2"
+                    value={
+                      `${parent?.name} / ${parent.cpf} / ${moment(parent.birthdate).format("DD/MM/YYYY")} / ${parent.books && parent.books || "Não"} / ${parent.papers && parent.papers || "Não"}`
+                    }
+                    disabled={true}
+                  />
+                </div>
+
+                <div className="col-1">
+                  <button className="btn btn-danger" onClick={() => handleDeleteWorkerParents(parent)}>
+                    <Trash />
+                  </button>
+                </div>
+              </div>
+            ))
+          }
+
+          <div className="row">
+            <div className="col">
+              <div className="row">
+                <div className="col-11">
+                  <Select
+                    placeholder={""}
+                    options={parentsTypeOptions}
+                    setSelectedValue={setSelectedParentsType}
+                    label={"Tipo de parente"}
+                  />
+                </div>
+
+                <div className="col-1">
+                  <button className="btn btn-warning mt-4" onClick={handleWorkersParents}>
+                    <Plus />
+                  </button>
+                </div>
               </div>
 
-              <div className="col">
-                <Select
-                  placeholder={""}
-                  label="Já foi empregado da empresa?"
-                  options={trueFalseOptions}
-                  setSelectedValue={setWasEmployee}
-                  defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.was_employee)}
-                />
+              <Input
+                type={"text"}
+                label={"Nome"}
+                setSelectedValue={setParentsName}
+              />
+
+              <Input
+                type={"text"}
+                label={"CPF"}
+                setSelectedValue={setParentsCpf}
+              />
+
+              <Input
+                type={"date"}
+                label={"Data de nascimento"}
+                setSelectedValue={setParentsDatebirth}
+              />
+
+              {
+                selectedParentsType?.value == 3 && (
+                  <>
+                    <Input
+                      type={"text"}
+                      label={"Livros"}
+                      setSelectedValue={setParentsBooks}
+                    />
+
+                    <Input
+                      type={"text"}
+                      label={"Folhas"}
+                      setSelectedValue={setParentsPapers}
+                    />
+                  </>
+                )
+              }
+            </div>
+          </div>
+
+          <div>
+            <h4>Para preenchimento exclusivo da empresa - Dados de contratação</h4>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Select
+                placeholder=""
+                label={"Função"}
+                options={functionsOptions}
+                setSelectedValue={setSelectedFunction}
+                required={true}
+                defaultValue={functionsOptions?.find((option) => option.value == selectedWorker?.function_id)}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                placeholder=""
+                label={"Turno"}
+                options={turnsOptions}
+                setSelectedValue={setSelectedTurn}
+                required={true}
+                defaultValue={turnsOptions?.find((option) => option.value == selectedWorker?.turn_id)}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                label={"Centro de custos"}
+                placeholder=""
+                options={costCenterOptions}
+                setSelectedValue={setSelectedCostCenter}
+                required={true}
+                defaultValue={costCenterOptions?.find((option) => option.value == selectedWorker?.cost_center_id)}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                label={"Setor"}
+                placeholder=""
+                options={departmentsOptions}
+                setSelectedValue={setSelectedDepartment}
+                required={true}
+                defaultValue={departmentsOptions?.find((option) => option.value == selectedWorker?.department_id)}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <label><b>Código geral de função</b></label>
+
+                  <input
+                    className="form-control"
+                    disabled={"true"}
+                    value={functionCode?.general_function_code || ""}
+                  />
+                </div>
+
+                <div className="col">
+                  <label><b>CBO</b></label>
+
+                  <input
+                    className="form-control"
+                    disabled={"true"}
+                    value={functionCode?.cbo || ""}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="col">
+
+              <div className="row">
+                <div className="col">
+                  <label><b>Semana do turno</b></label>
+
+                  <input
+                    className="form-control"
+                    disabled={"true"}
+                    value={seeTurn?.week}
+                  />
+                </div>
+
+                <div className="col">
+                  <label><b>Início de turno</b></label>
+
+                  <input
+                    className="form-control"
+                    disabled={"true"}
+                    value={seeTurn?.start_time}
+                  />
+                </div>
+
+                <div className="col">
+                  <label><b>Início de intervalo</b></label>
+
+                  <input
+                    className="form-control"
+                    disabled={"true"}
+                    value={seeTurn?.start_interval_time}
+                  />
+                </div>
+
+                <div className="col">
+                  <label><b>Fim de intervalo</b></label>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    disabled={"true"}
+                    value={seeTurn?.end_interval_time || ""}
+                  />
+                </div>
+
+                <div className="col">
+                  <label><b>Fim de turno</b></label>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    disabled={"true"}
+                    value={seeTurn?.end_time || ""}
+                  />
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Input
+                label="Data de última função"
+                type="text"
+                setSelectedValue={setLastFunctionDate}
+                defaultValue={selectedWorker?.last_function_date}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                label="Tempo na função atual"
+                type="text"
+                setSelectedValue={setCurrentFunctionTime}
+                defaultValue={selectedWorker?.current_function_time}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Input
+                type="date"
+                setSelectedValue={setAdmissionDate}
+                label={"Data de admissão"}
+                required={true}
+                defaultValue={selectedWorker?.admission_date}
+              />
+            </div>
+
+            <div className="col">
+              <label><b>Tempo de empresa</b></label>
+
+              <input className="form-control" value={timeEnterprise} disabled />
+            </div>
+
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Input
+                    label="Mensalista"
+                    type="text"
+                    setSelectedValue={setMonthWage}
+                    defaultValue={selectedWorker?.month_wage}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    label="Valor/horista"
+                    type="text"
+                    setSelectedValue={setHourWage}
+                    defaultValue={selectedWorker?.hour_wage}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    label="Prop. a jornada"
+                    type="text"
+                    setSelectedValue={setJourneyWage}
+                    defaultValue={selectedWorker?.journey_wage}
+                  />
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="col">
+          <div className="row">
+            <div className="col">
+              <Select
+                placeholder={""}
+                label="Vale transporte"
+                options={trueFalseOptions}
+                setSelectedValue={setTransportVoucher}
+                defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.transport_voucher)}
+              />
+            </div>
+
+            <div className="col">
+              <div className="row">
+                <div className="col">
+                  <Input
+                    label="Carga diária"
+                    type="text"
+                    setSelectedValue={setDiaryWorkJourney}
+                    defaultValue={selectedWorker?.diary_workjourney}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    label="Carga semanal"
+                    type="text"
+                    setSelectedValue={setWeekWorkJourney}
+                    defaultValue={selectedWorker?.week_workjourney}
+                  />
+                </div>
+
+                <div className="col">
+                  <Input
+                    label="Carga mensal"
+                    type="text"
+                    setSelectedValue={setMonthWorkJourney}
+                    defaultValue={selectedWorker?.month_workjourney}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Select
+                placeholder={""}
+                label={"Haverá tempo de experiência?"}
+                options={trueFalseOptions}
+                setSelectedValue={setSelectedHasExperienceTime}
+                defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.has_experience_time)}
+              />
+
+              {seeExperiencePeriods && (
+                <>
+                  <div className="row mt-2">
+                    <div className="col">
+                      <label><b>Primeiro período de experiência</b></label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        disabled={true}
+                        value={"30 dias"}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="row mt-2">
+                    <div className="col">
+                      <label><b>Segundo período de experiência</b></label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        disabled={true}
+                        value={"60 dias"}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Select
+                placeholder={""}
+                label="Periculosidade"
+                options={trueFalseOptions}
+                setSelectedValue={setDangerousness}
+                defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.dangerousness)}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                placeholder={""}
+                label="Insalubridade"
+                options={trueFalseOptions}
+                setSelectedValue={setUnhealthy}
+                defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.unhealthy)}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                placeholder={""}
+                label="Método de pagamento"
+                options={wagePaymentMethodOptions}
+                setSelectedValue={setWagePaymentMethod}
+                defaultValue={wagePaymentMethodOptions?.find((option) => option.value == selectedWorker?.wage_payment_method?.id)}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <Select
+                placeholder={""}
+                label="Banco"
+                options={banksOptions}
+                setSelectedValue={setSelectedBankOption}
+                defaultValue={banksOptions?.find((option) => option.value == selectedWorker?.bank?.id)}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                label="Agência do banco"
+                type="text"
+                setSelectedValue={setBankAgency}
+                defaultValue={selectedWorker?.bank_agency}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                label="Conta do banco"
+                type="text"
+                setSelectedValue={setBankAccount}
+                defaultValue={selectedWorker?.bank_account}
+              />
+            </div>
+          </div>
+
+          <div>
             <Select
+              label={"Horas noturnas?"}
               placeholder={""}
-              label="Contribuição sindical nesse ano?"
               options={trueFalseOptions}
-              setSelectedValue={setUnionContributeCurrentYear}
-              defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.union_contribute_current_year)}
-            />
-          </div>
-
-          <div className="col">
-            <div className="row">
-              <div className="col">
-                <Select
-                  placeholder={""}
-                  label="Recebendo seguro-desemprego?"
-                  options={trueFalseOptions}
-                  setSelectedValue={setReceivingUnemploymentInsurance}
-                  defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.receiving_unemployment_insurance)}
-                />
-              </div>
-
-              <div className="col">
-                <Select
-                  placeholder={""}
-                  label="Experiência prévia na função?"
-                  options={trueFalseOptions}
-                  setSelectedValue={setPreviousExperience}
-                  defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.previous_experience)}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <h4>Dependentes</h4>
-
-        {
-          parentsData?.map((parent) => (
-            <div className="row">
-              <div className="col-11">
-                <input
-                  type="text"
-                  className="form-control mb-2"
-                  value={
-                    `${parent?.name} / ${parent.cpf} / ${moment(parent.birthdate).format("DD/MM/YYYY")} / ${parent.books && parent.books || "Não"} / ${parent.papers && parent.papers || "Não"}`
-                  }
-                  disabled={true}
-                />
-              </div>
-
-              <div className="col-1">
-                <button className="btn btn-danger" onClick={() => handleDeleteWorkerParents(parent)}>
-                  <Trash />
-                </button>
-              </div>
-            </div>
-          ))
-        }
-
-        <div className="row">
-          <div className="col">
-            <div className="row">
-              <div className="col-11">
-                <Select
-                  placeholder={""}
-                  options={parentsTypeOptions}
-                  setSelectedValue={setSelectedParentsType}
-                  label={"Tipo de parente"}
-                />
-              </div>
-
-              <div className="col-1">
-                <button className="btn btn-warning mt-4" onClick={handleWorkersParents}>
-                  <Plus />
-                </button>
-              </div>
-            </div>
-
-            <Input
-              type={"text"}
-              label={"Nome"}
-              setSelectedValue={setParentsName}
-            />
-
-            <Input
-              type={"text"}
-              label={"CPF"}
-              setSelectedValue={setParentsCpf}
-            />
-
-            <Input
-              type={"date"}
-              label={"Data de nascimento"}
-              setSelectedValue={setParentsDatebirth}
+              setSelectedValue={setHasNocturneHours}
+              defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.has_nocturne_hours)}
             />
 
             {
-              selectedParentsType?.value == 3 && (
+              seeOtherNocturneFields && (
                 <>
-                  <Input
-                    type={"text"}
-                    label={"Livros"}
-                    setSelectedValue={setParentsBooks}
-                  />
+                  <div className="row">
+                    <div className="col">
+                      <Select
+                        label={"Pagamento proporcional?"}
+                        placeholder={""}
+                        options={trueFalseOptions}
+                        setSelectedValue={setProportionalPayment}
+                        defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.propotional_payment)}
+                      />
+                    </div>
 
-                  <Input
-                    type={"text"}
-                    label={"Folhas"}
-                    setSelectedValue={setParentsPapers}
-                  />
+                    <div className="col">
+                      <Input
+                        label={"Total de horas noturnas diárias"}
+                        placeholder={""}
+                        setSelectedValue={setTotalNocturneWorkjourney}
+                        defaultValue={selectedWorker?.total_nocturne_workjourney}
+                      />
+                    </div>
+
+                    <div className="col">
+                      <Input
+                        label={"Jornada parcial até 25 horas semanais"}
+                        placeholder={""}
+                        setSelectedValue={setTwentyFiveWorkjourney}
+                        defaultValue={selectedWorker?.twenty_five_workjourney}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-3">
+                    <h4>Trabalho das 22:00 às 05:00</h4>
+                  </div>
+
+                  <div className="row">
+                    <div className="col">
+                      <Input
+                        label={"Total de horas por semana"}
+                        placeholder={""}
+                        setSelectedValue={setTwentyTwoToFiveWeekWorkjourney}
+                        defaultValue={selectedWorker?.twenty_two_to_five_week_workjourney}
+                      />
+                    </div>
+
+                    <div className="col">
+                      <Input
+                        label={"Total de horas por mês"}
+                        placeholder={""}
+                        setSelectedValue={setTwentyTwoToFiveMonthWorkjourney}
+                        defaultValue={selectedWorker?.twenty_two_to_five_month_workjourney}
+                      />
+                    </div>
+
+                    <div className="col">
+                      <Input
+                        label={"Carga horária diária efetiva com trabalho noturno"}
+                        placeholder={""}
+                        setSelectedValue={setTwentyTwoToFiveEffectiveDiaryWorkjourney}
+                        defaultValue={selectedWorker?.twenty_two_to_five_effective_diary_workjourney}
+                      />
+                    </div>
+                  </div>
                 </>
               )
             }
           </div>
-        </div>
 
-        <div>
-          <h4>Para preenchimento exclusivo da empresa - Dados de contratação</h4>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <Select
-              placeholder=""
-              label={"Função"}
-              options={functionsOptions}
-              setSelectedValue={setSelectedFunction}
-              required={true}
-              defaultValue={functionsOptions?.find((option) => option.value == selectedWorker?.function_id)}
-            />
-          </div>
-
-          <div className="col">
-            <Select
-              placeholder=""
-              label={"Turno"}
-              options={turnsOptions}
-              setSelectedValue={setSelectedTurn}
-              required={true}
-              defaultValue={turnsOptions?.find((option) => option.value == selectedWorker?.turn_id)}
-            />
-          </div>
-
-          <div className="col">
-            <Select
-              label={"Centro de custos"}
-              placeholder=""
-              options={costCenterOptions}
-              setSelectedValue={setSelectedCostCenter}
-              required={true}
-              defaultValue={costCenterOptions?.find((option) => option.value == selectedWorker?.cost_center_id)}
-            />
-          </div>
-
-          <div className="col">
-            <Select
-              label={"Setor"}
-              placeholder=""
-              options={departmentsOptions}
-              setSelectedValue={setSelectedDepartment}
-              required={true}
-              defaultValue={departmentsOptions?.find((option) => option.value == selectedWorker?.department_id)}
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <div className="row">
-              <div className="col">
-                <label><b>Código geral de função</b></label>
-
-                <input
-                  className="form-control"
-                  disabled={"true"}
-                  value={functionCode?.general_function_code || ""}
-                />
-              </div>
-
-              <div className="col">
-                <label><b>CBO</b></label>
-
-                <input
-                  className="form-control"
-                  disabled={"true"}
-                  value={functionCode?.cbo || ""}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="col">
-
-            <div className="row">
-              <div className="col">
-                <label><b>Semana do turno</b></label>
-
-                <input
-                  className="form-control"
-                  disabled={"true"}
-                  value={seeTurn?.week}
-                />
-              </div>
-
-              <div className="col">
-                <label><b>Início de turno</b></label>
-
-                <input
-                  className="form-control"
-                  disabled={"true"}
-                  value={seeTurn?.start_time}
-                />
-              </div>
-
-              <div className="col">
-                <label><b>Início de intervalo</b></label>
-
-                <input
-                  className="form-control"
-                  disabled={"true"}
-                  value={seeTurn?.start_interval_time}
-                />
-              </div>
-
-              <div className="col">
-                <label><b>Fim de intervalo</b></label>
-
-                <input
-                  type="text"
-                  className="form-control"
-                  disabled={"true"}
-                  value={seeTurn?.end_interval_time || ""}
-                />
-              </div>
-
-              <div className="col">
-                <label><b>Fim de turno</b></label>
-
-                <input
-                  type="text"
-                  className="form-control"
-                  disabled={"true"}
-                  value={seeTurn?.end_time || ""}
-                />
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <Input
-              label="Data de última função"
-              type="text"
-              setSelectedValue={setLastFunctionDate}
-              defaultValue={selectedWorker?.last_function_date}
-            />
-          </div>
-
-          <div className="col">
-            <Input
-              label="Tempo na função atual"
-              type="text"
-              setSelectedValue={setCurrentFunctionTime}
-              defaultValue={selectedWorker?.current_function_time}
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <Input
-              type="date"
-              setSelectedValue={setAdmissionDate}
-              label={"Data de admissão"}
-              required={true}
-              defaultValue={selectedWorker?.admission_date}
-            />
-          </div>
-
-          <div className="col">
-            <label><b>Tempo de empresa</b></label>
-
-            <input className="form-control" value={timeEnterprise} disabled />
-          </div>
-
-          <div className="col">
-            <div className="row">
-              <div className="col">
-                <Input
-                  label="Mensalista"
-                  type="text"
-                  setSelectedValue={setMonthWage}
-                  defaultValue={selectedWorker?.month_wage}
-                />
-              </div>
-
-              <div className="col">
-                <Input
-                  label="Valor/horista"
-                  type="text"
-                  setSelectedValue={setHourWage}
-                  defaultValue={selectedWorker?.hour_wage}
-                />
-              </div>
-
-              <div className="col">
-                <Input
-                  label="Prop. a jornada"
-                  type="text"
-                  setSelectedValue={setJourneyWage}
-                  defaultValue={selectedWorker?.journey_wage}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <Select
-              placeholder={""}
-              label="Vale transporte"
-              options={trueFalseOptions}
-              setSelectedValue={setTransportVoucher}
-              defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.transport_voucher)}
-            />
-          </div>
-
-          <div className="col">
-            <div className="row">
-              <div className="col">
-                <Input
-                  label="Carga diária"
-                  type="text"
-                  setSelectedValue={setDiaryWorkJourney}
-                  defaultValue={selectedWorker?.diary_workjourney}
-                />
-              </div>
-
-              <div className="col">
-                <Input
-                  label="Carga semanal"
-                  type="text"
-                  setSelectedValue={setWeekWorkJourney}
-                  defaultValue={selectedWorker?.week_workjourney}
-                />
-              </div>
-
-              <div className="col">
-                <Input
-                  label="Carga mensal"
-                  type="text"
-                  setSelectedValue={setMonthWorkJourney}
-                  defaultValue={selectedWorker?.month_workjourney}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <Select
-              placeholder={""}
-              label={"Haverá tempo de experiência?"}
-              options={trueFalseOptions}
-              setSelectedValue={setSelectedHasExperienceTime}
-              defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.has_experience_time)}
-            />
-
-            {seeExperiencePeriods && (
-              <>
-                <div className="row mt-2">
-                  <div className="col">
-                    <label><b>Primeiro período de experiência</b></label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      disabled={true}
-                      value={"30 dias"}
-                    />
-                  </div>
-                </div>
-
-                <div className="row mt-2">
-                  <div className="col">
-                    <label><b>Segundo período de experiência</b></label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      disabled={true}
-                      value={"60 dias"}
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <Select
-              placeholder={""}
-              label="Periculosidade"
-              options={trueFalseOptions}
-              setSelectedValue={setDangerousness}
-              defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.dangerousness)}
-            />
-          </div>
-
-          <div className="col">
-            <Select
-              placeholder={""}
-              label="Insalubridade"
-              options={trueFalseOptions}
-              setSelectedValue={setUnhealthy}
-              defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.unhealthy)}
-            />
-          </div>
-
-          <div className="col">
-            <Select
-              placeholder={""}
-              label="Método de pagamento"
-              options={wagePaymentMethodOptions}
-              setSelectedValue={setWagePaymentMethod}
-              defaultValue={wagePaymentMethodOptions?.find((option) => option.value == selectedWorker?.wage_payment_method?.id)}
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <Select
-              placeholder={""}
-              label="Banco"
-              options={banksOptions}
-              setSelectedValue={setSelectedBankOption}
-              defaultValue={banksOptions?.find((option) => option.value == selectedWorker?.bank?.id)}
-            />
-          </div>
-
-          <div className="col">
-            <Input
-              label="Agência do banco"
-              type="text"
-              setSelectedValue={setBankAgency}
-              defaultValue={selectedWorker?.bank_agency}
-            />
-          </div>
-
-          <div className="col">
-            <Input
-              label="Conta do banco"
-              type="text"
-              setSelectedValue={setBankAccount}
-              defaultValue={selectedWorker?.bank_account}
-            />
-          </div>
-        </div>
-
-        <div>
-          <Select
-            label={"Horas noturnas?"}
-            placeholder={""}
-            options={trueFalseOptions}
-            setSelectedValue={setHasNocturneHours}
-            defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.has_nocturne_hours)}
-          />
-
-          {
-            seeOtherNocturneFields && (
-              <>
-                <div className="row">
-                  <div className="col">
-                    <Select
-                      label={"Pagamento proporcional?"}
-                      placeholder={""}
-                      options={trueFalseOptions}
-                      setSelectedValue={setProportionalPayment}
-                      defaultValue={trueFalseOptions?.find((option) => option.value == selectedWorker?.propotional_payment)}
-                    />
-                  </div>
-
-                  <div className="col">
-                    <Input
-                      label={"Total de horas noturnas diárias"}
-                      placeholder={""}
-                      setSelectedValue={setTotalNocturneWorkjourney}
-                      defaultValue={selectedWorker?.total_nocturne_workjourney}
-                    />
-                  </div>
-
-                  <div className="col">
-                    <Input
-                      label={"Jornada parcial até 25 horas semanais"}
-                      placeholder={""}
-                      setSelectedValue={setTwentyFiveWorkjourney}
-                      defaultValue={selectedWorker?.twenty_five_workjourney}
-                    />
-                  </div>
-                </div>
-
-                <div className="mb-3">
-                  <h4>Trabalho das 22:00 às 05:00</h4>
-                </div>
-
-                <div className="row">
-                  <div className="col">
-                    <Input
-                      label={"Total de horas por semana"}
-                      placeholder={""}
-                      setSelectedValue={setTwentyTwoToFiveWeekWorkjourney}
-                      defaultValue={selectedWorker?.twenty_two_to_five_week_workjourney}
-                    />
-                  </div>
-
-                  <div className="col">
-                    <Input
-                      label={"Total de horas por mês"}
-                      placeholder={""}
-                      setSelectedValue={setTwentyTwoToFiveMonthWorkjourney}
-                      defaultValue={selectedWorker?.twenty_two_to_five_month_workjourney}
-                    />
-                  </div>
-
-                  <div className="col">
-                    <Input
-                      label={"Carga horária diária efetiva com trabalho noturno"}
-                      placeholder={""}
-                      setSelectedValue={setTwentyTwoToFiveEffectiveDiaryWorkjourney}
-                      defaultValue={selectedWorker?.twenty_two_to_five_effective_diary_workjourney}
-                    />
-                  </div>
-                </div>
-              </>
-            )
-          }
-        </div>
-
-        <div className="row">
-          {/* <div className="col">
+          <div className="row">
+            {/* <div className="col">
             <Input
               label="Horas noturnas"
               type="text"
@@ -2093,28 +2106,28 @@ const EditWorkerModal = (props) => {
             />
           </div> */}
 
-          <div className="col">
-            <Input
-              label="Salário"
-              type="text"
-              setSelectedValue={setWage}
-              defaultValue={selectedWorker?.wage}
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <Select
-              options={hierarchyStructureOptions}
-              placeholder={""}
-              label={"Estrutura hierárquica"}
-              setSelectedValue={setSelectedHierarchyStructure}
-              defaultValue={hierarchyStructureOptions?.find((option) => option.value == selectedWorker?.hierarchy_structure?.id)}
-            />
+            <div className="col">
+              <Input
+                label="Salário"
+                type="text"
+                setSelectedValue={setWage}
+                defaultValue={selectedWorker?.wage}
+              />
+            </div>
           </div>
 
-          {/* <div className="col">
+          <div className="row">
+            <div className="col">
+              <Select
+                options={hierarchyStructureOptions}
+                placeholder={""}
+                label={"Estrutura hierárquica"}
+                setSelectedValue={setSelectedHierarchyStructure}
+                defaultValue={hierarchyStructureOptions?.find((option) => option.value == selectedWorker?.hierarchy_structure?.id)}
+              />
+            </div>
+
+            {/* <div className="col">
             <label><b>Tempo de empresa</b></label>
 
             <Input
@@ -2124,215 +2137,261 @@ const EditWorkerModal = (props) => {
               defaultValue={selectedWorker?.enterprise_time}
             />
           </div> */}
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <Select
-              placeholder={""}
-              options={trueFalseOptions}
-              label={"Adiantamento salarial"}
-              setSelectedValue={setEarlyPayment}
-              defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.early_payment)}
-            />
           </div>
 
-          <div className="col">
-            <Input
-              label={"Porcentagem ou valor"}
-              placeholder={""}
-              setSelectedValue={setEarlyPaymentDiscount}
-              defaultValue={selectedWorker?.early_payment_discount}
-            />
+          <div className="row">
+            <div className="col">
+              <Select
+                placeholder={""}
+                options={trueFalseOptions}
+                label={"Adiantamento salarial"}
+                setSelectedValue={setEarlyPayment}
+                defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.early_payment)}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                label={"Porcentagem ou valor"}
+                placeholder={""}
+                setSelectedValue={setEarlyPaymentDiscount}
+                defaultValue={selectedWorker?.early_payment_discount}
+              />
+            </div>
+
+            <div className="col">
+              <Select
+                placeholder={""}
+                options={trueFalseOptions}
+                label={"Exposição a agente nocivo"}
+                setSelectedValue={setHarmfullExposition}
+                defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.harmfull_exposition)}
+              />
+            </div>
           </div>
 
-          <div className="col">
-            <Select
-              placeholder={""}
-              options={trueFalseOptions}
-              label={"Exposição a agente nocivo"}
-              setSelectedValue={setHarmfullExposition}
-              defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.harmfull_exposition)}
-            />
-          </div>
-        </div>
+          {
+            workersDocs && (
+              workersDocs.map((doc, i) => (
+                <div className="row">
+                  <div className="col-10">
+                    <input
+                      type="text"
+                      className="form-control mb-3"
+                      value={`${doc.docTitle.label} / ${doc.doc.name}`}
+                      disabled={"true"}
+                    />
+                  </div>
 
-        {
-          workersDocs && (
-            workersDocs.map((doc, i) => (
-              <div className="row">
-                <div className="col-10">
-                  <input
-                    type="text"
-                    className="form-control mb-3"
-                    value={`${doc.docTitle.label} / ${doc.doc.name}`}
-                    disabled={"true"}
-                  />
+                  <div className="col-2 text-center">
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleRemoveDoc(i)}
+                    >
+                      <Trash />
+                    </button>
+                  </div>
                 </div>
+              ))
+            )
+          }
 
-                <div className="col-2 text-center">
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => handleRemoveDoc(i)}
-                  >
-                    <Trash />
-                  </button>
-                </div>
-              </div>
-            ))
-          )
-        }
+          <div className="row">
+            <div className="col-10">
+              <Select
+                label={"Título do documento"}
+                placeholder={""}
+                options={[
+                  { value: 1, label: "CTPS" },
+                  { value: 2, label: "Exame médico admissional" },
+                  { value: 3, label: "Identidade" },
+                  { value: 4, label: "CPF" },
+                  { value: 5, label: "Titulo eleitoral" },
+                  { value: 7, label: "Comprovante de residência" },
+                  { value: 8, label: "CNH" },
+                  { value: 9, label: "Certidão de casamento" },
+                  { value: 10, label: "Certificado de reservista" },
+                  { value: 11, label: "Certidão de nascimento (filhos menores de 14)" },
+                  { value: 12, label: "Carteira de vacinação (filhos menores de 5)" },
+                  { value: 13, label: "Comprovante de frequência escolar (filhos entre 7 e 14)" },
+                ]}
+                setSelectedValue={setDocTitle}
+              />
+            </div>
 
-        <div className="row">
-          <div className="col-10">
-            <Select
-              label={"Título do documento"}
-              placeholder={""}
-              options={[
-                { value: 1, label: "CTPS" },
-                { value: 2, label: "Exame médico admissional" },
-                { value: 3, label: "Identidade" },
-                { value: 4, label: "CPF" },
-                { value: 5, label: "Titulo eleitoral" },
-                { value: 7, label: "Comprovante de residência" },
-                { value: 8, label: "CNH" },
-                { value: 9, label: "Certidão de casamento" },
-                { value: 10, label: "Certificado de reservista" },
-                { value: 11, label: "Certidão de nascimento (filhos menores de 14)" },
-                { value: 12, label: "Carteira de vacinação (filhos menores de 5)" },
-                { value: 13, label: "Comprovante de frequência escolar (filhos entre 7 e 14)" },
-              ]}
-              setSelectedValue={setDocTitle}
+            <div className="col-2 text-center">
+              <button
+                className="btn btn-warning mt-4"
+                title="Adicionar documento"
+                onClick={handleOnchangeWorkersDocs}
+              >
+                <Plus />
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <input
+              type="file"
+              className="form-control"
+              onChange={(e) => setDoc(e.target.files[0])}
             />
           </div>
 
-          <div className="col-2 text-center">
-            <button
-              className="btn btn-warning mt-4"
-              title="Adicionar documento"
-              onClick={handleOnchangeWorkersDocs}
-            >
-              <Plus />
-            </button>
-          </div>
-        </div>
+          <div className='mb-3 mt-3'>
+            <label><b>Local de trabalho</b></label>
 
-        <div>
-          <input
-            type="file"
-            className="form-control"
-            onChange={(e) => setDoc(e.target.files[0])}
-          />
-        </div>
-
-        <div className='mb-3 mt-3'>
-          <label><b>Local de trabalho</b></label>
-
-          <input
-            type="text"
-            className="form-control"
-            disabled={true}
-            value={`${selectedSubsdiarie?.label} \ Filial N° ${selectedSubsdiarie?.value}`}
-          />
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <Select
-              label={"Plano de saúde"}
-              placeholder={""}
-              options={trueFalseOptions}
-              setSelectedValue={setHealthcarePlan}
-              defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.healthcare_plan)}
+            <input
+              type="text"
+              className="form-control"
+              disabled={true}
+              value={`${selectedSubsdiarie?.label} \ Filial N° ${selectedSubsdiarie?.value}`}
             />
           </div>
 
-          <div className="col">
-            <Input
-              label={"Desconto em folha"}
-              placeholder={""}
-              setSelectedValue={setHealthcarePlanDiscount}
-              defaultValue={selectedWorker?.healthcare_plan_discount}
-            />
-          </div>
-        </div>
+          <div className="row">
+            <div className="col">
+              <Select
+                label={"Plano de saúde"}
+                placeholder={""}
+                options={trueFalseOptions}
+                setSelectedValue={setHealthcarePlan}
+                defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.healthcare_plan)}
+              />
+            </div>
 
-        <div className="row">
-          <div className="col">
-            <Select
-              label={"Seguro de vida"}
-              placeholder={""}
-              options={trueFalseOptions}
-              setSelectedValue={setLifeInsurance}
-              defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.life_insurance)}
-            />
-          </div>
-
-          <div className="col">
-            <Input
-              label={"Desconto em folha"}
-              placeholder={""}
-              setSelectedValue={setLifeInsuranceDiscount}
-              defaultValue={selectedWorker?.life_insurance_discount}
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <Input
-              label={"AG"}
-              placeholder={""}
-              setSelectedValue={setAg}
-              defaultValue={selectedWorker?.ag}
-            />
+            <div className="col">
+              <Input
+                label={"Desconto em folha"}
+                placeholder={""}
+                setSelectedValue={setHealthcarePlanDiscount}
+                defaultValue={selectedWorker?.healthcare_plan_discount}
+              />
+            </div>
           </div>
 
-          <div className="col">
-            <Input
-              label={"CC"}
-              placeholder={""}
-              setSelectedValue={setCc}
-              defaultValue={selectedWorker?.cc}
-            />
+          <div className="row">
+            <div className="col">
+              <Select
+                label={"Seguro de vida"}
+                placeholder={""}
+                options={trueFalseOptions}
+                setSelectedValue={setLifeInsurance}
+                defaultValue={trueFalseOptions.find((option) => option.value == selectedWorker?.life_insurance)}
+              />
+            </div>
+
+            <div className="col">
+              <Input
+                label={"Desconto em folha"}
+                placeholder={""}
+                setSelectedValue={setLifeInsuranceDiscount}
+                defaultValue={selectedWorker?.life_insurance_discount}
+              />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <p>
-            <b>
-              Sugestão de locais para realização de exames médicos (outros locais poderão ser escolhidos, a critério do empregador)
-            </b>
-          </p>
+          <div className="row">
+            <div className="col">
+              <Input
+                label={"AG"}
+                placeholder={""}
+                setSelectedValue={setAg}
+                defaultValue={selectedWorker?.ag}
+              />
+            </div>
 
-          <p>
-            Clinimed Saúde Ocupacional: R. Conselheiro Mafra, 111 - Centro. Tel. (47) 3025-4970
-          </p>
+            <div className="col">
+              <Input
+                label={"CC"}
+                placeholder={""}
+                setSelectedValue={setCc}
+                defaultValue={selectedWorker?.cc}
+              />
+            </div>
+          </div>
 
-          <p>
-            Dom Med Gestão em Medicina ST: R. Rio Branco, 202 - Centro. Tel. (47) 3017-5001
-          </p>
+          <div>
+            <p>
+              <b>
+                Sugestão de locais para realização de exames médicos (outros locais poderão ser escolhidos, a critério do empregador)
+              </b>
+            </p>
 
-          <p>
-            DataMed Saúde Ocupacional: R. Abdon Batista, 314 - Centro. Tel. (47) 3432-8242"
-          </p>
-        </div>
-      </Modal.Body>
+            <p>
+              Clinimed Saúde Ocupacional: R. Conselheiro Mafra, 111 - Centro. Tel. (47) 3025-4970
+            </p>
 
-      <Modal.Footer>
-        <Button variant="success" className="w-100" onClick={handleSubmit}>Salvar</Button>
+            <p>
+              Dom Med Gestão em Medicina ST: R. Rio Branco, 202 - Centro. Tel. (47) 3017-5001
+            </p>
 
-        <Button variant="primary" className="w-100" onClick={handleSendEmailToMabecon}>Solicitar admissão via e-mail</Button>
+            <p>
+              DataMed Saúde Ocupacional: R. Abdon Batista, 314 - Centro. Tel. (47) 3432-8242"
+            </p>
+          </div>
+        </Modal.Body>
 
-        {/* <Button variant="primary" className="w-100" onClick={handleSendEmailToMabecon}>Nova estado</Button>
+        <Modal.Footer>
+          <div className="w-100 d-grid gap-2">
+            <Button variant="success" onClick={handleSubmit}>
+              Salvar
+            </Button>
+          </div>
 
-        <Button variant="primary" className="w-100" onClick={handleSendEmailToMabecon}>Nova cidade</Button>
+          <div className="w-100 d-flex flex-wrap gap-2 mt-2">
+            <Button variant="primary" className="flex-fill" onClick={handleSendEmailToMabecon}>
+              Solicitar admissão via e-mail
+            </Button>
 
-        <Button variant="primary" className="w-100" onClick={handleSendEmailToMabecon}>Novo bairro</Button> */}
+            <Button variant="primary" className="flex-fill" onClick={() => setNewNationalityModalOpen(true)}>
+              Nova nacionalidade
+            </Button>
 
-        <Button variant="light" className="w-100" onClick={handleClose}>Fechar</Button>
-      </Modal.Footer>
-    </Modal>
+            <Button variant="primary" className="flex-fill" onClick={() => setNewStateModalOpen(true)}>
+              Novo estado
+            </Button>
+
+            <Button variant="primary" className="flex-fill" onClick={() => setNewCityModalOpen(true)}>
+              Nova cidade
+            </Button>
+
+            <Button variant="primary" className="flex-fill" onClick={() => setNewNeighborhoodModalOpen(true)}>
+              Novo bairro
+            </Button>
+          </div>
+
+          <div className="w-100 d-grid gap-2 mt-3">
+            <Button variant="light" onClick={handleClose}>
+              Fechar
+            </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+
+      <NewNationalityModal
+        newNationalityModalOpen={newNationalityModalOpen}
+        setNewNationalityModalOpen={setNewNationalityModalOpen}
+      />
+
+      <NewStateModal
+        newStateModalOpen={newStateModalOpen}
+        setNewStateModalOpen={setNewStateModalOpen}
+        setStatesOptions={setStatesOptions}
+      />
+
+      <NewCityModal
+        newCityModalOpen={newCityModalOpen}
+        setNewCityModalOpen={setNewCityModalOpen}
+        setCitiesOptions={setCitiesOptions}
+      />
+
+      <NewNeighborhoodModal
+        newNeighborhoodModalOpen={newNeighborhoodModalOpen}
+        setNewNeighborhoodModalOpen={setNewNeighborhoodModalOpen}
+        setNeighborhoodOptions={setNeighborhoodOptions}
+      />
+    </>
   )
 }
 

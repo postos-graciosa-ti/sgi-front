@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import ReactSelect from "react-select"
 import api from "../../services/api"
-import StateManagedSelect from "react-select"
 
 const EditNeighborhoodModal = (props) => {
   const { editNeighborhoodModalOpen, setEditNeighborhoodModalOpen, selectedNeighborhood, setSelectedNeighborhood, setNeighborhoods } = props
@@ -17,7 +17,7 @@ const EditNeighborhoodModal = (props) => {
     api
       .get("/cities")
       .then((response) => {
-        let options = response.data.map((city) => ({ value: city.id, label: city.name }))
+        let options = response.data.map((option) => ({ value: option.Cities.id, label: option.Cities.name }))
 
         setCitiesOptions(options)
       })
@@ -42,12 +42,14 @@ const EditNeighborhoodModal = (props) => {
 
     let formData = {
       "name": name || selectedNeighborhood?.name,
-      "city_id": selectedCity?.value || selectedNeighborhood?.state_id
+      "city_id": selectedCity?.value || selectedNeighborhood?.city_id
     }
 
     api
       .put(`/neighborhoods/${selectedNeighborhood?.id}`, formData)
-      .then(() => handleClose())
+      .then(() => {
+        handleClose()
+      })
   }
 
   return (
@@ -79,10 +81,11 @@ const EditNeighborhoodModal = (props) => {
           <div className="mb-3">
             <label><b>Cidade</b></label>
 
-            <StateManagedSelect
+            <ReactSelect
               options={citiesOptions}
               placeholder="Cidade"
               onChange={(value) => setSelectedCity(value)}
+              defaultValue={citiesOptions?.find((option) => option.value == selectedNeighborhood?.city_id)}
             />
           </div>
         </Modal.Body>

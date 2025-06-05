@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import api from "../../services/api";
 import StateManagedSelect from 'react-select';
+import api from "../../services/api";
 
 const AddNeighborhoodModal = (props) => {
   const { addNeighborhoodModalOpen, setAddNeighborhoodModalOpen, setNeighborhoods } = props
@@ -17,7 +17,7 @@ const AddNeighborhoodModal = (props) => {
     api
       .get("/cities")
       .then((response) => {
-        let options = response.data.map((city) => ({ value: city.id, label: city.name }))
+        let options = response.data.map((option) => ({ value: option.Cities.id, label: option.Cities.name }))
 
         setCitiesOptions(options)
       })

@@ -210,39 +210,35 @@ const Nav = () => {
                 </ul>
               </li>
 
-              {
-                userSession.role_id === 1 && (
-                  <li className="nav-item dropdown">
-                    <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      Cadastros
-                    </a>
+              <li className="nav-item dropdown">
+                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Cadastros
+                </a>
 
-                    <ul className="dropdown-menu">
-                      <li><Link className="dropdown-item" to="/workers">Colaboradores</Link></li>
+                <ul className="dropdown-menu">
+                  <li><Link className="dropdown-item" to="/workers">Colaboradores</Link></li>
 
-                      <li><Link className="dropdown-item" to="/turns">Turnos</Link></li>
+                  <li><Link className="dropdown-item" to="/turns">Turnos</Link></li>
 
-                      <li><Link className="dropdown-item" to="/cost-center">Centros de custos</Link></li>
+                  <li><Link className="dropdown-item" to="/cost-center">Centros de custos</Link></li>
 
-                      <li><Link className="dropdown-item" to="/departments">Setores</Link></li>
+                  <li><Link className="dropdown-item" to="/departments">Setores</Link></li>
 
-                      <li><Link className="dropdown-item" to="/subsidiaries">Filiais</Link></li>
+                  <li><Link className="dropdown-item" to="/subsidiaries">Filiais</Link></li>
 
-                      <li><Link className="dropdown-item" to="/users">Usuários</Link></li>
+                  <li><Link className="dropdown-item" to="/users">Usuários</Link></li>
 
-                      <li><Link className="dropdown-item" to="/functions">Funções</Link></li>
+                  <li><Link className="dropdown-item" to="/functions">Funções</Link></li>
 
-                      <li><Link className="dropdown-item" to="/nationalities">Nacionalidades</Link></li>
+                  <li><Link className="dropdown-item" to="/nationalities">Nacionalidades</Link></li>
 
-                      <li><Link className="dropdown-item" to="/states">Estados</Link></li>
+                  <li><Link className="dropdown-item" to="/states">Estados</Link></li>
 
-                      <li><Link className="dropdown-item" to="/cities">Cidades</Link></li>
+                  <li><Link className="dropdown-item" to="/cities">Cidades</Link></li>
 
-                      <li><Link className="dropdown-item" to="/neighborhoods">Bairros</Link></li>
-                    </ul>
-                  </li>
-                )
-              }
+                  <li><Link className="dropdown-item" to="/neighborhoods">Bairros</Link></li>
+                </ul>
+              </li>
 
               {
                 userSession.role_id === 1 && (

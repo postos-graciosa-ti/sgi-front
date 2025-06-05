@@ -252,6 +252,8 @@ const Nav = () => {
                     </a>
 
                     <ul className="dropdown-menu">
+                      <li><Link className="dropdown-item" to="/system-log">Todos</Link></li>
+
                       <li><Link className="dropdown-item" to="/workers-logs">Colaboradores</Link></li>
 
                       <li><Link className="dropdown-item" to="/turns-logs">Turnos</Link></li>

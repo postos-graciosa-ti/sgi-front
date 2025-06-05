@@ -25,20 +25,21 @@ import WorkersLogs from "./pages/logsPages/WorkersLogs"
 import Monitoring from "./pages/monitoring/Monitoring"
 import Nationalities from "./pages/nationalities/Nationalities"
 import Neighborhood from "./pages/neighborhoods/Neighborhood"
+import PositionsTable from "./pages/positionsTable/PositionsTable"
 import Scale from "./pages/scale/Scale"
 import States from "./pages/states/States"
 import Steps from "./pages/steps/Steps"
 import Subsidiaries from "./pages/subsidiaries/Subsidiaries"
 import SubsidiarieStatus from "./pages/subsidiarieStatus/SubsidiarieStatus"
+import SystemLog from "./pages/systemLog/SystemLog"
 import Requesting from "./pages/tickets/Requesting"
+import Responsible from "./pages/tickets/Responsible"
 import Tickets from "./pages/tickets/Tickets"
 import Turns from "./pages/turns/Turns"
 import UpdateNotifications from "./pages/updateNotifications/UpdateNotifications"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
 import PrivateRoute from "./PrivateRoute"
-import Responsible from "./pages/tickets/Responsible"
-import PositionsTable from "./pages/positionsTable/PositionsTable"
 
 const Routes = createBrowserRouter([
   // public routes
@@ -232,6 +233,11 @@ const Routes = createBrowserRouter([
   {
     path: "/positions-table",
     element: <PrivateRoute><PositionsTable /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/system-log",
+    element: <PrivateRoute><SystemLog /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

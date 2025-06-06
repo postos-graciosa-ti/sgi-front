@@ -33,6 +33,8 @@ const SystemLog = () => {
                 <th></th>
 
                 <th></th>
+
+                <th></th>
               </tr>
             </thead>
 
@@ -51,6 +53,8 @@ const SystemLog = () => {
                     <td>{log.timestamp}</td>
 
                     <td>{log.details}</td>
+
+                    <td>{log.endpoint}</td>
                   </tr>
                 ))
               }

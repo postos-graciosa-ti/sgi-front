@@ -1,4 +1,3 @@
-import moment from 'moment'
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
@@ -12,11 +11,9 @@ const AddUserModal = (props) => {
     setModalOpen,
   } = props
 
-  const userSession = useUserSessionStore((state) => state.userSession)
-
-  const bearerToken = useUserSessionStore(state => state.bearerToken)
-
   const setUserList = useUserSessionStore(state => state.setUserList)
+
+  const [subsidiariesList, setSubsidiariesList] = useState()
 
   const [rolesOptions, setRolesOptions] = useState()
 
@@ -26,15 +23,7 @@ const AddUserModal = (props) => {
 
   const [role, setRole] = useState()
 
-  const [subsidiariesList, setSubsidiariesList] = useState()
-
-  const [functionsList, setFunctionsList] = useState()
-
   const [selectedSubsidiaries, setSelectedSubsidiaries] = useState([])
-
-  const [selectedFunction, setSelectedFunction] = useState()
-
-  const [hideSubsidiaries, setHideSubsidiaries] = useState(false)
 
   const [phone, setPhone] = useState()
 
@@ -66,20 +55,6 @@ const AddUserModal = (props) => {
 
         setSubsidiariesList(options)
       })
-
-    api
-      .get("/functions")
-      .then((response) => {
-        let functionsData = response.data
-
-        let options = []
-
-        functionsData && functionsData.map((data) => {
-          options.push({ "label": data.name, "value": data.id })
-        })
-
-        setFunctionsList(options)
-      })
   }, [])
 
   const handleClose = () => {
@@ -103,51 +78,17 @@ const AddUserModal = (props) => {
   const handleCreateUser = (e) => {
     e.preventDefault()
 
-    let subsidiariesString = selectedSubsidiaries.map(subsidiary => subsidiary.value).join(',');
-
     let formData = {
       "name": name,
       "email": email,
       "role_id": role,
-      "subsidiaries_id": `[${subsidiariesString}]`,
+      "subsidiaries_id": `[${selectedSubsidiaries.map(subsidiary => subsidiary.value).join(',')}]`,
       "phone": phone
     }
 
     api
       .post("/users", formData)
-      .then((response) => {
-        const userRole = rolesOptions?.find(role => role.value === response?.data.role_id)
-
-        let subsidiariesIds = (Array.isArray(JSON.parse(response?.data.subsidiaries_id)) && JSON.parse(response?.data.subsidiaries_id)) || eval(response?.data.subsidiaries_id)
-
-        const userSubsidiaries = subsidiariesList?.filter(({ value }) => subsidiariesIds.includes(value)) || []
-
-        const logStr = `
-          ${userSession.name} adicionou ${response.data.name} 
-          (
-            nome=${response?.data.name}, 
-            email=${response?.data.email}, 
-            tipo=${userRole?.label}, 
-            filiais=(${userSubsidiaries.map(subsidiarie => subsidiarie.label).join(", ")}), 
-            telefone=${response?.data.phone}
-          )
-        `
-
-        let logsFormData = {
-          "log_str": logStr,
-          "happened_at": moment(new Date()).format("DD-MM-YYYY"),
-          "happened_at_time": moment(new Date()).format("HH:mm"),
-          "user_id": userSession.id
-        }
-
-        api
-          .post(`/logs/users`, logsFormData)
-          .then(() => handleClose())
-      })
-  }
-
-  const handleSelectRole = (role) => {
-    setRole(role)
+      .then(() => handleClose())
   }
 
   return (
@@ -188,7 +129,7 @@ const AddUserModal = (props) => {
               <Select
                 placeholder="Tipo"
                 options={rolesOptions}
-                onChange={(e) => handleSelectRole(e.value)}
+                onChange={(e) => setRole(e.value)}
               />
             </div>
 
@@ -210,14 +151,6 @@ const AddUserModal = (props) => {
                 onChange={(e) => setPhone(e.target.value)}
               />
             </div>
-
-            {/* <div className="mb-3">
-              <Select
-                placeholder="Função"
-                options={functionsList}
-                onChange={(e) => setSelectedFunction(e)}
-              />
-            </div> */}
           </Modal.Body>
 
           <Modal.Footer>

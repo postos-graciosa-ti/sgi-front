@@ -2,8 +2,8 @@ import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Input from "../../components/form/Input"
-import postNationalities from "../../requests/nationalities/postNationalities"
 import getNationalities from '../../requests/nationalities/getNationalities'
+import postNationalities from "../../requests/nationalities/postNationalities"
 
 const AddNationalitieModal = (props) => {
   const { addNationalitieModalOpen, setAddNationalitieModalOpen, setNationalitiesList } = props

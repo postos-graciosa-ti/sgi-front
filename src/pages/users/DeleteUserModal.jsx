@@ -30,32 +30,6 @@ const DeleteUserModal = (props) => {
   }
 
   const handleDeleteUser = () => {
-    // api
-    //   .delete(`/users/${selectedUser.user_id}`)
-    //   .then(() => {
-    //     let logStr = `
-    //       ${userSession.name} excluiu ${selectedUser?.user_name} 
-    //       (
-    //         nome=${selectedUser?.user_name}, 
-    //         email=${selectedUser?.user_email},
-    //         tipo=${selectedUser?.role_name},
-    //         filiais=${selectedUser?.user_subsidiaries.map((subsidiarie) => subsidiarie.name).join(", ")},
-    //         telefone=${selectedUser?.user_phone}
-    //       )
-    //     `
-
-    //     let logsFormData = {
-    //       "log_str": logStr,
-    //       "happened_at": moment(new Date()).format("DD-MM-YYYY"),
-    //       "happened_at_time": moment(new Date()).format("HH:mm"),
-    //       "user_id": userSession.id
-    //     }
-
-    //     api
-    //       .post(`/logs/users`, logsFormData)
-    //       .then(() => handleClose())
-    //   })
-
     api
       .patch(`/users/${selectedUser?.user_id}/created_by/${userSession?.id}/deactivate`)
       .then(() => handleClose())

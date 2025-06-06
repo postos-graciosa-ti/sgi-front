@@ -427,7 +427,6 @@ const Workers = () => {
                     id="editWorker"
                     aria-label={`Editar informações de ${worker.worker_name}`}
                     title="Editar colaborador"
-                    disabled={userSession?.id !== 1}
                   >
                     <PersonGear />
                   </button>

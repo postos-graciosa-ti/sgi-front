@@ -1,5 +1,4 @@
 import dayjs from 'dayjs'
-import printJS from 'print-js'
 import { useEffect, useState } from 'react'
 import { Printer } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
@@ -18,44 +17,55 @@ const tdStyle = {
   border: '1px solid #ccc'
 }
 
-const TransportVoucherPrintContent = ({ workersList, startDate, endDate }) => {
+const OpenAccountPrintContent = ({ workersList, startDate, endDate }) => {
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px', color: '#333' }}>
       <div style={{ textAlign: 'center', marginBottom: '20px' }}>
         <img src="/logo.png" style={{ width: '120px', marginBottom: '10px' }} alt="Logo" />
+
         <h2 style={{ margin: '0', fontSize: '20px' }}>Relatório de Vale-Transporte</h2>
+
         <p style={{ margin: '5px 0', fontSize: '14px' }}>
           Período: {dayjs(startDate).format('DD/MM/YYYY')} - {dayjs(endDate).format('DD/MM/YYYY')}
         </p>
       </div>
 
-      <table style={{
-        width: '100%',
-        borderCollapse: 'collapse',
-        fontSize: '14px',
-        marginTop: '10px'
-      }}>
+      <table
+        style={{
+          width: '100%',
+          borderCollapse: 'collapse',
+          fontSize: '14px',
+          marginTop: '10px'
+        }}
+      >
         <thead>
           <tr style={{ backgroundColor: '#f2f2f2' }}>
             <th style={thStyle}>Nome</th>
+
             <th style={thStyle}>Data de Admissão</th>
           </tr>
         </thead>
+
         <tbody>
-          {workersList && workersList.map((worker, idx) => (
-            <tr key={idx} style={{ borderBottom: '1px solid #ddd' }}>
-              <td style={tdStyle}>{worker.name}</td>
-              <td style={tdStyle}>{dayjs(worker.admission_date).format('DD/MM/YYYY')}</td>
-            </tr>
-          ))}
+          {
+            workersList && workersList.map((worker, idx) => (
+              !worker.bank_account || !worker.bank_agency && (
+                <tr key={idx} style={{ borderBottom: '1px solid #ddd' }}>
+                  <td style={tdStyle}>{worker.name}</td>
+
+                  <td style={tdStyle}>{dayjs(worker.admission_date).format('DD/MM/YYYY')}</td>
+                </tr>
+              )
+            ))
+          }
         </tbody>
       </table>
     </div>
   )
 }
 
-const TransportVoucherModal = (props) => {
-  const { transportVoucherModalOpen, setTransportVoucherModalOpen } = props
+const OpenAccountModal = (props) => {
+  const { openAccountModalOpen, setOpenAccountModalOpen } = props
 
   const [startDate, setStartDate] = useState()
 
@@ -66,31 +76,23 @@ const TransportVoucherModal = (props) => {
   useEffect(() => {
     if (startDate, endDate) {
       let requestBody = {
-        start_date: startDate,
-        end_date: endDate,
+        "start_date": startDate,
+        "end_date": endDate,
       }
 
       api
-        .post("/workers/vt-report", requestBody)
+        .post("/workers/open-account-report", requestBody)
         .then((response) => {
+          console.log(response)
+
           setWorkersList(response.data)
         })
     }
   }, [startDate, endDate])
 
-  const handleClose = () => {
-    setStartDate()
-
-    setEndDate()
-
-    setWorkersList()
-
-    setTransportVoucherModalOpen(false)
-  }
-
   const handlePrint = () => {
     const printableContent = ReactDOMServer.renderToString(
-      <TransportVoucherPrintContent
+      <OpenAccountPrintContent
         workersList={workersList}
         startDate={startDate}
         endDate={endDate}
@@ -104,9 +106,19 @@ const TransportVoucherModal = (props) => {
     })
   }
 
+  const handleClose = () => {
+    setStartDate()
+
+    setEndDate()
+
+    setWorkersList()
+
+    setOpenAccountModalOpen(false)
+  }
+
   return (
     <Modal
-      show={transportVoucherModalOpen}
+      show={openAccountModalOpen}
       onHide={handleClose}
       backdrop="static"
       keyboard={false}
@@ -121,7 +133,11 @@ const TransportVoucherModal = (props) => {
             Data inicial
           </label>
 
-          <input type="date" className="form-control" onChange={(e) => setStartDate(e.target.value)} />
+          <input
+            type="date"
+            className="form-control"
+            onChange={(e) => setStartDate(e.target.value)}
+          />
         </div>
 
         <div className="mb-3">
@@ -129,7 +145,11 @@ const TransportVoucherModal = (props) => {
             Data final
           </label>
 
-          <input type="date" className="form-control" onChange={(e) => setEndDate(e.target.value)} />
+          <input
+            type="date"
+            className="form-control"
+            onChange={(e) => setEndDate(e.target.value)}
+          />
         </div>
 
         {
@@ -144,23 +164,21 @@ const TransportVoucherModal = (props) => {
                   <thead>
                     <tr>
                       <th>Nome</th>
-
                       <th>CPF</th>
-
                       <th>Data de admissão</th>
                     </tr>
                   </thead>
 
                   <tbody>
                     {
-                      workersList && workersList.map((worker) => (
-                        <tr>
-                          <td>{worker.name}</td>
-
-                          <td>{worker.cpf}</td>
-
-                          <td>{dayjs(worker.admission_date).format("DD-MM-YYYY")}</td>
-                        </tr>
+                      workersList.map((worker) => (
+                        worker.bank_account == null && (
+                          <tr key={worker.id}>
+                            <td>{worker.name}</td>
+                            <td>{worker.cpf}</td>
+                            <td>{dayjs(worker.admission_date).format("DD-MM-YYYY")}</td>
+                          </tr>
+                        )
                       ))
                     }
                   </tbody>
@@ -172,10 +190,10 @@ const TransportVoucherModal = (props) => {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="primary" onClick={handleClose}>Entendido</Button>
+        <Button variant="primary" onClick={handleClose}>Fechar</Button>
       </Modal.Footer>
     </Modal>
   )
 }
 
-export default TransportVoucherModal
+export default OpenAccountModal

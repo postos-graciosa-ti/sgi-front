@@ -60,6 +60,10 @@ export const EthnicityDoc = ({ selectedWorker, selectedSubsidiarie, handDate }) 
         Joinville, {handDate || dayjs().format("DD/MM/YYYY")}
       </p>
 
+      <p>
+        Assinatura: ________________________________________________________________________________________
+      </p>
+
       <div style={{ "bottom": "0", "position": "fixed" }}>
         <hr />
 

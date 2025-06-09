@@ -4,7 +4,6 @@ import Modal from 'react-bootstrap/Modal'
 import Swal from 'sweetalert2'
 
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/drvzslkwn/image/upload'
-
 const CLOUDINARY_UPLOAD_PRESET = 'sef26f5y'
 
 const IdentityModal = ({ identityModalOpen, setIdentityModalOpen, selectedApplicant }) => {
@@ -42,6 +41,18 @@ const IdentityModal = ({ identityModalOpen, setIdentityModalOpen, selectedApplic
     setPhotoPreview(null)
   }
 
+  const dataURLtoBlob = (dataurl) => {
+    const arr = dataurl.split(',')
+    const mime = arr[0].match(/:(.*?);/)[1]
+    const bstr = atob(arr[1])
+    let n = bstr.length
+    const u8arr = new Uint8Array(n)
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n)
+    }
+    return new Blob([u8arr], { type: mime })
+  }
+
   const handleCapture = async () => {
     const video = videoRef.current
     const canvas = canvasRef.current
@@ -57,6 +68,11 @@ const IdentityModal = ({ identityModalOpen, setIdentityModalOpen, selectedApplic
     const dataURL = canvas.toDataURL('image/jpeg')
     setPhotoPreview(dataURL)
 
+    if (!selectedApplicant?.id) {
+      Swal.fire('Erro', 'Nenhum candidato selecionado.', 'error')
+      return
+    }
+
     Swal.fire({
       title: 'Enviando...',
       allowOutsideClick: false,
@@ -66,7 +82,8 @@ const IdentityModal = ({ identityModalOpen, setIdentityModalOpen, selectedApplic
     try {
       // 📤 Upload para Cloudinary
       const formData = new FormData()
-      formData.append('file', dataURL)
+      const blob = dataURLtoBlob(dataURL)
+      formData.append('file', blob)
       formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET)
 
       const cloudinaryRes = await fetch(CLOUDINARY_URL, {
@@ -80,7 +97,7 @@ const IdentityModal = ({ identityModalOpen, setIdentityModalOpen, selectedApplic
       if (!imageUrl) throw new Error('URL não recebida do Cloudinary')
 
       // 📨 Enviar URL para o backend
-      const response = await fetch(`/applicants/${selectedApplicant?.id}/api/upload-image`, {
+      const response = await fetch(`/applicants/${selectedApplicant.id}/api/upload-image`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ image: imageUrl }),
@@ -115,23 +132,18 @@ const IdentityModal = ({ identityModalOpen, setIdentityModalOpen, selectedApplic
 
       <Modal.Body>
         <video ref={videoRef} autoPlay playsInline style={{ width: '100%', borderRadius: 8 }} />
-
         <canvas ref={canvasRef} style={{ display: 'none' }} />
-
-        {
-          photoPreview && (
-            <img
-              src={photoPreview}
-              alt="Prévia da foto"
-              style={{ width: '100%', marginTop: 10, borderRadius: 8 }}
-            />
-          )
-        }
+        {photoPreview && (
+          <img
+            src={photoPreview}
+            alt="Prévia da foto"
+            style={{ width: '100%', marginTop: 10, borderRadius: 8 }}
+          />
+        )}
       </Modal.Body>
 
       <Modal.Footer>
         <Button variant="light" onClick={handleClose}>Fechar</Button>
-
         <Button variant="success" onClick={handleCapture}>Concluir</Button>
       </Modal.Footer>
     </Modal>

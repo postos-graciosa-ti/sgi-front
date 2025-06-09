@@ -2,24 +2,32 @@ import { useEffect, useRef, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Swal from 'sweetalert2'
+import api from "../../services/api"
 
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/drvzslkwn/image/upload'
+
 const CLOUDINARY_UPLOAD_PRESET = 'sef26f5y'
 
 const IdentityModal = ({ identityModalOpen, setIdentityModalOpen, selectedApplicant }) => {
   const videoRef = useRef(null)
+
   const canvasRef = useRef(null)
+
   const streamRef = useRef(null)
+
   const [photoPreview, setPhotoPreview] = useState(null)
 
   useEffect(() => {
     const startCamera = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true })
+
         videoRef.current.srcObject = stream
+
         streamRef.current = stream
       } catch (err) {
         console.error('Erro ao acessar a câmera:', err)
+
         Swal.fire('Erro', 'Não foi possível acessar a câmera.', 'error')
       }
     }
@@ -37,39 +45,52 @@ const IdentityModal = ({ identityModalOpen, setIdentityModalOpen, selectedApplic
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((track) => track.stop())
     }
+
     setIdentityModalOpen(false)
+
     setPhotoPreview(null)
   }
 
   const dataURLtoBlob = (dataurl) => {
     const arr = dataurl.split(',')
+
     const mime = arr[0].match(/:(.*?);/)[1]
+
     const bstr = atob(arr[1])
+
     let n = bstr.length
+
     const u8arr = new Uint8Array(n)
+
     while (n--) {
       u8arr[n] = bstr.charCodeAt(n)
     }
+
     return new Blob([u8arr], { type: mime })
   }
 
   const handleCapture = async () => {
     const video = videoRef.current
+
     const canvas = canvasRef.current
 
     if (!video || !canvas) return
 
     canvas.width = video.videoWidth
+
     canvas.height = video.videoHeight
 
     const ctx = canvas.getContext('2d')
+
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
 
     const dataURL = canvas.toDataURL('image/jpeg')
+
     setPhotoPreview(dataURL)
 
     if (!selectedApplicant?.id) {
       Swal.fire('Erro', 'Nenhum candidato selecionado.', 'error')
+
       return
     }
 
@@ -80,10 +101,12 @@ const IdentityModal = ({ identityModalOpen, setIdentityModalOpen, selectedApplic
     })
 
     try {
-      // 📤 Upload para Cloudinary
       const formData = new FormData()
+
       const blob = dataURLtoBlob(dataURL)
+
       formData.append('file', blob)
+
       formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET)
 
       const cloudinaryRes = await fetch(CLOUDINARY_URL, {
@@ -92,26 +115,38 @@ const IdentityModal = ({ identityModalOpen, setIdentityModalOpen, selectedApplic
       })
 
       const cloudinaryData = await cloudinaryRes.json()
+
       const imageUrl = cloudinaryData.secure_url
 
       if (!imageUrl) throw new Error('URL não recebida do Cloudinary')
 
-      // 📨 Enviar URL para o backend
-      const response = await fetch(`/applicants/${selectedApplicant.id}/api/upload-image`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: imageUrl }),
-      })
+      api
+        .post(`/applicants/${selectedApplicant.id}/api/upload-image`, { image: imageUrl })
+        .then((response) => {
+          if (response.status == 200) {
+            Swal.fire('Sucesso', 'Imagem salva com sucesso!', 'success')
 
-      if (response.ok) {
-        Swal.fire('Sucesso', 'Imagem salva com sucesso!', 'success').then(() => {
-          handleClose()
+            handleClose()
+          } else {
+            Swal.fire('Erro', 'Erro ao salvar imagem', 'error')
+          }
         })
-      } else {
-        const errorData = await response.text()
-        console.error('Erro ao salvar imagem:', errorData)
-        Swal.fire('Erro', 'Falha ao salvar a imagem.', 'error')
-      }
+
+      // const response = await fetch(`/applicants/${selectedApplicant.id}/api/upload-image`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ image: imageUrl }),
+      // })
+
+      // if (response.ok) {
+      //   Swal.fire('Sucesso', 'Imagem salva com sucesso!', 'success').then(() => {
+      //     handleClose()
+      //   })
+      // } else {
+      //   const errorData = await response.text()
+      //   console.error('Erro ao salvar imagem:', errorData)
+      //   Swal.fire('Erro', 'Falha ao salvar a imagem.', 'error')
+      // }
     } catch (error) {
       console.error('Erro no envio:', error)
       Swal.fire('Erro', 'Erro ao processar a imagem.', 'error')

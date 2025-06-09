@@ -3,12 +3,14 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Swal from 'sweetalert2'
 
-const IdentityModal = (props) => {
-  const { identityModalOpen, setIdentityModalOpen } = props
+const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/drvzslkwn/image/upload'
 
+const CLOUDINARY_UPLOAD_PRESET = 'sef26f5y'
+
+const IdentityModal = ({ identityModalOpen, setIdentityModalOpen, selectedApplicant }) => {
   const videoRef = useRef(null)
-  const streamRef = useRef(null)
   const canvasRef = useRef(null)
+  const streamRef = useRef(null)
   const [photoPreview, setPhotoPreview] = useState(null)
 
   useEffect(() => {
@@ -62,10 +64,26 @@ const IdentityModal = (props) => {
     })
 
     try {
-      const response = await fetch('/api/upload-image', {
+      // 📤 Upload para Cloudinary
+      const formData = new FormData()
+      formData.append('file', dataURL)
+      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET)
+
+      const cloudinaryRes = await fetch(CLOUDINARY_URL, {
+        method: 'POST',
+        body: formData,
+      })
+
+      const cloudinaryData = await cloudinaryRes.json()
+      const imageUrl = cloudinaryData.secure_url
+
+      if (!imageUrl) throw new Error('URL não recebida do Cloudinary')
+
+      // 📨 Enviar URL para o backend
+      const response = await fetch(`/applicants/${selectedApplicant?.id}/api/upload-image`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: dataURL }),
+        body: JSON.stringify({ image: imageUrl }),
       })
 
       if (response.ok) {
@@ -78,8 +96,8 @@ const IdentityModal = (props) => {
         Swal.fire('Erro', 'Falha ao salvar a imagem.', 'error')
       }
     } catch (error) {
-      console.error('Erro na requisição:', error)
-      Swal.fire('Erro', 'Erro na comunicação com o servidor.', 'error')
+      console.error('Erro no envio:', error)
+      Swal.fire('Erro', 'Erro ao processar a imagem.', 'error')
     }
   }
 
@@ -96,24 +114,24 @@ const IdentityModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          style={{ width: '100%', borderRadius: 8 }}
-        />
+        <video ref={videoRef} autoPlay playsInline style={{ width: '100%', borderRadius: 8 }} />
+
         <canvas ref={canvasRef} style={{ display: 'none' }} />
-        {photoPreview && (
-          <img
-            src={photoPreview}
-            alt="Prévia da foto"
-            style={{ width: '100%', marginTop: 10, borderRadius: 8 }}
-          />
-        )}
+
+        {
+          photoPreview && (
+            <img
+              src={photoPreview}
+              alt="Prévia da foto"
+              style={{ width: '100%', marginTop: 10, borderRadius: 8 }}
+            />
+          )
+        }
       </Modal.Body>
 
       <Modal.Footer>
         <Button variant="light" onClick={handleClose}>Fechar</Button>
+
         <Button variant="success" onClick={handleCapture}>Concluir</Button>
       </Modal.Footer>
     </Modal>

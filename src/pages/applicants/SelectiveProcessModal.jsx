@@ -327,6 +327,7 @@ const SelectiveProcessModal = (props) => {
       <IdentityModal
         identityModalOpen={identityModalOpen}
         setIdentityModalOpen={setIdentityModalOpen}
+        selectedApplicant={selectedApplicant}
       />
     </Modal>
   )

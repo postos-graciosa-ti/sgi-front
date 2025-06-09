@@ -250,7 +250,7 @@ const Nav = () => {
                     <ul className="dropdown-menu">
                       <li><Link className="dropdown-item" to="/system-log">Todos</Link></li>
 
-                      <li><Link className="dropdown-item" to="/workers-logs">Colaboradores</Link></li>
+                      {/* <li><Link className="dropdown-item" to="/workers-logs">Colaboradores</Link></li> */}
 
                       <li><Link className="dropdown-item" to="/turns-logs">Turnos</Link></li>
 
@@ -258,7 +258,7 @@ const Nav = () => {
 
                       <li><Link className="dropdown-item" to="/department-logs">Setores</Link></li>
 
-                      <li><Link className="dropdown-item" to="/subsidiaries-logs">Filiais</Link></li>
+                      {/* <li><Link className="dropdown-item" to="/subsidiaries-logs">Filiais</Link></li> */}
 
                       {/* <li><Link className="dropdown-item" to="/users-logs">Usuários</Link></li> */}
 

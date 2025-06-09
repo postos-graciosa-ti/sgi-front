@@ -1,4 +1,3 @@
-import moment from 'moment'
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
@@ -81,35 +80,7 @@ const EditSubsidiarieModal = (props) => {
 
     api
       .put(`/subsidiaries/${selectedSubsidiarie.id}`, formData)
-      .then((response) => {
-        const logStr = `
-          ${userSession.name} alterou ${selectedSubsidiarie.name} de 
-          (
-            nome=${selectedSubsidiarie.name}, 
-            endereço=${selectedSubsidiarie.adress}, 
-            telefone=${selectedSubsidiarie.phone}, 
-            email=${selectedSubsidiarie.email}
-          ) 
-          para ${response.data.name} 
-          (
-            nome=${response.data.name}, 
-            endereço=${response.data.adress}, 
-            telefone=${response.data.phone}, 
-            email=${response.data.email}
-          )
-        `
-
-        const logFormData = {
-          log_str: logStr,
-          happened_at: moment().format('DD-MM-YYYY'),
-          happened_at_time: moment().format('HH:mm'),
-          user_id: userSession.id,
-        }
-
-        api
-          .post('/subsidiaries/logs', logFormData)
-          .then(() => handleCloseModal())
-      })
+      .then(() => handleCloseModal())
   }
 
   return (

@@ -1,4 +1,3 @@
-import moment from 'moment'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import useUserSessionStore from '../../data/userSession'
@@ -30,20 +29,7 @@ const DeleteSubsidiarieModal = (props) => {
 
     api
       .delete(`/subsidiaries/${selectedSubsidiarie.id}`)
-      .then(() => {
-        let logStr = `${userSession.name} removeu ${selectedSubsidiarie.name} (nome=${selectedSubsidiarie.name}, endereço=${selectedSubsidiarie.adress}, telefone=${selectedSubsidiarie.phone}, email=${selectedSubsidiarie.email})`
-
-        let logFormData = {
-          "log_str": logStr,
-          "happened_at": moment(new Date()).format("DD-MM-YYYY"),
-          "happened_at_time": moment(new Date()).format("HH:mm"),
-          "user_id": userSession.id
-        }
-
-        api
-          .post(`/subsidiaries/logs`, logFormData)
-          .then(() => handleCloseModal())
-      })
+      .then(() => handleCloseModal())
   }
 
   return (
@@ -62,7 +48,7 @@ const DeleteSubsidiarieModal = (props) => {
 
         <form onSubmit={handleSubmit}>
           <Modal.Body>
-            Tem certeza que deseja excluir {selectedSubsidiarie && selectedSubsidiarie.name}
+            Tem certeza que deseja excluir {selectedSubsidiarie && selectedSubsidiarie.name}?
           </Modal.Body>
 
           <Modal.Footer>

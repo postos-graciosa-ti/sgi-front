@@ -83,11 +83,11 @@ const Home = () => {
       <Nav />
 
       <div className="container mt-4">
-        <button className="btn btn-dark mt-4 mb-4">Manual do usuário</button>
-
         <h3 className="text-danger">
           Importante
         </h3>
+
+        <button className="btn btn-dark mt-2 mb-4">Manual do usuário</button>
 
         <div className="text-muted mb-3">
           Essa página contém as notificações relacionadas as filiais de seu interesse

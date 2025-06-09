@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Swal from 'sweetalert2'
@@ -9,6 +9,7 @@ const IdentityModal = (props) => {
   const videoRef = useRef(null)
   const streamRef = useRef(null)
   const canvasRef = useRef(null)
+  const [photoPreview, setPhotoPreview] = useState(null)
 
   useEffect(() => {
     const startCamera = async () => {
@@ -32,7 +33,11 @@ const IdentityModal = (props) => {
   }, [identityModalOpen])
 
   const handleClose = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop())
+    }
     setIdentityModalOpen(false)
+    setPhotoPreview(null)
   }
 
   const handleCapture = async () => {
@@ -48,6 +53,13 @@ const IdentityModal = (props) => {
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
 
     const dataURL = canvas.toDataURL('image/jpeg')
+    setPhotoPreview(dataURL)
+
+    Swal.fire({
+      title: 'Enviando...',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    })
 
     try {
       const response = await fetch('/api/upload-image', {
@@ -87,9 +99,17 @@ const IdentityModal = (props) => {
         <video
           ref={videoRef}
           autoPlay
+          playsInline
           style={{ width: '100%', borderRadius: 8 }}
         />
         <canvas ref={canvasRef} style={{ display: 'none' }} />
+        {photoPreview && (
+          <img
+            src={photoPreview}
+            alt="Prévia da foto"
+            style={{ width: '100%', marginTop: 10, borderRadius: 8 }}
+          />
+        )}
       </Modal.Body>
 
       <Modal.Footer>

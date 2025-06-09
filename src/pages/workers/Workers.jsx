@@ -14,9 +14,11 @@ import EditWorkerModal from "./EditWorkerModal"
 import ExperienceTimeModal from "./ExperienceTimeModal"
 import ModifyWorkpointModal from "./ModifyWorkpointModal"
 import NrModal from "./NrModal"
+import OpenAccountModal from "./OpenAccountModal"
 import PrintBadgeContent from "./PrintBadgeContent"
 import ReactivateWorkerModal from "./ReactivateWorkerModal"
 import ResignationReasonsReportModal from "./ResignationReasonsReportModal"
+import TransportVoucherModal from "./TransportVoucherModal"
 import WorkerAwayModal from "./WorkerAwayModal"
 import WorkerDocsModal from "./WorkerDocsModal"
 import WorkerInfoModal from "./WorkerInfoModal"
@@ -72,6 +74,10 @@ const Workers = () => {
   const [modifyWorkpointModalOpen, setModifyWorkpointModalOpen] = useState(false)
 
   const [admissionsReportModalOpen, setAdmissionsReportModalOpen] = useState(false)
+
+  const [transportVoucherModalOpen, setTransportVoucherModalOpen] = useState(false)
+
+  const [openAccountModalOpen, setOpenAccountModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -347,6 +353,24 @@ const Workers = () => {
                   Filtro de admitidos
                 </button>
               </li>
+
+              <li>
+                <button
+                  className="dropdown-item"
+                  onClick={() => setTransportVoucherModalOpen(true)}
+                >
+                  Vale transporte
+                </button>
+              </li>
+
+              <li>
+                <button
+                  className="dropdown-item"
+                  onClick={() => setOpenAccountModalOpen(true)}
+                >
+                  Abertura de conta
+                </button>
+              </li>
             </ul>
           </div>
         </div>
@@ -421,8 +445,6 @@ const Workers = () => {
 
               <ul className="list-group list-group-flush">
                 <li className="list-group-item">
-                  <button></button>
-                  
                   <button
                     className="btn btn-warning me-2 mt-2"
                     onClick={() => handleOpenEditWorkerModal(worker)}
@@ -655,6 +677,16 @@ const Workers = () => {
       <AdmissionsReportModal
         admissionsReportModalOpen={admissionsReportModalOpen}
         setAdmissionsReportModalOpen={setAdmissionsReportModalOpen}
+      />
+
+      <TransportVoucherModal
+        transportVoucherModalOpen={transportVoucherModalOpen}
+        setTransportVoucherModalOpen={setTransportVoucherModalOpen}
+      />
+
+      <OpenAccountModal
+        openAccountModalOpen={openAccountModalOpen}
+        setOpenAccountModalOpen={setOpenAccountModalOpen}
       />
     </>
   )

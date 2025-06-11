@@ -25,6 +25,7 @@ import WorkerInfoModal from "./WorkerInfoModal"
 import WorkerNotationModal from "./WorkerNotationModal"
 import WorkerReturnModal from "./WorkerReturnModal"
 import WorkersByTurnModal from "./WorkersByTurnModal"
+import MonthBirthdaysModal from "./MonthBirthdaysModal"
 
 const Workers = () => {
   const userSession = useUserSessionStore((state) => state.userSession)
@@ -78,6 +79,8 @@ const Workers = () => {
   const [transportVoucherModalOpen, setTransportVoucherModalOpen] = useState(false)
 
   const [openAccountModalOpen, setOpenAccountModalOpen] = useState(false)
+
+  const [monthBirthdaysModalOpen, setMonthBirthdaysModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -278,6 +281,10 @@ const Workers = () => {
     setAdmissionsReportModalOpen(true)
   }
 
+  const handleOpenMonthBirthdaysModal = () => {
+    setMonthBirthdaysModalOpen(true)
+  }
+
   return (
     <>
       <Nav />
@@ -370,6 +377,13 @@ const Workers = () => {
                 >
                   Abertura de conta
                 </button>
+              </li>
+
+              <li
+                className="dropdown-item"
+                onClick={() => handleOpenMonthBirthdaysModal(true)}
+              >
+                Aniversariantes do mês
               </li>
             </ul>
           </div>
@@ -698,6 +712,11 @@ const Workers = () => {
       <OpenAccountModal
         openAccountModalOpen={openAccountModalOpen}
         setOpenAccountModalOpen={setOpenAccountModalOpen}
+      />
+
+      <MonthBirthdaysModal
+        monthBirthdaysModalOpen={monthBirthdaysModalOpen}
+        setMonthBirthdaysModalOpen={setMonthBirthdaysModalOpen}
       />
     </>
   )

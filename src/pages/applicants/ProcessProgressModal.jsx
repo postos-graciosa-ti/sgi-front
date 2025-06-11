@@ -40,7 +40,7 @@ const ProcessProgressModal = (props) => {
         <div className="mb-3">
           <input
             value={"Avaliações"}
-            className={hasExam ? "form-control is-valid" : "form-control is-invalid"}
+            className={hasExam == true && "form-control is-valid" || "form-control is-invalid"}
             disabled={true}
           />
         </div>

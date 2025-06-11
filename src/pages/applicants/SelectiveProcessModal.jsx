@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
-import { CaretRightFill, Trash } from 'react-bootstrap-icons'
+import { CaretRightFill } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import Swal from 'sweetalert2'
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 import CoordinatorInterviewModal from './CoordinatorInterviewModal'
@@ -28,64 +27,64 @@ const SelectiveProcessModal = (props) => {
 
   const [identityModalOpen, setIdentityModalOpen] = useState(false)
 
-  useEffect(() => {
-    if (openWhatsapp) {
-      let failMessage = `
-        Prezado(a) ${selectedApplicant?.name}!
+  // useEffect(() => {
+  //   if (openWhatsapp) {
+  //     let failMessage = `
+  //       Prezado(a) ${selectedApplicant?.name}!
 
-        Agradecemos seu interesse em participar do nosso processo seletivo. 
-        No momento, optamos por não evoluir com a sua candidatura.
-        Vamos manter o seu currículo em nosso banco de talentos para novas
-        oportunidades e encorajamos que se inscreva em processos futuros.
+  //       Agradecemos seu interesse em participar do nosso processo seletivo. 
+  //       No momento, optamos por não evoluir com a sua candidatura.
+  //       Vamos manter o seu currículo em nosso banco de talentos para novas
+  //       oportunidades e encorajamos que se inscreva em processos futuros.
       
-        Desejamos sucesso em sua jornada profissional!
+  //       Desejamos sucesso em sua jornada profissional!
         
-        Abraços,
+  //       Abraços,
         
-        Time de RH
-        Postos Graciosa
-      `
+  //       Time de RH
+  //       Postos Graciosa
+  //     `
 
-      let successMessage = `
-        Prezado(A) ${selectedApplicant?.name}!,
+  //     let successMessage = `
+  //       Prezado(A) ${selectedApplicant?.name}!,
 
-        Agradecemos a confiança e gentileza de nos ouvir.
-        Conforme conversamos, estamos muito felizes em lhe
-        informar que você foi aprovado para a próxima etapa do
-        nosso processo seletivo! Agora, vamos para a próxima
-        fase, em breve entraremos em contato passando mais
-        informações.
+  //       Agradecemos a confiança e gentileza de nos ouvir.
+  //       Conforme conversamos, estamos muito felizes em lhe
+  //       informar que você foi aprovado para a próxima etapa do
+  //       nosso processo seletivo! Agora, vamos para a próxima
+  //       fase, em breve entraremos em contato passando mais
+  //       informações.
 
-        Segue lista de documentações: https://drive.google.com/file/d/1FefOkU4VNQlgBXiSREGngQD8Fr7AmY8n/view?usp=sharing
+  //       Segue lista de documentações: https://drive.google.com/file/d/1FefOkU4VNQlgBXiSREGngQD8Fr7AmY8n/view?usp=sharing
 
-        Abraços,
+  //       Abraços,
         
-        Time de RH
-        Postos Graciosa
-      `
+  //       Time de RH
+  //       Postos Graciosa
+  //     `
 
-      let isRejected = (
-        selectedApplicant?.rh_opinion == "reprovado" ||
-        selectedApplicant?.coordinator_opinion == "reprovado"
-      )
+  //     let isRejected = (
+  //       selectedApplicant?.rh_opinion == "reprovado" ||
+  //       selectedApplicant?.coordinator_opinion == "reprovado"
+  //     )
 
-      const phone = selectedApplicant?.mobile
+  //     const phone = selectedApplicant?.mobile
 
-      const message = isRejected ? failMessage : successMessage
+  //     const message = isRejected ? failMessage : successMessage
 
-      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+  //     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
 
-      window.open(url, '_blank')
+  //     window.open(url, '_blank')
 
-      let requestBody = {
-        whatsapp_feedback: "sim"
-      }
+  //     let requestBody = {
+  //       whatsapp_feedback: "sim"
+  //     }
 
-      api.patch(`/applicants/${selectedApplicant?.id}`, requestBody)
+  //     api.patch(`/applicants/${selectedApplicant?.id}`, requestBody)
 
-      setOpenWhatsapp(false)
-    }
-  }, [openWhatsapp])
+  //     setOpenWhatsapp(false)
+  //   }
+  // }, [openWhatsapp])
 
   const handleClose = () => {
     api
@@ -109,91 +108,6 @@ const SelectiveProcessModal = (props) => {
 
   const handleOpenCoordinatorInterviewModal = () => {
     setCoordinatorInterviewModalOpen(true)
-  }
-
-  const handleSendEmailFeedback = () => {
-    let failMessage = `
-      Prezado(a) ${selectedApplicant.name}!
-
-      Agradecemos seu interesse em participar do nosso processo seletivo. 
-      No momento, optamos por não evoluir com a sua candidatura.
-      Vamos manter o seu currículo em nosso banco de talentos para novas
-      oportunidades e encorajamos que se inscreva em processos futuros.
-    
-      Desejamos sucesso em sua jornada profissional!
-      
-      Abraços,
-      
-      Time de RH
-      Postos Graciosa
-    `
-
-    let successMessage = `
-      Prezado(A) ${selectedApplicant.name}!,
-
-      Agradecemos a confiança e gentileza de nos ouvir.
-      Conforme conversamos, estamos muito felizes em lhe
-      informar que você foi aprovado para a próxima etapa do
-      nosso processo seletivo! Agora, vamos para a próxima
-      fase, em breve entraremos em contato passando mais
-      informações.
-
-      Abraços,
-      
-      Time de RH
-      Postos Graciosa
-    `
-
-    const isRejected = (
-      selectedApplicant.rh_opinion == "reprovado" ||
-      selectedApplicant.coordinator_opinion == "reprovado"
-    )
-
-    const requestBody = {
-      id: selectedApplicant.id,
-      name: selectedApplicant.name,
-      email: selectedApplicant.email,
-      message: isRejected ? failMessage : successMessage,
-    }
-
-    if (requestBody.email == null || requestBody.email == undefined) {
-      Swal.fire({
-        icon: "error",
-        title: "Erro",
-        text: "Um erro inesperado ocorreu, verifique sua conexão e tente novamente mais tarde",
-        timer: 2000,
-      })
-    }
-
-    api
-      .post("/applicants/send-feedback-email", requestBody)
-      .then((response) => {
-        if (response.status == 200) {
-          Swal.fire({
-            icon: "success",
-            title: "Sucesso",
-            text: "E-mail encaminhado com sucesso",
-            timer: 2000,
-          })
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Erro",
-            text: "Um erro inesperado ocorreu, verifique sua conexão e tente novamente mais tarde",
-            timer: 2000,
-          })
-        }
-      })
-  }
-
-  const handleInactivateApplicant = () => {
-    let requestBody = {
-      is_active: false
-    }
-
-    api
-      .patch(`/applicants/${selectedApplicant?.id}`, requestBody)
-      .then(() => handleClose())
   }
 
   const handleOpenIdentityModal = () => {
@@ -259,54 +173,6 @@ const SelectiveProcessModal = (props) => {
             <button className="btn btn-primary ms-2" onClick={handleOpenCoordinatorInterviewModal}>
               <CaretRightFill />
             </button>
-          </div>
-        </div>
-
-        <div className="card mb-3 p-3">
-          <div className="card-body">
-            <div className="mb-4 fw-bold text-center">Retorno para candidato</div>
-
-            <div className="row">
-              <div className="col">
-                <button
-                  className="btn btn-light w-100 shadow fw-bold"
-                  onClick={handleSendEmailFeedback}
-                  disabled={userSession.id !== selectedApplicant?.created_by}
-                >
-                  E-mail
-                </button>
-              </div>
-
-              <div className="col">
-                <button
-                  className="btn btn-light w-100 shadow fw-bold"
-                  onClick={() => setOpenWhatsapp(true)}
-                  disabled={userSession.id !== selectedApplicant?.created_by}
-                >
-                  WhatsApp
-                </button>
-
-                {/* <a
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-light w-100 shadow fw-bold"
-                  disabled={userSession.id !== selectedApplicant?.created_by}
-                >
-                  WhatsApp
-                </a> */}
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <button
-                className="btn btn-danger w-100"
-                onClick={handleInactivateApplicant}
-                disabled={userSession.id !== selectedApplicant?.created_by}
-              >
-                <Trash />
-              </button>
-            </div>
           </div>
         </div>
       </Modal.Body>

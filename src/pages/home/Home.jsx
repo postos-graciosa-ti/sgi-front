@@ -28,7 +28,7 @@ const Home = () => {
 
   const userSession = useUserSessionStore(state => state.userSession)
 
-  const [monthBirthdays, setMonthBirthdays] = useState()
+  // const [monthBirthdays, setMonthBirthdays] = useState()
 
   const [workersAwayEndDate, setWorkersAwayEndDate] = useState()
 
@@ -73,9 +73,9 @@ const Home = () => {
       .get(`/users/${userSession?.id}/applicants/notifications`)
       .then((response) => setInterviewsToDo(response.data))
 
-    api
-      .get("/another-route-yet")
-      .then((response) => setMonthBirthdays(response.data))
+    // api
+    //   .get("/another-route-yet")
+    //   .then((response) => setMonthBirthdays(response.data))
   }, [])
 
   return (
@@ -261,7 +261,7 @@ const Home = () => {
           )
         }
 
-        {
+        {/* {
           monthBirthdays?.length > 0 && (
             <>
               <h5>Aniversariantes do mês</h5>
@@ -283,7 +283,7 @@ const Home = () => {
               </div>
             </>
           )
-        }
+        } */}
       </div>
     </>
   )

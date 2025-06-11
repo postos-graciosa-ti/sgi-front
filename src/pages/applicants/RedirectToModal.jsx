@@ -57,7 +57,7 @@ const RedirectToDoc = ({ selectedUser, selectedSubsidiarie, datetime, applicant 
         </p>
 
         <p>
-          {selectedSubsidiarie?.adress}
+          {selectedSubsidiarie?.address}
         </p>
 
         <p>

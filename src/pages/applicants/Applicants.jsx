@@ -2,8 +2,9 @@ import dayjs from "dayjs"
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore"
 import { useEffect, useState } from "react"
-import { Arrow90degRight, ArrowClockwise, CupHot } from "react-bootstrap-icons"
+import { ArrowClockwise, Trash } from "react-bootstrap-icons"
 import ReactSelect from "react-select"
+import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
@@ -180,6 +181,182 @@ const Applicants = () => {
     setSelectedApplicant(applicant)
 
     setSpecialNotatioModalOpen(true)
+  }
+
+  const handleSendEmailFeedback = (applicant) => {
+    if (!applicant?.rh_opinion || !applicant?.coordinator_opinion) {
+      Swal.fire("Erro", "É necessário preencher o parecer do RH e do gestor antes de enviar retorno para candidato", "error")
+
+      return
+    }
+
+    if (!applicant?.email) {
+      Swal.fire("Erro", "É necessário que o campo de celular esteja preenchido para enviar o retorno via WhatsApp", "error")
+
+      return
+    }
+
+    let failMessage = `
+      Prezado(a) ${applicant.name}!
+
+      Agradecemos seu interesse em participar do nosso processo seletivo. 
+      No momento, optamos por não evoluir com a sua candidatura.
+      Vamos manter o seu currículo em nosso banco de talentos para novas
+      oportunidades e encorajamos que se inscreva em processos futuros.
+    
+      Desejamos sucesso em sua jornada profissional!
+      
+      Abraços,
+      
+      Time de RH
+      Postos Graciosa
+    `
+
+    let successMessage = `
+      Prezado(A) ${applicant.name}!,
+
+      Agradecemos a confiança e gentileza de nos ouvir.
+      Conforme conversamos, estamos muito felizes em lhe
+      informar que você foi aprovado para a próxima etapa do
+      nosso processo seletivo! Agora, vamos para a próxima
+      fase, em breve entraremos em contato passando mais
+      informações.
+
+      Abraços,
+      
+      Time de RH
+      Postos Graciosa
+    `
+
+    const isRejected = (
+      applicant.rh_opinion == "reprovado" ||
+      applicant.coordinator_opinion == "reprovado"
+    )
+
+    const requestBody = {
+      id: applicant.id,
+      name: applicant.name,
+      email: applicant.email,
+      message: isRejected ? failMessage : successMessage,
+    }
+
+    if (requestBody.email == null || requestBody.email == undefined) {
+      Swal.fire({
+        icon: "error",
+        title: "Erro",
+        text: "Um erro inesperado ocorreu, verifique sua conexão e tente novamente mais tarde",
+        timer: 2000,
+      })
+    }
+
+    api
+      .post("/applicants/send-feedback-email", requestBody)
+      .then((response) => {
+        if (response.status == 200) {
+          api
+            .get("/applicants")
+            .then((response) => setApplicantsList(response.data))
+
+          Swal.fire({
+            icon: "success",
+            title: "Sucesso",
+            text: "E-mail encaminhado com sucesso",
+            timer: 2000,
+          })
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Erro",
+            text: "Um erro inesperado ocorreu, verifique sua conexão e tente novamente mais tarde",
+            timer: 2000,
+          })
+        }
+      })
+  }
+
+  const handleWhatsappFeedback = (applicant) => {
+    if (!applicant?.rh_opinion || !applicant?.coordinator_opinion) {
+      Swal.fire("Erro", "É necessário preencher o parecer do RH e do gestor antes de enviar retorno para candidato", "error")
+
+      return
+    }
+
+    if (!applicant?.mobile) {
+      Swal.fire("Erro", "É necessário que o campo de celular esteja preenchido para enviar o retorno via WhatsApp", "error")
+
+      return
+    }
+
+    let failMessage = `
+      Prezado(a) ${applicant?.name}!
+
+      Agradecemos seu interesse em participar do nosso processo seletivo. 
+      No momento, optamos por não evoluir com a sua candidatura.
+      Vamos manter o seu currículo em nosso banco de talentos para novas
+      oportunidades e encorajamos que se inscreva em processos futuros.
+      
+      Desejamos sucesso em sua jornada profissional!
+        
+      Abraços,
+        
+      Time de RH
+      Postos Graciosa
+    `
+
+    let successMessage = `
+      Prezado(A) ${applicant?.name}!,
+
+      Agradecemos a confiança e gentileza de nos ouvir.
+      Conforme conversamos, estamos muito felizes em lhe
+      informar que você foi aprovado para a próxima etapa do
+      nosso processo seletivo! Agora, vamos para a próxima
+      fase, em breve entraremos em contato passando mais
+      informações.
+
+      Segue lista de documentações: https://drive.google.com/file/d/1FefOkU4VNQlgBXiSREGngQD8Fr7AmY8n/view?usp=sharing
+
+      Abraços,
+        
+      Time de RH
+      Postos Graciosa
+    `
+
+    let isRejected = (
+      applicant?.rh_opinion == "reprovado" ||
+      applicant?.coordinator_opinion == "reprovado"
+    )
+
+    const phone = applicant?.mobile
+
+    const message = isRejected ? failMessage : successMessage
+
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+
+    window.open(url, '_blank')
+
+    let requestBody = {
+      whatsapp_feedback: "sim"
+    }
+
+    api.patch(`/applicants/${selectedApplicant?.id}`, requestBody)
+
+    api
+      .get("/applicants")
+      .then((response) => setApplicantsList(response.data))
+  }
+
+  const handleInactivateApplicant = (applicant) => {
+    let requestBody = {
+      is_active: false
+    }
+
+    api
+      .patch(`/applicants/${applicant?.id}`, requestBody)
+      .then(() => {
+        api
+          .get("/applicants")
+          .then((response) => setApplicantsList(response.data))
+      })
   }
 
   return (
@@ -367,6 +544,41 @@ const Applicants = () => {
                   </li>
 
                   <li className="list-group-item">
+                    <label className="fw-bold mb-3">
+                      Não se esqueça de dar retorno ao candidato =)
+                    </label>
+
+                    <div className="row mt-4 mb-4">
+                      <div className="col">
+                        <button
+                          className="btn btn-light w-100 shadow fw-bold"
+                          onClick={() => handleSendEmailFeedback(applicant)}
+                        >
+                          E-mail
+                        </button>
+                      </div>
+
+                      <div className="col">
+                        <button
+                          className="btn btn-light w-100 shadow fw-bold"
+                          onClick={() => handleWhatsappFeedback(applicant)}
+                        >
+                          WhatsApp
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <button
+                        className="btn btn-danger w-100"
+                        onClick={() => handleInactivateApplicant(applicant)}
+                      >
+                        <Trash />
+                      </button>
+                    </div>
+                  </li>
+
+                  <li className="list-group-item">
                     {
                       applicant?.rh_opinion === "aprovado" &&
                       applicant?.coordinator_opinion === "aprovado" && (
@@ -420,10 +632,6 @@ const Applicants = () => {
                     }
                   </li>
                 </ul>
-
-                <div className="card-body fw-bold text-center">
-                  Não se esqueça de dar retorno ao candidato =)
-                </div>
               </div>
             ))
           }

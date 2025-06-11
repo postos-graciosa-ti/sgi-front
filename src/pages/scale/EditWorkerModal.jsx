@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import printJS from 'print-js'
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
@@ -7,16 +8,78 @@ import ReactSelect from "react-select"
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 
-const ChangeWorkerTurnPrintContent = ({ selectedWorker, selectedTurn }) => {
+const ChangeWorkerTurnPrintContent = ({ selectedWorker, selectedTurn, workerData, subsidiarieData }) => {
   return (
     <>
-      <h4>Termo de consentimento de mudança de horário</h4>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div>
+          <img src="/logo.png" style={{ width: '80px' }} />
+        </div>
+      </div>
 
-      <p>Eu, {selectedWorker.label}, aceito ser trocado o turno para {selectedTurn.label}</p>
+      <div>
+        <h4>Acordo de compensação de horas</h4>
+      </div>
 
-      <p>Assinatura</p>
+      <div>
+        <h4><b>Empregador</b>: {subsidiarieData?.name}</h4>
 
-      <p>_________________________________________________________________________________</p>
+        <p><b>CNPJ:</b> {subsidiarieData?.cnpj}</p>
+
+        <p><b>Endereço:</b> {subsidiarieData?.adress}</p>
+      </div>
+
+      <div>
+        <h4><b>Empregado</b>: {workerData?.name}</h4>
+
+        <p><b>CPF:</b> {workerData?.cpf}</p>
+
+        <p><b>CTPS:</b> {workerData?.ctps}</p>
+
+        <p><b>Série:</b> {workerData?.ctps_serie}</p>
+
+        <p><b>Endereço:</b> {workerData?.street} {workerData?.street_number} {workerData?.street_complement}</p>
+      </div>
+
+      <div>
+        <h4><b>Objeto</b></h4>
+
+        <p>O presente acordo tem como objetivo a alteração do horário de trabalho do empregado, mantendo a mesma carga horária semanal, conforme descrito a seguir:</p>
+
+        <p><b>Horário de trabalho</b></p>
+
+        <p><b>Horário anterior:</b></p>
+
+        <p><b>Novo horário:</b> {selectedTurn?.label}</p>
+
+        <p><b>Dias da Semana</b>: segunda à sábado</p>
+
+        <p><b>Data de Início</b>: {dayjs().format("DD-MM-YYYY")}</p>
+      </div>
+
+      <div>
+        <h4><b>Compensação de Horas (Se Aplicável)</b></h4>
+
+        <p><b>Validade do Acordo:</b> tempo indeterminado</p>
+      </div>
+
+      <div>
+        <h4><b>Condições Gerais</b></h4>
+
+        <p>O presente acordo está em conformidade com a legislação trabalhista vigente</p>
+
+        <p>O presente acordo poderá ser rescindido por qualquer das partes, mediante aviso prévio</p>
+      </div>
+
+      <div>
+        <h4><b>Assinaturas</b></h4>
+
+        <p><b>Empregador</b> _______________________________________________________________</p>
+
+        <p><b>Empregado</b> _______________________________________________________________</p>
+
+        <p><b>Data</b>: {dayjs().format("DD-MM-YYYY")}</p>
+      </div>
     </>
   )
 }
@@ -56,16 +119,17 @@ const EditWorkerModal = (props) => {
     setEditWorkerModalOpen(false)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const requestBody = {
       worker_id: selectedWorker?.value,
       turn_id: selectedTurn?.value,
     }
 
-    console.log(requestBody)
-    debugger
+    let workerData = await api.get(`/workers/${selectedWorker?.value}`).then((response) => response.data)
 
-    api
+    let subsidiarieData = await api.get(`/subsidiaries/${selectedSubsdiarie?.value}`).then((response) => response.data)
+
+    await api
       .patch("/patch-workers-turn", requestBody)
       .then(() => {
         handleClose()
@@ -74,6 +138,8 @@ const EditWorkerModal = (props) => {
           <ChangeWorkerTurnPrintContent
             selectedWorker={selectedWorker}
             selectedTurn={selectedTurn}
+            workerData={workerData}
+            subsidiarieData={subsidiarieData}
           />
         )
 

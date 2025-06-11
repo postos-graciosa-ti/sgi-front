@@ -331,6 +331,7 @@ const RhInterviewModal = (props) => {
       email: email,
       mobile: mobile,
       work_experiences: JSON.stringify(existExperiences),
+      rh_interview_complete: true,
     }
 
     api

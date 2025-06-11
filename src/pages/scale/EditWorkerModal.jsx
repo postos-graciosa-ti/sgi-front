@@ -1,9 +1,25 @@
+import printJS from 'print-js'
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
+
+const ChangeWorkerTurnPrintContent = ({ selectedWorker, selectedTurn }) => {
+  return (
+    <>
+      <h4>Termo de consentimento de mudança de horário</h4>
+
+      <p>Eu, {selectedWorker.label}, aceito ser trocado o turno para {selectedTurn.label}</p>
+
+      <p>Assinatura</p>
+
+      <p>_________________________________________________________________________________</p>
+    </>
+  )
+}
 
 const EditWorkerModal = (props) => {
   const { editWorkerModalOpen, setEditWorkerModalOpen } = props
@@ -41,14 +57,31 @@ const EditWorkerModal = (props) => {
   }
 
   const handleSubmit = () => {
-    let requestBody = {
-      worker_id: selectedWorker,
-      turn_id: selectedTurn
+    const requestBody = {
+      worker_id: selectedWorker?.value,
+      turn_id: selectedTurn?.value,
     }
+
+    console.log(requestBody)
+    debugger
 
     api
       .patch("/patch-workers-turn", requestBody)
-      .then(() => handleClose())
+      .then(() => {
+        handleClose()
+
+        const printableContent = ReactDOMServer.renderToString(
+          <ChangeWorkerTurnPrintContent
+            selectedWorker={selectedWorker}
+            selectedTurn={selectedTurn}
+          />
+        )
+
+        printJS({
+          printable: printableContent,
+          type: "raw-html",
+        })
+      })
   }
 
   return (
@@ -67,7 +100,7 @@ const EditWorkerModal = (props) => {
           <ReactSelect
             placeholder="Colaboradores"
             options={workersOptions}
-            onChange={(option) => setSelectedWorker(option.value)}
+            onChange={(option) => setSelectedWorker(option)}
           />
         </div>
 
@@ -75,7 +108,7 @@ const EditWorkerModal = (props) => {
           <ReactSelect
             placeholder="Turnos"
             options={turnsOptions}
-            onChange={(option) => setSelectedTurn(option.value)}
+            onChange={(option) => setSelectedTurn(option)}
           />
         </div>
       </Modal.Body>

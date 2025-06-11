@@ -6,14 +6,17 @@ import Swal from 'sweetalert2'
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 import CoordinatorInterviewModal from './CoordinatorInterviewModal'
+import IdentityModal from './IdentityModal'
+import ProcessProgressModal from './ProcessProgressModal'
 import RhInterviewModal from './RhInterviewModal'
 import SeeApplicantsExamsModal from './SeeApplicantsExamsModal'
-import IdentityModal from './IdentityModal'
 
 const SelectiveProcessModal = (props) => {
   const { selectiveProcessModalOpen, setSelectiveProcessModalOpen, selectedApplicant, setApplicantsList, setSelectedApplicant } = props
 
   const userSession = useUserSessionStore((state) => state.userSession)
+
+  const [processProgressModalOpen, setProcessProgressModalOpen] = useState(false)
 
   const [applicantsExamsModalOpen, setApplicantsExamsModalOpen] = useState(false)
 
@@ -90,6 +93,10 @@ const SelectiveProcessModal = (props) => {
       .then((response) => setApplicantsList(response.data))
 
     setSelectiveProcessModalOpen(false)
+  }
+
+  const handleOpenProcessProgressModal = () => {
+    setProcessProgressModalOpen(true)
   }
 
   const handleOpenSeeApplicantsExamsModal = () => {
@@ -205,6 +212,16 @@ const SelectiveProcessModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
+        <div className="card mb-3">
+          <div className="card-body text-center">
+            <div className="mb-2 fw-bold">Andamento do processo</div>
+
+            <button className="btn btn-primary ms-2" onClick={handleOpenProcessProgressModal}>
+              <CaretRightFill />
+            </button>
+          </div>
+        </div>
+
         <div className="card mb-3">
           <div className="card-body text-center">
             <div className="mb-2 fw-bold">Avaliações</div>
@@ -327,6 +344,12 @@ const SelectiveProcessModal = (props) => {
       <IdentityModal
         identityModalOpen={identityModalOpen}
         setIdentityModalOpen={setIdentityModalOpen}
+        selectedApplicant={selectedApplicant}
+      />
+
+      <ProcessProgressModal
+        processProgressModalOpen={processProgressModalOpen}
+        setProcessProgressModalOpen={setProcessProgressModalOpen}
         selectedApplicant={selectedApplicant}
       />
     </Modal>

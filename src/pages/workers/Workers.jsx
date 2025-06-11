@@ -292,6 +292,7 @@ const Workers = () => {
             onClick={handleOpenAddWorkerModal}
             id="addWorker"
             title="Adicionar colaborador"
+            disabled={userSession.role_id == 1 ? false : true}
           >
             <PersonAdd />
           </button>
@@ -302,6 +303,7 @@ const Workers = () => {
               type="button"
               data-bs-toggle="dropdown"
               aria-expanded="false"
+              disabled={userSession.role_id == 1 ? false : true}
             >
               Mais operações
             </button>
@@ -422,6 +424,15 @@ const Workers = () => {
             <div key={worker.id} className="card mb-4">
               <div className="card-body">
                 <h5 className="card-title">{worker.worker_name}</h5>
+
+                <div className="mt-2 mb-2">
+                  <b>CPF:</b> <span className="text-muted">{worker.cpf}</span>
+                </div>
+
+                <div className="mb-2">
+                  <b>Endereço:</b> <span className="text-muted">{worker.street}, {worker.street_number}, {worker.street_complement}</span>
+                </div>
+
                 {
                   worker.worker_is_active && !worker.is_away && (
                     <span className="badge text-bg-success p-2">Ativo</span>
@@ -449,6 +460,7 @@ const Workers = () => {
                     id="editWorker"
                     aria-label={`Editar informações de ${worker.worker_name}`}
                     title="Editar colaborador"
+                    disabled={userSession.role_id == 1 ? false : true}
                   >
                     <PersonGear />
                   </button>
@@ -457,6 +469,7 @@ const Workers = () => {
                     className="btn btn-warning me-2 mt-2"
                     onClick={() => handleOpenWorkerDocsModal(worker)}
                     title="Visualizar documentos"
+                    disabled={userSession.role_id == 1 ? false : true}
                   >
                     <FileEarmarkPdf />
                   </button>
@@ -467,6 +480,7 @@ const Workers = () => {
                     className="btn btn-danger me-2 mt-2"
                     title="Afastar colaborador"
                     onClick={() => handleOpenWorkerAwayModal(worker)}
+                    disabled={userSession.role_id == 1 ? false : true}
                   >
                     <PersonSlash />
                   </button>
@@ -477,6 +491,7 @@ const Workers = () => {
                     id="deleteWorker"
                     aria-label={`Excluir ${worker.worker_name}`}
                     title="Demitir colaborador"
+                    disabled={userSession.role_id == 1 ? false : true}
                   >
                     <PersonX />
                   </button>
@@ -487,6 +502,7 @@ const Workers = () => {
                         className="btn btn-warning me-2 mt-2"
                         title="Retorno ao trabalho"
                         onClick={() => handleOpenWorkerReturnModal(worker)}
+                        disabled={userSession.role_id == 1 ? false : true}
                       >
                         <ArrowClockwise />
                       </button>
@@ -500,6 +516,7 @@ const Workers = () => {
                           className="btn btn-warning me-2 mt-2"
                           onClick={() => handleOpenReactivateWorkerModal(worker)}
                           title="readmitir"
+                          disabled={userSession.role_id == 1 ? false : true}
                         >
                           <ArrowClockwise />
                         </button>
@@ -513,6 +530,7 @@ const Workers = () => {
                     className="btn btn-primary me-2 mt-2"
                     title="Emitir documentos"
                     onClick={() => handleOpenDocsModal(worker)}
+                    disabled={userSession.role_id == 1 ? false : true}
                   >
                     <FiletypeDocx />
                   </button>
@@ -521,6 +539,7 @@ const Workers = () => {
                     className="btn btn-primary me-2 mt-2"
                     title="Emitir crachá"
                     onClick={() => handleIssueBadge(worker)}
+                    disabled={userSession.role_id == 1 ? false : true}
                   >
                     <PersonBadge />
                   </button>
@@ -530,6 +549,7 @@ const Workers = () => {
                     onClick={() => handleOpenWorkerNotation(worker)}
                     title="Adicionar observação"
                     id="workerObservation"
+                    disabled={userSession.role_id == 1 ? false : true}
                   >
                     <Pen />
                   </button>
@@ -538,6 +558,7 @@ const Workers = () => {
                     className="btn btn-primary me-2 mt-2"
                     title="Avaliação de tempo de experiência"
                     onClick={() => handleOpenExperienceTimeModal(worker)}
+                    disabled={userSession.role_id == 1 ? false : true}
                   >
                     <HourglassSplit />
                   </button>

@@ -428,6 +428,46 @@ export const Integration = ({ selectedWorker, selectedSubsidiarie, handDate }) =
   )
 }
 
+export const WorkJourney = ({ subsidiarieData, selectedWorker, handDate }) => {
+  return (
+    <>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div>
+          <img src="/logo.png" style={{ width: '80px' }} />
+        </div>
+
+        <div style={{ marginLeft: '8px' }}>
+          {subsidiarieData?.name}
+        </div>
+      </div>
+
+      <div className="text-center">
+        <h4>DECLARAÇÃO DO HORÁRIO DE TRABALHO</h4>
+      </div>
+
+      <div>
+        <p>
+          A empresa {subsidiarieData?.name} cadastrada no CNPJ sob n° {subsidiarieData?.cnpj}, situada nesta cidade, declara para os devidos fins que {selectedWorker.worker_name} cadastrado no CPF nº {selectedWorker.cpf}, é funcionário desta empresa, cumprindo, a jornada de trabalho das {selectedWorker.turn_name} horas de segunda a domingo, com uma folga durante a semana.
+        </p>
+      </div>
+
+      <p>
+        Joinville, {handDate || dayjs().format("DD/MM/YYYY")}
+      </p>
+
+      <p>
+        Assinatura do colaborador: ________________________________________________________________________________________
+      </p>
+
+      <p>POSTO JARIVA LTDA</p>
+
+      <p>Reigiani Souza</p>
+
+      <p>Gestora de Recursos Humanos</p>
+    </>
+  )
+}
+
 const DocsModal = (props) => {
   const { docsModalOpen, setDocsModalOpen, selectedWorker } = props
 
@@ -501,6 +541,18 @@ const DocsModal = (props) => {
       )
     }
 
+    if (documentType.value == 6) {
+      let subsidiarieData = await api.get(`/subsidiaries/${selectedSubsidiarie?.value}`).then((response) => response.data)
+
+      printableContent = ReactDOMServer.renderToString(
+        <WorkJourney
+          subsidiarieData={subsidiarieData}
+          selectedWorker={selectedWorker}
+          handDate={dayjs(handDate).format("DD/MM/YYYY")}
+        />
+      )
+    }
+
     printJS({
       printable: printableContent,
       type: 'raw-html',
@@ -529,6 +581,7 @@ const DocsModal = (props) => {
             { value: 3, label: "Protocolo para Homologação de Atestado Médico Externo" },
             { value: 4, label: "Termo de compromisso para utilização do grupo de WhatsApp" },
             { value: 5, label: "Termo de Confirmação de Participação na Integração" },
+            { value: 6, label: "Declaração de turno de trabalho" },
           ]}
           setSelectedValue={setDocumentType}
         />

@@ -79,6 +79,7 @@ const CoordinatorInterviewModal = (props) => {
       work_relationships: workRelationships,
 
       coordinator_observations: coordinatorObservation,
+      coordinator_interview_complete: true,
     }
 
     api

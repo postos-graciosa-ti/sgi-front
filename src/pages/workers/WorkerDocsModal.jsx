@@ -247,6 +247,7 @@ const WorkerDocsModal = (props) => {
       <DigitalizeDocsModal
         digitalizeDocsModalOpen={digitalizeDocsModalOpen}
         setDigitalizeDocsModalOpen={setDigitalizeDocsModalOpen}
+        selectedWorker={selectedWorker}
       />
     </>
   )

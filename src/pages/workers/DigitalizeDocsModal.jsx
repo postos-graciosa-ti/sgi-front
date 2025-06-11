@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-const DigitalizeDocsModal = ({ digitalizeDocsModalOpen, setDigitalizeDocsModalOpen }) => {
+const DigitalizeDocsModal = ({ digitalizeDocsModalOpen, setDigitalizeDocsModalOpen, selectedWorker }) => {
   const videoRef = useRef(null)
 
   const canvasRef = useRef(null)
@@ -107,9 +107,12 @@ const DigitalizeDocsModal = ({ digitalizeDocsModalOpen, setDigitalizeDocsModalOp
 
       const imageUrl = await uploadToCloudinary(capturedImage)
 
-      await axios.post('/workers-pictures', {
-        url: imageUrl,
-      })
+      let requestBody = {
+        worker_id: selectedWorker?.worker_id,
+        picture_url: imageUrl,
+      }
+
+      await axios.post('/workers-pictures', requestBody)
 
       alert('Foto enviada com sucesso!')
 

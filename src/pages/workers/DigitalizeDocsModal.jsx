@@ -1,7 +1,8 @@
-import axios from 'axios';
-import { useEffect, useRef, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import axios from 'axios'
+import { useEffect, useRef, useState } from 'react'
+import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
+import api from '../../services/api'
 
 const DigitalizeDocsModal = ({ digitalizeDocsModalOpen, setDigitalizeDocsModalOpen, selectedWorker }) => {
   const videoRef = useRef(null)
@@ -112,7 +113,7 @@ const DigitalizeDocsModal = ({ digitalizeDocsModalOpen, setDigitalizeDocsModalOp
         picture_url: imageUrl,
       }
 
-      await axios.post('/workers-pictures', requestBody)
+      await api.post('/workers-pictures', requestBody)
 
       alert('Foto enviada com sucesso!')
 

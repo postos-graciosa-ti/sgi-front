@@ -13,8 +13,6 @@ const ProcessProgressModal = (props) => {
       .get(`/applicants/${selectedApplicant?.id}/exams`)
       .then((response) => {
         if (response.data) {
-          console.log(response)
-
           setHasExam(true)
         } else {
           setHasExam(false)
@@ -25,8 +23,6 @@ const ProcessProgressModal = (props) => {
   const handleClose = () => {
     setProcessProgressModalOpen(false)
   }
-
-  console.log(selectedApplicant)
 
   return (
     <Modal
@@ -44,7 +40,7 @@ const ProcessProgressModal = (props) => {
         <div className="mb-3">
           <input
             value={"Avaliações"}
-            className={hasExam?.length > 0 ? "form-control is-valid" : "form-control is-invalid"}
+            className={hasExam ? "form-control is-valid" : "form-control is-invalid"}
             disabled={true}
           />
         </div>

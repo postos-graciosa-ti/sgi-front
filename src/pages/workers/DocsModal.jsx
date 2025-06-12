@@ -463,6 +463,10 @@ export const WorkJourney = ({ subsidiarieData, selectedWorker, handDate }) => {
 
       <p>Reigiani Souza</p>
 
+      <p>
+        Assinatura da diretoria: ________________________________________________________________________________________
+      </p>
+
       <p>Gestora de Recursos Humanos</p>
     </>
   )

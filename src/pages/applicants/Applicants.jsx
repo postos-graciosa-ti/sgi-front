@@ -2,7 +2,7 @@ import dayjs from "dayjs"
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore"
 import { useEffect, useState } from "react"
-import { ArrowClockwise, Trash } from "react-bootstrap-icons"
+import { Trash } from "react-bootstrap-icons"
 import ReactSelect from "react-select"
 import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
@@ -21,6 +21,10 @@ const yesNoOptions = [{ value: "aprovado", label: "aprovado" }, { value: "reprov
 
 const Applicants = () => {
   const userSession = useUserSessionStore((state) => state.userSession)
+
+  const [usersOptions, setUsersOptions] = useState()
+
+  const [userToFilter, setUserToFilter] = useState()
 
   const [applicantToSearch, setApplicantToSearch] = useState()
 
@@ -52,6 +56,16 @@ const Applicants = () => {
     api
       .get("/applicants")
       .then((response) => setApplicantsList(response.data))
+
+    api
+      .get("/users")
+      .then((response) => {
+        let options = response.data.map((user) => ({ value: user.user_id, label: user.user_name }))
+
+        options.unshift({ label: "Todos", value: "all" })
+
+        setUsersOptions(options)
+      })
   }, [])
 
   // useEffect(() => {
@@ -65,6 +79,20 @@ const Applicants = () => {
   //       })
   //   }
   // }, [applicantToSearch])
+
+  useEffect(() => {
+    if (userToFilter) {
+      if (userToFilter.value == "all") {
+        api
+          .get("/applicants")
+          .then((response) => setApplicantsList(response.data))
+      } else {
+        api
+          .get(`/applicants/redirected/${userToFilter.value}`)
+          .then((response) => setApplicantsList(response.data))
+      }
+    }
+  }, [userToFilter])
 
   useEffect(() => {
     if (applicantToSearch) {
@@ -365,50 +393,45 @@ const Applicants = () => {
 
       <div className="container">
         <div>
-          <button className="btn btn-primary mb-3" onClick={handleOpenNewApplicantModal}>
+          <button className="btn btn-primary mb-4" onClick={handleOpenNewApplicantModal}>
             Novo candidato
           </button>
         </div>
 
-        <div className="mb-3">
-          <label className="form-label fw-bold">
-            Buscar candidato
-          </label>
-
+        <div className="bg-light rounded shadow p-4 mb-4">
           <div className="row">
-            <div className="col-10">
+            <div className="col">
+              <input type="date" className="form-control" onChange={(e) => setStartDate(e.target.value)} />
+            </div>
+
+            <div className="col">
+              <input type="date" className="form-control" onChange={(e) => setEndDate(e.target.value)} />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-light rounded shadow p-4 mb-4">
+          <div className="row">
+            <div className="col-6">
+              <ReactSelect
+                placeholder="Redirecionado para"
+                options={usersOptions}
+                onChange={(value) => setUserToFilter(value)}
+              />
+            </div>
+
+            <div className="col-6">
               <input
+                placeholder="Buscar candidato"
                 type="text"
                 className="form-control"
                 onChange={(e) => setApplicantToSearch(e.target.value)}
               />
             </div>
-
-            <div className="col-2">
-              <button className="btn btn-primary" onClick={handleReloadApplicantsList}>
-                <ArrowClockwise />
-              </button>
-            </div>
           </div>
         </div>
 
-        <div className="mb-3">
-          <label className="form-label fw-bold">
-            Filtrar
-          </label>
-        </div>
-
-        <div className="row mb-3">
-          <div className="col">
-            <input type="date" className="form-control mb-2" onChange={(e) => setStartDate(e.target.value)} />
-          </div>
-
-          <div className="col">
-            <input type="date" className="form-control mb-2" onChange={(e) => setEndDate(e.target.value)} />
-          </div>
-        </div>
-
-        <div className="mt-5">
+        <div className="mt-3">
           {
             applicantsList && applicantsList.map((applicant) => (
               <div className="card mb-3 shadow">

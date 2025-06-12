@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import LoginModal from './LoginModal'
-import RegisterModal from './RegisterModal'
 import RecoveryPasswordModal from './RecoveryPasswordModal'
+import RegisterModal from './RegisterModal'
 
 function App() {
   const [registerModalOpen, setRegisterModalOpen] = useState(false)

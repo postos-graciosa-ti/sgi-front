@@ -995,7 +995,7 @@ const EditWorkerModal = (props) => {
 
   const handleDownload = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/export/worker/${selectedWorker?.worker_id}`, {
+      const response = await fetch(`https://sgi-api-prod.onrender.com/export/worker/${selectedWorker?.worker_id}`, {
         method: "GET",
       })
 

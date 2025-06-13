@@ -3,7 +3,7 @@ import dayjs from "dayjs"
 import moment from 'moment'
 import printJS from 'print-js'
 import { useEffect, useState } from 'react'
-import { Plus, Printer, Trash } from 'react-bootstrap-icons'
+import { FiletypeCsv, Plus, Printer, Trash } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactDOMServer from 'react-dom/server'
@@ -993,6 +993,38 @@ const EditWorkerModal = (props) => {
     })
   }
 
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(`http://localhost:8000/export/worker/${selectedWorker?.worker_id}`, {
+        method: "GET",
+      })
+
+      if (!response.ok) {
+        throw new Error("Erro ao gerar o arquivo.")
+      }
+
+      const blob = await response.blob()
+
+      const url = window.URL.createObjectURL(blob)
+
+      const link = document.createElement("a")
+
+      link.href = url
+
+      link.download = `colaborador_${selectedWorker?.worker_id}.xlsx`
+
+      document.body.appendChild(link)
+
+      link.click()
+
+      link.remove()
+
+      window.URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error("Erro ao baixar o arquivo:", error)
+    }
+  }
+
   return (
     <>
       <Modal
@@ -1013,6 +1045,10 @@ const EditWorkerModal = (props) => {
             title="Imprimir dados do colaborador"
           >
             <Printer />
+          </button>
+
+          <button className="btn btn-light ms-2" onClick={handleDownload}>
+            <FiletypeCsv />
           </button>
 
           <div>

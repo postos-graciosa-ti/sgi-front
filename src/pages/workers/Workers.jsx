@@ -13,6 +13,7 @@ import DocsModal from "./DocsModal"
 import EditWorkerModal from "./EditWorkerModal"
 import ExperienceTimeModal from "./ExperienceTimeModal"
 import ModifyWorkpointModal from "./ModifyWorkpointModal"
+import MonthBirthdaysModal from "./MonthBirthdaysModal"
 import NrModal from "./NrModal"
 import OpenAccountModal from "./OpenAccountModal"
 import PrintBadgeContent from "./PrintBadgeContent"
@@ -25,7 +26,7 @@ import WorkerInfoModal from "./WorkerInfoModal"
 import WorkerNotationModal from "./WorkerNotationModal"
 import WorkerReturnModal from "./WorkerReturnModal"
 import WorkersByTurnModal from "./WorkersByTurnModal"
-import MonthBirthdaysModal from "./MonthBirthdaysModal"
+import ChangeWorkerSubsidiarieModal from "./ChangeWorkerSubsidiarieModal"
 
 const Workers = () => {
   const userSession = useUserSessionStore((state) => state.userSession)
@@ -81,6 +82,8 @@ const Workers = () => {
   const [openAccountModalOpen, setOpenAccountModalOpen] = useState(false)
 
   const [monthBirthdaysModalOpen, setMonthBirthdaysModalOpen] = useState(false)
+
+  const [changeWorkerSubsidiarieModalOpen, setChangeWorkerSubsidiarieModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -285,6 +288,12 @@ const Workers = () => {
     setMonthBirthdaysModalOpen(true)
   }
 
+  const handleOpenChangeWorkerSubsidiarieModal = (worker) => {
+    setSelectedWorker(worker)
+
+    setChangeWorkerSubsidiarieModalOpen(true)
+  }
+
   return (
     <>
       <Nav />
@@ -486,6 +495,13 @@ const Workers = () => {
                     disabled={userSession.role_id == 1 ? false : true}
                   >
                     <FileEarmarkPdf />
+                  </button>
+
+                  <button
+                    className="btn btn-warning me-2 mt-2"
+                    onClick={() => handleOpenChangeWorkerSubsidiarieModal(worker)}
+                  >
+                    <ArrowClockwise />
                   </button>
                 </li>
 
@@ -717,6 +733,14 @@ const Workers = () => {
       <MonthBirthdaysModal
         monthBirthdaysModalOpen={monthBirthdaysModalOpen}
         setMonthBirthdaysModalOpen={setMonthBirthdaysModalOpen}
+      />
+
+      <ChangeWorkerSubsidiarieModal
+        changeWorkerSubsidiarieModalOpen={changeWorkerSubsidiarieModalOpen}
+        setChangeWorkerSubsidiarieModalOpen={setChangeWorkerSubsidiarieModalOpen}
+        selectedWorker={selectedWorker}
+        setSelectedWorker={setSelectedWorker}
+        setWorkersList={setWorkersList}
       />
     </>
   )

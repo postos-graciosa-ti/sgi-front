@@ -714,21 +714,73 @@ const CreateWorkerModal = (props) => {
       "cnh_emition_date": cnhEmissionDate,
       "cnh_valid_date": cnhValidDate,
       "first_job": firstJob && true,
-      "was_employee": wasEmployee && true,
-      "union_contribute_current_year": unionContributeCurrentYear?.value && true,
-      "receiving_unemployment_insurance": receivingUnemploymentInsurance?.value && true,
-      "previous_experience": previousExperience?.value && true,
+
+      "first_job": (
+        firstJob?.value !== undefined ?
+          firstJob.value
+          :
+          selectedWorker?.first_job
+      ),
+
+      "was_employee": (
+        wasEmployee?.value !== undefined ?
+          wasEmployee?.value
+          :
+          selectedWorker?.was_employee
+      ),
+
+      "union_contribute_current_year": (
+        unionContributeCurrentYear?.value !== undefined ?
+          unionContributeCurrentYear?.value
+          :
+          selectedWorker?.union_contribute_current_year
+      ),
+
+      "receiving_unemployment_insurance": (
+        receivingUnemploymentInsurance?.value !== undefined ?
+          receivingUnemploymentInsurance?.value
+          :
+          selectedWorker?.receiving_unemployment_insurance
+      ),
+
+      "previous_experience": (
+        previousExperience?.value !== undefined ?
+          previousExperience?.value
+          :
+          selectedWorker?.previous_experience
+      ),
+
       "month_wage": monthWage,
       "hour_wage": hourWage,
       "journey_wage": journeyWage,
-      "transport_voucher": transportVoucher?.value,
+
+      "transport_voucher": (
+        transportVoucher?.value !== undefined ?
+          transportVoucher?.value
+          :
+          selectedWorker?.transport_voucher
+      ),
+
       "diary_workjourney": diaryWorkJourney,
       "week_workjourney": weekWorkJourney,
       "month_workjourney": monthWorkJourney,
       "experience_time": experienceTime?.value,
       "nocturne_hours": nocturneHours,
-      "dangerousness": dangerousness?.value,
-      "unhealthy": unhealthy?.value,
+
+      "dangerousness": (
+        dangerousness?.value !== undefined ?
+          dangerousness?.value
+          :
+          selectedWorker?.dangerousness
+      ),
+
+      "unhealthy": (
+        unhealthy?.value !== undefined ?
+          unhealthy?.value
+          :
+          selectedWorker?.unhealthy
+      ),
+
       "wage_payment_method": wagePaymentMethod?.value,
       "general_function_code": codeGeneralFunction,
       "wage": wage,
@@ -742,19 +794,58 @@ const CreateWorkerModal = (props) => {
       "cbo": cbo,
       "hierarchy_structure": selectedHierarchyStructure?.value,
       "enterprise_time": enterpriseTime,
-      "early_payment": earlyPayment?.value,
-      "harmfull_exposition": harmfullExposition?.value,
-      "has_experience_time": hasExperienceTime?.value,
-      "has_nocturne_hours": hasNocturneHours?.value,
+
+      "early_payment": (
+        earlyPayment?.value !== undefined ?
+          earlyPayment?.value
+          :
+          selectedWorker?.early_payment
+      ),
+
+      "harmfull_exposition": (
+        harmfullExposition?.value !== undefined ?
+          harmfullExposition?.value
+          :
+          selectedWorker?.harmfull_exposition
+      ),
+
+      "has_experience_time": (
+        selectedHasExperienceTime?.value !== undefined ?
+          selectedHasExperienceTime?.value
+          :
+          selectedWorker?.has_experience_time
+      ),
+
+      "has_nocturne_hours": (
+        hasNocturneHours?.value !== undefined ?
+          hasNocturneHours?.value
+          :
+          selectedWorker?.has_nocturne_hours
+      ),
+
       "propotional_payment": proportionalPayment?.value,
       "total_nocturne_workjourney": totalNocturneWorkjourney,
       "twenty_five_workjourney": twentyFiveWorkjourney,
       "twenty_two_to_five_week_workjourney": twentyTwoToFiveWeekWorkjourney,
       "twenty_two_to_five_month_workjourney": twentyTwoToFiveMonthWorkjourney,
       "twenty_two_to_five_effective_diary_workjourney": twentyTwoToFiveEffectiveDiaryWorkjourney,
-      "healthcare_plan": healthcarePlan?.value,
+
+      "healthcare_plan": (
+        healthcarePlan?.value !== undefined ?
+          healthcarePlan?.value
+          :
+          selectedWorker?.healthcare_plan
+      ),
+
       "healthcare_plan_discount": healthcarePlanDiscount,
-      "life_insurance": lifeInsurance?.value,
+
+      "life_insurance": (
+        lifeInsurance?.value !== undefined ?
+          lifeInsurance?.value
+          :
+          selectedWorker?.life_insurance
+      ),
+
       "life_insurance_discount": lifeInsuranceDiscount,
       "ag": ag,
       "cc": cc,

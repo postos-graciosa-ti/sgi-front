@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
-import { Pen, Plus, Question, Trash } from "react-bootstrap-icons"
+import { ArrowClockwise, Pen, Plus, Question, Trash } from "react-bootstrap-icons"
 import ReactSelect from "react-select"
+import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import initTour from "../../driverjs/initTour"
@@ -55,6 +56,24 @@ const Users = () => {
     setSelectedUser(user)
 
     setOpenDeleteUserModal(true)
+  }
+
+  const handleResetPassword = (user) => {
+    api
+      .patch(`/users/${user.user_id}/reset-password`)
+      .then((response) => {
+        console.log(response)
+
+        if (response.status == 200) {
+          Swal.fire("Sucesso", "Senha redefinida com sucesso", "success")
+        }
+
+        if (response.data.success) {
+          Swal.fire("Sucesso", "Senha redefinida com sucesso", "success")
+        } else {
+          Swal.fire("Erro", "Não foi possível redefinir a senha", "error")
+        }
+      })
   }
 
   return (
@@ -143,6 +162,14 @@ const Users = () => {
                 </li>
 
                 <li className="list-group-item">
+                  <button
+                    className="btn btn-primary mt-2 me-2"
+                    title="Redefinir senha"
+                    onClick={() => handleResetPassword(user)}
+                  >
+                    <ArrowClockwise />
+                  </button>
+
                   <button
                     id="editUser"
                     className="btn btn-warning mt-2 me-2"

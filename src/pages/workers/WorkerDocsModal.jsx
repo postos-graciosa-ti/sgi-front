@@ -161,6 +161,7 @@ const WorkerDocsModal = (props) => {
                 { value: 13, label: "Comprovante de frequência escolar (filhos entre 7 e 14)" },
                 { value: 14, label: "Contrato de trabalho" },
                 { value: 15, label: "Foto" },
+                { value: 16, label: "Ficha da contabilidade" },
               ]}
               setSelectedValue={setDocTitle}
             />
@@ -185,32 +186,48 @@ const WorkerDocsModal = (props) => {
           </div>
 
           {
-            docsList?.map((pdf) => (
-              <div key={pdf.doc_id} className="mt-5 mb-5">
+            docsList?.map((doc) => (
+              <div key={doc.doc_id} className="mt-5 mb-5">
                 <div className="row mb-2">
                   <div className="col-10">
-                    <h4>{`${pdf.doc_title}` || `Documento #${pdf.doc_id}`}</h4>
+                    <h4>{doc.doc_title || `Documento #${doc.doc_id}`}</h4>
                   </div>
-
                   <div className="col-2">
-                    <button className="btn btn-danger" onClick={() => handleDelete(pdf.doc_id)}>
+                    <button className="btn btn-danger" onClick={() => handleDelete(doc.doc_id)}>
                       <Trash />
                     </button>
                   </div>
                 </div>
 
-                <iframe
-                  src={`${import.meta.env.VITE_API_URL}/get-pdf/${pdf.doc_id}`}
-                  width="100%"
-                  height="500px"
-                  style={{ border: 'none' }}
-                  title={`PDF-${pdf.doc_id}`}
-                />
+                {
+                  doc.doc_title === "Ficha da contabilidade" ? (
+                    <div className="alert alert-info">
+                      <p>Este é um arquivo Excel. Clique abaixo para baixá-lo:</p>
+                      <a
+                        href={`${import.meta.env.VITE_API_URL}/get-pdf/${doc.doc_id}`}
+                        className="btn btn-success"
+                        download
+                      >
+                        Baixar Excel
+                      </a>
+                    </div>
+                  ) : (
+                    <iframe
+                      src={`${import.meta.env.VITE_API_URL}/get-pdf/${doc.doc_id}`}
+                      width="100%"
+                      height="500px"
+                      style={{ border: 'none' }}
+                      title={`PDF-${doc.doc_id}`}
+                    />
+                  )
+                }
 
                 {
-                  pdf.doc_title == "Contrato de trabalho" && (
-                    <div className='mt-3'>
-                      <button className="btn btn-primary w-100" onClick={handleSendEmail}>Enviar contrato por e-mail</button>
+                  doc.doc_title === "Contrato de trabalho" && (
+                    <div className="mt-3">
+                      <button className="btn btn-primary w-100" onClick={handleSendEmail}>
+                        Enviar contrato por e-mail
+                      </button>
                     </div>
                   )
                 }

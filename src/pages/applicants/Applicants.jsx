@@ -16,6 +16,7 @@ import NewApplicantModal from "./NewApplicantModal"
 import RedirectToModal from "./RedirectToModal"
 import SelectiveProcessModal from "./SelectiveProcessModal"
 import SpecialNotationModal from "./SpecialNotationModal"
+import ProcessChecklistModal from "./ProcessChecklistModal"
 
 const yesNoOptions = [{ value: "aprovado", label: "aprovado" }, { value: "reprovado", label: "reprovado" }]
 
@@ -47,6 +48,8 @@ const Applicants = () => {
   const [redirectToModalOpen, setRedirectToModalOpen] = useState(false)
 
   const [specialNotatioModalOpen, setSpecialNotatioModalOpen] = useState(false)
+
+  const [processChecklistModalOpen, setProcessChecklistModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -441,6 +444,19 @@ const Applicants = () => {
                 </div>
 
                 <ul className="list-group list-group-flush">
+                  <li className="list-group-item">
+                    <button
+                      className="btn btn-light w-100"
+                      onClick={() => {
+                        setSelectedApplicant(applicant)
+                        setProcessChecklistModalOpen(true)
+                      }
+                      }
+                    >
+                      Andamento do processo
+                    </button>
+                  </li>
+
                   <li className="list-group-item">
                     <button
                       className="btn btn-primary w-100"
@@ -885,6 +901,12 @@ const Applicants = () => {
         selectedApplicant={selectedApplicant}
         setSelectedApplicant={setSelectedApplicant}
         setApplicantsList={setApplicantsList}
+      />
+
+      <ProcessChecklistModal
+        processChecklistModalOpen={processChecklistModalOpen}
+        setProcessChecklistModalOpen={setProcessChecklistModalOpen}
+        applicantId={selectedApplicant?.id}
       />
     </>
   )

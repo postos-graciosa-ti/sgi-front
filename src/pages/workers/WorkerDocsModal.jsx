@@ -4,9 +4,33 @@ import { CameraFill, Trash } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Swal from 'sweetalert2'
+import * as XLSX from 'xlsx'
 import Select from '../../components/form/Select'
 import api from '../../services/api'
 import DigitalizeDocsModal from './DigitalizeDocsModal'
+
+export const ExcelViewer = ({ fileUrl }) => {
+  const [html, setHtml] = useState("Carregando Excel...")
+
+  useEffect(() => {
+    fetch(fileUrl)
+      .then((res) => res.arrayBuffer())
+      .then((arrayBuffer) => {
+        const data = new Uint8Array(arrayBuffer)
+        const workbook = XLSX.read(data, { type: 'array' })
+
+        const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
+        const htmlString = XLSX.utils.sheet_to_html(firstSheet)
+        setHtml(htmlString)
+      })
+      .catch(() => setHtml("Erro ao carregar Excel"))
+  }, [fileUrl])
+
+  return (
+    <div dangerouslySetInnerHTML={{ __html: html }} style={{ overflowX: 'auto' }} />
+  )
+}
+
 
 const WorkerDocsModal = (props) => {
   const { workerDocsModalOpen, setWorkerDocsModalOpen, selectedWorker, setSelectedWorker } = props

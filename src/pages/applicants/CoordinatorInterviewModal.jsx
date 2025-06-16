@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import ReactSelect from "react-select"
 import api from '../../services/api'
 
 const CoordinatorInterviewModal = (props) => {
@@ -48,6 +49,20 @@ const CoordinatorInterviewModal = (props) => {
 
   const [workRelationships, setWorkRelationships] = useState()
 
+  const [usersOptions, setUsersOptions] = useState()
+
+  const [selectUser, setSelectedUser] = useState()
+
+  useEffect(() => {
+    api
+      .get("/users")
+      .then((response) => {
+        let options = response.data.map((option) => ({ value: option.user_id, label: option.user_name }))
+
+        setUsersOptions(options)
+      })
+  }, [])
+
   const handleClose = () => {
     api
       .get("/applicants")
@@ -80,12 +95,16 @@ const CoordinatorInterviewModal = (props) => {
 
       coordinator_observations: coordinatorObservation,
       coordinator_interview_complete: true,
+
+      redirect_to: selectUser?.value
     }
 
     api
       .patch(`/applicants/${selectedApplicant?.id}`, requestBody)
       .then(() => handleClose())
   }
+
+  console.log(selectedApplicant)
 
   return (
     <Modal
@@ -357,6 +376,15 @@ const CoordinatorInterviewModal = (props) => {
             onChange={(e) => setWorkRelationships(e.target.value)}
             defaultValue={selectedApplicant?.work_relationships}
             disabled={selectedApplicant?.work_relationships && true}
+          />
+        </div>
+
+        <div className="mb-3">
+          <ReactSelect
+            options={usersOptions}
+            onChange={(value) => setSelectedUser(value)}
+            defaultValue={usersOptions?.find((option) => option.value == selectedApplicant?.redirect_to)}
+            isDisabled={selectedApplicant?.redirect_to && true}
           />
         </div>
       </Modal.Body>

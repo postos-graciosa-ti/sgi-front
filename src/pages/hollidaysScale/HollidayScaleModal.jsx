@@ -74,7 +74,9 @@ const HollidayScaleModal = (props) => {
 
         const scaledWorkerIds = scaleData.map(scale => scale.worker.id)
 
-        const availableWorkers = allWorkers.filter(worker => !scaledWorkerIds.includes(worker.worker_id))
+        const availableWorkers = allWorkers.filter(
+          worker => worker.worker_is_active && !scaledWorkerIds.includes(worker.worker_id)
+        )
 
         setWorkersScale(scaleData)
 
@@ -82,7 +84,7 @@ const HollidayScaleModal = (props) => {
       } catch (error) {
         console.error("Erro ao carregar escala/trabalhadores:", error)
       }
-    }
+    };
 
     fetchData()
   }, [hollidayScaleModalOpen])

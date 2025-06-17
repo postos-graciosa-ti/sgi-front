@@ -472,6 +472,62 @@ export const WorkJourney = ({ subsidiarieData, selectedWorker, handDate }) => {
   )
 }
 
+export const LastDayWorked = ({ subsidiarieData, selectedWorker, handDate, subsidiarieAddress }) => {
+  return (
+    <>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div>
+          <img src="/logo.png" style={{ width: '80px' }} />
+        </div>
+
+        <div style={{ marginLeft: '8px' }}>
+          {subsidiarieData?.name}
+        </div>
+      </div>
+
+      <div>
+        {subsidiarieData?.name}
+      </div>
+
+      <div>
+        <b>CNPJ</b>: {subsidiarieData?.cnpj}
+      </div>
+
+      <div>
+        <b>Endereço</b>: {subsidiarieAddress}
+      </div>
+
+      <div className="text-center">
+        <h4>DECLARAÇÃO DE ÚLTIMO DIA TRABALHADO</h4>
+      </div>
+
+      <div>
+        Declaramos, para os devidos fins, que o(a) colaborador(a) {selectedWorker.worker_name} inscrito (a) no CPF sob o no {selectedWorker.cpf}, ocupando o cargo de {selectedWorker.function_name}, teve como último dia efetivo de trabalho no dia {handDate || dayjs().format("DD/MM/YYYY")}.
+      </div>
+
+      <div>
+        Esta declaração é emitida a pedido do(a) interessado(a) para fins de comprovação junto aos órgãos competentes.
+      </div>
+
+      <p>
+        Joinville, {handDate || dayjs().format("DD/MM/YYYY")}
+      </p>
+
+      <div>
+        {subsidiarieData?.name}
+      </div>
+
+      <div>
+        Reigiani Souza Cargo: Diretora
+      </div>
+
+      <p>
+        Assinatura da diretoria: ________________________________________________________________________________________
+      </p>
+    </>
+  )
+}
+
 const DocsModal = (props) => {
   const { docsModalOpen, setDocsModalOpen, selectedWorker } = props
 
@@ -492,70 +548,71 @@ const DocsModal = (props) => {
   const handleSubmit = async () => {
     let printableContent
 
-    if (documentType.value == 1) {
-      printableContent = ReactDOMServer.renderToString(
-        <EthnicityDoc
-          selectedWorker={selectedWorker}
-          selectedSubsidiarie={selectedSubsidiarie}
-          handDate={dayjs(handDate).format("DD/MM/YYYY")}
-        />
-      )
+    const formattedDate = dayjs(handDate).format("DD/MM/YYYY")
+
+    let subsidiarieData = null
+
+    let subsidiarieAddress = null
+
+    const needsSubsidiarieData = [4, 6, 7].includes(documentType.value)
+
+    if (needsSubsidiarieData) {
+      const { data } = await api.get(`/subsidiaries/${selectedSubsidiarie?.value}`)
+
+      subsidiarieData = data
+
+      subsidiarieAddress = data.adress
     }
 
-    if (documentType.value == 2) {
-      printableContent = ReactDOMServer.renderToString(
-        <ResponsabilityDoc
-          selectedWorker={selectedWorker}
-          selectedSubsidiarie={selectedSubsidiarie}
-          handDate={dayjs(handDate).format("DD/MM/YYYY")}
-        />
-      )
+    const docComponents = {
+      1: <EthnicityDoc
+        selectedWorker={selectedWorker}
+        selectedSubsidiarie={selectedSubsidiarie}
+        handDate={formattedDate}
+      />,
+      2: <ResponsabilityDoc
+        selectedWorker={selectedWorker}
+        selectedSubsidiarie={selectedSubsidiarie}
+        handDate={formattedDate}
+      />,
+      3: <HealthDoc
+        selectedWorker={selectedWorker}
+        selectedSubsidiarie={selectedSubsidiarie}
+        handDate={formattedDate}
+      />,
+      4: <WhatsAppDoc
+        selectedWorker={selectedWorker}
+        selectedSubsidiarie={selectedSubsidiarie}
+        subsidiarieAddress={subsidiarieAddress}
+        handDate={formattedDate}
+      />,
+      5: <Integration
+        selectedWorker={selectedWorker}
+        selectedSubsidiarie={selectedSubsidiarie}
+        handDate={formattedDate}
+      />,
+      6: <WorkJourney
+        subsidiarieData={subsidiarieData}
+        selectedWorker={selectedWorker}
+        handDate={formattedDate}
+      />,
+      7: <LastDayWorked
+        subsidiarieData={subsidiarieData}
+        selectedWorker={selectedWorker}
+        handDate={formattedDate}
+        subsidiarieAddress={subsidiarieAddress}
+      />
     }
 
-    if (documentType.value == 3) {
-      printableContent = ReactDOMServer.renderToString(
-        <HealthDoc
-          selectedWorker={selectedWorker}
-          selectedSubsidiarie={selectedSubsidiarie}
-          handDate={dayjs(handDate).format("DD/MM/YYYY")}
-        />
-      )
+    const component = docComponents[documentType.value]
+
+    if (!component) {
+      console.warn("Tipo de documento desconhecido")
+
+      return
     }
 
-    if (documentType.value == 4) {
-      let subsidiarieAddress = await api.get(`/subsidiaries/${selectedSubsidiarie?.value}`).then((response) => response.data.adress)
-
-      printableContent = ReactDOMServer.renderToString(
-        <WhatsAppDoc
-          selectedWorker={selectedWorker}
-          selectedSubsidiarie={selectedSubsidiarie}
-          subsidiarieAddress={subsidiarieAddress}
-          handDate={dayjs(handDate).format("DD/MM/YYYY")}
-        />
-      )
-    }
-
-    if (documentType.value == 5) {
-      printableContent = ReactDOMServer.renderToString(
-        <Integration
-          selectedWorker={selectedWorker}
-          selectedSubsidiarie={selectedSubsidiarie}
-          handDate={dayjs(handDate).format("DD/MM/YYYY")}
-        />
-      )
-    }
-
-    if (documentType.value == 6) {
-      let subsidiarieData = await api.get(`/subsidiaries/${selectedSubsidiarie?.value}`).then((response) => response.data)
-
-      printableContent = ReactDOMServer.renderToString(
-        <WorkJourney
-          subsidiarieData={subsidiarieData}
-          selectedWorker={selectedWorker}
-          handDate={dayjs(handDate).format("DD/MM/YYYY")}
-        />
-      )
-    }
+    printableContent = ReactDOMServer.renderToString(component)
 
     printJS({
       printable: printableContent,
@@ -586,6 +643,7 @@ const DocsModal = (props) => {
             { value: 4, label: "Termo de compromisso para utilização do grupo de WhatsApp" },
             { value: 5, label: "Termo de Confirmação de Participação na Integração" },
             { value: 6, label: "Declaração de turno de trabalho" },
+            { value: 7, label: "Declaração de último dia trabalhado" },
           ]}
           setSelectedValue={setDocumentType}
         />

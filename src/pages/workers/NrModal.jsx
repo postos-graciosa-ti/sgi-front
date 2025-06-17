@@ -1,23 +1,53 @@
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import api from '../../services/api';
+import ReactSelect from "react-select";
 import useUserSessionStore from '../../data/userSession';
-import moment from 'moment';
+import api from '../../services/api';
 
 const NrModal = (props) => {
   const { nrModalOpen, setNrModalOpen } = props
 
   const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
-  const [nrList, setNrList] = useState()
+  const [workersOptions, setWorkersOptions] = useState()
+
+  const [date, setDate] = useState()
+
+  const [selectedWorker, setSelectedWorker] = useState()
 
   useEffect(() => {
-    api
-      .get(`/subsidiaries/${selectedSubsidiarie?.value}/get-nr20-list`)
-      .then((response) => setNrList(response.data))
+    if (nrModalOpen) {
+      api
+        .get(`/workers/subsidiarie/${selectedSubsidiarie?.value}`)
+        .then((response) => {
+          let options = response.data.map((option) => ({ value: option.worker_id, label: option.worker_name }))
 
+          setWorkersOptions(options)
+        })
+    }
   }, [nrModalOpen])
+
+  const handleSendEmail = () => {
+
+    let message = `
+Caros coordenadores,
+
+Segue lista de colaboradores para treinamento de NR-20 no dia ${dayjs(date).format("DD/MM/YYYY")}:
+
+  ${selectedWorker.map((w) => `- ${w.label}`).join("\n  ")}
+
+Atenciosamente,
+Equipe de RH
+`
+
+    api
+      .post("/send-nr-20-email-to-coordinators", { message: message })
+      .then((response) => {
+        console.log(response)
+      })
+  }
 
   const handleClose = () => {
     setNrModalOpen(false)
@@ -31,43 +61,35 @@ const NrModal = (props) => {
       keyboard={false}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Colaboradores que precisam fazer NR 20</Modal.Title>
+        <Modal.Title>Notificar treinamento de NR-20</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
-        <div className="table-responsive">
-          <table className="table table-hover">
-            <thead>
-              <tr>
-                <th>Matrícula</th>
-
-                <th>Nome</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {
-                nrList?.nr_list.map((worker) => (
-                  <tr>
-                    <td>{worker.enrolment}</td>
-
-                    <td>{worker.name}</td>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
+        <div className="mb-3">
+          <input type="date" className="form-control" onChange={(e) => setDate(e.target.value)} />
         </div>
 
-        <div>
-          <span>
-            <i>*Filtrando admitidos entre {moment(nrList?.first_day).format("DD-MM-YYYY")} e {moment(nrList?.last_day).format("DD-MM-YYYY")}</i>
-          </span>
+        <div className="mb-3">
+          <ReactSelect
+            options={workersOptions}
+            isMulti
+            onChange={(value) => setSelectedWorker(value)}
+          />
+        </div>
+
+        <div className="row mt-3">
+          <div className="col">
+            <button className="btn btn-light shadow w-100" onClick={handleSendEmail}>E-mail</button>
+          </div>
+
+          <div className="col">
+            <button className="btn btn-light shadow w-100">WhatsApp</button>
+          </div>
         </div>
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="primary" onClick={handleClose}>Entendido</Button>
+        <Button variant="light" onClick={handleClose}>Fechar</Button>
       </Modal.Footer>
     </Modal>
   )

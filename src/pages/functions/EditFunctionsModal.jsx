@@ -26,6 +26,10 @@ const EditFunctionsModal = (props) => {
   const [functionGeneralCode, setFunctionGeneralCode] = useState()
 
   const handleClose = () => {
+    api
+      .get("/functions")
+      .then((response) => setFunctionsList(response.data))
+
     setFunctionName()
 
     setFunctionDescription()
@@ -55,13 +59,7 @@ const EditFunctionsModal = (props) => {
 
     api
       .put(`/functions/${selectedFunction.id}`, formData)
-      .then(() => {
-        api
-          .get("/functions")
-          .then((response) => setFunctionsList(response.data))
-
-        handleClose()
-      })
+      .then(() => handleClose())
   }
 
   return (

@@ -1,4 +1,3 @@
-import moment from 'moment'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import useUserSessionStore from '../../data/userSession'
@@ -32,21 +31,7 @@ const DeleteFunctionsModal = (props) => {
 
     api
       .delete(`/functions/${selectedFunction.id}`)
-      .then(() => {
-        let logStr = `${userSession.name} deletou ${selectedFunction.name} (nome=${selectedFunction.name}, endereço=${selectedFunction.description}, quantidade ideal=${selectedFunction.ideal_quantity || `indefenido`})`
-
-        let logFormData = {
-          "log_str": logStr,
-          "happened_at": moment(new Date()).format("DD-MM-YYYY"),
-          "happened_at_time": moment(new Date()).format("HH:mm"),
-          "subsidiarie_id": selectedSubsidiarie.value,
-          "user_id": userSession.id
-        }
-
-        api
-          .post(`/subsidiaries/${selectedSubsidiarie.value}/functions/logs`, logFormData)
-          .then(() => handleClose())
-      })
+      .then(() => handleClose())
   }
 
   return (

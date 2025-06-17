@@ -719,35 +719,35 @@ const CreateWorkerModal = (props) => {
         firstJob?.value !== undefined ?
           firstJob.value
           :
-          selectedWorker?.first_job
+          null
       ),
 
       "was_employee": (
         wasEmployee?.value !== undefined ?
           wasEmployee?.value
           :
-          selectedWorker?.was_employee
+          null
       ),
 
       "union_contribute_current_year": (
         unionContributeCurrentYear?.value !== undefined ?
           unionContributeCurrentYear?.value
           :
-          selectedWorker?.union_contribute_current_year
+          null
       ),
 
       "receiving_unemployment_insurance": (
         receivingUnemploymentInsurance?.value !== undefined ?
           receivingUnemploymentInsurance?.value
           :
-          selectedWorker?.receiving_unemployment_insurance
+          null
       ),
 
       "previous_experience": (
         previousExperience?.value !== undefined ?
           previousExperience?.value
           :
-          selectedWorker?.previous_experience
+          null
       ),
 
       "month_wage": monthWage,
@@ -758,7 +758,7 @@ const CreateWorkerModal = (props) => {
         transportVoucher?.value !== undefined ?
           transportVoucher?.value
           :
-          selectedWorker?.transport_voucher
+          null
       ),
 
       "diary_workjourney": diaryWorkJourney,
@@ -771,14 +771,14 @@ const CreateWorkerModal = (props) => {
         dangerousness?.value !== undefined ?
           dangerousness?.value
           :
-          selectedWorker?.dangerousness
+          null
       ),
 
       "unhealthy": (
         unhealthy?.value !== undefined ?
           unhealthy?.value
           :
-          selectedWorker?.unhealthy
+          null
       ),
 
       "wage_payment_method": wagePaymentMethod?.value,
@@ -799,28 +799,28 @@ const CreateWorkerModal = (props) => {
         earlyPayment?.value !== undefined ?
           earlyPayment?.value
           :
-          selectedWorker?.early_payment
+          null
       ),
 
       "harmfull_exposition": (
         harmfullExposition?.value !== undefined ?
           harmfullExposition?.value
           :
-          selectedWorker?.harmfull_exposition
+          null
       ),
 
-      "has_experience_time": (
-        selectedHasExperienceTime?.value !== undefined ?
-          selectedHasExperienceTime?.value
-          :
-          selectedWorker?.has_experience_time
-      ),
+      // "has_experience_time": (
+      //   selectedHasExperienceTime?.value !== undefined ?
+      //     selectedHasExperienceTime?.value
+      //     :
+      //     selectedWorker?.has_experience_time
+      // ),
 
       "has_nocturne_hours": (
         hasNocturneHours?.value !== undefined ?
           hasNocturneHours?.value
           :
-          selectedWorker?.has_nocturne_hours
+          null
       ),
 
       "propotional_payment": proportionalPayment?.value,
@@ -834,7 +834,7 @@ const CreateWorkerModal = (props) => {
         healthcarePlan?.value !== undefined ?
           healthcarePlan?.value
           :
-          selectedWorker?.healthcare_plan
+          null
       ),
 
       "healthcare_plan_discount": healthcarePlanDiscount,
@@ -843,7 +843,7 @@ const CreateWorkerModal = (props) => {
         lifeInsurance?.value !== undefined ?
           lifeInsurance?.value
           :
-          selectedWorker?.life_insurance
+          null
       ),
 
       "life_insurance_discount": lifeInsuranceDiscount,

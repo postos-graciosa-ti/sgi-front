@@ -1,4 +1,3 @@
-import moment from 'moment'
 import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
@@ -62,28 +61,7 @@ const AddTurnModal = (props) => {
 
     api
       .post('/turns', formData)
-      .then((response) => {
-        let logStr = `
-        ${userSession.name} adicionou ${response.data.name} (
-            nome = ${response.data.name}, 
-            horário de inicio de turno = ${response.data.start_time},
-            horário de inicio de intervalo = ${response.data.start_interval_time},
-            horário de fim de intervalo = ${response.data.end_interval_time},
-            horário de fim de turno = ${response.data.end_time}
-        )`
-
-        let logFormData = {
-          "log_str": logStr,
-          "happened_at": moment(new Date()).format("DD-MM-YYYY"),
-          "happened_at_time": moment(new Date()).format("HH:mm"),
-          "subsidiarie_id": selectedSubsidiarie.value,
-          "user_id": userSession.id
-        }
-
-        api
-          .post(`/subsidiaries/${selectedSubsidiarie.value}/logs/turns`, logFormData)
-          .then(() => handleClose())
-      })
+      .then(() => handleClose())
   }
 
   return (

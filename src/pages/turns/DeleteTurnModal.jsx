@@ -1,4 +1,3 @@
-import moment from 'moment'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import useUserSessionStore from '../../data/userSession'
@@ -30,28 +29,7 @@ const DeleteTurnModal = (props) => {
   const handleSubmit = () => {
     api
       .delete(`/turns/${turnToDelete.id}`)
-      .then(() => {
-        let logStr = `
-          ${userSession.name} deletou ${turnToDelete.name} (
-            nome=${turnToDelete.name}, 
-            horário de inicio de turno=${turnToDelete.start_time},
-            horário de inicio de intervalo=${turnToDelete.start_interval_time},
-            horário de fim de intervalo=${turnToDelete.end_interval_time},
-            horário de fim de turn=${turnToDelete.end_time}
-          )`
-
-        let logFormData = {
-          log_str: logStr,
-          happened_at: moment(new Date()).format("DD-MM-YYYY"),
-          happened_at_time: moment(new Date()).format("HH:mm"),
-          subsidiarie_id: selectedSubsidiarie.value,
-          user_id: userSession.id
-        }
-
-        api
-          .post(`/subsidiaries/${selectedSubsidiarie.value}/logs/turns`, logFormData)
-          .then(() => handleClose())
-      })
+      .then(() => handleClose())
   }
 
   return (
@@ -63,9 +41,7 @@ const DeleteTurnModal = (props) => {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>
-            Confirmar exclusão
-          </Modal.Title>
+          <Modal.Title>Confirmar exclusão</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>

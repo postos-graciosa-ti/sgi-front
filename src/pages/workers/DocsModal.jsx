@@ -528,6 +528,240 @@ export const LastDayWorked = ({ subsidiarieData, selectedWorker, handDate, subsi
   )
 }
 
+export const ConfidenceRole = ({ subsidiarieData, selectedWorker, handDate }) => {
+  return (
+    <>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div>
+          <img src="/logo.png" style={{ width: '80px' }} />
+        </div>
+
+        <div style={{ marginLeft: '8px' }}>
+          {subsidiarieData?.name}
+        </div>
+      </div>
+
+      <div>
+        <h4>TERMO DE RESPONSABILIDADE DE CARGO DE CONFIANÇA</h4>
+      </div>
+
+      <p>
+        Eu, {selectedWorker?.worker_name}
+      </p>
+
+      <p>residente e domiciliado(a) Rua: {selectedWorker?.street}, Nº {selectedWorker?.street_number} - Bairro: {selectedWorker?.neighborhood?.name}</p>
+
+      <p>Admissão: {selectedWorker?.admission_date}</p>
+
+      <h4>1. Objetivo</h4>
+
+      <p>1. Este termo tem como objetivo formalizar as responsabilidades, deveres e expectativas para o colaborador que ocupa um cargo de confiança no {subsidiarieData?.name}.</p>
+
+      <h4>2. Responsabilidades Gerais</h4>
+
+      <p>O colaborador deve:</p>
+
+      <p>2.1 Cumprir Metas: Alcançar as metas e objetivos estabelecidos pela empresa, garantindo o cumprimento dos prazos e qualidade dos serviços.</p>
+
+      <p>2.2 Liderança: Exercer liderança positiva, promovendo um ambiente de trabalho saudável, motivador e produtivo.</p>
+
+      <p>2.3 Tomada de Decisão: Tomar decisões estratégicas que visem o melhor para a empresa e para a equipe, sempre baseadas em dados e informações concretas.</p>
+
+      <p>2.4 Comunicação: Manter uma comunicação clara, aberta e assertiva com a equipe e superiores, garantindo que todas as informações relevantes sejam compartilhadas.</p>
+
+      <p>2.5 Gestão de Recursos: Gerir de forma eficiente os recursos financeiros, materiais e humanos, buscando otimizar os resultados da empresa.</p>
+
+      <h4>
+        3. Deveres Específicos
+      </h4>
+
+      <h4>
+        Para o Gerente:
+      </h4>
+
+      <p>Planejar, dirigir e coordenar as atividades da empresa ou departamento.</p>
+
+      <p>Analisar relatórios de desempenho e propor ações corretivas.</p>
+
+      <p>Representar a empresa em reuniões e eventos externos.</p>
+
+      <h4>
+        Para o Coordenador:
+      </h4>
+
+      <p>Supervisionar e orientar os colaboradores em suas atividades diárias.</p>
+
+      <p>Garantir que os projetos e tarefas sejam concluídos dentro do prazo e orçamento.</p>
+
+      <p>Facilitar a comunicação entre a equipe e a gerência.</p>
+
+      <h4>Para o Pessoal Administrativo:</h4>
+
+      <p>Executar tarefas administrativas diárias, como processamento de documentos, atendimento a clientes e fornecedores, e gestão de agendas.</p>
+
+      <p>Organizar e manter arquivos e registros atualizados.</p>
+
+      <p>Apoiar a equipe de gerência e coordenação nas atividades necessárias.</p>
+
+      <h4>
+        4. Confidencialidade
+      </h4>
+
+      <p>O colaborador se compromete a manter sigilo sobre todas as informações confidenciais a que tiver acesso em virtude de seu cargo, não divulgando ou utilizando tais informações para quaisquer fins que não os estritamente relacionados ao desempenho de suas funções no {subsidiarieData?.name}.</p>
+
+      <h4>
+        5. Penalidades
+      </h4>
+
+      <p>O não cumprimento das responsabilidades e deveres descritos neste termo poderá resultar em penalidades, incluindo advertências, suspensão ou demissão por justa causa, conforme a legislação trabalhista vigente.</p>
+
+      <h4>
+        6. Assinaturas
+      </h4>
+
+      <p>
+        Joinville, {handDate || dayjs().format("DD/MM/YYYY")}
+      </p>
+
+      <p>
+        Assinatura do colaborador: ________________________________________________________________________________________
+      </p>
+
+      <p>
+        Assinatura da diretoria: ________________________________________________________________________________________
+      </p>
+
+      <div style={{ "bottom": "0", "position": "fixed" }}>
+        <hr />
+
+        Posto Graciosa: Rua Florianópolis, 510 – Itaum – Cep: 89210-085 – Joinville – SC <br />
+        Auto Posto Fatima: Rua Fátima, 1730 – Fatima – Cep: 89.229-102 – Joinville – SC <br />
+        Posto Bemer: Rua Boehmerwaldt, 675 – Boehmerwaldt – Cep: 89.232-100 – Joinville – SC <br />
+        Posto Jariva: Rua Monsenhor Gercino, 5085 – Jarivatuba – Cep: 89.231-000 – Joinville – SC <br />
+        Posto Graciosa V: Rua Santa Catarina, 1870 – Floresta – Cep: 89.212-000 – Joinville – SC <br />
+        Auto Posto Pirai: Rua XI de Novembro, 5031 – Vila Nova – Cep: 89.237-000 – Joinville - SC
+      </div>
+    </>
+  )
+}
+
+const TabletDoc = ({ subsidiarieData, selectedWorker, handDate }) => {
+  return (
+    <>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div>
+          <img src="/logo.png" style={{ width: '80px' }} />
+        </div>
+
+        <div style={{ marginLeft: '8px' }}>
+          {subsidiarieData?.name}
+        </div>
+      </div>
+
+      <div>
+        <h4>TERMO DE GUARDA E RESPONSABILIDADE POR USO DE EQUIPAMENTO</h4>
+      </div>
+
+      <p>
+        Eu {selectedWorker.worker_name} inscrito no CPF nº {selectedWorker.cpf}, Rua: {selectedWorker?.street}, Nº {selectedWorker?.street_number} - Bairro: {selectedWorker?.neighborhood?.name}, Cargo _COORDENADOR DE VENDAS___, venho para os devidos fins DECLARAR
+        que a empresa {subsidiarieData?.name}, inscrita no CNPJ nº {subsidiarieData?.cnpj}, na qualidade
+        de minha empregadora, está entregando nesta data, a título de empréstimo, o equipamento e
+        assessórios “Novos” abaixo discriminados em perfeito estado de conservação e
+        funcionamento. Comprometo-me a mantê-lo nestas mesmas características, ficando ciente
+        dos seguintes pontos:
+      </p>
+
+      <p>
+        Responsabilidade Total: Assumo total responsabilidade civil, criminal, administrativa pelo uso
+        e direção do respectivo equipamento. Eventuais avarias, e acidentes serão ressarcidas à
+        empregadora {subsidiarieData?.name}, inscrita no CNPJ nº {subsidiarieData?.cnpj}.
+        Isso ocorrerá, salvo se a culpa for exclusiva de terceiros.
+      </p>
+
+      <p>
+        Autorizo desde já os respectivos descontos em folha de pagamento ou rescisão contratual.
+      </p>
+
+      <p>
+        Listagem dos Equipamentos e/ou Ferramentas Emprestadas:
+      </p>
+
+      <p>
+        1 Tablet Galaxy Tab A9 + 5G / modelo: SM-X216B
+      </p>
+
+      <table style={{ borderCollapse: 'collapse', width: '100%' }} border="1">
+        <tbody>
+          <tr>
+            <td>Série:</td>
+
+            <td>1 Chip da operadora Claro nº</td>
+          </tr>
+
+          <tr>
+            <td>IMEI:</td>
+
+            <td>1 Capa</td>
+          </tr>
+
+          <tr>
+            <td>1 Carregador com cabo</td>
+
+            <td>1 Película</td>
+          </tr>
+
+          <tr>
+            <td>Caneta de digitação</td>
+
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        Recebido em {handDate || dayjs().format("DD/MM/YYYY")}
+      </p>
+
+      <div style={{ marginTop: '2rem' }}>
+        <div style={{ borderBottom: '1px solid #000', width: '100%', marginBottom: '1rem' }}></div>
+
+        <p>
+          Devolução do Equipamento Utilizadas: Atestamos que o bem foi devolvido em
+          <span style={{ display: 'inline-block', minWidth: '100px', borderBottom: '1px solid #000', margin: '0 5px' }}></span>
+          , nas seguintes condições:
+        </p>
+
+        <p>
+          ( &nbsp;&nbsp;) Em perfeito estado &nbsp;&nbsp;
+          ( &nbsp;&nbsp;) Apresentando defeito &nbsp;&nbsp;
+          ( &nbsp;&nbsp;) Faltando peças/acessórios
+        </p>
+
+        <div style={{ marginTop: '2rem' }}>
+          <div style={{ borderBottom: '1px solid #000', width: '100%', marginBottom: '0.25rem' }}></div>
+          <p style={{ margin: 0 }}>Nome do responsável pelo recebimento / assinatura:</p>
+        </div>
+
+        <div style={{ marginTop: '2rem' }}>
+          <div style={{ borderBottom: '1px solid #000', width: '100%', marginBottom: '0.25rem' }}></div>
+          <p style={{ margin: 0 }}>Colaborador e assinatura:</p>
+        </div>
+      </div>
+
+      <div style={{ "bottom": "0", "position": "fixed" }}>
+        <hr />
+
+        Posto Graciosa: Rua Florianópolis, 510 – Itaum – Cep: 89210-085 – Joinville – SC <br />
+        Auto Posto Fatima: Rua Fátima, 1730 – Fatima – Cep: 89.229-102 – Joinville – SC <br />
+        Posto Bemer: Rua Boehmerwaldt, 675 – Boehmerwaldt – Cep: 89.232-100 – Joinville – SC <br />
+        Posto Jariva: Rua Monsenhor Gercino, 5085 – Jarivatuba – Cep: 89.231-000 – Joinville – SC <br />
+        Posto Graciosa V: Rua Santa Catarina, 1870 – Floresta – Cep: 89.212-000 – Joinville – SC <br />
+        Auto Posto Pirai: Rua XI de Novembro, 5031 – Vila Nova – Cep: 89.237-000 – Joinville - SC
+      </div>
+    </>
+  )
+}
+
 const DocsModal = (props) => {
   const { docsModalOpen, setDocsModalOpen, selectedWorker } = props
 
@@ -601,6 +835,16 @@ const DocsModal = (props) => {
         selectedWorker={selectedWorker}
         handDate={formattedDate}
         subsidiarieAddress={subsidiarieAddress}
+      />,
+      8: <ConfidenceRole
+        subsidiarieData={subsidiarieData}
+        selectedWorker={selectedWorker}
+        handDate={formattedDate}
+      />,
+      9: <TabletDoc
+        subsidiarieData={subsidiarieData}
+        selectedWorker={selectedWorker}
+        handDate={formattedDate}
       />
     }
 
@@ -644,6 +888,8 @@ const DocsModal = (props) => {
             { value: 5, label: "Termo de Confirmação de Participação na Integração" },
             { value: 6, label: "Declaração de turno de trabalho" },
             { value: 7, label: "Declaração de último dia trabalhado" },
+            { value: 8, label: "Termo de responsabilidade de cargo de confiança" },
+            { value: 9, label: "Termo de guarda e responsabilidade por uso de equipamento" },
           ]}
           setSelectedValue={setDocumentType}
         />

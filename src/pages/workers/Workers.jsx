@@ -7,6 +7,7 @@ import useUserSessionStore from "../../data/userSession"
 import { useScreenSize } from "../../hooks/useScreenSize"
 import api from "../../services/api"
 import AdmissionsReportModal from "./AdmissionsReportModal"
+import ChangeWorkerSubsidiarieModal from "./ChangeWorkerSubsidiarieModal"
 import CreateWorkerModal from "./CreateWorkerModal"
 import DeleteWorkerModal from "./DeleteWorkerModal"
 import DocsModal from "./DocsModal"
@@ -18,6 +19,7 @@ import NrModal from "./NrModal"
 import OpenAccountModal from "./OpenAccountModal"
 import PrintBadgeContent from "./PrintBadgeContent"
 import ReactivateWorkerModal from "./ReactivateWorkerModal"
+import RequestBadgesModal from "./RequestBadgesModal"
 import ResignationReasonsReportModal from "./ResignationReasonsReportModal"
 import TransportVoucherModal from "./TransportVoucherModal"
 import WorkerAwayModal from "./WorkerAwayModal"
@@ -26,7 +28,6 @@ import WorkerInfoModal from "./WorkerInfoModal"
 import WorkerNotationModal from "./WorkerNotationModal"
 import WorkerReturnModal from "./WorkerReturnModal"
 import WorkersByTurnModal from "./WorkersByTurnModal"
-import ChangeWorkerSubsidiarieModal from "./ChangeWorkerSubsidiarieModal"
 
 const Workers = () => {
   const userSession = useUserSessionStore((state) => state.userSession)
@@ -84,6 +85,8 @@ const Workers = () => {
   const [monthBirthdaysModalOpen, setMonthBirthdaysModalOpen] = useState(false)
 
   const [changeWorkerSubsidiarieModalOpen, setChangeWorkerSubsidiarieModalOpen] = useState(false)
+
+  const [requestBadgesModalOpen, setRequestBadgesModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -294,6 +297,10 @@ const Workers = () => {
     setChangeWorkerSubsidiarieModalOpen(true)
   }
 
+  const handleOpenRequestBadgesModal = () => {
+    setRequestBadgesModalOpen(true)
+  }
+
   return (
     <>
       <Nav />
@@ -393,6 +400,15 @@ const Workers = () => {
                 onClick={() => handleOpenMonthBirthdaysModal(true)}
               >
                 Aniversariantes do mês
+              </li>
+
+              <li>
+                <button
+                  className="dropdown-item"
+                  onClick={handleOpenRequestBadgesModal}
+                >
+                  Solicitar crachá definitivo
+                </button>
               </li>
             </ul>
           </div>
@@ -741,6 +757,11 @@ const Workers = () => {
         selectedWorker={selectedWorker}
         setSelectedWorker={setSelectedWorker}
         setWorkersList={setWorkersList}
+      />
+
+      <RequestBadgesModal
+        requestBadgesModalOpen={requestBadgesModalOpen}
+        setRequestBadgesModalOpen={setRequestBadgesModalOpen}
       />
     </>
   )

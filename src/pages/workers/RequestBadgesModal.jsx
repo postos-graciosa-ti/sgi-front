@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import ReactSelect from "react-select"
+import Swal from 'sweetalert2'
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
-import ReactSelect from "react-select"
 
 const RequestBadgesModal = (props) => {
   const { requestBadgesModalOpen, setRequestBadgesModalOpen } = props
@@ -31,7 +32,16 @@ const RequestBadgesModal = (props) => {
   }
 
   const handleSubmit = () => {
-    console.log(selectedWorkers)
+    let requestBody = {
+      workers_ids: selectedWorkers.map((worker) => worker.value),
+      recipient_email: "postosgraciosati@gmail.com",
+    }
+
+    api
+      .post(`/workers/request-badges`, requestBody)
+      .then(() => {
+        Swal.fire("Sucesso", "Solicitação enviada com sucesso", "success")
+      })
   }
 
   return (

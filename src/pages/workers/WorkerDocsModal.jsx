@@ -153,6 +153,12 @@ const WorkerDocsModal = (props) => {
     setDigitalizeDocsModalOpen(true)
   }
 
+  const handleSendToMabecon = (workerId) => {
+    api
+      .post(`/workers/${workerId}/send-ficha-contabilidade-to-mabecon`)
+      .then(() => Swal.fire("Sucesso", `E-mail enviado com sucesso`, "success"))
+  }
+
   return (
     <>
       <Modal
@@ -227,6 +233,7 @@ const WorkerDocsModal = (props) => {
                   doc.doc_title === "Ficha da contabilidade" ? (
                     <div className="alert alert-info">
                       <p>Este é um arquivo Excel. Clique abaixo para baixá-lo:</p>
+
                       <a
                         href={`${import.meta.env.VITE_API_URL}/get-pdf/${doc.doc_id}`}
                         className="btn btn-success"
@@ -234,6 +241,10 @@ const WorkerDocsModal = (props) => {
                       >
                         Baixar Excel
                       </a>
+
+                      <button className="btn btn-success ms-2" onClick={() => handleSendToMabecon(doc.worker_id)}>
+                        Encaminhar por e-mail
+                      </button>
                     </div>
                   ) : (
                     <iframe

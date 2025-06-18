@@ -82,7 +82,7 @@ const Applicants = () => {
           setApplicantsList(newApplicantsList)
         })
     }
-  }, [applicantsList, applicantToSearch])
+  }, [applicantToSearch])
 
   useEffect(() => {
     if (startDate && endDate) {
@@ -874,6 +874,7 @@ const Applicants = () => {
         selectedApplicant={selectedApplicant}
         setApplicantsList={setApplicantsList}
         setSelectedApplicant={setSelectedApplicant}
+        applicantToSearch={applicantToSearch}
       />
 
       <HireApplicantModal

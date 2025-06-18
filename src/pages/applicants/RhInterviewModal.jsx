@@ -82,7 +82,8 @@ const RhInterviewModal = (props) => {
     setRhInterviewModalOpen,
     selectedApplicant,
     setSelectiveProcessModalOpen,
-    setApplicantsList
+    setApplicantsList,
+    applicantToSearch,
   } = props
 
   const [usersOptions, setUsersOptions] = useState()
@@ -265,9 +266,22 @@ const RhInterviewModal = (props) => {
   // }, [rhInterviewModalOpen])
 
   const handleClose = () => {
-    api
-      .get("/applicants")
-      .then((response) => setApplicantsList(response.data))
+    if (applicantToSearch) {
+      api
+        .get("/applicants")
+        .then((response) => {
+          const newApplicantsList = response.data.filter((applicant) => {
+            const firstName = applicant.name.split(" ")[0].toLowerCase()
+            return firstName === applicantToSearch.toLowerCase()
+          })
+
+          setApplicantsList(newApplicantsList)
+        })
+    } else {
+      api
+        .get("/applicants")
+        .then((response) => setApplicantsList(response.data))
+    }
 
     setOpenPositionsList()
 

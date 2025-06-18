@@ -11,7 +11,7 @@ import RhInterviewModal from './RhInterviewModal'
 import SeeApplicantsExamsModal from './SeeApplicantsExamsModal'
 
 const SelectiveProcessModal = (props) => {
-  const { selectiveProcessModalOpen, setSelectiveProcessModalOpen, selectedApplicant, setApplicantsList, setSelectedApplicant } = props
+  const { selectiveProcessModalOpen, setSelectiveProcessModalOpen, selectedApplicant, setApplicantsList, setSelectedApplicant, applicantToSearch } = props
 
   const userSession = useUserSessionStore((state) => state.userSession)
 
@@ -36,11 +36,11 @@ const SelectiveProcessModal = (props) => {
   //       No momento, optamos por não evoluir com a sua candidatura.
   //       Vamos manter o seu currículo em nosso banco de talentos para novas
   //       oportunidades e encorajamos que se inscreva em processos futuros.
-      
+
   //       Desejamos sucesso em sua jornada profissional!
-        
+
   //       Abraços,
-        
+
   //       Time de RH
   //       Postos Graciosa
   //     `
@@ -58,7 +58,7 @@ const SelectiveProcessModal = (props) => {
   //       Segue lista de documentações: https://drive.google.com/file/d/1FefOkU4VNQlgBXiSREGngQD8Fr7AmY8n/view?usp=sharing
 
   //       Abraços,
-        
+
   //       Time de RH
   //       Postos Graciosa
   //     `
@@ -87,9 +87,22 @@ const SelectiveProcessModal = (props) => {
   // }, [openWhatsapp])
 
   const handleClose = () => {
-    api
-      .get("/applicants")
-      .then((response) => setApplicantsList(response.data))
+    if (applicantToSearch) {
+      api
+        .get("/applicants")
+        .then((response) => {
+          const newApplicantsList = response.data.filter((applicant) => {
+            const firstName = applicant.name.split(" ")[0].toLowerCase()
+            return firstName === applicantToSearch.toLowerCase()
+          })
+
+          setApplicantsList(newApplicantsList)
+        })
+    } else {
+      api
+        .get("/applicants")
+        .then((response) => setApplicantsList(response.data))
+    }
 
     setSelectiveProcessModalOpen(false)
   }
@@ -197,6 +210,7 @@ const SelectiveProcessModal = (props) => {
         selectedApplicant={selectedApplicant}
         setSelectiveProcessModalOpen={setSelectiveProcessModalOpen}
         setApplicantsList={setApplicantsList}
+        applicantToSearch={applicantToSearch}
       />
 
       <CoordinatorInterviewModal
@@ -205,6 +219,7 @@ const SelectiveProcessModal = (props) => {
         selectedApplicant={selectedApplicant}
         setSelectiveProcessModalOpen={setSelectiveProcessModalOpen}
         setApplicantsList={setApplicantsList}
+        applicantToSearch={applicantToSearch}
       />
 
       <IdentityModal

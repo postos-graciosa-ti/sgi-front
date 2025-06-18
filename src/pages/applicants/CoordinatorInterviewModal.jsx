@@ -10,7 +10,8 @@ const CoordinatorInterviewModal = (props) => {
     setCoordinatorInterviewModalOpen,
     selectedApplicant,
     setSelectiveProcessModalOpen,
-    setApplicantsList
+    setApplicantsList,
+    applicantToSearch
   } = props
 
   const [coordinatorObservation, setCoordinatorObservation] = useState()
@@ -64,9 +65,22 @@ const CoordinatorInterviewModal = (props) => {
   }, [])
 
   const handleClose = () => {
-    api
-      .get("/applicants")
-      .then((response) => setApplicantsList(response.data))
+    if (applicantToSearch) {
+      api
+        .get("/applicants")
+        .then((response) => {
+          const newApplicantsList = response.data.filter((applicant) => {
+            const firstName = applicant.name.split(" ")[0].toLowerCase()
+            return firstName === applicantToSearch.toLowerCase()
+          })
+
+          setApplicantsList(newApplicantsList)
+        })
+    } else {
+      api
+        .get("/applicants")
+        .then((response) => setApplicantsList(response.data))
+    }
 
     setSelectiveProcessModalOpen(false)
 

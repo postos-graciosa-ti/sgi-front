@@ -1,10 +1,39 @@
 import moment from 'moment'
+import printJS from 'print-js'
 import { useEffect, useState } from 'react'
+import { Printer } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
+
+const HollidayScalePrintContent = ({ working, resting, date, name }) => {
+  return (
+    <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px' }}>
+      <h2>Escala de Feriado - {moment(date).format("DD/MM/YYYY")}</h2>
+
+      <h4>{name}</h4>
+
+      <div style={{ marginTop: '20px' }}>
+        <h5>Trabalhando</h5>
+
+        <ul>
+          {working?.map((w, i) => <li key={i}>{w.name}</li>)}
+        </ul>
+      </div>
+
+      <div style={{ marginTop: '20px' }}>
+        <h5>Folgando</h5>
+
+        <ul>
+          {resting?.map((r, i) => <li key={i}>{r.name}</li>)}
+        </ul>
+      </div>
+    </div>
+  )
+}
 
 const HollidayScaleModal = (props) => {
   const { hollidayScaleModalOpen, setHollidayScaleModalOpen, selectedHolliday, setSelectedHolliday } = props
@@ -36,6 +65,23 @@ const HollidayScaleModal = (props) => {
         })
     }
   }, [hollidayScaleModalOpen])
+
+  const handlePrint = () => {
+    const printableContent = ReactDOMServer.renderToString(
+      <HollidayScalePrintContent
+        working={scalesList?.working}
+        resting={scalesList?.resting}
+        date={selectedHolliday?.date}
+        name={selectedHolliday?.name}
+      />
+    )
+
+    printJS({
+      printable: printableContent,
+      type: 'raw-html',
+      header: null
+    })
+  }
 
   const handleSubmit = () => {
     const requestBody = {
@@ -81,7 +127,6 @@ const HollidayScaleModal = (props) => {
         <Modal.Body>
           <div className="mb-3">
             <label className="form-label fw-bold">Trabalhando</label>
-
             <ReactSelect
               placeholder={""}
               options={workersOptions}
@@ -92,7 +137,6 @@ const HollidayScaleModal = (props) => {
 
           <div className="mb-3">
             <label className="form-label fw-bold">Folgando</label>
-
             <ReactSelect
               placeholder={""}
               options={workersOptions}
@@ -103,65 +147,71 @@ const HollidayScaleModal = (props) => {
 
           {
             scalesList && (
-              <div className="accordion mb-3" id="hollidayAccordion">
-                <div className="accordion-item">
-                  <h2 className="accordion-header" id="headingWorking">
-                    <button
-                      className="accordion-button"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#collapseWorking"
-                      aria-expanded="true"
-                      aria-controls="collapseWorking"
-                    >
-                      <b>Trabalhando</b>
-                    </button>
-                  </h2>
-                  <div
-                    id="collapseWorking"
-                    className="accordion-collapse collapse show"
-                    aria-labelledby="headingWorking"
-                    data-bs-parent="#hollidayAccordion"
-                  >
-                    <div className="accordion-body">
-                      {scalesList?.working?.map((work, index) => (
-                        <div key={index}>
-                          <span>{work.name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+              <>
+                <button className="btn btn-light mt-3 mb-3" onClick={handlePrint}>
+                  <Printer />
+                </button>
 
-                <div className="accordion-item">
-                  <h2 className="accordion-header" id="headingResting">
-                    <button
-                      className="accordion-button collapsed"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#collapseResting"
-                      aria-expanded="false"
-                      aria-controls="collapseResting"
+                <div className="accordion mb-3" id="hollidayAccordion">
+                  <div className="accordion-item">
+                    <h2 className="accordion-header" id="headingWorking">
+                      <button
+                        className="accordion-button"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseWorking"
+                        aria-expanded="true"
+                        aria-controls="collapseWorking"
+                      >
+                        <b>Trabalhando</b>
+                      </button>
+                    </h2>
+                    <div
+                      id="collapseWorking"
+                      className="accordion-collapse collapse show"
+                      aria-labelledby="headingWorking"
+                      data-bs-parent="#hollidayAccordion"
                     >
-                      <b>Folgando</b>
-                    </button>
-                  </h2>
-                  <div
-                    id="collapseResting"
-                    className="accordion-collapse collapse"
-                    aria-labelledby="headingResting"
-                    data-bs-parent="#hollidayAccordion"
-                  >
-                    <div className="accordion-body">
-                      {scalesList?.resting?.map((rest, index) => (
-                        <div key={index}>
-                          <span>{rest.name}</span>
-                        </div>
-                      ))}
+                      <div className="accordion-body">
+                        {scalesList?.working?.map((work, index) => (
+                          <div key={index}>
+                            <span>{work.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="accordion-item">
+                    <h2 className="accordion-header" id="headingResting">
+                      <button
+                        className="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseResting"
+                        aria-expanded="false"
+                        aria-controls="collapseResting"
+                      >
+                        <b>Folgando</b>
+                      </button>
+                    </h2>
+                    <div
+                      id="collapseResting"
+                      className="accordion-collapse collapse"
+                      aria-labelledby="headingResting"
+                      data-bs-parent="#hollidayAccordion"
+                    >
+                      <div className="accordion-body">
+                        {scalesList?.resting?.map((rest, index) => (
+                          <div key={index}>
+                            <span>{rest.name}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </>
             )
           }
         </Modal.Body>

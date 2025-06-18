@@ -82,7 +82,7 @@ const Applicants = () => {
           setApplicantsList(newApplicantsList)
         })
     }
-  }, [applicantToSearch])
+  }, [applicantsList, applicantToSearch])
 
   useEffect(() => {
     if (startDate && endDate) {

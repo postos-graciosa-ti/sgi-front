@@ -1,33 +1,54 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CameraFill, Trash } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Swal from 'sweetalert2'
 import Select from '../../components/form/Select'
+import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 import DigitalizeDocsModal from './DigitalizeDocsModal'
 
 const WorkerDocsModal = (props) => {
-  const { workerDocsModalOpen, setWorkerDocsModalOpen, selectedWorker, setSelectedWorker } = props
+  const { workerDocsModalOpen, setWorkerDocsModalOpen, selectedWorker, setSelectedWorker, setWorkersList } = props
+
+  const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
 
   const [docsList, setDocsList] = useState()
+
   const [workerPicture, setWorkerPicture] = useState()
-  const [docs, setDocs] = useState([]) // arquivos selecionados
-  const [docTitles, setDocTitles] = useState({}) // títulos por arquivo nome
+
+  const [docs, setDocs] = useState([])
+
+  const [docTitles, setDocTitles] = useState({})
+
   const [digitalizeDocsModalOpen, setDigitalizeDocsModalOpen] = useState(false)
 
   useEffect(() => {
     if (!workerDocsModalOpen) return
 
-    api.get(`/worker-pdfs/${selectedWorker?.worker_id}`)
+    api
+      .get(`/worker-pdfs/${selectedWorker?.worker_id}`)
       .then((response) => setDocsList(response.data))
 
-    api.get(`/workers-pictures/${selectedWorker?.worker_id}`)
+    api
+      .get(`/workers-pictures/${selectedWorker?.worker_id}`)
       .then((response) => setWorkerPicture(response.data))
   }, [workerDocsModalOpen, selectedWorker?.worker_id])
 
   const handleClose = () => {
+    api
+      .get(`/workers/subsidiarie/${selectedSubsidiarie?.value}`)
+      .then((response) => {
+        let allWorkers = response.data
+
+        let statusWorkers = allWorkers.filter((worker) => worker.worker_is_active == true && worker.is_away == false)
+
+        let sortStatusWorkers = statusWorkers.sort()
+
+        setWorkersList(sortStatusWorkers)
+      })
+
     setDocs([])
     setDocTitles({})
     setWorkerPicture()

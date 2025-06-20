@@ -724,6 +724,7 @@ const Workers = () => {
         setWorkerDocsModalOpen={setWorkerDocsModalOpen}
         selectedWorker={selectedWorker}
         setSelectedWorker={setSelectedWorker}
+        setWorkersList={setWorkersList}
       />
 
       <ModifyWorkpointModal

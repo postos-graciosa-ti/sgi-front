@@ -159,6 +159,14 @@ const WorkerDocsModal = (props) => {
       .then(() => Swal.fire("Sucesso", `E-mail enviado com sucesso`, "success"))
   }
 
+  const sendDocsToMabecon = () => {
+    api
+      .post(`/workers/${selectedWorker?.worker_id}/send-docs-to-mabecon`)
+      .then(() => {
+        Swal.fire("Sucesso", `E-mail enviado com sucesso`, "success")
+      })
+  }
+
   return (
     <>
       <Modal
@@ -166,52 +174,68 @@ const WorkerDocsModal = (props) => {
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
+        fullscreen={true}
       >
         <Modal.Header closeButton>
           <Modal.Title>Documentos de {selectedWorker?.worker_name}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          <div>
-            <Select
-              label={"Título do documento"}
-              placeholder={""}
-              options={[
-                { value: 1, label: "CTPS" },
-                { value: 2, label: "Exame médico admissional" },
-                { value: 3, label: "Identidade" },
-                { value: 4, label: "CPF" },
-                { value: 5, label: "Titulo eleitoral" },
-                { value: 7, label: "Comprovante de residência" },
-                { value: 8, label: "CNH" },
-                { value: 9, label: "Certidão de casamento" },
-                { value: 10, label: "Certificado de reservista" },
-                { value: 11, label: "Certidão de nascimento (filhos menores de 14)" },
-                { value: 12, label: "Carteira de vacinação (filhos menores de 5)" },
-                { value: 13, label: "Comprovante de frequência escolar (filhos entre 7 e 14)" },
-                { value: 14, label: "Contrato de trabalho" },
-                { value: 15, label: "Foto" },
-                { value: 16, label: "Ficha da contabilidade" },
-              ]}
-              setSelectedValue={setDocTitle}
-            />
+          <div className="fw-bold mb-3">
+            Selecionar arquivo
           </div>
 
-          <div className="d-inline-flex gap-2 mb-3">
-            <div>
+          <div className="row mb-3">
+            <div className="col-10">
               <input type="file" className="form-control" onChange={(e) => setDoc(e.target.files[0])} />
             </div>
 
-            <div>
-              <button className="btn btn-dark" onClick={handleOpenDigitalizeDocsModal}>
+            <div className="col-2">
+              <button className="btn btn-dark w-100" onClick={handleOpenDigitalizeDocsModal}>
                 <CameraFill />
               </button>
             </div>
           </div>
 
+          <div className="fw-bold mb-3">
+            Título de arquivo
+          </div>
+
+          <div className="row">
+            <div className="col-10">
+              <Select
+                placeholder={""}
+                options={[
+                  { value: 1, label: "CTPS" },
+                  { value: 2, label: "Exame médico admissional" },
+                  { value: 3, label: "Identidade" },
+                  { value: 4, label: "CPF" },
+                  { value: 5, label: "Titulo eleitoral" },
+                  { value: 7, label: "Comprovante de residência" },
+                  { value: 8, label: "CNH" },
+                  { value: 9, label: "Certidão de casamento" },
+                  { value: 10, label: "Certificado de reservista" },
+                  { value: 11, label: "Certidão de nascimento (filhos menores de 14)" },
+                  { value: 12, label: "Carteira de vacinação (filhos menores de 5)" },
+                  { value: 13, label: "Comprovante de frequência escolar (filhos entre 7 e 14)" },
+                  { value: 14, label: "Contrato de trabalho" },
+                  { value: 15, label: "Foto" },
+                  { value: 16, label: "Ficha da contabilidade" },
+                ]}
+                setSelectedValue={setDocTitle}
+              />
+            </div>
+
+            <div className="col-2">
+              <button className="btn btn-success w-100" onClick={handleSubmit}>
+                Adicionar
+              </button>
+            </div>
+          </div>
+
           <div>
-            <button className="btn btn-success w-100" onClick={handleSubmit}>
-              Adicionar
+            <button className="btn btn-primary w-100" onClick={sendDocsToMabecon}>
+              Enviar arquivos por e-mail
             </button>
           </div>
 
@@ -222,7 +246,7 @@ const WorkerDocsModal = (props) => {
                   <div className="col-10">
                     <h4>{doc.doc_title || `Documento #${doc.doc_id}`}</h4>
                   </div>
-                  <div className="col-2">
+                  <div className="col-2 text-end">
                     <button className="btn btn-danger" onClick={() => handleDelete(doc.doc_id)}>
                       <Trash />
                     </button>

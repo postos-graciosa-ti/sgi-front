@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 const PrintBadgeContent = ({ worker, selectedSubsidiarie, workerPicture }) => {
+=======
+const PrintBadgeContent = ({ worker, selectedSubsidiarie }) => {
+>>>>>>> Stashed changes
   const safeUpper = (text) => (text ? text.toString().toUpperCase() : "")
 
   return (
@@ -13,6 +17,7 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie, workerPicture }) => {
             <b>{safeUpper(selectedSubsidiarie?.name)}</b>
           </div>
 
+<<<<<<< Updated upstream
           <div className="center-flex" style={{ "marginTop": "15px" }}>
             <img
               src={`${workerPicture.picture_url || "https://res.cloudinary.com/drvzslkwn/image/upload/v1743692323/qtgm9fevvkfi09p4vczt.svg"}`}
@@ -28,6 +33,25 @@ const PrintBadgeContent = ({ worker, selectedSubsidiarie, workerPicture }) => {
             <div><b>CARGO</b></div>
 
             <div>{safeUpper(worker?.function_name)}</div>
+=======
+          <div className="center-flex"></div>
+
+          <div
+            style={{
+              "text-align": "center",
+              "bottom": "0",
+              "position": "absolute",
+              "justifyContent": "center"
+            }}
+          >
+            <div>NOME</div>
+
+            <div><b>{safeUpper(worker?.worker_name?.split(" ")[0])}</b></div>
+
+            <div>CARGO</div>
+
+            <div><b>{safeUpper(worker?.function_name)}</b></div>
+>>>>>>> Stashed changes
           </div>
         </div>
 

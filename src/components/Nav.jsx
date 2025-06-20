@@ -194,6 +194,12 @@ const Nav = () => {
                 </a>
 
                 <ul className="dropdown-menu">
+                  {
+                    userSession.role_id === 1 && (
+                      <li><Link className="dropdown-item" to="/system-log">Histórico de alterações</Link></li>
+                    )
+                  }
+
                   <li><Link className="dropdown-item" to="/workers">Colaboradores</Link></li>
 
                   <li><Link className="dropdown-item" to="/turns">Turnos</Link></li>
@@ -218,7 +224,7 @@ const Nav = () => {
                 </ul>
               </li>
 
-              {
+              {/* {
                 userSession.role_id === 1 && (
                   <li className="nav-item dropdown">
                     <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -238,7 +244,7 @@ const Nav = () => {
                     </ul>
                   </li>
                 )
-              }
+              } */}
 
               <li className="nav-item dropdown">
                 <a

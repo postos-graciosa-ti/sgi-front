@@ -42,21 +42,7 @@ const AddDepartmentModal = (props) => {
 
     api
       .post("/departments", formData)
-      .then((response) => {
-        let logStr = `${userSession.name} adicionou ${response.data.name} (nome=${response.data.name}, descrição=${response.data.description})`
-
-        let logsFormData = {
-          "log_str": logStr,
-          "happened_at": moment(new Date()).format("DD-MM-YYYY"),
-          "happened_at_time": moment(new Date()).format("HH:mm"),
-          "subsidiarie_id": selectedSubsidiarie.value,
-          "user_id": userSession.id
-        }
-
-        api
-          .post(`/subsidiaries/${selectedSubsidiarie.value}/logs/departments`, logsFormData)
-          .then(() => handleClose())
-      })
+      .then(() => handleClose())
   }
 
   return (

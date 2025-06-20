@@ -1,4 +1,3 @@
-import moment from 'moment'
 import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
@@ -46,24 +45,7 @@ const EditDepartmentModal = (props) => {
 
     api
       .put(`/departments/${selectedDepartment.id}`, formData)
-      .then((response) => {
-        let logStr = `
-          ${userSession.name} atualizou ${selectedDepartment?.name} de (nome=${selectedDepartment?.name}, descrição=${selectedDepartment?.description})
-          para ${response.data.name} (nome=${response.data.name}, descrição=${response.data.description})
-        `
-
-        let logsFormData = {
-          "log_str": logStr,
-          "happened_at": moment(new Date()).format("DD-MM-YYYY"),
-          "happened_at_time": moment(new Date()).format("HH:mm"),
-          "subsidiarie_id": selectedSubsidiarie.value,
-          "user_id": userSession.id
-        }
-
-        api
-          .post(`/subsidiaries/${selectedSubsidiarie.value}/logs/departments`, logsFormData)
-          .then(() => handleClose())
-      })
+      .then(() => handleClose())
   }
 
   return (

@@ -268,6 +268,8 @@ const WorkerDocsModal = (props) => {
                         { value: 14, label: "Contrato de trabalho" },
                         { value: 15, label: "Foto" },
                         { value: 16, label: "Ficha da contabilidade" },
+                        { value: 17, label: "Pedido de demissão" },
+                        { value: 18, label: "Relatório de rescisão" },
                       ]}
                       setSelectedValue={(selected) => handleDocTitleChange(file.name, selected)}
                       value={docTitles[file.name] || null}
@@ -300,7 +302,7 @@ const WorkerDocsModal = (props) => {
 
           <div>
             <button className="btn btn-primary w-100" onClick={sendDocsToMabecon}>
-              Enviar arquivos por e-mail
+              Enviar arquivos por e-mail para contabilidade
             </button>
           </div>
 
@@ -346,7 +348,7 @@ const WorkerDocsModal = (props) => {
               {doc.doc_title === "Contrato de trabalho" && (
                 <div className="mt-3">
                   <button className="btn btn-primary w-100" onClick={handleSendEmail}>
-                    Enviar contrato por e-mail
+                    Enviar contrato por e-mail para colaborador
                   </button>
                 </div>
               )}

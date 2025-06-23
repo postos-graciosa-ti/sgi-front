@@ -7,6 +7,7 @@ import ReactDOMServer from 'react-dom/server'
 import Select from '../../components/form/Select'
 import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
+import printJS from 'print-js'
 
 export const EthnicityDoc = ({ selectedWorker, selectedSubsidiarie, handDate }) => {
   return (
@@ -798,6 +799,12 @@ const DocsModal = (props) => {
       subsidiarieAddress = data.adress
     }
 
+    if (documentType.value === 10) {
+      printJS("/ficha_de_epi.pdf")
+      
+      return
+    }
+
     const docComponents = {
       1: <EthnicityDoc
         selectedWorker={selectedWorker}
@@ -890,6 +897,7 @@ const DocsModal = (props) => {
             { value: 7, label: "Declaração de último dia trabalhado" },
             { value: 8, label: "Termo de responsabilidade de cargo de confiança" },
             { value: 9, label: "Termo de guarda e responsabilidade por uso de equipamento" },
+            { value: 10, label: "Ficha de EPI" },
           ]}
           setSelectedValue={setDocumentType}
         />

@@ -16,6 +16,7 @@ import Functions from "./pages/functions/Functions"
 import HollidaysScale from "./pages/hollidaysScale/HollidaysScale"
 import Home from "./pages/home/Home"
 import Indicators from "./pages/Indicators/Indicators"
+import IndicatorsCriteria from "./pages/indicatorsCriteria/IndicatorsCriteria"
 import CostCenterLogs from "./pages/logsPages/CostCentersLogs"
 import DepartmentLogs from "./pages/logsPages/DepartmentsLogs"
 import FunctionsLogs from "./pages/logsPages/FunctionsLogs"
@@ -244,6 +245,11 @@ const Routes = createBrowserRouter([
   {
     path: "/indicators",
     element: <PrivateRoute><Indicators /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/indicators-criteria",
+    element: <PrivateRoute><IndicatorsCriteria /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

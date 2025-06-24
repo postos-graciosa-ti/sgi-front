@@ -3,6 +3,7 @@ import { ArrowClockwise, FileEarmarkPdf, FiletypeDocx, HourglassSplit, Pen, Pers
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import Nav from "../../components/Nav"
+import SideMenu from "../../components/SideMenu"
 import useUserSessionStore from "../../data/userSession"
 import { useScreenSize } from "../../hooks/useScreenSize"
 import api from "../../services/api"
@@ -312,6 +313,8 @@ const Workers = () => {
 
   return (
     <>
+      <SideMenu />
+
       <Nav />
 
       <div className="container">

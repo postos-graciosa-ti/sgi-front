@@ -208,6 +208,8 @@ const Nav = () => {
 
                   <li><Link className="dropdown-item" to="/workers">Colaboradores</Link></li>
 
+                  <li><Link className="dropdown-item" to="/indicators-criteria">Critérios de indicadores</Link></li>
+
                   <li><Link className="dropdown-item" to="/turns">Turnos</Link></li>
 
                   <li><Link className="dropdown-item" to="/cost-center">Centros de custos</Link></li>

@@ -8,6 +8,7 @@ import 'react-calendar/dist/Calendar.css'
 import ReactSelect from "react-select"
 import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
+import SideMenu from "../../components/SideMenu"
 import useUserSessionStore from "../../data/userSession"
 import initTour from "../../driverjs/initTour"
 import scaleSteps from "../../driverjs/scaleSteps"
@@ -17,10 +18,10 @@ import AddSomeWorkersModal from "./AddSomeWorkers"
 import DaysOffReportModal from "./DaysOffReportModal"
 import DaysOnReportModal from "./DaysOnReportModal"
 import DeleteScaleModal from "./DeleteScaleModal"
+import EditWorkerModal from "./EditWorkerModal"
 import HollidaysModal from "./HollidaysModal"
 import PrintModal from "./PrintModal"
 import ScaleLogsModal from "./ScaleLogsModal"
-import EditWorkerModal from "./EditWorkerModal"
 
 const Scale = () => {
   const firstDayOfMonth = moment().startOf('month')
@@ -516,6 +517,8 @@ const Scale = () => {
 
   return (
     <>
+      <SideMenu />
+
       <Nav />
 
       <div className="container">

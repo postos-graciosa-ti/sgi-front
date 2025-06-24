@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { ArrowClockwise, Trash } from "react-bootstrap-icons"
 import ReactSelect from "react-select"
 import Nav from "../../components/Nav"
+import SideMenu from "../../components/SideMenu"
 import api from "../../services/api"
 import AddOpenPositionModal from "./AddOpenPositionModal"
 
@@ -69,6 +70,8 @@ const PositionsTable = () => {
 
   return (
     <>
+      <SideMenu />
+
       <Nav />
 
       <div className="container">

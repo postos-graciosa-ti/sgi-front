@@ -19,6 +19,8 @@ const AddIndicatorsModal = (props) => {
 
   const [selectedWorkerOption, setSelectedWorkerOption] = useState()
 
+  const [note, setNote] = useState()
+
   useEffect(() => {
     api
       .get("/indicators-criteria")
@@ -45,8 +47,11 @@ const AddIndicatorsModal = (props) => {
     let requestBody = {
       month: dayjs().format("YYYY/MM"),
       criteria_id: selectedCriteriaOption?.value,
-      workers_ids: `[${selectedWorkerOption.map((option) => option.value).join(",")}]`
+      workers_ids: `[${selectedWorkerOption.map((option) => option.value).join(",")}]`,
+      note: note,
     }
+
+    console.log(requestBody)
 
     api
       .post("/indicators", requestBody)
@@ -68,6 +73,10 @@ const AddIndicatorsModal = (props) => {
 
       <Modal.Body>
         <div className="mb-3">
+          <label className="form-label fw-bold">
+            Indicador
+          </label>
+
           <ReactSelect
             options={indicatorsCriteriaOptions}
             onChange={(value) => setSelectedCriteriaOption(value)}
@@ -75,10 +84,26 @@ const AddIndicatorsModal = (props) => {
         </div>
 
         <div className="mb-3">
+          <label className="form-label fw-bold">
+            Colaboradores
+          </label>
+
           <ReactSelect
             isMulti
             options={workersOptions}
             onChange={(value) => setSelectedWorkerOption(value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            Observações
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setNote(e.target.value)}
           />
         </div>
       </Modal.Body>

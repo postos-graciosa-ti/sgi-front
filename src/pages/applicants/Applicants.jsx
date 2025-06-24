@@ -6,6 +6,7 @@ import { ArrowClockwise, Trash } from "react-bootstrap-icons"
 import ReactSelect from "react-select"
 import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
+import SideMenu from "../../components/SideMenu"
 import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
 import ConfirmApplicantDeleteModal from "./ConfirmApplicantDeleteModal"
@@ -13,10 +14,10 @@ import ExamsCorrectionModal from "./ExamsCorrectionModal"
 import ExamsEmissionModal from "./ExamsEmissionModal"
 import HireApplicantModal from "./HireApplicantModal"
 import NewApplicantModal from "./NewApplicantModal"
+import ProcessChecklistModal from "./ProcessChecklistModal"
 import RedirectToModal from "./RedirectToModal"
 import SelectiveProcessModal from "./SelectiveProcessModal"
 import SpecialNotationModal from "./SpecialNotationModal"
-import ProcessChecklistModal from "./ProcessChecklistModal"
 
 const yesNoOptions = [{ value: "aprovado", label: "aprovado" }, { value: "reprovado", label: "reprovado" }]
 
@@ -364,6 +365,8 @@ const Applicants = () => {
 
   return (
     <>
+      <SideMenu />
+
       <Nav />
 
       <div className="container">

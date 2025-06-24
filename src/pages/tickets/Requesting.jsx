@@ -1,6 +1,7 @@
 import moment from "moment"
 import { useEffect, useState } from "react"
 import Nav from "../../components/Nav"
+import SideMenu from "../../components/SideMenu"
 import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
 import NewTicketModal from "./NewTicketModal"
@@ -45,6 +46,8 @@ const Requesting = () => {
 
   return (
     <>
+      <SideMenu />
+
       <Nav />
 
       <div className="container">

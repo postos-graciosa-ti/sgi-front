@@ -1,7 +1,7 @@
-import dayjs from "dayjs"
 import moment from "moment"
 import { useEffect, useState } from "react"
 import Nav from "../../components/Nav.jsx"
+import SideMenu from "../../components/SideMenu.jsx"
 import useUserSessionStore from "../../data/userSession.js"
 import api from "../../services/api.js"
 
@@ -80,6 +80,8 @@ const Home = () => {
 
   return (
     <>
+      <SideMenu />
+
       <Nav />
 
       <div className="container mt-4">

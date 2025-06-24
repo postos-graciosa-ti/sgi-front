@@ -8,6 +8,7 @@ import { useScreenSize } from "../../hooks/useScreenSize"
 import api from "../../services/api"
 import AdmissionsReportModal from "./AdmissionsReportModal"
 import ChangeWorkerSubsidiarieModal from "./ChangeWorkerSubsidiarieModal"
+import ChecklistModal from "./ChecklistModal"
 import CreateWorkerModal from "./CreateWorkerModal"
 import DeleteWorkerModal from "./DeleteWorkerModal"
 import DocsModal from "./DocsModal"
@@ -87,6 +88,8 @@ const Workers = () => {
   const [changeWorkerSubsidiarieModalOpen, setChangeWorkerSubsidiarieModalOpen] = useState(false)
 
   const [requestBadgesModalOpen, setRequestBadgesModalOpen] = useState(false)
+
+  const [checklistModalOpen, setChecklistModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -301,6 +304,12 @@ const Workers = () => {
     setRequestBadgesModalOpen(true)
   }
 
+  const handleOpenChecklistModal = (worker) => {
+    setSelectedWorker(worker)
+
+    setChecklistModalOpen(true)
+  }
+
   return (
     <>
       <Nav />
@@ -492,6 +501,15 @@ const Workers = () => {
               </div>
 
               <ul className="list-group list-group-flush">
+                <li className="list-group-item">
+                  <button
+                    className="btn btn-primary w-100"
+                    onClick={() => handleOpenChecklistModal(worker)}
+                  >
+                    Checklist de Documentos
+                  </button>
+                </li>
+
                 <li className="list-group-item">
                   <button
                     className="btn btn-warning me-2 mt-2"
@@ -763,6 +781,12 @@ const Workers = () => {
       <RequestBadgesModal
         requestBadgesModalOpen={requestBadgesModalOpen}
         setRequestBadgesModalOpen={setRequestBadgesModalOpen}
+      />
+
+      <ChecklistModal
+        checklistModalOpen={checklistModalOpen}
+        setChecklistModalOpen={setChecklistModalOpen}
+        workerId={selectedWorker?.worker_id}
       />
     </>
   )

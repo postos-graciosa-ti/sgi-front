@@ -15,6 +15,7 @@ import Department from "./pages/department/Department"
 import Functions from "./pages/functions/Functions"
 import HollidaysScale from "./pages/hollidaysScale/HollidaysScale"
 import Home from "./pages/home/Home"
+import Indicators from "./pages/Indicators/Indicators"
 import CostCenterLogs from "./pages/logsPages/CostCentersLogs"
 import DepartmentLogs from "./pages/logsPages/DepartmentsLogs"
 import FunctionsLogs from "./pages/logsPages/FunctionsLogs"
@@ -238,6 +239,11 @@ const Routes = createBrowserRouter([
   {
     path: "/system-log",
     element: <PrivateRoute><SystemLog /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/indicators",
+    element: <PrivateRoute><Indicators /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

@@ -6,6 +6,7 @@ import { ArrowClockwise, Trash } from "react-bootstrap-icons"
 import ReactSelect from "react-select"
 import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
+import SideMenu from "../../components/SideMenu"
 import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
 import ConfirmApplicantDeleteModal from "./ConfirmApplicantDeleteModal"
@@ -366,7 +367,7 @@ const Applicants = () => {
 
   return (
     <>
-      {/* <SideMenu /> */}
+      <SideMenu />
 
       <Nav />
 

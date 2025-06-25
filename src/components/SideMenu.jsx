@@ -56,6 +56,18 @@ const SideMenu = () => {
     }
   }, [show])
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const modalIsOpen = document.querySelector('.modal.show')
+
+      if (modalIsOpen && show) {
+        closeMenu()
+      }
+    }, 300)
+
+    return () => clearInterval(interval)
+  }, [show])
+
   const handleAlterarSenha = () => {
     console.log('Alterar minha senha clicado')
 

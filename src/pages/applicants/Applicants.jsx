@@ -365,7 +365,7 @@ const Applicants = () => {
 
   return (
     <>
-      <SideMenu />
+      {/* <SideMenu /> */}
 
       <Nav />
 

@@ -6,7 +6,6 @@ import { ArrowClockwise, Trash } from "react-bootstrap-icons"
 import ReactSelect from "react-select"
 import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
-import SideMenu from "../../components/SideMenu"
 import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
 import ConfirmApplicantDeleteModal from "./ConfirmApplicantDeleteModal"
@@ -23,6 +22,8 @@ const yesNoOptions = [{ value: "aprovado", label: "aprovado" }, { value: "reprov
 
 const Applicants = () => {
   const userSession = useUserSessionStore((state) => state.userSession)
+
+  console.log(userSession)
 
   const [applicantToSearch, setApplicantToSearch] = useState()
 
@@ -371,7 +372,15 @@ const Applicants = () => {
 
       <div className="container">
         <div>
-          <button className="btn btn-primary mb-3" onClick={handleOpenNewApplicantModal}>
+          <button type="button" class="btn btn-primary position-relative">
+            Profile
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              New
+              <span class="visually-hidden">New alerts</span>
+            </span>
+          </button>
+
+          <button className="btn btn-primary ms-4" onClick={handleOpenNewApplicantModal}>
             Novo candidato
           </button>
         </div>
@@ -612,7 +621,8 @@ const Applicants = () => {
                             disabled={
                               !(
                                 userSession?.id === applicant.created_by ||
-                                userSession?.id === applicant.redirect_to
+                                userSession?.id === applicant.redirect_to ||
+                                userSession?.function?.name == "Analista de RH"
                               )
                             }
                           >

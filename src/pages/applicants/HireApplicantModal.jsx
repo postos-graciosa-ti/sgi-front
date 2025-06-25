@@ -101,8 +101,6 @@ const HireApplicantModal = (props) => {
   }
 
   const handleSubmit = () => {
-    debugger
-
     let requestBody = {
       applicant_id: selectedApplicant?.id,
       worker_data: {

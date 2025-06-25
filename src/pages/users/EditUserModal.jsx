@@ -8,6 +8,8 @@ import api from '../../services/api'
 const EditUserModal = (props) => {
   const { editUserModalOpen, setEditUserModalOpen } = props
 
+  const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
   const bearerToken = useUserSessionStore(state => state.bearerToken)
 
   const selectedUser = useUserSessionStore(state => state.selectedUser)
@@ -24,6 +26,8 @@ const EditUserModal = (props) => {
 
   const [subsidiariesList, setSubsidiariesList] = useState([])
 
+  const [functionsOptions, setFunctionsOptions] = useState()
+
   const [email, setEmail] = useState()
 
   const [name, setName] = useState()
@@ -35,6 +39,8 @@ const EditUserModal = (props) => {
   const [subsidiaries, setSubsidiaries] = useState()
 
   const [phone, setPhone] = useState()
+
+  const [selectedFunction, setSelectedFunction] = useState()
 
   useEffect(() => {
     api
@@ -78,6 +84,13 @@ const EditUserModal = (props) => {
         setSubsidiariesList(options)
       })
 
+    api
+      .get(`/subsidiaries/${selectedSubsidiarie?.value}/functions`)
+      .then((response) => {
+        let options = response.data.map((option) => ({ value: option.id, label: option.name }))
+
+        setFunctionsOptions(options)
+      })
   }, [])
 
   const handleClose = () => {
@@ -115,9 +128,9 @@ const EditUserModal = (props) => {
       "name": name || selectedUser?.user_name,
       "role_id": role?.value || selectedUser?.role_id,
       "subsidiaries_id": subsidiariesId,
-      "function_id": functions?.value || selectedUser?.function_id,
       "is_active": true,
-      "phone": phone
+      "phone": phone,
+      "function_id": selectedFunction?.value || selectedUser?.user_function?.id,
     }
 
     api
@@ -158,6 +171,17 @@ const EditUserModal = (props) => {
             className="form-control"
             defaultValue={selectedUser?.user_name}
             onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="fw-bold mb-1">Função</label>
+
+          <ReactSelect
+            placeholder="Funções"
+            options={functionsOptions}
+            onChange={(value) => setSelectedFunction(value)}
+            defaultValue={functionsOptions?.find((func) => func.value == selectedUser?.user_function?.id)}
           />
         </div>
 

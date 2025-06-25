@@ -11,11 +11,15 @@ const AddUserModal = (props) => {
     setModalOpen,
   } = props
 
+  const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
   const setUserList = useUserSessionStore(state => state.setUserList)
 
   const [subsidiariesList, setSubsidiariesList] = useState()
 
   const [rolesOptions, setRolesOptions] = useState()
+
+  const [functionsOptions, setFunctionsOptions] = useState()
 
   const [name, setName] = useState()
 
@@ -26,6 +30,8 @@ const AddUserModal = (props) => {
   const [selectedSubsidiaries, setSelectedSubsidiaries] = useState([])
 
   const [phone, setPhone] = useState()
+
+  const [selectedFunction, setSelectedFunction] = useState()
 
   useEffect(() => {
     api
@@ -55,6 +61,14 @@ const AddUserModal = (props) => {
 
         setSubsidiariesList(options)
       })
+
+    api
+      .get(`/subsidiaries/${selectedSubsidiarie?.value}/functions`)
+      .then((response) => {
+        let options = response.data.map((option) => ({ value: option.id, label: option.name }))
+
+        setFunctionsOptions(options)
+      })
   }, [])
 
   const handleClose = () => {
@@ -83,7 +97,8 @@ const AddUserModal = (props) => {
       "email": email,
       "role_id": role,
       "subsidiaries_id": `[${selectedSubsidiaries.map(subsidiary => subsidiary.value).join(',')}]`,
-      "phone": phone
+      "phone": phone,
+      "function_id": selectedFunction?.value,
     }
 
     api
@@ -122,6 +137,14 @@ const AddUserModal = (props) => {
                 className="form-control"
                 placeholder="Nome"
                 onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-3">
+              <Select
+                placeholder="Funções"
+                options={functionsOptions}
+                onChange={(value) => setSelectedFunction(value)}
               />
             </div>
 

@@ -140,6 +140,12 @@ const Users = () => {
                 </li>
 
                 <li className="list-group-item">
+                  <div><b>Função</b></div>
+
+                  <div>{user.user_function?.name}</div>
+                </li>
+
+                <li className="list-group-item">
                   <div><b>Permissões</b></div>
 
                   <div>{user.role_name}</div>

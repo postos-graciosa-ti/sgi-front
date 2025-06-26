@@ -4,9 +4,12 @@ import Nav from "../../components/Nav.jsx"
 import SideMenu from "../../components/SideMenu.jsx"
 import useUserSessionStore from "../../data/userSession.js"
 import api from "../../services/api.js"
+import CustomNotificationModal from "./CustomNotificationModal.jsx"
 
 const Home = () => {
   const selectedSubsidiarie = useUserSessionStore(state => state.selectedSubsdiarie)
+
+  const [customNotificationModalOpen, setCustomNotificationModalOpen] = useState(false)
 
   const today = new Date()
 
@@ -28,8 +31,6 @@ const Home = () => {
 
   const userSession = useUserSessionStore(state => state.userSession)
 
-  // const [monthBirthdays, setMonthBirthdays] = useState()
-
   const [workersAwayEndDate, setWorkersAwayEndDate] = useState()
 
   const [workersWithoutFirstReview, setWorkersWithoutFirstReview] = useState()
@@ -43,6 +44,8 @@ const Home = () => {
   const [secondReviewRealizedBy, setSecondReviewRealizedBy] = useState()
 
   const [interviewsToDo, setInterviewsToDo] = useState()
+
+  const [enterpriseTwoYearAnniversary, setEnterpriseTwoYearAnniversary] = useState()
 
   useEffect(() => {
     api
@@ -73,10 +76,14 @@ const Home = () => {
       .get(`/users/${userSession?.id}/applicants/notifications`)
       .then((response) => setInterviewsToDo(response.data))
 
-    // api
-    //   .get("/another-route-yet")
-    //   .then((response) => setMonthBirthdays(response.data))
+    api
+      .get(`/user-subsidiaries/${userSession?.id}/workers/enterprise-two-year-anniversary`)
+      .then((response) => setEnterpriseTwoYearAnniversary(response.data))
   }, [])
+
+  const handleOpenCustomNotificationModal = () => {
+    setCustomNotificationModalOpen(true)
+  }
 
   return (
     <>
@@ -88,6 +95,13 @@ const Home = () => {
         <h3 className="text-danger">
           Importante
         </h3>
+
+        <button
+          onClick={handleOpenCustomNotificationModal}
+          className="btn btn-dark mt-2 mb-4 me-2"
+        >
+          Notificação personalizada
+        </button>
 
         <button className="btn btn-dark mt-2 mb-4">Manual do usuário</button>
 
@@ -263,30 +277,35 @@ const Home = () => {
           )
         }
 
-        {/* {
-          monthBirthdays?.length > 0 && (
+        {
+          enterpriseTwoYearAnniversary?.length > 0 && (
             <>
-              <h5>Aniversariantes do mês</h5>
+              <h5>Colaboradores que fazem 2 anos de empresa nos próximos três meses</h5>
 
               {
-                monthBirthdays?.map((data) => (
-                  <div className="alert alert-primary" key={data.worker_id}>
-                    {data.name} ({dayjs(data.birthdate).format("DD-MM-YYYY")})
+                enterpriseTwoYearAnniversary && enterpriseTwoYearAnniversary.map((worker) => (
+                  <div className="alert alert-warning" key={worker.id}>
+                    {worker.name}
                   </div>
                 ))
               }
             </>
           ) || (
             <>
-              <h5>Aniversariantes do mês</h5>
+              <h5>Colaboradores que fazem 2 anos de empresa nos próximos três meses</h5>
 
-              <div className="alert alert-primary mt-3">
-                Não há aniversariantes do mês
+              <div className="alert alert-success mt-3">
+                Não há colaboradores que fazem 2 anos de empresa nos próximos três meses
               </div>
             </>
           )
-        } */}
+        }
       </div>
+
+      <CustomNotificationModal
+        customNotificationModalOpen={customNotificationModalOpen}
+        setCustomNotificationModalOpen={setCustomNotificationModalOpen}
+      />
     </>
   )
 }

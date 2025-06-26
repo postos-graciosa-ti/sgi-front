@@ -258,13 +258,6 @@ const RhInterviewModal = (props) => {
     }
   }, [bairro])
 
-  // useEffect(() => {
-  //   if (rhInterviewModalOpen) {
-  //     api
-  //     .get("")
-  //   }
-  // }, [rhInterviewModalOpen])
-
   const handleClose = () => {
     if (applicantToSearch) {
       api
@@ -350,57 +343,12 @@ const RhInterviewModal = (props) => {
 
     api
       .patch(`/applicants/${selectedApplicant?.id}`, requestBody)
-      .then((response) => {
-        console.log(response)
-
-        handleClose()
-      })
-  }
-
-  const areAllFieldsDefault = () => {
-    return (
-      (!natural || natural === selectedApplicant?.natural) &&
-      (!tempo || tempo === selectedApplicant?.tempo) &&
-      (!vagaInteresse || vagaInteresse === selectedApplicant?.vaga_interesse) &&
-      (!experienciaFuncao || experienciaFuncao === selectedApplicant?.experiencia_funcao) &&
-      (!dataNascimento || dataNascimento === selectedApplicant?.data_nascimento) &&
-      (!nomePai || nomePai === selectedApplicant?.nome_pai) &&
-      (!nomeMae || nomeMae === selectedApplicant?.nome_mae) &&
-      (!rg || rg === selectedApplicant?.rg) &&
-      (!cpf || cpf === selectedApplicant?.cpf) &&
-      (!estadoCivil || estadoCivil === selectedApplicant?.estado_civil) &&
-      (!filhos || filhos === selectedApplicant?.filhos) &&
-      (!fumante || fumante === selectedApplicant?.fumante) &&
-      (!bairro || bairro === selectedApplicant?.bairro) &&
-      (!ondeViuVaga || ondeViuVaga === selectedApplicant?.onde_viu_vaga) &&
-      (!indicacao || indicacao === selectedApplicant?.indicacao) &&
-      (!disponibilidadeHorario || disponibilidadeHorario === selectedApplicant?.disponibilidade_horario) &&
-      (!moradia || moradia === selectedApplicant?.moradia) &&
-      (!transporte || transporte === selectedApplicant?.transporte) &&
-      (!ultimoSalario || ultimoSalario === selectedApplicant?.ultimo_salario) &&
-      (!apresentacaoPessoal || apresentacaoPessoal === selectedApplicant?.apresentacao_pessoal) &&
-      (!comunicativo || comunicativo === selectedApplicant?.comunicativo) &&
-      (!postura || postura === selectedApplicant?.postura) &&
-      (!simpatia || simpatia === selectedApplicant?.simpatia) &&
-      (!observacoes || observacoes === selectedApplicant?.observacoes) &&
-      (!simNaoTalvez || simNaoTalvez === selectedApplicant?.sim_nao_talvez) &&
-      (!contato || contato === selectedApplicant?.contato) &&
-      (!retornoWhatsapp || retornoWhatsapp === selectedApplicant?.retorno_whatsapp) &&
-      (!primeiraEntrevista || primeiraEntrevista === selectedApplicant?.primeira_entrevista) &&
-      (!segundaEntrevista || segundaEntrevista === selectedApplicant?.segunda_entrevista) &&
-      (!encaminhadoAdmissional || encaminhadoAdmissional === selectedApplicant?.encaminhado_admissional) &&
-      (!dataPrevistaAdmissao || dataPrevistaAdmissao === selectedApplicant?.data_prevista_admissao) &&
-      (!filial || filial === selectedApplicant?.filial) &&
-      (!horario || horario === selectedApplicant?.horario) &&
-      !selectedUser
-    )
+      .then(() => handleClose())
   }
 
   const hendleOpenRedirectToModal = () => {
     setRedirectToModalOpen(true)
   }
-
-  console.log(existExperiences)
 
   const handleAddNewExperience = () => {
     setExistExperiences((prev) => {
@@ -543,7 +491,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setNatural(e.target.value)}
               defaultValue={selectedApplicant?.natural}
-              disabled={selectedApplicant?.natural && true}
+            // disabled={selectedApplicant?.natural && true}
             />
           </div>
 
@@ -557,7 +505,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setEmail(e.target.value)}
               defaultValue={selectedApplicant?.email}
-              disabled={selectedApplicant?.email && true}
+            // disabled={selectedApplicant?.email && true}
             />
           </div>
 
@@ -571,7 +519,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setMobile(e.target.value)}
               defaultValue={selectedApplicant?.mobile}
-              disabled={selectedApplicant?.mobile && true}
+            // disabled={selectedApplicant?.mobile && true}
             />
           </div>
 
@@ -583,7 +531,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setTempo(e.target.value)}
               defaultValue={selectedApplicant?.tempo}
-              disabled={selectedApplicant?.tempo && true}
+            // disabled={selectedApplicant?.tempo && true}
             />
           </div>
 
@@ -594,7 +542,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setVagaInteresse(e.target.value)}
               defaultValue={selectedApplicant?.vaga_interesse}
-              disabled={selectedApplicant?.vaga_interesse && true}
+            // disabled={selectedApplicant?.vaga_interesse && true}
             />
           </div>
 
@@ -604,7 +552,7 @@ const RhInterviewModal = (props) => {
             <ReactSelect
               options={yesNoOptions}
               onChange={(option) => setExperienciaFuncao(option.value)}
-              isDisabled={selectedApplicant?.experiencia_funcao && true}
+              // isDisabled={selectedApplicant?.experiencia_funcao && true}
               defaultValue={yesNoOptions?.find((option) => option.value == selectedApplicant?.experiencia_funcao)}
             />
           </div>
@@ -616,7 +564,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setDataNascimento(e.target.value)}
               defaultValue={selectedApplicant?.data_nascimento}
-              disabled={selectedApplicant?.data_nascimento && true}
+            // disabled={selectedApplicant?.data_nascimento && true}
             />
           </div>
 
@@ -637,7 +585,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setNomePai(e.target.value)}
               defaultValue={selectedApplicant?.nome_pai}
-              disabled={selectedApplicant?.nome_pai && true}
+            // disabled={selectedApplicant?.nome_pai && true}
             />
           </div>
 
@@ -648,7 +596,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setNomeMae(e.target.value)}
               defaultValue={selectedApplicant?.nome_mae}
-              disabled={selectedApplicant?.nome_mae && true}
+            // disabled={selectedApplicant?.nome_mae && true}
             />
           </div>
 
@@ -659,7 +607,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setRg(e.target.value)}
               defaultValue={selectedApplicant?.rg}
-              disabled={selectedApplicant?.rg && true}
+            // disabled={selectedApplicant?.rg && true}
             />
           </div>
 
@@ -670,7 +618,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setCpf(e.target.value)}
               defaultValue={selectedApplicant?.cpf}
-              disabled={selectedApplicant?.cpf && true}
+            // disabled={selectedApplicant?.cpf && true}
             />
           </div>
 
@@ -681,7 +629,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setEstadoCivil(e.target.value)}
               defaultValue={selectedApplicant?.estado_civil}
-              disabled={selectedApplicant?.estado_civil && true}
+            // disabled={selectedApplicant?.estado_civil && true}
             />
           </div>
 
@@ -692,7 +640,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setFilhos(e.target.value)}
               defaultValue={selectedApplicant?.filhos}
-              disabled={selectedApplicant?.filhos && true}
+            // disabled={selectedApplicant?.filhos && true}
             />
           </div>
 
@@ -703,7 +651,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setFumante(e.target.value)}
               defaultValue={selectedApplicant?.fumante}
-              disabled={selectedApplicant?.fumante && true}
+            // disabled={selectedApplicant?.fumante && true}
             />
           </div>
 
@@ -744,7 +692,7 @@ const RhInterviewModal = (props) => {
               options={neighborhoodsOptions}
               onChange={(option) => setBairro(option.label)}
               defaultValue={neighborhoodsOptions?.find((option) => option.label == selectedApplicant?.bairro)}
-              isDisabled={selectedApplicant?.bairro && true}
+            // isDisabled={selectedApplicant?.bairro && true}
             />
           </div>
 
@@ -755,7 +703,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setOndeViuVaga(e.target.value)}
               defaultValue={selectedApplicant?.onde_viu_vaga}
-              disabled={selectedApplicant?.onde_viu_vaga && true}
+            // disabled={selectedApplicant?.onde_viu_vaga && true}
             />
           </div>
 
@@ -766,7 +714,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setIndicacao(e.target.value)}
               defaultValue={selectedApplicant?.indicacao}
-              disabled={selectedApplicant?.indicacao && true}
+            // disabled={selectedApplicant?.indicacao && true}
             />
           </div>
 
@@ -777,7 +725,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setDisponibilidadeHorario(e.target.value)}
               defaultValue={selectedApplicant?.disponibilidade_horario}
-              disabled={selectedApplicant?.disponibilidade_horario && true}
+            // disabled={selectedApplicant?.disponibilidade_horario && true}
             />
           </div>
 
@@ -788,7 +736,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setMoradia(e.target.value)}
               defaultValue={selectedApplicant?.moradia}
-              disabled={selectedApplicant?.moradia && true}
+            // disabled={selectedApplicant?.moradia && true}
             />
           </div>
 
@@ -799,7 +747,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setTransporte(e.target.value)}
               defaultValue={selectedApplicant?.transporte}
-              disabled={selectedApplicant?.transporte && true}
+            // disabled={selectedApplicant?.transporte && true}
             />
           </div>
 
@@ -810,7 +758,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setUltimoSalario(e.target.value)}
               defaultValue={selectedApplicant?.ultimo_salario}
-              disabled={selectedApplicant?.ultimo_salario && true}
+            // disabled={selectedApplicant?.ultimo_salario && true}
             />
           </div>
 
@@ -833,7 +781,7 @@ const RhInterviewModal = (props) => {
               options={recruitCriteria}
               onChange={(option) => setApresentacaoPessoal(option.value)}
               defaultValue={recruitCriteria?.find((option) => option.value == selectedApplicant?.apresentacao_pessoal)}
-              isDisabled={selectedApplicant?.apresentacao_pessoal && true}
+            // isDisabled={selectedApplicant?.apresentacao_pessoal && true}
             />
           </div>
 
@@ -852,7 +800,7 @@ const RhInterviewModal = (props) => {
               options={recruitCriteria}
               onChange={(option) => setComunicativo(option.value)}
               defaultValue={recruitCriteria?.find((option) => option.value == selectedApplicant?.comunicativo)}
-              isDisabled={selectedApplicant?.comunicativo && true}
+            // isDisabled={selectedApplicant?.comunicativo && true}
             />
           </div>
 
@@ -871,7 +819,7 @@ const RhInterviewModal = (props) => {
               options={recruitCriteria}
               onChange={(option) => setPostura(option.value)}
               defaultValue={recruitCriteria?.find((option) => option.value == selectedApplicant?.postura)}
-              isDisabled={selectedApplicant?.postura && true}
+            // isDisabled={selectedApplicant?.postura && true}
             />
           </div>
 
@@ -890,7 +838,7 @@ const RhInterviewModal = (props) => {
               options={recruitCriteria}
               onChange={(option) => setSimpatia(option.value)}
               defaultValue={recruitCriteria?.find((option) => option.value == selectedApplicant?.simpatia)}
-              isDisabled={selectedApplicant?.simpatia && true}
+            // isDisabled={selectedApplicant?.simpatia && true}
             />
           </div>
 
@@ -901,7 +849,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setObservacoes(e.target.value)}
               defaultValue={selectedApplicant?.observacoes}
-              disabled={selectedApplicant?.observacoes && true}
+            // disabled={selectedApplicant?.observacoes && true}
             />
           </div>
 
@@ -912,7 +860,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setSimNaoTalvez(e.target.value)}
               defaultValue={selectedApplicant?.sim_nao_talvez}
-              disabled={selectedApplicant?.sim_nao_talvez && true}
+            // disabled={selectedApplicant?.sim_nao_talvez && true}
             />
           </div>
 
@@ -945,7 +893,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setPrimeiraEntrevista(e.target.value)}
               defaultValue={selectedApplicant?.primeira_entrevista}
-              disabled={selectedApplicant?.primeira_entrevista && true}
+            // disabled={selectedApplicant?.primeira_entrevista && true}
             />
           </div>
 
@@ -956,7 +904,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setSegundaEntrevista(e.target.value)}
               defaultValue={selectedApplicant?.segunda_entrevista}
-              disabled={selectedApplicant?.segunda_entrevista && true}
+            // disabled={selectedApplicant?.segunda_entrevista && true}
             />
           </div>
 
@@ -967,7 +915,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setEncaminhadoAdmissional(e.target.value)}
               defaultValue={selectedApplicant?.encaminhado_admissional}
-              disabled={selectedApplicant?.encaminhado_admissional && true}
+            // disabled={selectedApplicant?.encaminhado_admissional && true}
             />
           </div>
 
@@ -978,7 +926,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setDataPrevistaAdmissao(e.target.value)}
               defaultValue={selectedApplicant?.data_prevista_admissao}
-              disabled={selectedApplicant?.data_prevista_admissao && true}
+            // disabled={selectedApplicant?.data_prevista_admissao && true}
             />
           </div>
 
@@ -989,7 +937,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setFilial(e.target.value)}
               defaultValue={selectedApplicant?.filial}
-              disabled={selectedApplicant?.filial && true}
+            // disabled={selectedApplicant?.filial && true}
             />
           </div>
 
@@ -1000,7 +948,7 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setHorario(e.target.value)}
               defaultValue={selectedApplicant?.horario}
-              disabled={selectedApplicant?.horario && true}
+            // disabled={selectedApplicant?.horario && true}
             />
           </div>
 
@@ -1175,7 +1123,7 @@ const RhInterviewModal = (props) => {
               options={schoolLevelsOptions}
               onChange={(option) => setSelectedSchoolLevel(option.value)}
               defaultValue={schoolLevelsOptions?.find((option) => option.value == selectedApplicant?.escolaridade)}
-              isDisabled={selectedApplicant?.escolaridade && true}
+            // isDisabled={selectedApplicant?.escolaridade && true}
             />
           </div>
 
@@ -1191,7 +1139,7 @@ const RhInterviewModal = (props) => {
                   ? usersOptions?.find(option => option.value === selectedApplicant.redirect_to)
                   : null
               }
-              isDisabled={!!selectedApplicant?.redirect_to}
+            // isDisabled={!!selectedApplicant?.redirect_to}
             />
           </div>
         </Modal.Body>
@@ -1214,7 +1162,7 @@ const RhInterviewModal = (props) => {
           <Button
             variant="success"
             onClick={handleSubmit}
-            disabled={areAllFieldsDefault()}
+          // disabled={areAllFieldsDefault()}
           >
             Confirmar
           </Button>

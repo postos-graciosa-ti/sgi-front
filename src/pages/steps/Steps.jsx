@@ -18,8 +18,9 @@ const Steps = () => {
 
         window.OneSignal.push(() => {
           window.OneSignal.init({
-            appId: 'a884fea7-2f84-4b09-9815-7de82198616e',
-            allowLocalhostAsSecureOrigin: true,
+            appId: import.meta.env.VITE_APP_ID,
+            // appId: 'a884fea7-2f84-4b09-9815-7de82198616e',
+            // allowLocalhostAsSecureOrigin: true,
           })
 
           window.OneSignal.showSlidedownPrompt()

@@ -1,6 +1,8 @@
+import { useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Select from "react-select"
 import useUserSessionStore from "../../data/userSession"
+import api from "../../services/api"
 
 const Steps = () => {
   const navigate = useNavigate()
@@ -8,6 +10,35 @@ const Steps = () => {
   const userSession = useUserSessionStore(state => state.userSession)
 
   const setSelectedSubsidiarie = useUserSessionStore(state => state.setSelectedSubsidiarie)
+
+  useEffect(() => {
+    if (!userSession.one_signal_id) {
+      if (window && window.OneSignal) {
+        window.OneSignal = window.OneSignal || []
+
+        window.OneSignal.push(() => {
+          window.OneSignal.init({
+            appId: 'a884fea7-2f84-4b09-9815-7de82198616e',
+            allowLocalhostAsSecureOrigin: true,
+          })
+
+          window.OneSignal.showSlidedownPrompt()
+
+          window.OneSignal.on('subscriptionChange', function (isSubscribed) {
+            if (isSubscribed) {
+              window.OneSignal.getUserId().then((userId) => {
+                api
+                  .patch(`/users/${userSession?.id}/${userId}/activate-notifications`)
+                  .then(() => {
+                    window.location.reload()
+                  })
+              })
+            }
+          })
+        })
+      }
+    }
+  }, [])
 
   const handleSubmit = () => {
     navigate('/home', { replace: true })

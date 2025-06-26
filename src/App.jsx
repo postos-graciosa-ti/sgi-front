@@ -81,3 +81,51 @@ function App() {
 }
 
 export default App
+
+
+
+// import React, { useEffect } from 'react';
+
+// function App() {
+//   useEffect(() => {
+//     if (window && window.OneSignal) {
+//       window.OneSignal = window.OneSignal || [];
+
+//       window.OneSignal.push(() => {
+//         window.OneSignal.init({
+//           appId: 'a884fea7-2f84-4b09-9815-7de82198616e',
+//           allowLocalhostAsSecureOrigin: true,
+//         });
+
+//         window.OneSignal.showSlidedownPrompt();
+
+//         window.OneSignal.on('subscriptionChange', function (isSubscribed) {
+//           if (isSubscribed) {
+//             window.OneSignal.getUserId().then((userId) => {
+//               console.log('✅ Player ID:', userId);
+
+//               // Suponha que o user_id venha de um contexto de login
+//               const user_id = 123;
+
+//               fetch('http://localhost:8000/register-player-id', {
+//                 method: 'POST',
+//                 headers: {
+//                   'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify({ user_id, player_id: userId }),
+//               })
+//                 .then(res => res.json())
+//                 .then(data => console.log("🔄 Player ID registrado no backend", data))
+//                 .catch(err => console.error("Erro ao registrar player ID", err));
+//             });
+//           }
+//         });
+//       });
+//     }
+//   }, []);
+
+
+//   return <div>Meu App com OneSignal</div>;
+// }
+
+// export default App;

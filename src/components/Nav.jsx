@@ -165,6 +165,12 @@ const Nav = () => {
               </li>
 
               <li className="nav-item">
+                <Link className="nav-link" to="/metrics">
+                  Métricas
+                </Link>
+              </li>
+
+              <li className="nav-item">
                 <Link className="nav-link" to="/indicators">
                   Indicadores
                 </Link>

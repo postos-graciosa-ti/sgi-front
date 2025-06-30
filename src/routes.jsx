@@ -24,6 +24,7 @@ import SubsidiariesLogs from "./pages/logsPages/SubsidiariesLogs"
 import TurnsLogs from "./pages/logsPages/TurnsLogs"
 import UsersLogs from "./pages/logsPages/UsersLogs"
 import WorkersLogs from "./pages/logsPages/WorkersLogs"
+import Metrics from "./pages/metrics/Metrics"
 import Monitoring from "./pages/monitoring/Monitoring"
 import Nationalities from "./pages/nationalities/Nationalities"
 import Neighborhood from "./pages/neighborhoods/Neighborhood"
@@ -250,6 +251,11 @@ const Routes = createBrowserRouter([
   {
     path: "/indicators-criteria",
     element: <PrivateRoute><IndicatorsCriteria /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/metrics",
+    element: <PrivateRoute><Metrics /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

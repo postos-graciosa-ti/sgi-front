@@ -18,10 +18,6 @@ function App() {
     setLoginModalOpen(true)
   }
 
-  const handleOpenRecoveryPasswordModal = () => {
-    setRecoveryPasswordModalOpen(true)
-  }
-
   return (
     <>
       <div className="container min-vh-100 d-flex flex-column">
@@ -38,20 +34,20 @@ function App() {
         </div>
 
         <div>
-          <button className="w-100 btn btn-light mb-3 mt-5" onClick={handleOpenRegisterModal}>
-            Primeiro acesso
+          <button className="w-100 btn btn-light mt-5 mb-3">
+            Eu Sou
           </button>
         </div>
 
         <div>
-          <button className="w-100 btn btn-primary mb-3" onClick={handleOpenLoginModal}>
+          <button className="w-100 btn btn-light mb-3" onClick={handleOpenRegisterModal}>
+            Primeiro Acesso
+          </button>
+        </div>
+
+        <div>
+          <button className="w-100 btn btn-light mb-3" onClick={handleOpenLoginModal}>
             Entrar
-          </button>
-        </div>
-
-        <div>
-          <button className="w-100 btn btn-warning mb-3" onClick={handleOpenRecoveryPasswordModal}>
-            Recuperar senha
           </button>
         </div>
 

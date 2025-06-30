@@ -68,9 +68,19 @@ const printContent = (scalesList, onDuty, startDate, endDate, selectedTurn, sele
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
                   {
-                    scale.proportion?.map((item, index) => (
-                      <div key={index} style={{ color: "green", fontSize: '11px' }}>{`${item.data} (${translateWeekday(item.weekday)} - ${item.proporcao})`}</div>
-                    ))
+                    scale.proportion && scale.proportion.length > 0 ? (
+                      scale.proportion.map((item, index) => (
+                        <div key={index} style={{ color: "green", fontSize: '11px' }}>
+                          {`${item.data} (${translateWeekday(item.weekday)} - ${item.proporcao})`}
+                        </div>
+                      ))
+                    ) : (
+                      scale.days_off?.map((dateItem, index) => (
+                        <div key={index} style={{ color: "green", fontSize: '11px' }}>
+                          {`${formatDate(dateItem)} (${formatWeekday(dateItem)})`}
+                        </div>
+                      ))
+                    )
                   }
                 </div>
               </div>

@@ -30,6 +30,7 @@ import WorkerInfoModal from "./WorkerInfoModal"
 import WorkerNotationModal from "./WorkerNotationModal"
 import WorkerReturnModal from "./WorkerReturnModal"
 import WorkersByTurnModal from "./WorkersByTurnModal"
+import WorkersMetricsModal from "./WorkersMetricsModal"
 
 const Workers = () => {
   const userSession = useUserSessionStore((state) => state.userSession)
@@ -91,6 +92,8 @@ const Workers = () => {
   const [requestBadgesModalOpen, setRequestBadgesModalOpen] = useState(false)
 
   const [checklistModalOpen, setChecklistModalOpen] = useState(false)
+
+  const [workersMetricsModalOpen, setWorkersMetricsModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -311,6 +314,12 @@ const Workers = () => {
     setChecklistModalOpen(true)
   }
 
+  const handleOpenWorkersMetricsModal = (worker) => {
+    setSelectedWorker(worker)
+
+    setWorkersMetricsModalOpen(true)
+  }
+
   return (
     <>
       <SideMenu />
@@ -504,6 +513,12 @@ const Workers = () => {
               </div>
 
               <ul className="list-group list-group-flush">
+                <li className="list-group-item">
+                  <button onClick={() => handleOpenWorkersMetricsModal(worker)} className="btn btn-primary w-100">
+                    Métricas de funcionário
+                  </button>
+                </li>
+
                 <li className="list-group-item">
                   <button
                     className="btn btn-primary w-100"
@@ -790,6 +805,12 @@ const Workers = () => {
         checklistModalOpen={checklistModalOpen}
         setChecklistModalOpen={setChecklistModalOpen}
         workerId={selectedWorker?.worker_id}
+      />
+
+      <WorkersMetricsModal
+        selectedWorker={selectedWorker}
+        workersMetricsModalOpen={workersMetricsModalOpen}
+        setWorkersMetricsModalOpen={setWorkersMetricsModalOpen}
       />
     </>
   )

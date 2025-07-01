@@ -329,6 +329,24 @@ const Workers = () => {
     setWorkersDiscountsModalOpen(true)
   }
 
+  const handleAutorizeApp = (worker) => {
+    api
+      .post(`/workers/${worker.worker_id}/autorize-app`)
+      .then(() => {
+        api
+          .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
+          .then((response) => {
+            let allWorkers = response.data
+
+            let statusWorkers = allWorkers.filter((worker) => worker.worker_is_active == true && worker.is_away == false)
+
+            let sortStatusWorkers = statusWorkers.sort()
+
+            setWorkersList(sortStatusWorkers)
+          })
+      })
+  }
+
   return (
     <>
       <SideMenu />
@@ -519,9 +537,21 @@ const Workers = () => {
                     <span className="badge text-bg-warning p-2">Afastado</span>
                   )
                 }
+
+                {
+                  worker.app_login && (
+                    <span className="badge text-bg-primary p-2 ms-2">Aplicativo Autorizado</span>
+                  )
+                }
               </div>
 
               <ul className="list-group list-group-flush">
+                <li className="list-group-item">
+                  <button className="btn btn-primary w-100" onClick={() => handleAutorizeApp(worker)}>
+                    Autorizar Aplicativo
+                  </button>
+                </li>
+
                 <li className="list-group-item">
                   <div className="dropdown">
                     <button className="btn btn-light dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">

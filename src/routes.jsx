@@ -12,6 +12,7 @@ import RegisterCandidate from "./pages/candidates/RegisterCandidate"
 import Cities from "./pages/cities/Cities"
 import CostCenter from "./pages/costCenter/CostCenter"
 import Department from "./pages/department/Department"
+import DiscountReasons from "./pages/discountReasons/DiscountReasons"
 import Functions from "./pages/functions/Functions"
 import HollidaysScale from "./pages/hollidaysScale/HollidaysScale"
 import Home from "./pages/home/Home"
@@ -256,6 +257,11 @@ const Routes = createBrowserRouter([
   {
     path: "/metrics",
     element: <PrivateRoute><Metrics /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/discounts-reasons",
+    element: <PrivateRoute><DiscountReasons /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

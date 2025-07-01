@@ -235,6 +235,8 @@ const Nav = () => {
                   <li><Link className="dropdown-item" to="/cities">Cidades</Link></li>
 
                   <li><Link className="dropdown-item" to="/neighborhoods">Bairros</Link></li>
+
+                  <li><Link className="dropdown-item" to="/discounts-reasons">Razões de Desconto</Link></li>
                 </ul>
               </li>
 

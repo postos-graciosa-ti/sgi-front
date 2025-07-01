@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { ArrowClockwise, FileEarmarkPdf, FiletypeDocx, HourglassSplit, Pen, PersonAdd, PersonBadge, PersonGear, PersonSlash, PersonX } from "react-bootstrap-icons"
+import { ArrowClockwise, PersonAdd } from "react-bootstrap-icons"
 import ReactDOMServer from 'react-dom/server'
 import ReactSelect from "react-select"
 import Nav from "../../components/Nav"
@@ -30,6 +30,7 @@ import WorkerInfoModal from "./WorkerInfoModal"
 import WorkerNotationModal from "./WorkerNotationModal"
 import WorkerReturnModal from "./WorkerReturnModal"
 import WorkersByTurnModal from "./WorkersByTurnModal"
+import WorkersDiscountsModal from "./WorkersDiscountsModal"
 import WorkersMetricsModal from "./WorkersMetricsModal"
 
 const Workers = () => {
@@ -94,6 +95,8 @@ const Workers = () => {
   const [checklistModalOpen, setChecklistModalOpen] = useState(false)
 
   const [workersMetricsModalOpen, setWorkersMetricsModalOpen] = useState(false)
+
+  const [workersDiscountsModalOpen, setWorkersDiscountsModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -320,6 +323,12 @@ const Workers = () => {
     setWorkersMetricsModalOpen(true)
   }
 
+  const handleOpenWorkersDiscountsModal = (worker) => {
+    setSelectedWorker(worker)
+
+    setWorkersDiscountsModalOpen(true)
+  }
+
   return (
     <>
       <SideMenu />
@@ -514,136 +523,169 @@ const Workers = () => {
 
               <ul className="list-group list-group-flush">
                 <li className="list-group-item">
-                  <button onClick={() => handleOpenWorkersMetricsModal(worker)} className="btn btn-primary w-100">
-                    Métricas de funcionário
-                  </button>
-                </li>
+                  <div className="dropdown">
+                    <button className="btn btn-light dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Operações de Colaborador
+                    </button>
 
-                <li className="list-group-item">
-                  <button
-                    className="btn btn-primary w-100"
-                    onClick={() => handleOpenChecklistModal(worker)}
-                  >
-                    Checklist de Documentos
-                  </button>
-                </li>
+                    <ul className="dropdown-menu w-100">
+                      <li>
+                        <button className="dropdown-item" onClick={() => handleOpenWorkersDiscountsModal(worker)}>
+                          Descontos de Colaborador
+                        </button>
+                      </li>
 
-                <li className="list-group-item">
-                  <button
-                    className="btn btn-warning me-2 mt-2"
-                    onClick={() => handleOpenEditWorkerModal(worker)}
-                    id="editWorker"
-                    aria-label={`Editar informações de ${worker.worker_name}`}
-                    title="Editar colaborador"
-                    disabled={userSession.role_id == 1 ? false : true}
-                  >
-                    <PersonGear />
-                  </button>
+                      <li>
+                        <button className="dropdown-item" onClick={() => handleOpenWorkersMetricsModal(worker)}>
+                          Métricas de Colaborador
+                        </button>
+                      </li>
 
-                  <button
-                    className="btn btn-warning me-2 mt-2"
-                    onClick={() => handleOpenWorkerDocsModal(worker)}
-                    title="Visualizar documentos"
-                    disabled={userSession.role_id == 1 ? false : true}
-                  >
-                    <FileEarmarkPdf />
-                  </button>
-
-                  <button
-                    className="btn btn-warning me-2 mt-2"
-                    onClick={() => handleOpenChangeWorkerSubsidiarieModal(worker)}
-                  >
-                    <ArrowClockwise />
-                  </button>
-                </li>
-
-                <li className="list-group-item">
-                  <button
-                    className="btn btn-danger me-2 mt-2"
-                    title="Afastar colaborador"
-                    onClick={() => handleOpenWorkerAwayModal(worker)}
-                    disabled={userSession.role_id == 1 ? false : true}
-                  >
-                    <PersonSlash />
-                  </button>
-
-                  <button
-                    className="btn btn-danger me-2 mt-2"
-                    onClick={() => handleOpenDeleteWorkerModal(worker)}
-                    id="deleteWorker"
-                    aria-label={`Excluir ${worker.worker_name}`}
-                    title="Demitir colaborador"
-                    disabled={userSession.role_id == 1 ? false : true}
-                  >
-                    <PersonX />
-                  </button>
-
-                  {
-                    worker.is_away && (
-                      <button
-                        className="btn btn-warning me-2 mt-2"
-                        title="Retorno ao trabalho"
-                        onClick={() => handleOpenWorkerReturnModal(worker)}
-                        disabled={userSession.role_id == 1 ? false : true}
-                      >
-                        <ArrowClockwise />
-                      </button>
-                    )
-                  }
-
-                  {
-                    !worker.worker_is_active && (
-                      <>
+                      <li>
                         <button
-                          className="btn btn-warning me-2 mt-2"
-                          onClick={() => handleOpenReactivateWorkerModal(worker)}
-                          title="readmitir"
+                          className="dropdown-item"
+                          onClick={() => handleOpenChecklistModal(worker)}
+                        >
+                          Lista de Documentos
+                        </button>
+                      </li>
+
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => handleOpenEditWorkerModal(worker)}
+                          id="editWorker"
+                          aria-label={`Editar informações de ${worker.worker_name}`}
+                          title="Editar colaborador"
                           disabled={userSession.role_id == 1 ? false : true}
                         >
-                          <ArrowClockwise />
+                          Edição de Colaborador
                         </button>
-                      </>
-                    )
-                  }
-                </li>
+                      </li>
 
-                <li className="list-group-item">
-                  <button
-                    className="btn btn-primary me-2 mt-2"
-                    title="Emitir documentos"
-                    onClick={() => handleOpenDocsModal(worker)}
-                    disabled={userSession.role_id == 1 ? false : true}
-                  >
-                    <FiletypeDocx />
-                  </button>
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => handleOpenWorkerDocsModal(worker)}
+                          title="Visualizar documentos"
+                          disabled={userSession.role_id == 1 ? false : true}
+                        >
+                          Visualização de Documentos
+                        </button>
+                      </li>
 
-                  <button
-                    className="btn btn-primary me-2 mt-2"
-                    title="Emitir crachá"
-                    onClick={() => handleIssueBadge(worker)}
-                    disabled={userSession.role_id == 1 ? false : true}
-                  >
-                    <PersonBadge />
-                  </button>
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          title="Alterar filial de colaborador"
+                          onClick={() => handleOpenChangeWorkerSubsidiarieModal(worker)}
+                        >
+                          Alterar Filial de Colaborador
+                        </button>
+                      </li>
 
-                  <button
-                    className="btn btn-primary me-2 mt-2"
-                    onClick={() => handleOpenWorkerNotation(worker)}
-                    title="Adicionar observação"
-                    id="workerObservation"
-                    disabled={userSession.role_id == 1 ? false : true}
-                  >
-                    <Pen />
-                  </button>
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          title="Afastar colaborador"
+                          onClick={() => handleOpenWorkerAwayModal(worker)}
+                          disabled={userSession.role_id == 1 ? false : true}
+                        >
+                          Afastar Colaborador
+                        </button>
+                      </li>
 
-                  <button
-                    className="btn btn-primary me-2 mt-2"
-                    title="Avaliação de tempo de experiência"
-                    onClick={() => handleOpenExperienceTimeModal(worker)}
-                    disabled={userSession.role_id == 1 ? false : true}
-                  >
-                    <HourglassSplit />
-                  </button>
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => handleOpenDeleteWorkerModal(worker)}
+                          id="deleteWorker"
+                          aria-label={`Excluir ${worker.worker_name}`}
+                          title="Demitir colaborador"
+                          disabled={userSession.role_id == 1 ? false : true}
+                        >
+                          Demissão de Colaborador
+                        </button>
+                      </li>
+
+                      <li>
+                        {
+                          worker.is_away && (
+                            <button
+                              className="dropdown-item"
+                              title="Retorno ao trabalho"
+                              onClick={() => handleOpenWorkerReturnModal(worker)}
+                              disabled={userSession.role_id == 1 ? false : true}
+                            >
+                              Retorno de Colaborador
+                            </button>
+                          )
+                        }
+                      </li>
+
+                      <li>
+                        {
+                          !worker.worker_is_active && (
+                            <>
+                              <button
+                                className="dropdown-item"
+                                onClick={() => handleOpenReactivateWorkerModal(worker)}
+                                title="readmitir"
+                                disabled={userSession.role_id == 1 ? false : true}
+                              >
+                                Readmissão de Colaborador
+                              </button>
+                            </>
+                          )
+                        }
+                      </li>
+
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          title="Emitir documentos"
+                          onClick={() => handleOpenDocsModal(worker)}
+                          disabled={userSession.role_id == 1 ? false : true}
+                        >
+                          Emissão de Documentos
+                        </button>
+                      </li>
+
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          title="Emitir crachá"
+                          onClick={() => handleIssueBadge(worker)}
+                          disabled={userSession.role_id == 1 ? false : true}
+                        >
+                          Emissão de Crachá
+                        </button>
+                      </li>
+
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => handleOpenWorkerNotation(worker)}
+                          title="Adicionar observação"
+                          id="workerObservation"
+                          disabled={userSession.role_id == 1 ? false : true}
+                        >
+                          Observação de Colaborador
+                        </button>
+                      </li>
+
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          title="Avaliação de tempo de experiência"
+                          onClick={() => handleOpenExperienceTimeModal(worker)}
+                          disabled={userSession.role_id == 1 ? false : true}
+                        >
+                          Avaliação de tempo de experiência de colaborador
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -811,6 +853,12 @@ const Workers = () => {
         selectedWorker={selectedWorker}
         workersMetricsModalOpen={workersMetricsModalOpen}
         setWorkersMetricsModalOpen={setWorkersMetricsModalOpen}
+      />
+
+      <WorkersDiscountsModal
+        selectedWorker={selectedWorker}
+        workersDiscountsModalOpen={workersDiscountsModalOpen}
+        setWorkersDiscountsModalOpen={setWorkersDiscountsModalOpen}
       />
     </>
   )

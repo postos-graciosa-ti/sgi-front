@@ -43,6 +43,7 @@ import Turns from "./pages/turns/Turns"
 import UpdateNotifications from "./pages/updateNotifications/UpdateNotifications"
 import Users from "./pages/users/Users"
 import Workers from "./pages/workers/Workers"
+import WorkersStatus from "./pages/workersStatus/WorkersStatus"
 import PrivateRoute from "./PrivateRoute"
 
 const Routes = createBrowserRouter([
@@ -262,6 +263,11 @@ const Routes = createBrowserRouter([
   {
     path: "/discounts-reasons",
     element: <PrivateRoute><DiscountReasons /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/workers-status",
+    element: <PrivateRoute><WorkersStatus /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

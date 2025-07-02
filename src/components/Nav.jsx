@@ -153,6 +153,12 @@ const Nav = () => {
               </li>
 
               <li className="nav-item">
+                <Link className="nav-link" to="/workers-status">
+                  Status de filiais
+                </Link>
+              </li>
+
+              <li className="nav-item">
                 <Link className="nav-link" to="/positions-table">
                   Quadro de vagas
                 </Link>

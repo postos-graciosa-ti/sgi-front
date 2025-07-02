@@ -97,6 +97,10 @@ const EditWorkerModal = (props) => {
 
   const [selectedTurn, setSelectedTurn] = useState()
 
+  const [functionsOptions, setFunctionsOptions] = useState()
+
+  const [selectedFunction, setSelectedFunction] = useState()
+
   useEffect(() => {
     api
       .get(`/workers/subsidiarie/${selectedSubsdiarie?.value}`)
@@ -113,9 +117,23 @@ const EditWorkerModal = (props) => {
 
         setTurnsOptions(options)
       })
+
+    api
+      .get(`/subsidiaries/${selectedSubsdiarie?.value}/functions`)
+      .then((response) => {
+        let options = response.data.map((option) => ({ value: option.id, label: option.name }))
+
+        setFunctionsOptions(options)
+      })
   }, [])
 
   const handleClose = () => {
+    setSelectedWorker()
+
+    setSelectedTurn()
+
+    setSelectedFunction()
+
     setEditWorkerModalOpen(false)
   }
 
@@ -123,6 +141,7 @@ const EditWorkerModal = (props) => {
     const requestBody = {
       worker_id: selectedWorker?.value,
       turn_id: selectedTurn?.value,
+      function_id: selectedFunction?.value,
     }
 
     let workerData = await api.get(`/workers/${selectedWorker?.value}`).then((response) => response.data)
@@ -175,6 +194,14 @@ const EditWorkerModal = (props) => {
             placeholder="Turnos"
             options={turnsOptions}
             onChange={(option) => setSelectedTurn(option)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <ReactSelect
+            placeholder="Funções"
+            options={functionsOptions}
+            onChange={(option) => setSelectedFunction(option)}
           />
         </div>
       </Modal.Body>

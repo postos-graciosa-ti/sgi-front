@@ -162,7 +162,7 @@ const Applicants = () => {
       
       Abraços,
       
-      Time de RH
+      Recursos Humanos
       Postos Graciosa
     `
 
@@ -178,7 +178,7 @@ const Applicants = () => {
 
       Abraços,
       
-      Time de RH
+      Recursos Humanos
       Postos Graciosa
     `
 
@@ -253,7 +253,7 @@ const Applicants = () => {
         
       Abraços,
         
-      Time de RH
+      Recursos Humanos
       Postos Graciosa
     `
 
@@ -271,7 +271,7 @@ const Applicants = () => {
 
       Abraços,
         
-      Time de RH
+      Recursos Humanos
       Postos Graciosa
     `
 

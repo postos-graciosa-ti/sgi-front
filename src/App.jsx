@@ -33,20 +33,14 @@ function App() {
           </p>
         </div>
 
-        <div>
-          <button className="w-100 btn btn-light mt-5 mb-3">
-            Eu Sou
-          </button>
-        </div>
-
-        <div>
-          <button className="w-100 btn btn-light mb-3" onClick={handleOpenRegisterModal}>
+        <div className="mt-5">
+          <button className="w-100 btn btn-primary mb-3" onClick={handleOpenRegisterModal}>
             Primeiro Acesso
           </button>
         </div>
 
         <div>
-          <button className="w-100 btn btn-light mb-3" onClick={handleOpenLoginModal}>
+          <button className="w-100 btn btn-primary mb-3" onClick={handleOpenLoginModal}>
             Entrar
           </button>
         </div>

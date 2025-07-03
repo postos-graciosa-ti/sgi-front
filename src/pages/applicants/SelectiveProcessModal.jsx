@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { CaretRightFill } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 import CoordinatorInterviewModal from './CoordinatorInterviewModal'
 import IdentityModal from './IdentityModal'
@@ -11,9 +10,14 @@ import RhInterviewModal from './RhInterviewModal'
 import SeeApplicantsExamsModal from './SeeApplicantsExamsModal'
 
 const SelectiveProcessModal = (props) => {
-  const { selectiveProcessModalOpen, setSelectiveProcessModalOpen, selectedApplicant, setApplicantsList, setSelectedApplicant, applicantToSearch } = props
-
-  const userSession = useUserSessionStore((state) => state.userSession)
+  const {
+    selectiveProcessModalOpen,
+    setSelectiveProcessModalOpen,
+    selectedApplicant,
+    setApplicantsList,
+    setSelectedApplicant,
+    applicantToSearch,
+  } = props
 
   const [processProgressModalOpen, setProcessProgressModalOpen] = useState(false)
 
@@ -23,85 +27,25 @@ const SelectiveProcessModal = (props) => {
 
   const [coordinatorInterviewModalOpen, setCoordinatorInterviewModalOpen] = useState(false)
 
-  const [openWhatsapp, setOpenWhatsapp] = useState(false)
-
   const [identityModalOpen, setIdentityModalOpen] = useState(false)
-
-  // useEffect(() => {
-  //   if (openWhatsapp) {
-  //     let failMessage = `
-  //       Prezado(a) ${selectedApplicant?.name}!
-
-  //       Agradecemos seu interesse em participar do nosso processo seletivo. 
-  //       No momento, optamos por não evoluir com a sua candidatura.
-  //       Vamos manter o seu currículo em nosso banco de talentos para novas
-  //       oportunidades e encorajamos que se inscreva em processos futuros.
-
-  //       Desejamos sucesso em sua jornada profissional!
-
-  //       Abraços,
-
-  //       Time de RH
-  //       Postos Graciosa
-  //     `
-
-  //     let successMessage = `
-  //       Prezado(A) ${selectedApplicant?.name}!,
-
-  //       Agradecemos a confiança e gentileza de nos ouvir.
-  //       Conforme conversamos, estamos muito felizes em lhe
-  //       informar que você foi aprovado para a próxima etapa do
-  //       nosso processo seletivo! Agora, vamos para a próxima
-  //       fase, em breve entraremos em contato passando mais
-  //       informações.
-
-  //       Segue lista de documentações: https://drive.google.com/file/d/1FefOkU4VNQlgBXiSREGngQD8Fr7AmY8n/view?usp=sharing
-
-  //       Abraços,
-
-  //       Time de RH
-  //       Postos Graciosa
-  //     `
-
-  //     let isRejected = (
-  //       selectedApplicant?.rh_opinion == "reprovado" ||
-  //       selectedApplicant?.coordinator_opinion == "reprovado"
-  //     )
-
-  //     const phone = selectedApplicant?.mobile
-
-  //     const message = isRejected ? failMessage : successMessage
-
-  //     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
-
-  //     window.open(url, '_blank')
-
-  //     let requestBody = {
-  //       whatsapp_feedback: "sim"
-  //     }
-
-  //     api.patch(`/applicants/${selectedApplicant?.id}`, requestBody)
-
-  //     setOpenWhatsapp(false)
-  //   }
-  // }, [openWhatsapp])
 
   const handleClose = () => {
     if (applicantToSearch) {
-      api
-        .get("/applicants")
-        .then((response) => {
-          const newApplicantsList = response.data.filter((applicant) => {
-            const firstName = applicant.name.split(" ")[0].toLowerCase()
-            return firstName === applicantToSearch.toLowerCase()
+      if (applicantToSearch.value == "todos") {
+        api
+          .get("/applicants")
+          .then((response) => {
+            setApplicantsList(response.data)
           })
+      } else {
+        api
+          .get("/applicants")
+          .then((response) => {
+            const applicantToShow = response.data.filter((applicant) => applicant.id == applicantToSearch.value)
 
-          setApplicantsList(newApplicantsList)
-        })
-    } else {
-      api
-        .get("/applicants")
-        .then((response) => setApplicantsList(response.data))
+            setApplicantsList(applicantToShow)
+          })
+      }
     }
 
     setSelectiveProcessModalOpen(false)

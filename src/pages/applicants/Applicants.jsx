@@ -1,12 +1,9 @@
 import dayjs from "dayjs"
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore"
 import { useEffect, useState } from "react"
-import { ArrowClockwise, Trash } from "react-bootstrap-icons"
+import { Filter, Trash } from "react-bootstrap-icons"
 import ReactSelect from "react-select"
 import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
-import SideMenu from "../../components/SideMenu"
 import useUserSessionStore from "../../data/userSession"
 import api from "../../services/api"
 import ConfirmApplicantDeleteModal from "./ConfirmApplicantDeleteModal"
@@ -24,13 +21,9 @@ const yesNoOptions = [{ value: "aprovado", label: "aprovado" }, { value: "reprov
 const Applicants = () => {
   const userSession = useUserSessionStore((state) => state.userSession)
 
-  console.log(userSession)
-
   const [applicantToSearch, setApplicantToSearch] = useState()
 
-  const [startDate, setStartDate] = useState()
-
-  const [endDate, setEndDate] = useState()
+  const [applicantsOptions, setApplicantsOptions] = useState()
 
   const [applicantsList, setApplicantsList] = useState()
 
@@ -57,68 +50,40 @@ const Applicants = () => {
   useEffect(() => {
     api
       .get("/applicants")
-      .then((response) => setApplicantsList(response.data))
-  }, [])
-
-  // useEffect(() => {
-  //   if (applicantToSearch) {
-  //     api
-  //       .get("/applicants")
-  //       .then((response) => {
-  //         let newApplicantsList = response.data.filter((applicant) => applicant.name.toLowerCase() == applicantToSearch.toLowerCase())
-
-  //         setApplicantsList(newApplicantsList)
-  //       })
-  //   }
-  // }, [applicantToSearch])
-
-  useEffect(() => {
-    if (applicantToSearch) {
-      api
-        .get("/applicants")
-        .then((response) => {
-          const newApplicantsList = response.data.filter((applicant) => {
-            const firstName = applicant.name.split(" ")[0].toLowerCase()
-            return firstName === applicantToSearch.toLowerCase()
-          })
-
-          setApplicantsList(newApplicantsList)
-        })
-    }
-  }, [applicantToSearch])
-
-  useEffect(() => {
-    if (startDate && endDate) {
-      dayjs.extend(isSameOrAfter)
-
-      dayjs.extend(isSameOrBefore)
-
-      const newApplicantsList = applicantsList?.filter((applicant) =>
-        dayjs(applicant.attendance_date).isSameOrAfter(dayjs(startDate)) &&
-        dayjs(applicant.attendance_date).isSameOrBefore(dayjs(endDate))
-      )
-
-      setApplicantsList(newApplicantsList)
-    }
-  }, [startDate, endDate])
-
-  const handleReloadApplicantsList = () => {
-    api
-      .get("/applicants")
       .then((response) => {
-        setApplicantToSearch()
+        let options = []
+
+        options.push({ value: "todos", label: "Todos" })
+
+        response.data.map((option) => {
+          options.push({ value: option.id, label: option.name })
+        })
+
+        setApplicantsOptions(options)
 
         setApplicantsList(response.data)
       })
-  }
+  }, [])
 
-  const handleOpenExamsEmissionModal = () => {
-    setExamsEmissionModalOpen(true)
-  }
+  useEffect(() => {
+    if (applicantToSearch) {
+      if (applicantToSearch.value == "todos") {
+        api
+          .get("/applicants")
+          .then((response) => {
+            setApplicantsList(response.data)
+          })
+      } else {
+        api
+          .get("/applicants")
+          .then((response) => {
+            const applicantToShow = response.data.filter((applicant) => applicant.id == applicantToSearch.value)
 
-  const handleOpenExamsCorrectionModal = () => {
-    setExamsCorrectionModalOpen(true)
-  }
+            setApplicantsList(applicantToShow)
+          })
+      }
+    }
+  }, [applicantToSearch])
 
   const handleOpenNewApplicantModal = () => {
     setSelectedApplicant(null)
@@ -136,23 +101,6 @@ const Applicants = () => {
     setSelectedApplicant(applicant)
 
     setHireApplicantModalOpen(true)
-  }
-
-  const handleOpenConfirmApplicantDeleteModal = (applicant) => {
-    setSelectedApplicant(applicant)
-
-    setConfirmApplicantDeleteModalOpen(true)
-  }
-
-  const handleOpenRedirectToModal = () => {
-    setRedirectToModalOpen(true)
-  }
-
-  const handlePrintDocsList = () => {
-    printJS({
-      printable: "/lista_de_documentos.pdf",
-      type: 'pdf',
-    })
   }
 
   const onChangeRhOpinion = (opinion, applicant) => {
@@ -365,66 +313,82 @@ const Applicants = () => {
       })
   }
 
+  const handleGetApplicantsInProcess = () => {
+    api
+      .get("/applicants/in-process")
+      .then((response) => {
+        setApplicantsList(response.data)
+      })
+  }
+
+  const handleGetApplicantsApproved = () => {
+    api
+      .get("/applicants/approved")
+      .then((response) => {
+        setApplicantsList(response.data)
+      })
+  }
+
+  const handleGetApplicantsReproved = () => {
+    api
+      .get("/applicants/reproved")
+      .then((response) => {
+        setApplicantsList(response.data)
+      })
+  }
+
   return (
     <>
-      <SideMenu />
+      {/* <SideMenu /> */}
 
       <Nav />
 
       <div className="container">
         <div>
-          <button type="button" class="btn btn-primary position-relative">
-            Profile
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              New
-              <span class="visually-hidden">New alerts</span>
-            </span>
-          </button>
-
-          <button className="btn btn-primary ms-4" onClick={handleOpenNewApplicantModal}>
+          <button className="btn btn-primary" onClick={handleOpenNewApplicantModal}>
             Novo candidato
           </button>
         </div>
 
-        <div className="mb-3">
-          <label className="form-label fw-bold">
-            Buscar candidato
-          </label>
+        <div className="row mt-3">
+          <div className="col">
+            <ReactSelect
+              options={applicantsOptions}
+              defaultValue={{ value: "todos", label: "Todos" }}
+              onChange={(value) => setApplicantToSearch(value)}
+            />
+          </div>
 
-          <div className="row">
-            <div className="col-10">
-              <input
-                type="text"
-                className="form-control"
-                onChange={(e) => setApplicantToSearch(e.target.value)}
-              />
-            </div>
-
-            <div className="col-2">
-              <button className="btn btn-primary" onClick={handleReloadApplicantsList}>
-                <ArrowClockwise />
+          <div className="col-auto">
+            <div className="dropdown">
+              <button className="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <Filter />
               </button>
+
+              <ul className="dropdown-menu">
+                <li>
+                  <button className="dropdown-item" onClick={handleGetApplicantsInProcess}>
+                    Em processo
+                  </button>
+                </li>
+
+                <li>
+                  <button className="dropdown-item" onClick={handleGetApplicantsApproved}>
+                    Aprovados
+                  </button>
+                </li>
+
+                <li>
+                  <button className="dropdown-item" onClick={handleGetApplicantsReproved}>
+                    Reprovados
+                  </button>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
 
-        <div className="mb-3">
-          <label className="form-label fw-bold">
-            Filtrar
-          </label>
-        </div>
-
-        <div className="row mb-3">
-          <div className="col">
-            <input type="date" className="form-control mb-2" onChange={(e) => setStartDate(e.target.value)} />
-          </div>
-
-          <div className="col">
-            <input type="date" className="form-control mb-2" onChange={(e) => setEndDate(e.target.value)} />
-          </div>
-        </div>
-
-        <div className="mt-5">
+        <div className="mt-3">
           {
             applicantsList && applicantsList.map((applicant) => (
               <div className="card mb-3 shadow">
@@ -446,14 +410,6 @@ const Applicants = () => {
                       <span className="badge text-bg-success p-2 me-2">Retorno WhatsApp</span>
                     )
                   }
-
-                  {/* {
-                  applicant.feedback_status === "sim" && (
-                    <span className="badge text-bg-success p-2">Retornado</span>
-                  ) || (
-                    <span className="badge text-bg-danger p-2">Não retornado</span>
-                  )
-                } */}
                 </div>
 
                 <ul className="list-group list-group-flush">
@@ -494,8 +450,7 @@ const Applicants = () => {
                       placeholder=""
                       options={yesNoOptions}
                       onChange={(opinion) => onChangeRhOpinion(opinion, applicant)}
-                      defaultValue={yesNoOptions.find((option) => option.value === applicant?.rh_opinion)}
-                      // isDisabled={!!applicant?.rh_opinion}
+                      defaultValue={yesNoOptions?.find((option) => option.value === applicant?.rh_opinion)}
                       isDisabled={
                         userSession?.id != applicant.created_by && userSession?.id != applicant.redirect_to && true || !!applicant?.rh_opinion && true
                       }
@@ -573,9 +528,11 @@ const Applicants = () => {
                   </li>
 
                   <li className="list-group-item">
-                    <label className="fw-bold mb-3">
-                      Não se esqueça de dar retorno ao candidato =)
-                    </label>
+                    <div className="text-center mt-3">
+                      <label className="fw-bold mb-3 text-center">
+                        Não se esqueça de dar retorno ao candidato =)
+                      </label>
+                    </div>
 
                     <div className="row mt-4 mb-4">
                       <div className="col">
@@ -612,10 +569,6 @@ const Applicants = () => {
                       applicant?.rh_opinion === "aprovado" &&
                       applicant?.coordinator_opinion === "aprovado" && (
                         <div style={{ minWidth: '180px' }}>
-                          {/* <label className="form-label fw-bold">
-                          Efetivar
-                        </label> */}
-
                           <button
                             className="btn btn-success w-100"
                             onClick={() => handleOpenHireApplicantModal(applicant)}
@@ -632,10 +585,6 @@ const Applicants = () => {
                         </div>
                       ) || applicant?.rh_opinion === "reprovado" && (
                         <div style={{ minWidth: '180px' }}>
-                          {/* <label className="form-label fw-bold">
-                          Anotação especial
-                        </label> */}
-
                           <button
                             className="btn btn-dark w-100"
                             onClick={() => handleOpenSpecialNotationMoal(applicant)}
@@ -646,10 +595,6 @@ const Applicants = () => {
                         </div>
                       ) || applicant?.coordinator_opinion === "reprovado" && (
                         <div style={{ minWidth: '180px' }}>
-                          {/* <label className="form-label fw-bold">
-                          Anotação especial
-                        </label> */}
-
                           <button
                             className="btn btn-dark w-100"
                             onClick={() => handleOpenSpecialNotationMoal(applicant)}
@@ -666,204 +611,6 @@ const Applicants = () => {
             ))
           }
         </div>
-
-        {/* <div>
-          <table className="table table-hover align-middle">
-            <thead>
-              <tr>
-                <th></th>
-
-                <th>Atendimento</th>
-
-                <th>Nome</th>
-
-                <th></th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {
-                applicantsList && applicantsList.map((applicant, i) => (
-                  <tr key={applicant.id}>
-                    <td>
-                      {
-                        applicant.feedback_status === "sim" && (
-                          <span className="badge text-bg-success p-2">Retornado</span>
-                        ) || (
-                          <span className="badge text-bg-danger p-2">Não retornado</span>
-                        )
-                      }
-                    </td>
-
-                    <td className="text-muted">
-                      {applicant.attendance_date ? dayjs(applicant.attendance_date).format("DD/MM/YYYY") : ""}
-                    </td>
-
-                    <td>{applicant.name}</td>
-
-                    <td>
-                      <div className="d-flex flex-wrap gap-3">
-                        <div style={{ minWidth: '180px' }}>
-                          <label className="form-label fw-bold">
-                            Processo seletivo
-                          </label>
-
-                          <button
-                            className="btn btn-primary w-100"
-                            disabled={
-                              !(
-                                userSession?.id === applicant.created_by ||
-                                userSession?.id === applicant.redirect_to
-                              )
-                            }
-                            onClick={() => handleOpenSelectiveProcessModal(applicant)}
-                          >
-                            <Arrow90degRight />
-                          </button>
-                        </div>
-
-                        <div style={{ minWidth: '200px' }}>
-                          <label className="form-label fw-bold">Parecer RH</label>
-
-                          <ReactSelect
-                            placeholder=""
-                            options={yesNoOptions}
-                            onChange={(opinion) => onChangeRhOpinion(opinion, applicant)}
-                            defaultValue={yesNoOptions.find((option) => option.value === applicant?.rh_opinion)}
-                            // isDisabled={!!applicant?.rh_opinion}
-                            isDisabled={
-                              userSession?.id != applicant.created_by && userSession?.id != applicant.redirect_to && true || !!applicant?.rh_opinion && true
-                            }
-                            className={`react-select ${applicant?.rh_opinion
-                              ? applicant.rh_opinion === "aprovado"
-                                ? "is-valid"
-                                : "is-invalid"
-                              : ""}`}
-                            classNamePrefix="react-select"
-                            styles={
-                              applicant?.rh_opinion
-                                ? applicant.rh_opinion === "aprovado"
-                                  ? {
-                                    control: (base) => ({
-                                      ...base,
-                                      borderColor: 'green',
-                                      boxShadow: '0 0 0 0.25rem rgba(25, 135, 84, 0.25)',
-                                      '&:hover': { borderColor: 'green' },
-                                    }),
-                                  }
-                                  : {
-                                    control: (base) => ({
-                                      ...base,
-                                      borderColor: '#dc3545',
-                                      boxShadow: '0 0 0 0.25rem rgba(220, 53, 69, 0.25)',
-                                      '&:hover': { borderColor: '#dc3545' },
-                                    }),
-                                  }
-                                : {}
-                            }
-                          />
-                        </div>
-
-                        <div style={{ minWidth: '200px' }}>
-                          <label className="form-label fw-bold">Parecer gestor</label>
-
-                          <ReactSelect
-                            placeholder=""
-                            options={yesNoOptions}
-                            onChange={(opinion) => onChangeCoordinatorOpinion(opinion, applicant)}
-                            defaultValue={yesNoOptions.find((option) => option.value === applicant?.coordinator_opinion)}
-                            isDisabled={
-                              userSession?.id != applicant.created_by && userSession?.id != applicant.redirect_to && true || !!applicant?.coordinator_opinion && true
-                            }
-                            className={`react-select ${applicant?.coordinator_opinion
-                              ? applicant.coordinator_opinion === "aprovado"
-                                ? "is-valid"
-                                : "is-invalid"
-                              : ""}`}
-                            classNamePrefix="react-select"
-                            styles={
-                              applicant?.coordinator_opinion
-                                ? applicant.coordinator_opinion === "aprovado"
-                                  ? {
-                                    control: (base) => ({
-                                      ...base,
-                                      borderColor: 'green',
-                                      boxShadow: '0 0 0 0.25rem rgba(25, 135, 84, 0.25)',
-                                      '&:hover': { borderColor: 'green' },
-                                    }),
-                                  }
-                                  : {
-                                    control: (base) => ({
-                                      ...base,
-                                      borderColor: '#dc3545',
-                                      boxShadow: '0 0 0 0.25rem rgba(220, 53, 69, 0.25)',
-                                      '&:hover': { borderColor: '#dc3545' },
-                                    }),
-                                  }
-                                : {}
-                            }
-                          />
-                        </div>
-
-                        {
-                          applicant?.rh_opinion === "aprovado" &&
-                          applicant?.coordinator_opinion === "aprovado" && (
-                            <div style={{ minWidth: '180px' }}>
-                              <label className="form-label fw-bold">
-                                Efetivar
-                              </label>
-
-                              <button
-                                className="btn btn-success w-100"
-                                onClick={() => handleOpenHireApplicantModal(applicant)}
-                                disabled={
-                                  !(
-                                    userSession?.id === applicant.created_by ||
-                                    userSession?.id === applicant.redirect_to
-                                  )
-                                }
-                              >
-                                <Arrow90degRight />
-                              </button>
-                            </div>
-                          ) || applicant?.rh_opinion === "reprovado" && (
-                            <div style={{ minWidth: '180px' }}>
-                              <label className="form-label fw-bold">
-                                Anotação especial
-                              </label>
-
-                              <button
-                                className="btn btn-dark w-100"
-                                onClick={() => handleOpenSpecialNotationMoal(applicant)}
-                                disabled={!(userSession?.id === applicant.created_by)}
-                              >
-                                <CupHot />
-                              </button>
-                            </div>
-                          ) || applicant?.coordinator_opinion === "reprovado" && (
-                            <div style={{ minWidth: '180px' }}>
-                              <label className="form-label fw-bold">
-                                Anotação especial
-                              </label>
-
-                              <button
-                                className="btn btn-dark w-100"
-                                onClick={() => handleOpenSpecialNotationMoal(applicant)}
-                                disabled={!(userSession?.id === applicant.created_by)}
-                              >
-                                <CupHot />
-                              </button>
-                            </div>
-                          )
-                        }
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
-        </div> */}
       </div>
 
       <ExamsEmissionModal

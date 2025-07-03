@@ -3,6 +3,7 @@ import App from "./App"
 import ErrorBoundary from "./components/ErrorBoundary"
 import NotFound from "./components/NotFound"
 import Applicants from "./pages/applicants/Applicants"
+import ApplicantsApproved from "./pages/applicants/ApplicantsApproved"
 import AllJobs from "./pages/candidates/AllJobs"
 import CandidateFirstInterview from "./pages/candidates/CandidateFirstInterview"
 import Candidates from "./pages/candidates/Candidates"
@@ -268,6 +269,11 @@ const Routes = createBrowserRouter([
   {
     path: "/workers-status",
     element: <PrivateRoute><WorkersStatus /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/applicants-approved",
+    element: <PrivateRoute><ApplicantsApproved /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

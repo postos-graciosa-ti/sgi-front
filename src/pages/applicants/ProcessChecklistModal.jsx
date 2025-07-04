@@ -31,7 +31,6 @@ const ProcessChecklistModal = ({ processChecklistModalOpen, setProcessChecklistM
 
     api.put(`/applicant-process/${applicantId}`, payload)
       .then(res => {
-        console.log("Processo salvo com sucesso", res.data)
         handleClose()
       })
       .catch(err => {

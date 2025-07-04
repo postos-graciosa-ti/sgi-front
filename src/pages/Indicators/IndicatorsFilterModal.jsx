@@ -38,11 +38,7 @@ const IndicatorsFilterModal = (props) => {
   }
 
   const handleSubmit = () => {
-    api
-      .post(`/indicators_by_month_and_criteria`, { month: selectedMonth?.value, criteria_id: selectedCriteria?.value })
-      .then((response) => {
-        console.log(response)
-      })
+    api.post(`/indicators_by_month_and_criteria`, { month: selectedMonth?.value, criteria_id: selectedCriteria?.value })
   }
 
   return (

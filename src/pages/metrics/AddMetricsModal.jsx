@@ -37,13 +37,7 @@ const AddMetricsModal = (props) => {
       ligeirinho: `[${ligeirinho.map((lig) => lig.value).join(',')}]`
     }
 
-    console.log(requestBody)
-
-    api
-      .post("/metrics", requestBody)
-      .then((response) => {
-        console.log(response)
-      })
+    api.post("/metrics", requestBody)
   }
 
   return (

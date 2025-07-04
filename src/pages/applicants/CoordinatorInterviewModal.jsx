@@ -118,8 +118,6 @@ const CoordinatorInterviewModal = (props) => {
       .then(() => handleClose())
   }
 
-  console.log(selectedApplicant)
-
   return (
     <Modal
       show={coordinatorInterviewModalOpen}

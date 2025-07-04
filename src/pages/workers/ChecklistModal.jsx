@@ -128,7 +128,6 @@ const ChecklistModal = ({ checklistModalOpen, setChecklistModalOpen, workerId })
       if (checklistId) {
         // PATCH apenas os campos modificados
         await api.patch(`/checklist/${checklistId}`, dataToSend)
-        console.log("Checklist atualizado com sucesso")
       } else {
         // cria novo checklist completo
         const fullData = { worker_id: workerId }
@@ -136,7 +135,6 @@ const ChecklistModal = ({ checklistModalOpen, setChecklistModalOpen, workerId })
           fullData[key] = !!checkedItems[Number(index)]
         })
         await api.post("/checklist", fullData)
-        console.log("Checklist criado com sucesso")
       }
     } catch (error) {
       console.error("Erro ao salvar checklist:", error)

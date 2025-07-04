@@ -2,7 +2,6 @@ import axios from "axios"
 import moment from "moment"
 import { useEffect, useState } from "react"
 import Nav from "../../components/Nav"
-import SideMenu from "../../components/SideMenu"
 import HollidayScaleModal from "./HollidayScaleModal"
 
 const HollidaysScale = () => {
@@ -30,8 +29,6 @@ const HollidaysScale = () => {
 
   return (
     <>
-      <SideMenu />
-
       <Nav />
 
       <div className="container">

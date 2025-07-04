@@ -1,10 +1,106 @@
+import dayjs from "dayjs"
 import { useEffect, useState } from "react"
 import { Button, Modal } from 'react-bootstrap'
+import { XLg } from "react-bootstrap-icons"
 import { Link, useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
 import useUserSessionStore from "../data/userSession"
 import useWorkersExperienceTimeStore from "../data/workersExperienceTime"
 import api from "../services/api"
+
+export const MyNotificationsModal = (props) => {
+  const { myNotificationModalOpen, setMyNotificationModalOpen } = props
+
+  const userSession = useUserSessionStore((state) => state.userSession)
+
+  const [notificationsList, setNotificationsList] = useState()
+
+  useEffect(() => {
+    if (myNotificationModalOpen) {
+      api
+        .get(`/users/${userSession?.id}/custom-notifications`)
+        .then((response) => {
+          setNotificationsList(response.data)
+        })
+    }
+  }, [myNotificationModalOpen])
+
+  const handleClose = () => {
+    setMyNotificationModalOpen(false)
+  }
+
+  const handleDeleteNotification = (id) => {
+    api
+      .delete(`/custom-notification/${id}`)
+      .then(() => {
+        api
+          .get(`/users/${userSession?.id}/custom-notifications`)
+          .then((response) => {
+            setNotificationsList(response.data)
+          })
+      })
+  }
+
+  return (
+    <Modal
+      show={myNotificationModalOpen}
+      onHide={handleClose}
+      backdrop="static"
+      keyboard={false}
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Minhas Notificações</Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
+        {
+          notificationsList && notificationsList.map((notification) => (
+            <div className="card mb-3" key={notification.id}>
+              <div className="card-body">
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="card-title mb-0">{notification.title}</h5>
+
+                  <button
+                    onClick={() => handleDeleteNotification(notification.id)}
+                    className="btn btn-light btn-sm"
+                  >
+                    <XLg />
+                  </button>
+                </div>
+
+                <h6 className="card-subtitle mb-2 text-body-secondary">
+                  {dayjs(notification.date).format("DD-MM-YYYY")}
+                </h6>
+
+                <p className="card-text">{notification.description}</p>
+              </div>
+            </div>
+          ))
+        }
+
+        <div className="text-muted mt-3">
+          <div>
+            <span>
+              Não se preocupe, uma notificação chegará ao seu e-mail também
+            </span>
+          </div>
+
+          <div className="text-center">
+            <span>
+              =)
+            </span>
+          </div>
+        </div>
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button variant="light" onClick={handleClose}>
+          Fechar
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  )
+}
 
 export const ChangePasswordModal = (props) => {
   const { changePasswordModalOpen, setChangePasswordModalOpen } = props
@@ -122,6 +218,8 @@ const Nav = () => {
 
   const [subsidiarieData, setSubsidiarieData] = useState()
 
+  const [myNotificationModalOpen, setMyNotificationModalOpen] = useState(false)
+
   useEffect(() => {
     api
       .get(`/subsidiaries/${selectedSubsidiarie?.value}/workers/experience-time-no-first-review`)
@@ -153,6 +251,15 @@ const Nav = () => {
               </li>
 
               <li className="nav-item">
+                <button
+                  className="nav-link"
+                  onClick={() => setMyNotificationModalOpen(true)}
+                >
+                  Minhas notificações
+                </button>
+              </li>
+
+              <li className="nav-item">
                 <Link className="nav-link" to="/workers-status">
                   Status de filiais
                 </Link>
@@ -167,18 +274,6 @@ const Nav = () => {
               <li className="nav-item">
                 <Link className="nav-link" to="/applicants">
                   Processos seletivos
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link className="nav-link" to="/metrics">
-                  Métricas
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link className="nav-link" to="/indicators">
-                  Indicadores
                 </Link>
               </li>
 
@@ -312,6 +407,11 @@ const Nav = () => {
       <ChangePasswordModal
         changePasswordModalOpen={changePasswordModalOpen}
         setChangePasswordModalOpen={setChangePasswordModalOpen}
+      />
+
+      <MyNotificationsModal
+        myNotificationModalOpen={myNotificationModalOpen}
+        setMyNotificationModalOpen={setMyNotificationModalOpen}
       />
     </>
   )

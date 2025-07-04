@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { Pencil, Plus, Trash } from "react-bootstrap-icons"
 import Nav from "../../components/Nav"
-import SideMenu from "../../components/SideMenu"
 import api from "../../services/api"
 import AddIndicatorsCriteriaModal from "./AddIndicatorsCriteriaModal"
 import DeleteIndicatorsCriteriaModal from "./DeleteIndicatorsCriteriaModal"
@@ -44,8 +43,6 @@ const IndicatorsCriteria = () => {
 
   return (
     <>
-      <SideMenu />
-
       <Nav />
 
       <div className="container">

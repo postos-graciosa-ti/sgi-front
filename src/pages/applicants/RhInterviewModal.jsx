@@ -832,57 +832,30 @@ const RhInterviewModal = (props) => {
           <div className="mb-3">
             <label className="form-label fw-bold mb-3">Comunicativo:</label>
 
-            {/* <input
-            type="text"
-            className="form-control"
-            onChange={(e) => setComunicativo(e.target.value)}
-            defaultValue={selectedApplicant?.comunicativo}
-            disabled={selectedApplicant?.comunicativo && true}
-          /> */}
-
             <ReactSelect
               options={recruitCriteria}
               onChange={(option) => setComunicativo(option.value)}
               defaultValue={recruitCriteria?.find((option) => option.value == selectedApplicant?.comunicativo)}
-            // isDisabled={selectedApplicant?.comunicativo && true}
             />
           </div>
 
           <div className="mb-3">
             <label className="form-label fw-bold mb-3">Postura:</label>
 
-            {/* <input
-            type="text"
-            className="form-control"
-            onChange={(e) => setPostura(e.target.value)}
-            defaultValue={selectedApplicant?.postura}
-            disabled={selectedApplicant?.postura && true}
-          /> */}
-
             <ReactSelect
               options={recruitCriteria}
               onChange={(option) => setPostura(option.value)}
               defaultValue={recruitCriteria?.find((option) => option.value == selectedApplicant?.postura)}
-            // isDisabled={selectedApplicant?.postura && true}
             />
           </div>
 
           <div className="mb-3">
             <label className="form-label fw-bold mb-3">Simpatia:</label>
 
-            {/* <input
-            type="text"
-            className="form-control"
-            onChange={(e) => setSimpatia(e.target.value)}
-            defaultValue={selectedApplicant?.simpatia}
-            disabled={selectedApplicant?.simpatia && true}
-          /> */}
-
             <ReactSelect
               options={recruitCriteria}
               onChange={(option) => setSimpatia(option.value)}
               defaultValue={recruitCriteria?.find((option) => option.value == selectedApplicant?.simpatia)}
-            // isDisabled={selectedApplicant?.simpatia && true}
             />
           </div>
 
@@ -893,7 +866,6 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setObservacoes(e.target.value)}
               defaultValue={selectedApplicant?.observacoes}
-            // disabled={selectedApplicant?.observacoes && true}
             />
           </div>
 
@@ -904,31 +876,8 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setSimNaoTalvez(e.target.value)}
               defaultValue={selectedApplicant?.sim_nao_talvez}
-            // disabled={selectedApplicant?.sim_nao_talvez && true}
             />
           </div>
-
-          {/* <div className="mb-3">
-            <label className="form-label fw-bold mb-3">Contato:</label>
-            <input
-              type="text"
-              className="form-control"
-              onChange={(e) => setContato(e.target.value)}
-              defaultValue={selectedApplicant?.contato}
-              disabled={selectedApplicant?.contato && true}
-            />
-          </div> */}
-
-          {/* <div className="mb-3">
-            <label className="form-label fw-bold mb-3">Retorno pelo WhatsApp:</label>
-            <input
-              type="text"
-              className="form-control"
-              onChange={(e) => setRetornoWhatsapp(e.target.value)}
-              defaultValue={selectedApplicant?.retorno_whatsapp}
-              disabled={selectedApplicant?.retorno_whatsapp && true}
-            />
-          </div> */}
 
           <div className="mb-3">
             <label className="form-label fw-bold mb-3">1° Entrevista:</label>
@@ -937,7 +886,6 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setPrimeiraEntrevista(e.target.value)}
               defaultValue={selectedApplicant?.primeira_entrevista}
-            // disabled={selectedApplicant?.primeira_entrevista && true}
             />
           </div>
 
@@ -948,7 +896,6 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setSegundaEntrevista(e.target.value)}
               defaultValue={selectedApplicant?.segunda_entrevista}
-            // disabled={selectedApplicant?.segunda_entrevista && true}
             />
           </div>
 
@@ -959,7 +906,6 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setEncaminhadoAdmissional(e.target.value)}
               defaultValue={selectedApplicant?.encaminhado_admissional}
-            // disabled={selectedApplicant?.encaminhado_admissional && true}
             />
           </div>
 
@@ -970,7 +916,6 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setDataPrevistaAdmissao(e.target.value)}
               defaultValue={selectedApplicant?.data_prevista_admissao}
-            // disabled={selectedApplicant?.data_prevista_admissao && true}
             />
           </div>
 
@@ -981,7 +926,6 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setFilial(e.target.value)}
               defaultValue={selectedApplicant?.filial}
-            // disabled={selectedApplicant?.filial && true}
             />
           </div>
 
@@ -992,7 +936,6 @@ const RhInterviewModal = (props) => {
               className="form-control"
               onChange={(e) => setHorario(e.target.value)}
               defaultValue={selectedApplicant?.horario}
-            // disabled={selectedApplicant?.horario && true}
             />
           </div>
 
@@ -1116,48 +1059,6 @@ const RhInterviewModal = (props) => {
             }
           </div>
 
-          {/* <div className="mb-3">
-            <label className="form-label fw-bold">
-              última experiência
-            </label>
-
-            <input
-              type="text"
-              className="form-control"
-              onChange={(e) => setUltimaExperiencia(e.target.value)}
-              defaultValue={selectedApplicant?.ultima_experiencia}
-              disabled={selectedApplicant?.ultima_experiencia && true}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label fw-bold">
-              Penúltima experiência
-            </label>
-
-            <input
-              type="text"
-              className="form-control"
-              onChange={(e) => setPenultimaExperiencia(e.target.value)}
-              defaultValue={selectedApplicant?.penultima_experiencia}
-              disabled={selectedApplicant?.penultima_experiencia && true}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label fw-bold">
-              Antepenúltima experiência
-            </label>
-
-            <input
-              type="text"
-              className="form-control"
-              onChange={(e) => setAntepenultimaExperiencia(e.target.value)}
-              defaultValue={selectedApplicant?.antepenultima_experiencia}
-              disabled={selectedApplicant?.antepenultima_experiencia && true}
-            />
-          </div> */}
-
           <div className="mb-3">
             <label className="form-label fw-bold">
               Escolaridade
@@ -1167,7 +1068,6 @@ const RhInterviewModal = (props) => {
               options={schoolLevelsOptions}
               onChange={(option) => setSelectedSchoolLevel(option.value)}
               defaultValue={schoolLevelsOptions?.find((option) => option.value == selectedApplicant?.escolaridade)}
-            // isDisabled={selectedApplicant?.escolaridade && true}
             />
           </div>
 
@@ -1183,7 +1083,6 @@ const RhInterviewModal = (props) => {
                   ? usersOptions?.find(option => option.value === selectedApplicant.redirect_to)
                   : null
               }
-            // isDisabled={!!selectedApplicant?.redirect_to}
             />
           </div>
         </Modal.Body>
@@ -1206,7 +1105,6 @@ const RhInterviewModal = (props) => {
           <Button
             variant="success"
             onClick={handleSubmit}
-          // disabled={areAllFieldsDefault()}
           >
             Confirmar
           </Button>

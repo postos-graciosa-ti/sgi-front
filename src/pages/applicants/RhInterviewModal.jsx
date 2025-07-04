@@ -497,25 +497,33 @@ const RhInterviewModal = (props) => {
 
           {
             workersDocs && workersDocs.resume_available && (
-              <iframe
-                src={`${import.meta.env.VITE_API_URL}/applicants-docs/file/${workersDocs.id}/resume`}
-                width="100%"
-                height="600px"
-                title="Visualizador de PDF"
-                style={{ border: "none" }}
-              ></iframe>
+              <div className="mb-3">
+                <h4 className="mb-3">Currículo:</h4>
+
+                <iframe
+                  src={`${import.meta.env.VITE_API_URL}/applicants-docs/file/${workersDocs.id}/resume`}
+                  width="100%"
+                  height="600px"
+                  title="Visualizador de PDF"
+                  style={{ border: "none" }}
+                ></iframe>
+              </div>
             )
           }
 
           {
             workersDocs && workersDocs.workcard_available && (
-              <iframe
-                src={`${import.meta.env.VITE_API_URL}/applicants-docs/file/${workersDocs.id}/workcard`}
-                width="100%"
-                height="600px"
-                title="Visualizador de PDF"
-                style={{ border: "none" }}
-              ></iframe>
+              <div className="mb-3">
+                <h4 className="mb-3">CTPS:</h4>
+
+                <iframe
+                  src={`${import.meta.env.VITE_API_URL}/applicants-docs/file/${workersDocs.id}/workcard`}
+                  width="100%"
+                  height="600px"
+                  title="Visualizador de PDF"
+                  style={{ border: "none" }}
+                ></iframe>
+              </div>
             )
           }
 

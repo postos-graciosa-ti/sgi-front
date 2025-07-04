@@ -54,6 +54,8 @@ const CoordinatorInterviewModal = (props) => {
 
   const [selectUser, setSelectedUser] = useState()
 
+  const [workersDocs, setWorkersDocs] = useState()
+
   useEffect(() => {
     api
       .get("/users")
@@ -63,6 +65,16 @@ const CoordinatorInterviewModal = (props) => {
         setUsersOptions(options)
       })
   }, [])
+
+  useEffect(() => {
+    if (coordinatorInterviewModalOpen) {
+      api
+        .get(`/applicants-docs/${selectedApplicant?.id}`)
+        .then((response) => {
+          setWorkersDocs(response.data)
+        })
+    }
+  }, [coordinatorInterviewModalOpen])
 
   const handleClose = () => {
     if (applicantToSearch) {
@@ -131,6 +143,38 @@ const CoordinatorInterviewModal = (props) => {
       </Modal.Header>
 
       <Modal.Body>
+        {
+          workersDocs && workersDocs.resume_available && (
+            <div className="mb-3">
+              <h4 className="mb-3">Currículo:</h4>
+
+              <iframe
+                src={`${import.meta.env.VITE_API_URL}/applicants-docs/file/${workersDocs.id}/resume`}
+                width="100%"
+                height="600px"
+                title="Visualizador de PDF"
+                style={{ border: "none" }}
+              ></iframe>
+            </div>
+          )
+        }
+
+        {
+          workersDocs && workersDocs.workcard_available && (
+            <div className="mb-3">
+              <h4 className="mb-3">CTPS:</h4>
+
+              <iframe
+                src={`${import.meta.env.VITE_API_URL}/applicants-docs/file/${workersDocs.id}/workcard`}
+                width="100%"
+                height="600px"
+                title="Visualizador de PDF"
+                style={{ border: "none" }}
+              ></iframe>
+            </div>
+          )
+        }
+
         <div className="mb-3">
           <h4>Perguntas para gerente fazer aos candidatos</h4>
         </div>

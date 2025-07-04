@@ -9,8 +9,6 @@ const MonthCoursesModal = (props) => {
 
   const [monthCourses, setMonthCourses] = useState()
 
-  console.log(monthCourses)
-
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_EUSOU_ENDPOINT}/workerscourses/current-month`)
@@ -38,11 +36,17 @@ const MonthCoursesModal = (props) => {
         <div className="mb-3">
           {
             monthCourses && monthCourses.map((course) => (
-              <div className="mt-4 mb-5">
-                <div className="text-end mb-2">
-                  <button className="btn btn-danger">
-                    <Trash />
-                  </button>
+              <div className="mt-4 mb-5" key={course.id}>
+                <div className="row align-items-center mb-3">
+                  <div className="col">
+                    <span className="fs-5">{course.worker_name}</span>
+                  </div>
+
+                  <div className="col-auto">
+                    <button className="btn btn-danger">
+                      <Trash />
+                    </button>
+                  </div>
                 </div>
 
                 <iframe

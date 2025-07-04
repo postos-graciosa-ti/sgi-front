@@ -8,7 +8,6 @@ import 'react-calendar/dist/Calendar.css'
 import ReactSelect from "react-select"
 import Swal from "sweetalert2"
 import Nav from "../../components/Nav"
-import SideMenu from "../../components/SideMenu"
 import useUserSessionStore from "../../data/userSession"
 import initTour from "../../driverjs/initTour"
 import scaleSteps from "../../driverjs/scaleSteps"
@@ -517,8 +516,6 @@ const Scale = () => {
 
   return (
     <>
-      <SideMenu />
-
       <Nav />
 
       <div className="container">

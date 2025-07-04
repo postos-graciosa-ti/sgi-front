@@ -339,8 +339,6 @@ const Applicants = () => {
 
   return (
     <>
-      {/* <SideMenu /> */}
-
       <Nav />
 
       <div className="container">

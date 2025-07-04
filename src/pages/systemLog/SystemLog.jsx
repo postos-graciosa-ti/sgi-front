@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import Nav from "../../components/Nav"
-import SideMenu from "../../components/SideMenu"
 import api from "../../services/api"
 
 const SystemLog = () => {
@@ -16,8 +15,6 @@ const SystemLog = () => {
 
   return (
     <>
-      <SideMenu />
-
       <Nav />
 
       <div className="container-fluid">

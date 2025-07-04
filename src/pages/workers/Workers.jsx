@@ -547,8 +547,15 @@ const Workers = () => {
 
               <ul className="list-group list-group-flush">
                 <li className="list-group-item">
-                  <button className="btn btn-primary w-100" onClick={() => handleAutorizeApp(worker)}>
-                    Autorizar Aplicativo
+                  <button
+                    className="btn btn-primary w-100"
+                    onClick={() => handleOpenEditWorkerModal(worker)}
+                    id="editWorker"
+                    aria-label={`Editar informações de ${worker.worker_name}`}
+                    title="Editar colaborador"
+                    disabled={userSession.role_id == 1 ? false : true}
+                  >
+                    Dados de Colaborador
                   </button>
                 </li>
 
@@ -559,6 +566,12 @@ const Workers = () => {
                     </button>
 
                     <ul className="dropdown-menu w-100">
+                      <li>
+                        <button className="dropdown-item" onClick={() => handleAutorizeApp(worker)}>
+                          Autorizar Aplicativo
+                        </button>
+                      </li>
+
                       <li>
                         <button className="dropdown-item" onClick={() => handleOpenWorkersDiscountsModal(worker)}>
                           Descontos de Colaborador

@@ -51,13 +51,7 @@ const AddIndicatorsModal = (props) => {
       note: note,
     }
 
-    console.log(requestBody)
-
-    api
-      .post("/indicators", requestBody)
-      .then((response) => {
-        console.log(response)
-      })
+    api.post("/indicators", requestBody)
   }
 
   return (

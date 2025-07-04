@@ -62,8 +62,6 @@ const Users = () => {
     api
       .patch(`/users/${user.user_id}/reset-password`)
       .then((response) => {
-        console.log(response)
-
         if (response.status == 200) {
           Swal.fire("Sucesso", "Senha redefinida com sucesso", "success")
         }

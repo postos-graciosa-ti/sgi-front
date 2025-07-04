@@ -157,21 +157,17 @@ const SideMenu = () => {
   }, [show]);
 
   const handleAlterarSenha = () => {
-    console.log('Alterar minha senha clicado');
     closeMenu();
     navigate('/alterar-senha');
   };
 
   const handleSair = () => {
-    console.log('Sair clicado');
     closeMenu();
     setUserSession({});
     navigate('/');
   };
 
   const handleMinhasNotificacoes = () => {
-    console.log('Minhas Notificações clicado')
-
     setMyNotificationModalOpen(true)
 
     closeMenu()

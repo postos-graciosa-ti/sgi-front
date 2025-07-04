@@ -200,6 +200,8 @@ const RhInterviewModal = (props) => {
 
   const [existExperiences, setExistExperiences] = useState(JSON.parse(selectedApplicant?.work_experiences))
 
+  const [workersDocs, setWorkersDocs] = useState()
+
   useEffect(() => {
     api
       .get("/users")
@@ -257,6 +259,16 @@ const RhInterviewModal = (props) => {
       setSugestSubsidiaries([])
     }
   }, [bairro])
+
+  useEffect(() => {
+    if (rhInterviewModalOpen) {
+      api
+        .get(`/applicants-docs/${selectedApplicant?.id}`)
+        .then((response) => {
+          setWorkersDocs(response.data)
+        })
+    }
+  }, [rhInterviewModalOpen])
 
   const handleClose = () => {
     if (applicantToSearch) {
@@ -482,6 +494,38 @@ const RhInterviewModal = (props) => {
           height="480"
           style={{ display: 'block', marginTop: '1rem' }}
         /> */}
+
+          {
+            workersDocs && workersDocs.resume_available && (
+              <div className="mb-3">
+                <h4 className="mb-3">Currículo:</h4>
+
+                <iframe
+                  src={`${import.meta.env.VITE_API_URL}/applicants-docs/file/${workersDocs.id}/resume`}
+                  width="100%"
+                  height="600px"
+                  title="Visualizador de PDF"
+                  style={{ border: "none" }}
+                ></iframe>
+              </div>
+            )
+          }
+
+          {
+            workersDocs && workersDocs.workcard_available && (
+              <div className="mb-3">
+                <h4 className="mb-3">CTPS:</h4>
+
+                <iframe
+                  src={`${import.meta.env.VITE_API_URL}/applicants-docs/file/${workersDocs.id}/workcard`}
+                  width="100%"
+                  height="600px"
+                  title="Visualizador de PDF"
+                  style={{ border: "none" }}
+                ></iframe>
+              </div>
+            )
+          }
 
           <div className="mb-3">
             <label className="form-label fw-bold">Natural:</label>

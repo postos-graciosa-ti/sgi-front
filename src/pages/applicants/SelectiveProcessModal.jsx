@@ -3,6 +3,7 @@ import { CaretRightFill } from 'react-bootstrap-icons'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import api from '../../services/api'
+import ApplicantsDocsModal from './ApplicantsDocsModal'
 import CoordinatorInterviewModal from './CoordinatorInterviewModal'
 import IdentityModal from './IdentityModal'
 import ProcessProgressModal from './ProcessProgressModal'
@@ -28,6 +29,8 @@ const SelectiveProcessModal = (props) => {
   const [coordinatorInterviewModalOpen, setCoordinatorInterviewModalOpen] = useState(false)
 
   const [identityModalOpen, setIdentityModalOpen] = useState(false)
+
+  const [applicantsDocsModalOpen, setApplicantsDocsModalOpen] = useState(false)
 
   const handleClose = () => {
     if (applicantToSearch) {
@@ -71,6 +74,10 @@ const SelectiveProcessModal = (props) => {
     setIdentityModalOpen(true)
   }
 
+  const handleOpenApplicantsDocsModal = () => {
+    setApplicantsDocsModalOpen(true)
+  }
+
   return (
     <Modal
       show={selectiveProcessModalOpen}
@@ -108,6 +115,16 @@ const SelectiveProcessModal = (props) => {
             <div className="mb-2 fw-bold">Identificação</div>
 
             <button className="btn btn-primary ms-2" onClick={handleOpenIdentityModal}>
+              <CaretRightFill />
+            </button>
+          </div>
+        </div>
+
+        <div className="card mb-3">
+          <div className="card-body text-center">
+            <div className="mb-2 fw-bold">Histórico profissional</div>
+
+            <button className="btn btn-primary ms-2" onClick={handleOpenApplicantsDocsModal}>
               <CaretRightFill />
             </button>
           </div>
@@ -176,6 +193,12 @@ const SelectiveProcessModal = (props) => {
         processProgressModalOpen={processProgressModalOpen}
         setProcessProgressModalOpen={setProcessProgressModalOpen}
         selectedApplicant={selectedApplicant}
+      />
+
+      <ApplicantsDocsModal
+        selectedApplicant={selectedApplicant}
+        applicantsDocsModalOpen={applicantsDocsModalOpen}
+        setApplicantsDocsModalOpen={setApplicantsDocsModalOpen}
       />
     </Modal>
   )

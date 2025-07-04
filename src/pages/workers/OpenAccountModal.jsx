@@ -83,8 +83,6 @@ const OpenAccountModal = (props) => {
       api
         .post("/workers/open-account-report", requestBody)
         .then((response) => {
-          console.log(response)
-
           setWorkersList(response.data)
         })
     }

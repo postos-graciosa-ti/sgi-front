@@ -42,11 +42,7 @@ Atenciosamente,
 Equipe de RH
 `
 
-    api
-      .post("/send-nr-20-email-to-coordinators", { message: message })
-      .then((response) => {
-        console.log(response)
-      })
+    api.post("/send-nr-20-email-to-coordinators", { message: message })
   }
 
   const handleClose = () => {

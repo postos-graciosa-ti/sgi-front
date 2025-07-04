@@ -27,11 +27,7 @@ const CustomNotificationModal = (props) => {
       "description": description
     }
 
-    api
-      .post("/custom-notification", requestBody)
-      .then((response) => {
-        console.log(response)
-      })
+    api.post("/custom-notification", requestBody)
   }
 
   return (

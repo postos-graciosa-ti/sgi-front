@@ -15,6 +15,7 @@ import ProcessChecklistModal from "./ProcessChecklistModal"
 import RedirectToModal from "./RedirectToModal"
 import SelectiveProcessModal from "./SelectiveProcessModal"
 import SpecialNotationModal from "./SpecialNotationModal"
+import TalentsDatabaseModal from "./TalentsDatabaseModal"
 
 const yesNoOptions = [{ value: "aprovado", label: "aprovado" }, { value: "reprovado", label: "reprovado" }]
 
@@ -50,6 +51,12 @@ const Applicants = () => {
   const [subsidiariesOptions, setSubsidiariesOptions] = useState()
 
   const [selectedSubsidiarieOption, setSelectedSubsidiarieOption] = useState()
+
+  const [talentsDatabaseModalOpen, setTalentsDatabaseModalOpen] = useState(false)
+
+  const [defaultTalentsDatabaseTurn, setDefaultTalentsDatabaseTurn] = useState()
+
+  const [defaultTalentsDatabaseFunction, setDefaultTalentsDatabaseFunction] = useState()
 
   useEffect(() => {
     api
@@ -367,6 +374,24 @@ const Applicants = () => {
       })
   }
 
+  const handleOpenTalentsDatabaseModal = (applicant) => {
+    if (applicant.talents_database_turn) {
+      api
+        .get(`/turns/${applicant.talents_database_turn}`)
+        .then((response) => setDefaultTalentsDatabaseTurn({ value: response.data.id, label: response.data.name }))
+    }
+
+    if (applicant.talents_database_function) {
+      api
+        .get(`/functions/${applicant.talents_database_function}`)
+        .then((response) => setDefaultTalentsDatabaseFunction({ value: response.data.id, label: response.data.name }))
+    }
+
+    setSelectedApplicant(applicant)
+
+    setTalentsDatabaseModalOpen(true)
+  }
+
   return (
     <>
       <Nav />
@@ -469,7 +494,7 @@ const Applicants = () => {
                     </button>
                   </li>
 
-                  <li className="list-group-item">
+                  {/* <li className="list-group-item">
                     <label className="fw-bold mb-2 d-block">
                       Banco de Talentos
                     </label>
@@ -483,7 +508,7 @@ const Applicants = () => {
                       )}
                       isDisabled={applicant?.talents_database && true}
                     />
-                  </li>
+                  </li> */}
 
                   <li className="list-group-item">
                     <label className="fw-bold mb-3">
@@ -573,9 +598,15 @@ const Applicants = () => {
 
                   <li className="list-group-item">
                     <div className="text-center mt-3">
-                      <label className="fw-bold mb-3 text-center">
+                      <label className="fw-bold mb-4 text-center">
                         Não se esqueça de dar retorno ao candidato =)
                       </label>
+                    </div>
+
+                    <div>
+                      <button className="btn btn-light shadow w-100 fw-bold rounded" onClick={() => handleOpenTalentsDatabaseModal(applicant)}>
+                        Banco de Talentos
+                      </button>
                     </div>
 
                     <div className="row mt-4 mb-4">
@@ -713,6 +744,16 @@ const Applicants = () => {
         processChecklistModalOpen={processChecklistModalOpen}
         setProcessChecklistModalOpen={setProcessChecklistModalOpen}
         applicantId={selectedApplicant?.id}
+      />
+
+      <TalentsDatabaseModal
+        selectedApplicant={selectedApplicant}
+        talentsDatabaseModalOpen={talentsDatabaseModalOpen}
+        setTalentsDatabaseModalOpen={setTalentsDatabaseModalOpen}
+        defaultTalentsDatabaseTurn={defaultTalentsDatabaseTurn}
+        setDefaultTalentsDatabaseTurn={setDefaultTalentsDatabaseTurn}
+        defaultTalentsDatabaseFunction={defaultTalentsDatabaseFunction}
+        setDefaultTalentsDatabaseFunction={setDefaultTalentsDatabaseFunction}
       />
     </>
   )

@@ -6,6 +6,7 @@ import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import { useScreenSize } from "../../hooks/useScreenSize"
 import api from "../../services/api"
+import AddWorkersCoursesModal from "./AddWorkersCoursesModal"
 import AdmissionsReportModal from "./AdmissionsReportModal"
 import ChangeWorkerSubsidiarieModal from "./ChangeWorkerSubsidiarieModal"
 import ChecklistModal from "./ChecklistModal"
@@ -16,6 +17,7 @@ import EditWorkerModal from "./EditWorkerModal"
 import ExperienceTimeModal from "./ExperienceTimeModal"
 import ModifyWorkpointModal from "./ModifyWorkpointModal"
 import MonthBirthdaysModal from "./MonthBirthdaysModal"
+import MonthCoursesModal from "./MonthCoursesModal"
 import NrModal from "./NrModal"
 import OpenAccountModal from "./OpenAccountModal"
 import PrintBadgeContent from "./PrintBadgeContent"
@@ -96,6 +98,10 @@ const Workers = () => {
   const [workersMetricsModalOpen, setWorkersMetricsModalOpen] = useState(false)
 
   const [workersDiscountsModalOpen, setWorkersDiscountsModalOpen] = useState(false)
+
+  const [monthCoursesModalOpen, setMonthCoursesModalOpen] = useState(false)
+
+  const [addWorkersCoursesModalOpen, setAddWorkersCoursesModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -346,6 +352,16 @@ const Workers = () => {
       })
   }
 
+  const handleOpenMonthCoursesModal = () => {
+    setMonthCoursesModalOpen(true)
+  }
+
+  const handleOpenAddWorkersCoursesModal = (worker) => {
+    setSelectedWorker(worker)
+
+    setAddWorkersCoursesModalOpen(true)
+  }
+
   return (
     <>
       <Nav />
@@ -453,6 +469,15 @@ const Workers = () => {
                   onClick={handleOpenRequestBadgesModal}
                 >
                   Solicitar crachá definitivo
+                </button>
+              </li>
+
+              <li>
+                <button
+                  className="dropdown-item"
+                  onClick={handleOpenMonthCoursesModal}
+                >
+                  Cursos mensais
                 </button>
               </li>
             </ul>
@@ -724,6 +749,15 @@ const Workers = () => {
                           Avaliação de tempo de experiência de colaborador
                         </button>
                       </li>
+
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => handleOpenAddWorkersCoursesModal(worker)}
+                        >
+                          Adicionar cursos para colaborador
+                        </button>
+                      </li>
                     </ul>
                   </div>
                 </li>
@@ -899,6 +933,17 @@ const Workers = () => {
         selectedWorker={selectedWorker}
         workersDiscountsModalOpen={workersDiscountsModalOpen}
         setWorkersDiscountsModalOpen={setWorkersDiscountsModalOpen}
+      />
+
+      <MonthCoursesModal
+        monthCoursesModalOpen={monthCoursesModalOpen}
+        setMonthCoursesModalOpen={setMonthCoursesModalOpen}
+      />
+
+      <AddWorkersCoursesModal
+        addWorkersCoursesModalOpen={addWorkersCoursesModalOpen}
+        setAddWorkersCoursesModalOpen={setAddWorkersCoursesModalOpen}
+        selectedWorker={selectedWorker}
       />
     </>
   )

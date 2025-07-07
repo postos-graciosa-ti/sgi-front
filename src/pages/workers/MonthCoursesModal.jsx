@@ -1,4 +1,5 @@
 import axios from 'axios'
+import dayjs from "dayjs"
 import { useEffect, useState } from 'react'
 import { Trash } from "react-bootstrap-icons"
 import Button from 'react-bootstrap/Button'
@@ -27,6 +28,7 @@ const MonthCoursesModal = (props) => {
       onHide={handleClose}
       backdrop="static"
       keyboard={false}
+      fullscreen={true}
     >
       <Modal.Header closeButton>
         <Modal.Title>Cursos Mensais</Modal.Title>
@@ -39,7 +41,7 @@ const MonthCoursesModal = (props) => {
               <div className="mt-4 mb-5" key={course.id}>
                 <div className="row align-items-center mb-3">
                   <div className="col">
-                    <span className="fs-5">{course.worker_name}</span>
+                    <span className="fs-5">{course.worker_name} ({dayjs(course.date_file).format("DD-MM-YYYY")})</span>
                   </div>
 
                   <div className="col-auto">

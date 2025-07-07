@@ -6,6 +6,7 @@ import Nav from "../../components/Nav"
 import useUserSessionStore from "../../data/userSession"
 import { useScreenSize } from "../../hooks/useScreenSize"
 import api from "../../services/api"
+import AddWorkersCoursesModal from "./AddWorkersCoursesModal"
 import AdmissionsReportModal from "./AdmissionsReportModal"
 import ChangeWorkerSubsidiarieModal from "./ChangeWorkerSubsidiarieModal"
 import ChecklistModal from "./ChecklistModal"
@@ -99,6 +100,8 @@ const Workers = () => {
   const [workersDiscountsModalOpen, setWorkersDiscountsModalOpen] = useState(false)
 
   const [monthCoursesModalOpen, setMonthCoursesModalOpen] = useState(false)
+
+  const [addWorkersCoursesModalOpen, setAddWorkersCoursesModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -351,6 +354,12 @@ const Workers = () => {
 
   const handleOpenMonthCoursesModal = () => {
     setMonthCoursesModalOpen(true)
+  }
+
+  const handleOpenAddWorkersCoursesModal = (worker) => {
+    setSelectedWorker(worker)
+
+    setAddWorkersCoursesModalOpen(true)
   }
 
   return (
@@ -740,6 +749,15 @@ const Workers = () => {
                           Avaliação de tempo de experiência de colaborador
                         </button>
                       </li>
+
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => handleOpenAddWorkersCoursesModal(worker)}
+                        >
+                          Adicionar cursos para colaborador
+                        </button>
+                      </li>
                     </ul>
                   </div>
                 </li>
@@ -920,6 +938,12 @@ const Workers = () => {
       <MonthCoursesModal
         monthCoursesModalOpen={monthCoursesModalOpen}
         setMonthCoursesModalOpen={setMonthCoursesModalOpen}
+      />
+
+      <AddWorkersCoursesModal
+        addWorkersCoursesModalOpen={addWorkersCoursesModalOpen}
+        setAddWorkersCoursesModalOpen={setAddWorkersCoursesModalOpen}
+        selectedWorker={selectedWorker}
       />
     </>
   )

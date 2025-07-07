@@ -427,12 +427,12 @@ const Applicants = () => {
                   <li className="list-group-item">
                     <button
                       className="btn btn-primary w-100"
-                      disabled={
-                        !(
-                          userSession?.id === applicant.created_by ||
-                          userSession?.id === applicant.redirect_to
-                        )
-                      }
+                      // disabled={
+                      //   !(
+                      //     userSession?.id === applicant.created_by ||
+                      //     userSession?.id === applicant.redirect_to
+                      //   )
+                      // }
                       onClick={() => handleOpenSelectiveProcessModal(applicant)}
                     >
                       Processo seletivo

@@ -1,3 +1,4 @@
+import dayjs from "dayjs"
 import { useEffect, useState } from "react"
 import { ArrowClockwise, Trash } from "react-bootstrap-icons"
 import ReactSelect from "react-select"
@@ -67,6 +68,8 @@ const PositionsTable = () => {
       })
   }
 
+  console.log(openPositionsList)
+
   return (
     <>
       <Nav />
@@ -104,7 +107,43 @@ const PositionsTable = () => {
           </div>
         </div>
 
-        <div className="table-responsive mt-3">
+        {
+          openPositionsList?.map((openPosition) => (
+            <div className="card mt-3">
+              <div className="card-body">
+                <h5 className="card-title">{openPosition?.subsidiarie?.name}</h5>
+                <p className="card-text text-muted">{openPosition?.turn?.name} / {openPosition?.function?.name}</p>
+              </div>
+
+              <ul className="list-group list-group-flush">
+                <li className="list-group-item fw-bold">Banco de talentos:</li>
+
+                {
+                  openPosition?.talents_database?.length > 0 ? (
+                    openPosition.talents_database.map((talent, index) => (
+                      <li key={index} className="list-group-item">
+                        {talent?.name} ({dayjs(talent?.attendance_date).format("DD-MM-YYYY")})
+                      </li>
+                    ))
+                  ) : (
+                    <li className="list-group-item text-muted">Não há candidatos para o banco de talentos dessa filial</li>
+                  )
+                }
+              </ul>
+
+              <div className="card-body text-end">
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleDeleteOpenPosition(openPosition)}
+                >
+                  <Trash />
+                </button>
+              </div>
+            </div>
+          ))
+        }
+
+        {/* <div className="table-responsive mt-3">
           <table className="table table-hover">
             <thead>
               <tr>
@@ -140,7 +179,7 @@ const PositionsTable = () => {
               }
             </tbody>
           </table>
-        </div>
+        </div> */}
       </div>
 
       <AddOpenPositionModal

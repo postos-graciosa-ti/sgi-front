@@ -47,6 +47,10 @@ const Applicants = () => {
 
   const [processChecklistModalOpen, setProcessChecklistModalOpen] = useState(false)
 
+  const [subsidiariesOptions, setSubsidiariesOptions] = useState()
+
+  const [selectedSubsidiarieOption, setSelectedSubsidiarieOption] = useState()
+
   useEffect(() => {
     api
       .get("/applicants")
@@ -62,6 +66,14 @@ const Applicants = () => {
         setApplicantsOptions(options)
 
         setApplicantsList(response.data)
+      })
+
+    api
+      .get("/subsidiaries")
+      .then((response) => {
+        let options = response.data.map((option) => ({ value: option.id, label: option.name }))
+
+        setSubsidiariesOptions(options)
       })
   }, [])
 
@@ -337,6 +349,24 @@ const Applicants = () => {
       })
   }
 
+  const handleOnchangeTalentsDatabase = (value, applicant) => {
+    let requestBody = {
+      talents_database: value?.value
+    }
+
+    console.log(requestBody, value)
+
+    api
+      .patch(`/applicants/${applicant?.id}`, requestBody)
+      .then((response) => {
+        console.log(response)
+
+        api
+          .get("/applicants")
+          .then((response) => setApplicantsList(response.data))
+      })
+  }
+
   return (
     <>
       <Nav />
@@ -437,6 +467,22 @@ const Applicants = () => {
                     >
                       Processo seletivo
                     </button>
+                  </li>
+
+                  <li className="list-group-item">
+                    <label className="fw-bold mb-2 d-block">
+                      Banco de Talentos
+                    </label>
+
+                    <ReactSelect
+                      placeholder="Selecione uma opção"
+                      options={subsidiariesOptions}
+                      onChange={(value) => handleOnchangeTalentsDatabase(value, applicant)}
+                      value={subsidiariesOptions?.find(
+                        (option) => option.value === applicant?.talents_database
+                      )}
+                      isDisabled={applicant?.talents_database && true}
+                    />
                   </li>
 
                   <li className="list-group-item">

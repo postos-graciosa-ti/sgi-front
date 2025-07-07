@@ -202,6 +202,42 @@ const RhInterviewModal = (props) => {
 
   const [workersDocs, setWorkersDocs] = useState()
 
+  const [coordinatorObservation, setCoordinatorObservation] = useState("")
+
+  const [personalLife, setPersonalLife] = useState("")
+
+  const [gasStationExperience, setGasStationExperience] = useState("")
+
+  const [lifeStructure, setLifeStructure] = useState("")
+
+  const [workingHereObjectives, setWorkingHereObjectives] = useState("")
+
+  const [expectWorkingHere, setExpectWorkingHere] = useState("")
+
+  const [applicantCriteria, setApplicantCriteria] = useState("")
+
+  const [wageInfo, setWageInfo] = useState("")
+
+  const [targetGoals, setTargetGoals] = useState("")
+
+  const [claimedGoals, setClaimedGoals] = useState("")
+
+  const [clientFidelity, setClientFidelity] = useState("")
+
+  const [hardSituations, setHardSituations] = useState("")
+
+  const [badReputation, setBadReputation] = useState("")
+
+  const [boringConsumer, setBoringConsumer] = useState("")
+
+  const [rageAtWorkplace, setRageAtWorkplace] = useState("")
+
+  const [ecorpChanges, setEcorpChanges] = useState("")
+
+  const [teamWork, setTeamWork] = useState("")
+
+  const [workRelationships, setWorkRelationships] = useState("")
+
   useEffect(() => {
     api
       .get("/users")
@@ -351,6 +387,25 @@ const RhInterviewModal = (props) => {
       mobile: mobile,
       work_experiences: JSON.stringify(existExperiences),
       rh_interview_complete: true,
+
+      // coordinator_observations: coordinatorObservation || selectedApplicant?.coordinator_observations,
+      rh_personal_life: personalLife || selectedApplicant?.personal_life,
+      rh_gas_station_experience: gasStationExperience || selectedApplicant?.gas_station_experience,
+      rh_life_structure: lifeStructure || selectedApplicant?.life_structure,
+      rh_working_here_objectives: workingHereObjectives || selectedApplicant?.working_here_objectives,
+      rh_expect_working_here: expectWorkingHere || selectedApplicant?.expect_working_here,
+      rh_applicant_criteria: applicantCriteria || selectedApplicant?.applicant_criteria,
+      rh_wage_info: wageInfo || selectedApplicant?.wage_info,
+      rh_target_goals: targetGoals || selectedApplicant?.target_goals,
+      rh_claimed_goals: claimedGoals || selectedApplicant?.claimed_goals,
+      rh_client_fidelity: clientFidelity || selectedApplicant?.client_fidelity,
+      rh_hard_situations: hardSituations || selectedApplicant?.hard_situations,
+      rh_bad_reputation: badReputation || selectedApplicant?.bad_reputation,
+      rh_boring_consumer: boringConsumer || selectedApplicant?.boring_consumer,
+      rh_rage_at_workplace: rageAtWorkplace || selectedApplicant?.rage_at_workplace,
+      rh_ecorp_changes: ecorpChanges || selectedApplicant?.ecorp_changes,
+      rh_team_work: teamWork || selectedApplicant?.team_work,
+      rh_work_relationships: workRelationships || selectedApplicant?.work_relationships,
     }
 
     api
@@ -1083,6 +1138,264 @@ const RhInterviewModal = (props) => {
                   ? usersOptions?.find(option => option.value === selectedApplicant.redirect_to)
                   : null
               }
+            />
+          </div>
+
+          <div className="mb-3 mt-5">
+            <h4 className="border-bottom pb-2">Perguntas do Coordenador</h4>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              Conte-me um pouco sobre sua vida (pessoal e profissional)
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setPersonalLife(e.target.value)}
+              defaultValue={selectedApplicant?.rh_personal_life}
+              disabled={selectedApplicant?.rh_personal_life && true || false}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              Já possui experiência com postos de gasolina?
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setGasStationExperience(e.target.value)}
+              defaultValue={selectedApplicant?.rh_gas_station_experience}
+              disabled={selectedApplicant?.rh_gas_station_experience && true || false}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              Como sua vida está estruturada hoje? É casado? Tem filhos? Mora onde?
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setLifeStructure(e.target.value)}
+              defaultValue={selectedApplicant?.rh_life_structure}
+              disabled={selectedApplicant?.rh_life_structure && true || false}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              Quais seus planos e objetivos trabalhando aqui?
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setWorkingHereObjectives(e.target.value)}
+              defaultValue={selectedApplicant?.rh_working_here_objectives}
+              disabled={selectedApplicant?.rh_working_here_objectives && true || false}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              O que você espera trabalhando aqui?
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setExpectWorkingHere(e.target.value)}
+              defaultValue={selectedApplicant?.rh_expect_working_here}
+              disabled={selectedApplicant?.rh_expect_working_here && true || false}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              Quando você se inscreveu para a vaga, quais foram os critérios que você considerou?
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setApplicantCriteria(e.target.value)}
+              defaultValue={selectedApplicant?.rh_applicant_criteria}
+              disabled={selectedApplicant?.rh_applicant_criteria && true || false}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              Você tem alguma dúvida em relação ao pacote de remuneração?
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setWageInfo(e.target.value)}
+              defaultValue={selectedApplicant?.rh_wage_info}
+              disabled={selectedApplicant?.rh_wage_info && true || false}
+            />
+          </div>
+
+          {/* <div className="mb-3">
+            <label className="form-label fw-bold">
+              Observações do coordenador
+            </label>
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setCoordinatorObservation(e.target.value)}
+              defaultValue={selectedApplicant?.coordinator_observations}
+            />
+          </div> */}
+
+          <div className="mb-3 mt-5">
+            <h4 className="border-bottom pb-2">Perguntas Situacionais</h4>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              Você lida bem com a cobrança de metas?
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setTargetGoals(e.target.value)}
+              defaultValue={selectedApplicant?.rh_target_goals}
+              disabled={selectedApplicant?.rh_target_goals && true || false}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              Me descreva um momento em que você atingiu as metas
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setClaimedGoals(e.target.value)}
+              defaultValue={selectedApplicant?.rh_claimed_goals}
+              disabled={selectedApplicant?.rh_target_goals && true || false}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              De um exemplo de quando você conseguiu fidelizar um cliente
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setClientFidelity(e.target.value)}
+              defaultValue={selectedApplicant?.rh_client_fidelity}
+              disabled={selectedApplicant?.rh_client_fidelity && true || false}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              Qual o cliente mais difícil você já teve que lidar?
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setHardSituations(e.target.value)}
+              defaultValue={selectedApplicant?.rh_hard_situations}
+              disabled={selectedApplicant?.rh_hard_situations && true || false}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              Você já ajudou a reverter uma má impressão que o cliente tinha da empresa?
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setBadReputation(e.target.value)}
+              defaultValue={selectedApplicant?.rh_bad_reputation}
+              disabled={selectedApplicant?.rh_bad_reputation && true || false}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              Descreva uma situação em que você teve que lidar com um cliente insatisfeito
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setBoringConsumer(e.target.value)}
+              defaultValue={selectedApplicant?.rh_boring_consumer}
+              disabled={selectedApplicant?.rh_boring_consumer && true || false}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              O que te deixa com raiva no ambiente profissional
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setRageAtWorkplace(e.target.value)}
+              defaultValue={selectedApplicant?.rh_rage_at_workplace}
+              disabled={selectedApplicant?.rh_rage_at_workplace && true || false}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              Como você reage a mudanças repentinas na empresa? Cite um exemplo
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setEcorpChanges(e.target.value)}
+              defaultValue={selectedApplicant?.rh_ecorp_changes}
+              disabled={selectedApplicant?.rh_ecorp_changes && true || false}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              Conte uma experiência positiva que você teve trabalhando em equipe
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setTeamWork(e.target.value)}
+              defaultValue={selectedApplicant?.rh_team_work}
+              disabled={selectedApplicant?.rh_team_work && true || false}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-bold">
+              Como era seu relacionamento com superiores e colegas em experiências anteriores?
+            </label>
+
+            <textarea
+              className="form-control"
+              rows={3}
+              onChange={(e) => setWorkRelationships(e.target.value)}
+              defaultValue={selectedApplicant?.rh_work_relationships}
+              disabled={selectedApplicant?.rh_work_relationships && true || false}
             />
           </div>
         </Modal.Body>

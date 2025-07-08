@@ -1,8 +1,8 @@
-import axios from 'axios'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import api from '../../services/api'
 
 const AddWorkersCoursesModal = (props) => {
   const { addWorkersCoursesModalOpen, setAddWorkersCoursesModalOpen, selectedWorker } = props
@@ -24,12 +24,13 @@ const AddWorkersCoursesModal = (props) => {
 
     requestBody.append("is_payed", "false")
 
-    console.log(requestBody, selectedWorker)
-
-    axios
-      .post(`${import.meta.env.VITE_EUSOU_ENDPOINT}/workers-courses`, requestBody)
+    api
+      .post(`/workers-courses`, requestBody)
       .then((response) => {
-        console.log(response)
+        console.log(response.data)
+      })
+      .catch((error) => {
+        console.error("Erro ao enviar:", error.response?.data || error.message)
       })
   }
 

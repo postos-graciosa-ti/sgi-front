@@ -1,9 +1,9 @@
-import axios from 'axios'
 import dayjs from "dayjs"
 import { useEffect, useState } from 'react'
 import { Trash } from "react-bootstrap-icons"
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import api from "../../services/api"
 
 const MonthCoursesModal = (props) => {
   const { monthCoursesModalOpen, setMonthCoursesModalOpen } = props
@@ -11,8 +11,8 @@ const MonthCoursesModal = (props) => {
   const [monthCourses, setMonthCourses] = useState()
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_EUSOU_ENDPOINT}/workerscourses/current-month`)
+    api
+      .get(`/workerscourses/current-month`)
       .then((response) => {
         setMonthCourses(response.data)
       })

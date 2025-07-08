@@ -52,7 +52,7 @@ const MonthCoursesModal = (props) => {
                 </div>
 
                 <iframe
-                  src={`${import.meta.env.VITE_EUSOU_ENDPOINT}/workers-courses/file/${course.id}`}
+                  src={`${import.meta.env.VITE_API_URL}/workers-courses/file/${course.id}`}
                   width="100%"
                   height="500px"
                   style={{ border: "1px solid #ccc" }}

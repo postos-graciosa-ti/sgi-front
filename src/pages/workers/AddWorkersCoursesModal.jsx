@@ -1,8 +1,8 @@
+import axios from 'axios'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import api from '../../services/api'
 
 const AddWorkersCoursesModal = (props) => {
   const { addWorkersCoursesModalOpen, setAddWorkersCoursesModalOpen, selectedWorker } = props
@@ -10,13 +10,15 @@ const AddWorkersCoursesModal = (props) => {
   const [file, setFile] = useState()
 
   const handleClose = () => {
+    setFile(null)
+
     setAddWorkersCoursesModalOpen(false)
   }
 
   const handleSubmit = () => {
     const requestBody = new FormData()
 
-    requestBody.append("worker_id", selectedWorker?.worker_id)
+    requestBody.append("worker_id", selectedWorker.worker_id)
 
     requestBody.append("file", file)
 
@@ -24,14 +26,9 @@ const AddWorkersCoursesModal = (props) => {
 
     requestBody.append("is_payed", "false")
 
-    api
-      .post(`/workers-courses`, requestBody)
-      .then((response) => {
-        console.log(response.data)
-      })
-      .catch((error) => {
-        console.error("Erro ao enviar:", error.response?.data || error.message)
-      })
+    axios
+      .post(`${import.meta.env.VITE_API_URL}/workers-courses`, requestBody)
+      .then(() => handleClose())
   }
 
   return (
@@ -42,17 +39,15 @@ const AddWorkersCoursesModal = (props) => {
       keyboard={false}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Adicionar cursos para colaborador</Modal.Title>
+        <Modal.Title>Adicionar curso para colaborador</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <div className="mb-3">
-          <label className="fw-bold form-label">
-            Certificado
-          </label>
-
+          <label className="fw-bold form-label">Certificado (PDF)</label>
           <input
             type="file"
+            accept="application/pdf"
             className="form-control"
             onChange={(e) => setFile(e.target.files[0])}
           />
@@ -61,7 +56,6 @@ const AddWorkersCoursesModal = (props) => {
 
       <Modal.Footer>
         <Button variant="light" onClick={handleClose}>Fechar</Button>
-
         <Button variant="success" onClick={handleSubmit}>Confirmar</Button>
       </Modal.Footer>
     </Modal>

@@ -5,6 +5,8 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import api from "../../services/api"
 
+const trueFalseOptions = [{ value: true, label: "Pago" }]
+
 const MonthCoursesModal = (props) => {
   const { monthCoursesModalOpen, setMonthCoursesModalOpen } = props
 
@@ -17,6 +19,18 @@ const MonthCoursesModal = (props) => {
         setMonthCourses(response.data)
       })
   }, [monthCoursesModalOpen])
+
+  const handlePatchCourseToPaid = (id) => {
+    api
+      .patch(`/workers-courses/${id}/set-to-payed`)
+      .then(() => {
+        api
+          .get(`/workerscourses/current-month`)
+          .then((response) => {
+            setMonthCourses(response.data)
+          })
+      })
+  }
 
   const handleClose = () => {
     setMonthCoursesModalOpen(false)
@@ -50,6 +64,18 @@ const MonthCoursesModal = (props) => {
                     </button>
                   </div>
                 </div>
+
+                {
+                  course.is_payed && (
+                    <div className="card mt-3 mb-3 p-3 rounded shadow text-center text-success fw-bold">
+                      PAGO
+                    </div>
+                  ) || (
+                    <button className="btn btn-primary w-100 mt-3 mb-3" onClick={() => handlePatchCourseToPaid(course.id)}>
+                      Marcar como pago
+                    </button>
+                  )
+                }
 
                 <iframe
                   src={`${import.meta.env.VITE_API_URL}/workers-courses/file/${course.id}`}

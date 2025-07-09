@@ -480,6 +480,8 @@ const Workers = () => {
                   Cursos mensais
                 </button>
               </li>
+
+              <li></li>
             </ul>
           </div>
         </div>

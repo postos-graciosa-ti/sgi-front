@@ -1,5 +1,7 @@
+import dayjs from "dayjs"
 import moment from "moment"
 import { useEffect, useState } from "react"
+import { X } from "react-bootstrap-icons"
 import Nav from "../../components/Nav.jsx"
 import useUserSessionStore from "../../data/userSession.js"
 import api from "../../services/api.js"
@@ -30,6 +32,8 @@ const Home = () => {
 
   const userSession = useUserSessionStore(state => state.userSession)
 
+  const [customNotifications, setCustomNotifications] = useState()
+
   const [workersAwayEndDate, setWorkersAwayEndDate] = useState()
 
   const [workersWithoutFirstReview, setWorkersWithoutFirstReview] = useState()
@@ -47,6 +51,10 @@ const Home = () => {
   const [enterpriseTwoYearAnniversary, setEnterpriseTwoYearAnniversary] = useState()
 
   useEffect(() => {
+    api
+      .get(`/users/${userSession?.id}/custom-notifications`)
+      .then((response) => setCustomNotifications(response.data))
+
     api
       .post(`/subsidiaries/away-workers`, { subsidiaries_ids: eval(userSession.subsidiaries_id) })
       .then((response) => setWorkersAwayEndDate(response.data))
@@ -84,6 +92,18 @@ const Home = () => {
     setCustomNotificationModalOpen(true)
   }
 
+  const handleDeleteNotification = (id) => {
+    api
+      .delete(`/custom-notification/${id}`)
+      .then(() => {
+        api
+          .get(`/users/${userSession?.id}/custom-notifications`)
+          .then((response) => {
+            setCustomNotifications(response.data)
+          })
+      })
+  }
+
   return (
     <>
       <Nav />
@@ -93,18 +113,53 @@ const Home = () => {
           Importante
         </h3>
 
-        <button
-          onClick={handleOpenCustomNotificationModal}
-          className="btn btn-dark mt-2 mb-4 me-2"
-        >
-          Notificação personalizada
-        </button>
-
-        <button className="btn btn-dark mt-2 mb-4">Manual do usuário</button>
-
         <div className="text-muted mb-3">
           Essa página contém as notificações relacionadas as filiais de seu interesse
         </div>
+
+        <>
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h5 className="mt-2">Notificações personalizadas</h5>
+
+            <button
+              onClick={handleOpenCustomNotificationModal}
+              className="btn btn-light"
+            >
+              Nova notificação
+            </button>
+          </div>
+
+          {
+            customNotifications?.length > 0 ? (
+              customNotifications.map((notification) => (
+                <div className="alert alert-warning" key={notification.id}>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <h5 className="card-title mb-0">{notification.title} ({dayjs(notification.date).format("DD-MM-YYYY")})</h5>
+
+                    <button
+                      onClick={() => handleDeleteNotification(notification.id)}
+                      className="btn btn-light btn-sm"
+                    >
+                      <X />
+                    </button>
+                  </div>
+
+                  <div>
+                    {notification.description}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="alert alert-success mt-3">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>
+                    Você ainda não possui notificações personalizadas
+                  </div>
+                </div>
+              </div>
+            )
+          }
+        </>
 
         {
           workersWithoutFirstReview?.workers?.length > 0 && (
@@ -302,6 +357,7 @@ const Home = () => {
       <CustomNotificationModal
         customNotificationModalOpen={customNotificationModalOpen}
         setCustomNotificationModalOpen={setCustomNotificationModalOpen}
+        setCustomNotifications={setCustomNotifications}
       />
     </>
   )

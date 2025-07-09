@@ -250,14 +250,14 @@ const Nav = () => {
                 <Link className="nav-link" to="/home">Início</Link>
               </li>
 
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <button
                   className="nav-link"
                   onClick={() => setMyNotificationModalOpen(true)}
                 >
                   Minhas notificações
                 </button>
-              </li>
+              </li> */}
 
               <li className="nav-item">
                 <Link className="nav-link" to="/workers-status">

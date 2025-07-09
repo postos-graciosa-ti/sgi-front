@@ -5,7 +5,7 @@ import useUserSessionStore from '../../data/userSession'
 import api from '../../services/api'
 
 const CustomNotificationModal = (props) => {
-  const { customNotificationModalOpen, setCustomNotificationModalOpen } = props
+  const { customNotificationModalOpen, setCustomNotificationModalOpen, setCustomNotifications } = props
 
   const userSession = useUserSessionStore(state => state.userSession)
 
@@ -16,6 +16,18 @@ const CustomNotificationModal = (props) => {
   const [description, setDescription] = useState()
 
   const handleClose = () => {
+    api
+      .get(`/users/${userSession?.id}/custom-notifications`)
+      .then((response) => {
+        setCustomNotifications(response.data)
+      })
+
+    setDate()
+
+    setTitle()
+
+    setDescription()
+
     setCustomNotificationModalOpen(false)
   }
 
@@ -27,7 +39,9 @@ const CustomNotificationModal = (props) => {
       "description": description
     }
 
-    api.post("/custom-notification", requestBody)
+    api
+      .post("/custom-notification", requestBody)
+      .then(() => handleClose())
   }
 
   return (

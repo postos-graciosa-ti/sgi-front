@@ -18,6 +18,7 @@ import ExperienceTimeModal from "./ExperienceTimeModal"
 import ModifyWorkpointModal from "./ModifyWorkpointModal"
 import MonthBirthdaysModal from "./MonthBirthdaysModal"
 import MonthCoursesModal from "./MonthCoursesModal"
+import MonthMetricsModal from "./MonthMetricsModal"
 import NrModal from "./NrModal"
 import OpenAccountModal from "./OpenAccountModal"
 import PrintBadgeContent from "./PrintBadgeContent"
@@ -102,6 +103,8 @@ const Workers = () => {
   const [monthCoursesModalOpen, setMonthCoursesModalOpen] = useState(false)
 
   const [addWorkersCoursesModalOpen, setAddWorkersCoursesModalOpen] = useState(false)
+
+  const [monthMetricsModalOpen, setMonthMetricsModalOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -362,6 +365,10 @@ const Workers = () => {
     setAddWorkersCoursesModalOpen(true)
   }
 
+  const handleOpenMonthMetricsModal = () => {
+    setMonthMetricsModalOpen(true)
+  }
+
   return (
     <>
       <Nav />
@@ -481,7 +488,14 @@ const Workers = () => {
                 </button>
               </li>
 
-              <li></li>
+              <li>
+                <button
+                  className="dropdown-item"
+                  onClick={handleOpenMonthMetricsModal}
+                >
+                  Indicadores do mês
+                </button>
+              </li>
             </ul>
           </div>
         </div>
@@ -946,6 +960,11 @@ const Workers = () => {
         addWorkersCoursesModalOpen={addWorkersCoursesModalOpen}
         setAddWorkersCoursesModalOpen={setAddWorkersCoursesModalOpen}
         selectedWorker={selectedWorker}
+      />
+
+      <MonthMetricsModal
+        monthMetricsModalOpen={monthMetricsModalOpen}
+        setMonthMetricsModalOpen={setMonthMetricsModalOpen}
       />
     </>
   )

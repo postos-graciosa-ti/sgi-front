@@ -185,6 +185,21 @@ const WorkerDocsModal = (props) => {
       .then(() => Swal.fire("Sucesso", `E-mail enviado com sucesso`, "success"))
   }
 
+  const handleSendVacationsEmail = () => {
+    let requestBody = {
+      worker_id: selectedWorker.worker_id,
+      to: selectedWorker.email,
+      subject: "Relatório de férias",
+      body: `${selectedWorker.worker_name}, Em anexo, encaminhamos o seu relatório de férias.`,
+    }
+
+    api.post("/send-vacations-email", requestBody)
+      .then(() => {
+        Swal.fire("Sucesso", `E-mail enviado com sucesso para ${selectedWorker.worker_name}`, "success")
+        handleClose()
+      })
+  }
+
   return (
     <>
       <Modal
@@ -270,6 +285,7 @@ const WorkerDocsModal = (props) => {
                         { value: 16, label: "Ficha da contabilidade" },
                         { value: 17, label: "Pedido de demissão" },
                         { value: 18, label: "Relatório de rescisão" },
+                        { value: 19, label: "Relatório de férias" },
                       ]}
                       setSelectedValue={(selected) => handleDocTitleChange(file.name, selected)}
                       value={docTitles[file.name] || null}
@@ -349,6 +365,14 @@ const WorkerDocsModal = (props) => {
                 <div className="mt-3">
                   <button className="btn btn-primary w-100" onClick={handleSendEmail}>
                     Enviar contrato por e-mail para colaborador
+                  </button>
+                </div>
+              )}
+
+              {doc.doc_title === "Relatório de férias" && (
+                <div className="mt-3">
+                  <button className="btn btn-primary w-100" onClick={handleSendVacationsEmail}>
+                    Enviar relatório por e-mail para colaborador
                   </button>
                 </div>
               )}

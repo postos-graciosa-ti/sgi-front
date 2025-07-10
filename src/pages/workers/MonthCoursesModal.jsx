@@ -1,6 +1,5 @@
 import dayjs from "dayjs"
 import { useEffect, useState } from 'react'
-import { Trash } from "react-bootstrap-icons"
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import api from "../../services/api"
@@ -50,7 +49,40 @@ const MonthCoursesModal = (props) => {
 
       <Modal.Body>
         <div className="mb-3">
-          {
+          <div className="mb-3">
+            {
+              monthCourses && monthCourses.map((course) => (
+                <div
+                  key={course.id}
+                  className="d-flex justify-content-between align-items-center mb-3 p-3 border rounded shadow-sm bg-white"
+                >
+                  <a
+                    href={`${import.meta.env.VITE_API_URL}/workers-courses/file/${course.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title='Abrir certificado'
+                  >
+                    {course.worker_name} ({dayjs(course.date_file).format("DD-MM-YYYY")})
+                  </a>
+
+                  {
+                    course.is_payed && (
+                      <span className="badge bg-success">PAGO</span>
+                    ) || (
+                      <button
+                        className="btn btn-primary btn-sm"
+                        onClick={() => handlePatchCourseToPaid(course.id)}
+                      >
+                        MARCAR COMO PAGO
+                      </button>
+                    )
+                  }
+                </div>
+              ))
+            }
+          </div>
+
+          {/* {
             monthCourses && monthCourses.map((course) => (
               <div className="mt-4 mb-5" key={course.id}>
                 <div className="row align-items-center mb-3">
@@ -86,7 +118,7 @@ const MonthCoursesModal = (props) => {
                 />
               </div>
             ))
-          }
+          } */}
         </div>
       </Modal.Body>
 

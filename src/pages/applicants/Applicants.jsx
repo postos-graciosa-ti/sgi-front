@@ -463,6 +463,12 @@ const Applicants = () => {
                       <span className="badge text-bg-success p-2 me-2">Retorno WhatsApp</span>
                     )
                   }
+
+                  {
+                    applicant.selective_process_status == "efetivado" && (
+                      <span className="badge text-bg-success p-2 me-2">Efetivado</span>
+                    )
+                  }
                 </div>
 
                 <ul className="list-group list-group-flush">

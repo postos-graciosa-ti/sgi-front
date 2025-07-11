@@ -102,21 +102,16 @@ const HireApplicantModal = (props) => {
 
   const handleSubmit = () => {
     let requestBody = {
-      applicant_id: selectedApplicant?.id,
-      worker_data: {
-        name: selectedApplicant?.name,
-        subsidiarie_id: selectedSubsidiarie.value,
-        function_id: selectedFunction.value,
-        turn_id: selectedTurn.value,
-        cost_center_id: selectedCostCenter.value,
-        department_id: selectedDepartment.value,
-        admission_date: admissionDate,
-        resignation_date: admissionDate,
-      },
+      subsidiarie_id: selectedSubsidiarie?.value,
+      function_id: selectedFunction?.value,
+      turn_id: selectedTurn?.value,
+      cost_center_id: selectedCostCenter?.value,
+      department_id: selectedDepartment?.value,
+      admission_date: admissionDate,
     }
 
     api
-      .post("/applicants/hire", requestBody)
+      .post(`/hire-applicants/${selectedApplicant?.id}`, requestBody)
       .then(() => {
         api
           .get(`/subsidiaries/${selectedSubsidiarie?.value}/workers/experience-time-no-first-review`)

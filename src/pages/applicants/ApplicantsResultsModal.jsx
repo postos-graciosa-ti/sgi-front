@@ -67,19 +67,19 @@ const ApplicantsResultsModal = (props) => {
   }
 
   const handleSubmit = () => {
-    let requestBody = {
+    const requestBody = {
       rh_opinion: rhOpinion?.value,
       coordinator_opinion: coordinatorOpinion?.value,
       special_notation: specialNotation,
-      talents_bank_subsidiaries: `[${selectedSubsidiarieOption?.map((option) => option.value).join(",")}]`
+      talents_bank_subsidiaries: selectedSubsidiarieOption && selectedSubsidiarieOption.length > 0
+        ? `[${selectedSubsidiarieOption.map(option => option.value).join(",")}]`
+        : "[]"
     }
 
     api
       .patch(`/applicants/${selectedApplicant?.id}`, requestBody)
       .then(() => handleClose())
   }
-
-  console.log(selectedApplicant)
 
   return (
     <Modal

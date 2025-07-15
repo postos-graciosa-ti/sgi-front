@@ -66,7 +66,7 @@ const ProcessChecklistModal = ({ processChecklistModalOpen, setProcessChecklistM
   }, [processChecklistModalOpen, applicantId])
 
   return (
-    <Modal show={processChecklistModalOpen} onHide={handleClose} backdrop="static" keyboard={false}>
+    <Modal show={processChecklistModalOpen} onHide={handleClose} backdrop="static" keyboard={false} fullscreen={true}>
       <Modal.Header closeButton>
         <Modal.Title>Andamento do processo</Modal.Title>
       </Modal.Header>

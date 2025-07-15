@@ -14,6 +14,7 @@ import Cities from "./pages/cities/Cities"
 import CostCenter from "./pages/costCenter/CostCenter"
 import Department from "./pages/department/Department"
 import DiscountReasons from "./pages/discountReasons/DiscountReasons"
+import EffectiveApplicants from "./pages/effectiveApplicants/EffectiveApplicants"
 import Functions from "./pages/functions/Functions"
 import HollidaysScale from "./pages/hollidaysScale/HollidaysScale"
 import Home from "./pages/home/Home"
@@ -274,6 +275,11 @@ const Routes = createBrowserRouter([
   {
     path: "/applicants-approved",
     element: <PrivateRoute><ApplicantsApproved /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/effective-applicants",
+    element: <PrivateRoute><EffectiveApplicants /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

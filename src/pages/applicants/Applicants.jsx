@@ -167,8 +167,20 @@ const Applicants = () => {
                     }
 
                     {
+                      applicant.selective_process_status == "efetivado" && (
+                        <span className="badge text-bg-success p-2 me-2">EFETIVADO</span>
+                      )
+                    }
+
+                    {
                       applicant.rh_opinion == "reprovado" && applicant.coordinator_opinion == "reprovado" && (
                         <span className="badge text-bg-success p-2 me-2">REPROVADO</span>
+                      )
+                    }
+
+                    {
+                      applicant.special_notation && (
+                        <span className="badge text-bg-success p-2 me-2">ANOTAÇÃO ESPECIAL</span>
                       )
                     }
 
@@ -181,12 +193,6 @@ const Applicants = () => {
                     {
                       applicant.whatsapp_feedback === "sim" && (
                         <span className="badge text-bg-success p-2 me-2">RETORNO WHATSAPP</span>
-                      )
-                    }
-
-                    {
-                      applicant.selective_process_status == "efetivado" && (
-                        <span className="badge text-bg-success p-2 me-2">EFETIVADO</span>
                       )
                     }
                   </li>

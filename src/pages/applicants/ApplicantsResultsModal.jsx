@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import ReactSelect from "react-select"
@@ -15,6 +15,22 @@ const ApplicantsResultsModal = (props) => {
   const [rhOpinion, setRhOpinion] = useState()
 
   const [coordinatorOpinion, setCoordinatorOpinion] = useState()
+
+  const [specialNotation, setSpecialNotation] = useState()
+
+  const [subsidiariesOptions, setSubsidiariesOptions] = useState()
+
+  const [selectedSubsidiarieOption, setSelectedSubsidiarieOption] = useState()
+
+  useEffect(() => {
+    api
+      .get("/subsidiaries")
+      .then((response) => {
+        let options = response.data.map((option) => ({ value: option.id, label: option.name }))
+
+        setSubsidiariesOptions(options)
+      })
+  }, [])
 
   const handleClose = () => {
     if (applicantToSearch) {
@@ -54,12 +70,16 @@ const ApplicantsResultsModal = (props) => {
     let requestBody = {
       rh_opinion: rhOpinion?.value,
       coordinator_opinion: coordinatorOpinion?.value,
+      special_notation: specialNotation,
+      talents_bank_subsidiaries: `[${selectedSubsidiarieOption?.map((option) => option.value).join(",")}]`
     }
 
     api
       .patch(`/applicants/${selectedApplicant?.id}`, requestBody)
       .then(() => handleClose())
   }
+
+  console.log(selectedApplicant)
 
   return (
     <Modal
@@ -95,6 +115,37 @@ const ApplicantsResultsModal = (props) => {
             options={opinionsOptions}
             onChange={(option) => setCoordinatorOpinion(option)}
             defaultValue={opinionsOptions?.find((option) => option.value == selectedApplicant?.coordinator_opinion)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            ANOTAÇÃO ESPECIAL (OPCIONAL)
+          </label>
+
+          <textarea
+            className="form-control"
+            rows={4}
+            onChange={(e) => setSpecialNotation(e.target.value)}
+            defaultValue={selectedApplicant?.special_notation}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            BANCO DE TALENTOS (OPCIONAL)
+          </label>
+
+          <ReactSelect
+            placeholder={""}
+            isMulti={true}
+            options={subsidiariesOptions}
+            onChange={(options) => setSelectedSubsidiarieOption(options)}
+            defaultValue={
+              subsidiariesOptions?.filter(option =>
+                JSON.parse(selectedApplicant.talents_bank_subsidiaries || "[]").includes(option.value)
+              )
+            }
           />
         </div>
       </Modal.Body>

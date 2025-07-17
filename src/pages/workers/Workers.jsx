@@ -374,7 +374,7 @@ const Workers = () => {
       <Nav />
 
       <div className="container">
-        <h4>Cadastro de colaboradores</h4>
+        <h4>CADASTRO DE COLABORADORES</h4>
 
         <div className="d-inline-flex">
           <button
@@ -396,7 +396,7 @@ const Workers = () => {
               aria-expanded="false"
               disabled={userSession.role_id == 1 ? false : true}
             >
-              Mais operações
+              MAIS OPERAÇÕES
             </button>
 
             <ul className="dropdown-menu">
@@ -405,7 +405,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={handleOpenModifyWorkpointModal}
                 >
-                  Atualizar planilha de ponto
+                  ATUALIZAR PLANILHA DO PONTO
                 </button>
               </li>
 
@@ -414,7 +414,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={handleOpenResigntaionReasonsReportModal}
                 >
-                  Filtro de demissões
+                  FILTRO DE DEMISSÕES
                 </button>
               </li>
 
@@ -423,7 +423,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={handleOpenWorkerByTurnModal}
                 >
-                  Filtrar colaboradores por turno e por função
+                  FILTRAR COLABORADORES POR TURNO E FUNÇÃO
                 </button>
               </li>
 
@@ -441,7 +441,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={handleOpenAdmissionsReportModal}
                 >
-                  Filtro de admitidos
+                  FILTRO DE ADMITIDOS
                 </button>
               </li>
 
@@ -450,7 +450,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={() => setTransportVoucherModalOpen(true)}
                 >
-                  Vale transporte
+                  VALE TRANSPORTE
                 </button>
               </li>
 
@@ -459,7 +459,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={() => setOpenAccountModalOpen(true)}
                 >
-                  Abertura de conta
+                  ABERTURA DA CONTA
                 </button>
               </li>
 
@@ -467,7 +467,7 @@ const Workers = () => {
                 className="dropdown-item"
                 onClick={() => handleOpenMonthBirthdaysModal(true)}
               >
-                Aniversariantes do mês
+                ANIVERSARIANTES DO MÊS
               </li>
 
               <li>
@@ -475,7 +475,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={handleOpenRequestBadgesModal}
                 >
-                  Solicitar crachá definitivo
+                  SOLICITAR CRACHÁ DEFINITIVO
                 </button>
               </li>
 
@@ -484,7 +484,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={handleOpenMonthCoursesModal}
                 >
-                  Cursos mensais
+                  RELATÓRIO DE CURSOS DO MÊS
                 </button>
               </li>
 
@@ -493,7 +493,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={handleOpenMonthMetricsModal}
                 >
-                  Indicadores do mês
+                  INDICADORES DO MÊS
                 </button>
               </li>
             </ul>

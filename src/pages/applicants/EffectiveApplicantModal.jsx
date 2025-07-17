@@ -37,7 +37,7 @@ const EffectiveApplicantModal = (props) => {
 
         setSubsidiariesOptions(options)
       })
-  }, [])
+  }, [selectedApplicant])
 
   useEffect(() => {
     api
@@ -74,6 +74,28 @@ const EffectiveApplicantModal = (props) => {
   }, [selectedSubsidiarieOption])
 
   const handleClose = () => {
+    setSubsidiariesOptions()
+
+    setSelectedSubsidiarieOption()
+
+    setFunctionsOptions()
+
+    setSelectedFunctionOption()
+
+    setTurnsOptions()
+
+    setSelectedTurnOption()
+
+    setCostCenterOptions()
+
+    setSelectedCostCenterOption()
+
+    setDepartmentOptions()
+
+    setSelectedDepartmentOption()
+
+    setAdmissionDate()
+
     setEffectiveApplicantModalOpen(false)
   }
 
@@ -87,13 +109,9 @@ const EffectiveApplicantModal = (props) => {
       admission_date: admissionDate,
     }
 
-    console.log(requestBody)
-
     api
       .post(`/hire-applicants/${selectedApplicant?.id}`, requestBody)
-      .then((response) => {
-        console.log(response)
-      })
+      .then(() => handleClose())
   }
 
   return (

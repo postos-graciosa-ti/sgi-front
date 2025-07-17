@@ -166,28 +166,28 @@ const Scale = () => {
   }, [])
 
   useEffect(() => {
-    if (selectedSubsdiarie && selectedFunction && selectedTurn) {
-      api
-        .get(`/workers/subsidiarie/${selectedSubsdiarie.value}`)
-        .then((response) => {
-          setAllWorkers(response.data)
-        })
+    const fetchData = async () => {
+      if (selectedSubsdiarie && selectedFunction && selectedTurn) {
+        try {
+          const [allWorkersResponse, filteredWorkersResponse] = await Promise.all([
+            api.get(`/workers/subsidiarie/${selectedSubsdiarie.value}`),
+            api.get(`/workers/subsidiaries/${selectedSubsdiarie.value}/functions/${selectedFunction.value}/turns/${selectedTurn.value}`)
+          ])
 
-      api
-        .get(`/workers/subsidiaries/${selectedSubsdiarie.value}/functions/${selectedFunction.value}/turns/${selectedTurn.value}`)
-        .then((response) => {
-          let workers = response.data
+          setAllWorkers(allWorkersResponse.data)
 
-          let workersOptions = []
-
-          workers?.map((worker) => {
-            workersOptions.push({ "label": worker.name, "value": worker.id })
-          })
+          const workersOptions = filteredWorkersResponse.data
+            ?.filter(worker => worker.is_active && !worker.is_away)
+            .map(worker => ({ label: worker.name, value: worker.id }))
 
           setWorkersOptions(workersOptions)
-        })
+        } catch (error) {
+          console.error("Erro ao buscar trabalhadores:", error)
+        }
+      }
     }
 
+    fetchData()
   }, [selectedSubsdiarie, selectedFunction, selectedTurn])
 
   useEffect(() => {

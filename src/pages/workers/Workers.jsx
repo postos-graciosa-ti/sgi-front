@@ -760,7 +760,7 @@ const Workers = () => {
                           className="dropdown-item"
                           title="Avaliação de tempo de experiência"
                           onClick={() => handleOpenExperienceTimeModal(worker)}
-                          disabled={userSession.role_id == 1 ? false : true}
+                          // disabled={userSession.role_id == 1 ? false : true}
                         >
                           Avaliação de tempo de experiência de colaborador
                         </button>

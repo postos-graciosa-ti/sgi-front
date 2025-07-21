@@ -10,6 +10,8 @@ api.interceptors.request.use(
   (config) => {
     config.headers["Content-Type"] = "application/json"
 
+    config.headers["ngrok-skip-browser-warning"] = "true"
+
     const token = useUserSessionStore.getState().bearerToken
 
     if (token) {

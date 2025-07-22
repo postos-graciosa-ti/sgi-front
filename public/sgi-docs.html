@@ -233,6 +233,35 @@
       </p>
     </div>
 
+    <div class="mt-4 mb-4">
+      <h4>3. Infraestrutura atual do sistema</h4>
+
+      <p>Atualmente, o SGI é executado localmente em um ambiente interno dos Postos Graciosa, utilizando os seguintes
+        componentes:</p>
+
+      <ul>
+        <li class="mb-2"><b>Banco de dados:</b> a base de dados foi migrada da Neon para SQLite, armazenada localmente,
+          visando evitar limitações de tráfego de dados impostas por serviços em nuvem gratuitos.</li>
+
+        <li class="mb-2"><b>API:</b> a aplicação backend (API), desenvolvida em Python com o framework FastAPI, é
+          executada localmente utilizando o servidor <code>uvicorn</code>. O ambiente virtual Python é ativado
+          automaticamente por scripts de inicialização.</li>
+
+        <li class="mb-2"><b>Client:</b> o frontend do sistema, desenvolvido com React + Vite, também é executado
+          localmente em ambiente de desenvolvimento.</li>
+
+        <li class="mb-2"><b>Exposição para acesso externo:</b> para possibilitar o uso remoto da aplicação, são
+          utilizados túneis seguros via ferramentas como <b>LocalTunnel</b> ou <b>Cloudflare Tunnel</b>, evitando a
+          necessidade de IP fixo ou configurações complexas de rede.</li>
+
+        <li class="mb-2"><b>Backups:</b> backups do banco de dados SQLite são realizados periodicamente em dois
+          destinos: uma pasta local dedicada e envio automático por e-mail para maior segurança e redundância.</li>
+      </ul>
+
+      <p>Essa infraestrutura visa garantir maior controle, autonomia e resiliência ao sistema SGI. A atual arquitetura
+        encontra-se em fase de testes e está sendo avaliada continuamente para futuras melhorias e escalabilidade.</p>
+    </div>
+
     <div>
       <h4>Suporte</h4>
 

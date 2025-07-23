@@ -1,3 +1,4 @@
+import dayjs from "dayjs"
 import "driver.js/dist/driver.css"
 import moment from "moment"
 import "moment/locale/pt-br"
@@ -200,24 +201,57 @@ const Scale = () => {
     }
   }, [filterStartDate, filterEndDate, scalesList])
 
+  // const handleTitleClassname = ({ date, view }) => {
+  //   if (view == "month") {
+  //     let isDayOff = daysOff.some((dayOff) => dayOff == moment(date).format("DD-MM-YYYY"))
+
+  //     const now = moment().startOf("day");
+
+  //     const tileDate = moment(date).startOf("day");
+
+  //     const isPastDate = tileDate.isBefore(now);
+
+  //     if (isPastDate && isDayOff) {
+  //       return "bg-bloodred text-white"
+  //     }
+
+  //     return isDayOff && 'bg-danger text-white' || null
+  //   }
+
+  //   return
+  // }
+
   const handleTitleClassname = ({ date, view }) => {
-    if (view == "month") {
-      let isDayOff = daysOff.some((dayOff) => dayOff == moment(date).format("DD-MM-YYYY"))
+    if (view === "month") {
+      const tileDate = dayjs(date).startOf("day")
+      const now = dayjs().startOf("day")
+      const formattedDate = tileDate.format("DD-MM-YYYY")
 
-      const now = moment().startOf("day");
+      const isDayOff = daysOff.includes(formattedDate)
+      const isPastDate = tileDate.isBefore(now)
+      const isSunday = tileDate.day() === 0
 
-      const tileDate = moment(date).startOf("day");
-
-      const isPastDate = tileDate.isBefore(now);
-
-      if (isPastDate && isDayOff) {
-        return "bg-bloodred text-white"
+      // Prioridade: primeiro verifica se é folga
+      if (isDayOff && isPastDate) {
+        return "bg-bloodred text-white"  // folga no passado
       }
 
-      return isDayOff && 'bg-danger text-white' || null
+      if (isDayOff) {
+        return "bg-danger text-white"    // folga presente ou futura
+      }
+
+      if (isSunday && isPastDate) {
+        return "bg-warning-dark text-white" // domingo sem folga no passado
+      }
+
+      if (isSunday) {
+        return "bg-warning text-dark"    // domingo sem folga hoje/futuro
+      }
+
+      return null // dia útil normal
     }
 
-    return
+    return null
   }
 
   const handleOnclickDay = (date) => {
@@ -894,6 +928,11 @@ const Scale = () => {
               background: #800000 !important;
               color: white !important;
               font-weight: bold;
+            }
+
+            .bg-warning-dark {
+              background-color: #b58900 !important; /* tom de amarelo escuro */
+              color: white !important;
             }
           `
         }

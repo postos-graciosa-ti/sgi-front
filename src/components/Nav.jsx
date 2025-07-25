@@ -169,6 +169,8 @@ const Nav = () => {
                 </a>
 
                 <ul className="dropdown-menu">
+                  <li><Link className="dropdown-item" to="/activities-range">Atividades</Link></li>
+                  
                   <li><Link className="dropdown-item" to="/scale">Mensal</Link></li>
 
                   <li><Link className="dropdown-item" to="/hollidays-scale">Feriados</Link></li>

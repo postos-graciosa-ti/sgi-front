@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom"
 import App from "./App"
 import ErrorBoundary from "./components/ErrorBoundary"
 import NotFound from "./components/NotFound"
+import ActivitiesRange from "./pages/activitiesRange/ActivitiesRange"
 import Applicants from "./pages/applicants/Applicants"
 import ApplicantsApproved from "./pages/applicants/ApplicantsApproved"
 import AllJobs from "./pages/candidates/AllJobs"
@@ -280,6 +281,11 @@ const Routes = createBrowserRouter([
   {
     path: "/effective-applicants",
     element: <PrivateRoute><EffectiveApplicants /></PrivateRoute>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/activities-range",
+    element: <PrivateRoute><ActivitiesRange /></PrivateRoute>,
     errorElement: <ErrorBoundary />,
   },
 ])

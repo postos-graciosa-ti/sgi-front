@@ -374,7 +374,7 @@ const Workers = () => {
       <Nav />
 
       <div className="container">
-        <h4>CADASTRO DE COLABORADORES</h4>
+        <h4>Cadastro de Colaboradores</h4>
 
         <div className="d-inline-flex">
           <button
@@ -396,7 +396,7 @@ const Workers = () => {
               aria-expanded="false"
               disabled={userSession.role_id == 1 ? false : true}
             >
-              MAIS OPERAÇÕES
+              Mais Operações
             </button>
 
             <ul className="dropdown-menu">
@@ -405,7 +405,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={handleOpenModifyWorkpointModal}
                 >
-                  ATUALIZAR PLANILHA DO PONTO
+                  Atualizar Planilha do Ponto
                 </button>
               </li>
 
@@ -414,7 +414,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={handleOpenResigntaionReasonsReportModal}
                 >
-                  FILTRO DE DEMISSÕES
+                  Filtro de Demissões
                 </button>
               </li>
 
@@ -423,7 +423,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={handleOpenWorkerByTurnModal}
                 >
-                  FILTRAR COLABORADORES POR TURNO E FUNÇÃO
+                  Filtrar Colaboradores por Turno e Função
                 </button>
               </li>
 
@@ -441,7 +441,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={handleOpenAdmissionsReportModal}
                 >
-                  FILTRO DE ADMITIDOS
+                  Filtro de Admitidos
                 </button>
               </li>
 
@@ -450,7 +450,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={() => setTransportVoucherModalOpen(true)}
                 >
-                  VALE TRANSPORTE
+                  Vale Transporte
                 </button>
               </li>
 
@@ -459,7 +459,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={() => setOpenAccountModalOpen(true)}
                 >
-                  ABERTURA DA CONTA
+                  Abertura da Conta
                 </button>
               </li>
 
@@ -467,7 +467,7 @@ const Workers = () => {
                 className="dropdown-item"
                 onClick={() => handleOpenMonthBirthdaysModal(true)}
               >
-                ANIVERSARIANTES DO MÊS
+                Aniversariantes do Mês
               </li>
 
               <li>
@@ -475,7 +475,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={handleOpenRequestBadgesModal}
                 >
-                  SOLICITAR CRACHÁ DEFINITIVO
+                  Solicitar Crachá Definitivo
                 </button>
               </li>
 
@@ -484,7 +484,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={handleOpenMonthCoursesModal}
                 >
-                  RELATÓRIO DE CURSOS DO MÊS
+                  Relatório de Cursos do Mês
                 </button>
               </li>
 
@@ -493,7 +493,7 @@ const Workers = () => {
                   className="dropdown-item"
                   onClick={handleOpenMonthMetricsModal}
                 >
-                  INDICADORES DO MÊS
+                  Indicadores do Mês
                 </button>
               </li>
             </ul>
@@ -593,7 +593,7 @@ const Workers = () => {
                     title="Editar colaborador"
                     disabled={userSession.role_id == 1 ? false : true}
                   >
-                    Dados de Colaborador
+                    Ficha Registro
                   </button>
                 </li>
 
@@ -760,7 +760,7 @@ const Workers = () => {
                           className="dropdown-item"
                           title="Avaliação de tempo de experiência"
                           onClick={() => handleOpenExperienceTimeModal(worker)}
-                          // disabled={userSession.role_id == 1 ? false : true}
+                        // disabled={userSession.role_id == 1 ? false : true}
                         >
                           Avaliação de tempo de experiência de colaborador
                         </button>
